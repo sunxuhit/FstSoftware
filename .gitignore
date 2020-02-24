@@ -1,0 +1,13 @@
+# a comment - this is ignored
+# ignore share lib
+lib/
+
+# ignore build
+build/
+
+# ignore *.swp and *.o
+src/*.swp
+
+# ignore tmp root file
+macro/*.root
+
