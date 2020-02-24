@@ -9,5 +9,5 @@ build/
 src/*.swp
 
 # ignore tmp root file
-macro/*.root
+macros/*.root
 

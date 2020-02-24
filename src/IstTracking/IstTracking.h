@@ -6,9 +6,21 @@
 
 class TFile;
 class TChain;
+class TH1F;
 class TH2F;
 class TH3F;
 class TGraph;
+
+typedef struct
+{
+  int layer;
+  int sensor;
+  int column;
+  int row;
+  double maxAdc;
+  int maxTb;
+  bool filled;
+} IstHit;
 
 class IstTracking : public TObject
 {
@@ -28,12 +40,20 @@ class IstTracking : public TObject
     int Init();
     bool initChain();
     bool initPedestal();
+    bool initHit();
+    bool initSignal();
+    bool initHitDisplay();
+
+    bool clearHit();
+    bool clearSignal();
 
     int Make();
-    bool calPedestal();
+    bool calPedestal(); // extract pedestal for each ch and fill TGraphs for ped mean & sigma (noise)
+    void fillHitDisplay(IstHit isthit[]);
 
     int Finish();
     void writePedestal();
+    void writeHitDisplay();
 
   private:
     std::string mHome, mList;
@@ -42,9 +62,9 @@ class IstTracking : public TObject
     TFile *File_mOutPut;
 
     // Pedestal
-    float ped[IST::numARMs][IST::numPorts][IST::numAPVs][IST::numChannels];
-    float pedStdDev[IST::numARMs][IST::numPorts][IST::numAPVs][IST::numChannels];
-    // float pedRMS[IST::numARMs][IST::numPorts][IST::numAPVs][IST::numChannels];
+    double mPed[IST::numARMs][IST::numPorts][IST::numAPVs][IST::numChannels];
+    double mPedStdDev[IST::numARMs][IST::numPorts][IST::numAPVs][IST::numChannels];
+    // double pedRMS[IST::numARMs][IST::numPorts][IST::numAPVs][IST::numChannels];
 
     TGraph *g_mPedMean_Layer1;
     TGraph *g_mPedSigma_Layer1;
@@ -53,12 +73,20 @@ class IstTracking : public TObject
     TGraph *g_mPedMean_Layer3;
     TGraph *g_mPedSigma_Layer3;
 
-    TH3F *h_mDisplay_Layer1; // col & row & event => first 100 events
-    TH3F *h_mDisplay_Layer2;
-    TH3F *h_mDisplay_Layer3;
+    TH2F *h_mHitDisplay_Layer1; // col & row
+    TH2F *h_mHitDisplay_Layer2;
+    TH2F *h_mHitDisplay_Layer3;
+    TH1F *h_mMaxTb_Layer1; 
+    TH1F *h_mMaxTb_Layer2;
+    TH1F *h_mMaxTb_Layer3;
+
+    IstHit mIstHit[IST::maxNHits]; // store hit information after ped subtraction
+    double mSigPedCorr[IST::numARMs][IST::numPorts][IST::numAPVs][IST::numChannels][IST::numTBins];
+    double mRawSig[IST::numARMs][IST::numPorts][IST::numAPVs][IST::numChannels][IST::numTBins];
 
     // Utility for tracking
     int getLayer(int arm, int port); // return layer based on arm & port
+    int getSensor(int apv); // return sensor based on APV
     int getColumn(int apv, int ch); // return column based on arm & port & apv & ch
     int getRow(int apv, int ch); // return row based on arm & port & apv & ch
 

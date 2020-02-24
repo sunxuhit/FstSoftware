@@ -8,7 +8,7 @@ namespace IST
   const int numAPVs     = 12; // no actual Port information, we just introduce Port information ourselves
   const int numROChannels = 1152; // numFstChannels*numFstTBins
   const int numChannels = 128;
-  const int numTBins    = 9;
+  const int numTBins    = 7;
 
   // IST Cosmic Test Stand Geometry
   const int noRows    = 64; // for one group of sensors
@@ -18,6 +18,9 @@ namespace IST
 
   const int nPedCuts = 3;
   const int nHitCuts = 5;
+  const int maxNHits = 15; // max number of hits array
+  const int maxNHitsPerEvent = 10; // max number of hits per event => bail the event if found more than this number
+  const float MinNoise = 10.0;
 }
 
 #endif
