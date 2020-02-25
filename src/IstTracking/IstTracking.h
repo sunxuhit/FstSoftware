@@ -22,6 +22,17 @@ typedef struct
   bool filled;
 } IstHit;
 
+typedef struct
+{
+  int layer;
+  int sensor;
+  double x;
+  double y;
+  double z;
+  double adc;
+  bool filled;
+} IstCluster;
+
 class IstTracking : public TObject
 {
   public:
@@ -40,20 +51,26 @@ class IstTracking : public TObject
     int Init();
     bool initChain();
     bool initPedestal();
-    bool initHit();
     bool initSignal();
+    bool initHit();
     bool initHitDisplay();
+    bool initCluster();
+    bool initTracking_ARMDisplay();
 
     bool clearHit();
     bool clearSignal();
+    bool clearCluster();
 
     int Make();
     bool calPedestal(); // extract pedestal for each ch and fill TGraphs for ped mean & sigma (noise)
     void fillHitDisplay(IstHit isthit[]);
+    bool findCluster_ARMDisplay(IstHit isthit[], int numOfHits);
+    void fillTracking_ARMDisplay(IstCluster istcluster[], int numOfCluster);
 
     int Finish();
     void writePedestal();
     void writeHitDisplay();
+    void writeTracking_ARMDisplay();
 
   private:
     std::string mHome, mList;
@@ -83,6 +100,15 @@ class IstTracking : public TObject
     IstHit mIstHit[IST::maxNHits]; // store hit information after ped subtraction
     double mSigPedCorr[IST::numARMs][IST::numPorts][IST::numAPVs][IST::numChannels][IST::numTBins];
     double mRawSig[IST::numARMs][IST::numPorts][IST::numAPVs][IST::numChannels][IST::numTBins];
+
+    IstCluster mIstCluster[IST::maxNHits]; // cluster
+    TH1F *h_mXResidual;
+    TH1F *h_mYResidual;
+    TH1F *h_mAdc_Layer1;
+    TH1F *h_mAdc_Layer3;
+    TH1F *h_mAdcAngleCorr_Layer1;
+    TH1F *h_mAdcAngleCorr_Layer3;
+    TH1F *h_mTrackAngle;
 
     // Utility for tracking
     int getLayer(int arm, int port); // return layer based on arm & port
