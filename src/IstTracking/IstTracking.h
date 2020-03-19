@@ -3,6 +3,7 @@
 
 #include <TObject.h>
 #include <./IstTrackingCons.h>
+#include <vector>
 
 class TFile;
 class TChain;
@@ -26,11 +27,14 @@ typedef struct
 {
   int layer;
   int sensor;
-  double x;
-  double y;
-  double z;
-  double adc;
-  bool filled;
+  double meanColumn;
+  double meanRow;
+  double totAdc;
+  int maxTb;
+  int clusterSize;
+  int clusterSizeX;
+  int clusterSizeY;
+  int clusterType; // 0 for ARMDisplay | 1 for Simple | 2 for Scan
 } IstCluster;
 
 class IstTracking : public TObject
@@ -48,29 +52,43 @@ class IstTracking : public TObject
       mOutPutFile = outputfile;
     }
 
+    bool clearSignal();
+    bool clearHit();
+
     int Init();
     bool initChain();
-    bool initPedestal();
     bool initSignal();
     bool initHit();
-    bool initHitDisplay();
     bool initCluster();
-    bool initTracking_ARMDisplay();
 
-    bool clearHit();
-    bool clearSignal();
-    bool clearCluster();
-
-    int Make();
-    bool calPedestal(); // extract pedestal for each ch and fill TGraphs for ped mean & sigma (noise)
-    void fillHitDisplay(IstHit isthit[]);
-    bool findCluster_ARMDisplay(IstHit isthit[], int numOfHits);
-    void fillTracking_ARMDisplay(IstCluster istcluster[], int numOfCluster);
+    int Make(); // subtract pedestal => signal & find Hits
 
     int Finish();
+
+    // pedestal
+    bool clearPedestal();
+    bool initPedestal();
+    bool calPedestal(); // extract pedestal for each ch and fill TGraphs for ped mean & sigma (noise)
     void writePedestal();
+
+    // hit display
+    bool initHitDisplay();
+    void fillHitDisplay(std::vector<IstHit> isthitvec);
     void writeHitDisplay();
+
+    // cluster with ARMDisplay
+    bool clearCluster_ARMDisplay();
+    bool initTracking_ARMDisplay();
+    bool findCluster_ARMDisplay(std::vector<IstHit> isthit_orig);
+    void fillTracking_ARMDisplay(std::vector<IstCluster> istcluster_orig);
     void writeTracking_ARMDisplay();
+
+    // cluster with Simple Algorithm
+    bool clearCluster_Simple();
+    bool initTracking_Simple();
+    bool findCluster_Simple(std::vector<IstHit> isthit_orig);
+    // void fillTracking_Simple(std::vector<IstCluster> istcluster_orig);
+    void writeTracking_Simple();
 
   private:
     std::string mHome, mList;
@@ -97,18 +115,27 @@ class IstTracking : public TObject
     TH1F *h_mMaxTb_Layer2;
     TH1F *h_mMaxTb_Layer3;
 
-    IstHit mIstHit[IST::maxNHits]; // store hit information after ped subtraction
+    std::vector<IstHit> mIstHitVec; // store hit information after ped subtraction
     double mSigPedCorr[IST::numARMs][IST::numPorts][IST::numAPVs][IST::numChannels][IST::numTBins];
     double mRawSig[IST::numARMs][IST::numPorts][IST::numAPVs][IST::numChannels][IST::numTBins];
 
-    IstCluster mIstCluster[IST::maxNHits]; // cluster
-    TH1F *h_mXResidual;
-    TH1F *h_mYResidual;
-    TH1F *h_mAdc_Layer1;
-    TH1F *h_mAdc_Layer3;
-    TH1F *h_mAdcAngleCorr_Layer1;
-    TH1F *h_mAdcAngleCorr_Layer3;
-    TH1F *h_mTrackAngle;
+    std::vector<IstCluster> mIstClusterVec_ARMDisplay; // cluster with ARMDisplay
+    TH1F *h_mXResidual_ARMDisplay;
+    TH1F *h_mYResidual_ARMDisplay;
+    TH1F *h_mAdc_Layer1_ARMDisplay;
+    TH1F *h_mAdc_Layer3_ARMDisplay;
+    TH1F *h_mAdcAngleCorr_Layer1_ARMDisplay;
+    TH1F *h_mAdcAngleCorr_Layer3_ARMDisplay;
+    TH1F *h_mTrackAngle_ARMDisplay;
+
+    std::vector<IstCluster> mIstClusterVec_Simple; // cluster with Simple Algorithm
+    TH1F *h_mXResidual_Simple;
+    TH1F *h_mYResidual_Simple;
+    TH1F *h_mAdc_Layer1_Simple;
+    TH1F *h_mAdc_Layer3_Simple;
+    TH1F *h_mAdcAngleCorr_Layer1_Simple;
+    TH1F *h_mAdcAngleCorr_Layer3_Simple;
+    TH1F *h_mTrackAngle_Simple;
 
     // Utility for tracking
     int getLayer(int arm, int port); // return layer based on arm & port

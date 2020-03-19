@@ -57,7 +57,7 @@ int IstTracking::Init()
 bool IstTracking::initChain()
 {
   cout << "IstTracking::initChain -> " << endl;
-  string inputdir = Form("%s/WorkSpace/STAR/Data/ForwardSiliconTracker/",mHome.c_str());
+  string inputdir = Form("%s/WorkSpace/STAR/Data/ForwardSiliconTracker/IstTestStand/",mHome.c_str());
 
   mChainInPut = new TChain("tree_Hits");
 
@@ -106,34 +106,6 @@ bool IstTracking::initChain()
   return true;
 }
 
-bool IstTracking::initPedestal()
-{
-  cout << "IstTracking::initPedestal -> " << endl;
-  for(int i_arm = 0; i_arm < IST::numARMs; ++i_arm)
-  {
-    for(int i_port = 0; i_port < IST::numPorts; ++i_port)
-    {
-      for(int i_apv = 0; i_apv < IST::numAPVs; ++i_apv)
-      {
-	for(int i_ch = 0; i_ch < IST::numChannels; ++i_ch)
-	{
-	  mPed[i_arm][i_port][i_apv][i_ch] = -1.0;
-	  mPedStdDev[i_arm][i_port][i_apv][i_ch] = -1.0;
-	  // pedRMS[i_arm][i_port][i_apv][i_ch] = -1.0;
-	}
-      }
-    }
-  }
-  g_mPedMean_Layer1 = new TGraph();
-  g_mPedSigma_Layer1 = new TGraph();
-  g_mPedMean_Layer2 = new TGraph();
-  g_mPedSigma_Layer2 = new TGraph();
-  g_mPedMean_Layer3 = new TGraph();
-  g_mPedSigma_Layer3 = new TGraph();
-
-  return true;
-}
-
 bool IstTracking::initSignal()
 {
   cout << "IstTracking::initSignal -> " << endl;
@@ -146,40 +118,11 @@ bool IstTracking::initHit()
   return clearHit();
 }
 
-bool IstTracking::initHitDisplay()
-{
-  h_mHitDisplay_Layer1 = new TH2F("h_mHitDisplay_Layer1","h_mHitDisplay_Layer1",IST::noColumns,-0.5,IST::noColumns-0.5,IST::noRows,-0.5,IST::noRows-0.5);
-  h_mHitDisplay_Layer2 = new TH2F("h_mHitDisplay_Layer2","h_mHitDisplay_Layer2",IST::noColumns,-0.5,IST::noColumns-0.5,IST::noRows,-0.5,IST::noRows-0.5);
-  h_mHitDisplay_Layer3 = new TH2F("h_mHitDisplay_Layer3","h_mHitDisplay_Layer3",IST::noColumns,-0.5,IST::noColumns-0.5,IST::noRows,-0.5,IST::noRows-0.5);
-
-  h_mMaxTb_Layer1 = new TH1F("h_mMaxTb_Layer1","h_mMaxTb_Layer1",10,-0.5,9.5); 
-  h_mMaxTb_Layer2 = new TH1F("h_mMaxTb_Layer2","h_mMaxTb_Layer2",10,-0.5,9.5);
-  h_mMaxTb_Layer3 = new TH1F("h_mMaxTb_Layer3","h_mMaxTb_Layer3",10,-0.5,9.5);
-
-  return true;
-}
-
 bool IstTracking::initCluster()
 {
   cout << "IstTracking::initCluster -> " << endl;
-  return clearCluster();
+  return clearCluster_ARMDisplay() && clearCluster_Simple();
 }
-
-bool IstTracking::initTracking_ARMDisplay()
-{
-  h_mXResidual = new TH1F("h_mXResidual","h_mXResidual",150,-9,9);
-  h_mYResidual = new TH1F("h_mYResidual","h_mYResidual",150,-9,9);
-
-  h_mAdc_Layer1 = new TH1F("h_mAdc_Layer1","h_mAdc_Layer1",100,0,4000);
-  h_mAdc_Layer3 = new TH1F("h_mAdc_Layer3","h_mAdc_Layer3",100,0,4000);
-  h_mAdcAngleCorr_Layer1 = new TH1F("h_mAdcAngleCorr_Layer1","h_mAdcAngleCorr_Layer1",100,0,4000);
-  h_mAdcAngleCorr_Layer3 = new TH1F("h_mAdcAngleCorr_Layer3","h_mAdcAngleCorr_Layer3",100,0,4000);
-
-  h_mTrackAngle = new TH1F("h_mTrackAngle","h_mTrackAngle",100,0,90);
-
-  return true;
-}
-
 //------------------------------------------
 bool IstTracking::clearSignal()
 {
@@ -206,36 +149,11 @@ bool IstTracking::clearSignal()
 
 bool IstTracking::clearHit()
 {
-  for(int i_hit = 0; i_hit < IST::maxNHits; ++i_hit)
-  {
-    mIstHit[i_hit].layer = -1;
-    mIstHit[i_hit].sensor = -1;
-    mIstHit[i_hit].column = -1;
-    mIstHit[i_hit].row = -1;
-    mIstHit[i_hit].maxAdc = -1;
-    mIstHit[i_hit].maxTb = -1;
-    mIstHit[i_hit].filled = false;
-  }
-
-  return true;
-}
-
-bool IstTracking::clearCluster()
-{
-  for(int i_cluster = 0; i_cluster < IST::maxNHits; ++i_cluster)
-  {
-    mIstCluster[i_cluster].layer = -1;
-    mIstCluster[i_cluster].sensor = -1;
-    mIstCluster[i_cluster].x = -1;
-    mIstCluster[i_cluster].y = -1;
-    mIstCluster[i_cluster].adc = -1;
-    mIstCluster[i_cluster].filled = false;
-  }
+  mIstHitVec.clear();
 
   return true;
 }
 //------------------------------------------
-
 int IstTracking::Make()
 {
   cout << "IstTracking::Make => " << endl;
@@ -248,7 +166,8 @@ int IstTracking::Make()
   }
 
   long NumOfEvents = (long)mChainInPut->GetEntries();
-  // if(NumOfEvents > 1000) NumOfEvents = 1000;
+  if(NumOfEvents > 1000) NumOfEvents = 1000;
+  NumOfEvents = 10;
   mChainInPut->GetEntry(0);
 
   for(int i_event = 0; i_event < NumOfEvents; ++i_event)
@@ -332,13 +251,16 @@ int IstTracking::Make()
 	      }
 	      if(isHit && numOfHits < IST::maxNHits)
 	      { // set Hit info
-		mIstHit[numOfHits].layer = getLayer(i_arm,i_port);
-		mIstHit[numOfHits].sensor = getSensor(i_apv);
-		mIstHit[numOfHits].column = getColumn(i_apv,i_ch);
-		mIstHit[numOfHits].row = getRow(i_apv,i_ch);
-		mIstHit[numOfHits].maxAdc = maxADC;
-		mIstHit[numOfHits].maxTb = maxTB;
-		mIstHit[numOfHits].filled = isHit;
+		IstHit isthit_temp;
+		isthit_temp.layer = getLayer(i_arm,i_port);
+		isthit_temp.sensor = getSensor(i_apv);
+		isthit_temp.column = getColumn(i_apv,i_ch);
+		isthit_temp.row = getRow(i_apv,i_ch);
+		isthit_temp.maxAdc = maxADC;
+		isthit_temp.maxTb = maxTB;
+		isthit_temp.filled = isHit;
+
+		mIstHitVec.push_back(isthit_temp);
 		numOfHits++;
 	      }
 	    }
@@ -349,14 +271,62 @@ int IstTracking::Make()
 
     if(numOfHits > 0 && numOfHits <= IST::maxNHitsPerEvent) // maximum hits to expect per event is 10
     {
-      fillHitDisplay(mIstHit); // fill hit display
-      findCluster_ARMDisplay(mIstHit,numOfHits); // find cluster
+      fillHitDisplay(mIstHitVec); // fill hit display
+
+      // findCluster_ARMDisplay(mIstHitVec); // find cluster with ARMDisplay
+      findCluster_Simple(mIstHitVec); // find cluster with ARMDisplay
     }
   }
 
   cout << "processed events:  " << NumOfEvents << "/" << NumOfEvents << endl;
 
   return 1;
+}
+
+int IstTracking::Finish()
+{
+  cout << "IstTracking::Finish => " << endl;
+  writePedestal();
+  writeHitDisplay();
+  writeTracking_ARMDisplay();
+
+  return 1;
+}
+
+//--------------pedestal---------------------
+bool IstTracking::clearPedestal()
+{
+  for(int i_arm = 0; i_arm < IST::numARMs; ++i_arm)
+  {
+    for(int i_port = 0; i_port < IST::numPorts; ++i_port)
+    {
+      for(int i_apv = 0; i_apv < IST::numAPVs; ++i_apv)
+      {
+	for(int i_ch = 0; i_ch < IST::numChannels; ++i_ch)
+	{
+	  mPed[i_arm][i_port][i_apv][i_ch] = -1.0;
+	  mPedStdDev[i_arm][i_port][i_apv][i_ch] = -1.0;
+	  // pedRMS[i_arm][i_port][i_apv][i_ch] = -1.0;
+	}
+      }
+    }
+  }
+
+  return true;
+}
+
+bool IstTracking::initPedestal()
+{
+  cout << "IstTracking::initPedestal -> " << endl;
+
+  g_mPedMean_Layer1 = new TGraph();
+  g_mPedSigma_Layer1 = new TGraph();
+  g_mPedMean_Layer2 = new TGraph();
+  g_mPedSigma_Layer2 = new TGraph();
+  g_mPedMean_Layer3 = new TGraph();
+  g_mPedSigma_Layer3 = new TGraph();
+
+  return clearPedestal();
 }
 
 bool IstTracking::calPedestal()
@@ -539,30 +509,109 @@ bool IstTracking::calPedestal()
   return true;
 }
 
-void IstTracking::fillHitDisplay(IstHit isthit[])
+void IstTracking::writePedestal()
 {
-  for(int i_hit = 0; i_hit < IST::maxNHits; ++i_hit)
+  cout << "IstTracking::writePedestal => save ped mean & sigma!" << endl;
+
+  g_mPedMean_Layer1->SetName("g_mPedMean_Layer1");
+  g_mPedMean_Layer1->Write();
+  g_mPedSigma_Layer1->SetName("g_mPedSigma_Layer1");
+  g_mPedSigma_Layer1->Write();
+
+  g_mPedMean_Layer2->SetName("g_mPedMean_Layer2");
+  g_mPedMean_Layer2->Write();
+  g_mPedSigma_Layer2->SetName("g_mPedSigma_Layer2");
+  g_mPedSigma_Layer2->Write();
+
+  g_mPedMean_Layer3->SetName("g_mPedMean_Layer3");
+  g_mPedMean_Layer3->Write();
+  g_mPedSigma_Layer3->SetName("g_mPedSigma_Layer3");
+  g_mPedSigma_Layer3->Write();
+}
+//--------------pedestal---------------------
+
+//--------------hit display---------------------
+bool IstTracking::initHitDisplay()
+{
+  h_mHitDisplay_Layer1 = new TH2F("h_mHitDisplay_Layer1","h_mHitDisplay_Layer1",IST::noColumns,-0.5,IST::noColumns-0.5,IST::noRows,-0.5,IST::noRows-0.5);
+  h_mHitDisplay_Layer2 = new TH2F("h_mHitDisplay_Layer2","h_mHitDisplay_Layer2",IST::noColumns,-0.5,IST::noColumns-0.5,IST::noRows,-0.5,IST::noRows-0.5);
+  h_mHitDisplay_Layer3 = new TH2F("h_mHitDisplay_Layer3","h_mHitDisplay_Layer3",IST::noColumns,-0.5,IST::noColumns-0.5,IST::noRows,-0.5,IST::noRows-0.5);
+
+  h_mMaxTb_Layer1 = new TH1F("h_mMaxTb_Layer1","h_mMaxTb_Layer1",10,-0.5,9.5); 
+  h_mMaxTb_Layer2 = new TH1F("h_mMaxTb_Layer2","h_mMaxTb_Layer2",10,-0.5,9.5);
+  h_mMaxTb_Layer3 = new TH1F("h_mMaxTb_Layer3","h_mMaxTb_Layer3",10,-0.5,9.5);
+
+  return true;
+}
+
+void IstTracking::fillHitDisplay(std::vector<IstHit> isthitvec)
+{
+  if(isthitvec.size() < IST::maxNHits)
   {
-    if(isthit[i_hit].filled == true)
+    for(int i_hit = 0; i_hit < isthitvec.size(); ++i_hit)
     {
-      if(isthit[i_hit].layer == 1) h_mHitDisplay_Layer1->Fill(isthit[i_hit].column,isthit[i_hit].row);
-      if(isthit[i_hit].layer == 1) h_mMaxTb_Layer1->Fill(isthit[i_hit].maxTb);
-      // if(isthit[i_hit].column >=2 && isthit[i_hit].column<=5 && isthit[i_hit].row < 10 && isthit[i_hit].layer == 1)
-      // {
-	// cout << "adc = " << isthit[i_hit].maxAdc << endl;
-	// cout << "tb = " << isthit[i_hit].maxTb << endl;
-      // }
-      if(isthit[i_hit].layer == 2) h_mHitDisplay_Layer2->Fill(isthit[i_hit].column,isthit[i_hit].row);
-      if(isthit[i_hit].layer == 2) h_mMaxTb_Layer2->Fill(isthit[i_hit].maxTb);
-      if(isthit[i_hit].layer == 3) h_mHitDisplay_Layer3->Fill(isthit[i_hit].column,isthit[i_hit].row);
-      if(isthit[i_hit].layer == 3) h_mMaxTb_Layer3->Fill(isthit[i_hit].maxTb);
+      if(isthitvec[i_hit].filled == true)
+      {
+	if(isthitvec[i_hit].layer == 1) h_mHitDisplay_Layer1->Fill(isthitvec[i_hit].column,isthitvec[i_hit].row);
+	if(isthitvec[i_hit].layer == 1) h_mMaxTb_Layer1->Fill(isthitvec[i_hit].maxTb);
+	if(isthitvec[i_hit].layer == 2) h_mHitDisplay_Layer2->Fill(isthitvec[i_hit].column,isthitvec[i_hit].row);
+	if(isthitvec[i_hit].layer == 2) h_mMaxTb_Layer2->Fill(isthitvec[i_hit].maxTb);
+	if(isthitvec[i_hit].layer == 3) h_mHitDisplay_Layer3->Fill(isthitvec[i_hit].column,isthitvec[i_hit].row);
+	if(isthitvec[i_hit].layer == 3) h_mMaxTb_Layer3->Fill(isthitvec[i_hit].maxTb);
+      }
     }
   }
 }
 
-bool IstTracking::findCluster_ARMDisplay(IstHit isthit[], int numOfHits)
+void IstTracking::writeHitDisplay()
 {
-  clearCluster();
+  cout << "IstTracking::writeHitDisplay => save Hits at each Layer!" << endl;
+  h_mHitDisplay_Layer1->Write();
+  h_mHitDisplay_Layer2->Write();
+  h_mHitDisplay_Layer3->Write();
+
+  h_mMaxTb_Layer1->Write();
+  h_mMaxTb_Layer2->Write();
+  h_mMaxTb_Layer3->Write();
+}
+//--------------hit display---------------------
+
+//--------------cluster with ARMDisplay---------------------
+bool IstTracking::clearCluster_ARMDisplay()
+{
+  mIstClusterVec_ARMDisplay.clear();
+
+  return true;
+}
+
+bool IstTracking::initTracking_ARMDisplay()
+{
+  h_mXResidual_ARMDisplay = new TH1F("h_mXResidual_ARMDisplay","h_mXResidual_ARMDisplay",150,-9,9);
+  h_mYResidual_ARMDisplay = new TH1F("h_mYResidual_ARMDisplay","h_mYResidual_ARMDisplay",150,-9,9);
+
+  h_mAdc_Layer1_ARMDisplay = new TH1F("h_mAdc_Layer1_ARMDisplay","h_mAdc_Layer1_ARMDisplay",100,0,4000);
+  h_mAdc_Layer3_ARMDisplay = new TH1F("h_mAdc_Layer3_ARMDisplay","h_mAdc_Layer3_ARMDisplay",100,0,4000);
+  h_mAdcAngleCorr_Layer1_ARMDisplay = new TH1F("h_mAdcAngleCorr_Layer1_ARMDisplay","h_mAdcAngleCorr_Layer1_ARMDisplay",100,0,4000);
+  h_mAdcAngleCorr_Layer3_ARMDisplay = new TH1F("h_mAdcAngleCorr_Layer3_ARMDisplay","h_mAdcAngleCorr_Layer3_ARMDisplay",100,0,4000);
+
+  h_mTrackAngle_ARMDisplay = new TH1F("h_mTrackAngle_ARMDisplay","h_mTrackAngle_ARMDisplay",100,0,90);
+
+  return true;
+}
+
+bool IstTracking::findCluster_ARMDisplay(std::vector<IstHit> isthit_orig)
+{
+  clearCluster_ARMDisplay();
+  int numOfHits = isthit_orig.size();
+  std::vector<IstHit> isthit;
+  isthit.clear();
+  isthit.reserve(isthit.size());
+  for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
+  { // set temp ist hit container
+    isthit.push_back(isthit_orig[i_hit]);
+  }
+
+  // find cluster
   for(int i_hit_1st = 0; i_hit_1st < numOfHits-1; ++i_hit_1st) 
   { 
     for(int i_hit_2nd = i_hit_1st+1; i_hit_2nd < numOfHits; ++i_hit_2nd) 
@@ -591,39 +640,48 @@ bool IstTracking::findCluster_ARMDisplay(IstHit isthit[], int numOfHits)
     } 
   }
 
+  // fill cluster
   int numOfCluster = 0;
   for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
   {
     if(isthit[i_hit].filled == true) 
     {
-      mIstCluster[numOfCluster].layer = isthit[i_hit].layer;
-      mIstCluster[numOfCluster].sensor = isthit[i_hit].sensor;
-      // mIstCluster[numOfCluster].x = isthit[i_hit].column*IST::pitchColumn + (IST::pitchColumn*rand()/double(RAND_MAX));
-      // mIstCluster[numOfCluster].y = isthit[i_hit].row*IST::pitchRow + (IST::pitchRow*rand()/double(RAND_MAX));
-      // if( isthit[i_hit].layer == 1) mIstCluster[numOfCluster].z = 0.0;
-      // if( isthit[i_hit].layer == 2) mIstCluster[numOfCluster].z = IST::pitchLayer12;
-      // if( isthit[i_hit].layer == 3) mIstCluster[numOfCluster].z = IST::pitchLayer12+IST::pitchLayer23;
-      mIstCluster[numOfCluster].x = isthit[i_hit].column*IST::pitchColumn;
-      mIstCluster[numOfCluster].y = isthit[i_hit].row*IST::pitchRow;
-      if( isthit[i_hit].layer == 1) mIstCluster[numOfCluster].z = 0.0;
-      if( isthit[i_hit].layer == 2) mIstCluster[numOfCluster].z = IST::pitchLayer12;
-      if( isthit[i_hit].layer == 3) mIstCluster[numOfCluster].z = IST::pitchLayer12+IST::pitchLayer23;
-      mIstCluster[numOfCluster].adc = isthit[i_hit].maxAdc;
-      mIstCluster[numOfCluster].filled = true;
+      IstCluster istcluster_temp;
+      istcluster_temp.layer = isthit[i_hit].layer;
+      istcluster_temp.sensor = isthit[i_hit].sensor;
+      istcluster_temp.meanColumn = isthit[i_hit].column;
+      istcluster_temp.meanRow = isthit[i_hit].row;
+      istcluster_temp.totAdc = isthit[i_hit].maxAdc;
+      istcluster_temp.maxTb = isthit[i_hit].maxTb;
+      istcluster_temp.clusterSize = 1; // not real cluster size
+      istcluster_temp.clusterSizeX = 1; // not real cluster size
+      istcluster_temp.clusterSizeY = 1; // not real cluster size
+      istcluster_temp.clusterType = 0; // ARMDisplay
+
+      mIstClusterVec_ARMDisplay.push_back(istcluster_temp);
       numOfCluster++;
     }
   }
 
   if(numOfCluster > 0 && numOfCluster <= IST::maxNHitsPerEvent)
   {
-    fillTracking_ARMDisplay(mIstCluster,numOfCluster);
+    fillTracking_ARMDisplay(mIstClusterVec_ARMDisplay);
   }
 
   return true;
 }
 
-void IstTracking::fillTracking_ARMDisplay(IstCluster istcluster[], int numOfCluster)
+void IstTracking::fillTracking_ARMDisplay(std::vector<IstCluster> istcluster_orig)
 {
+  int numOfCluster = istcluster_orig.size();
+  std::vector<IstCluster> istcluster;
+  istcluster.clear();
+  istcluster.reserve(istcluster_orig.size());
+  for(int i_cluster = 0; i_cluster < numOfCluster; ++i_cluster)
+  { // set temp ist cluster container
+    istcluster.push_back(istcluster_orig[i_cluster]);
+  }
+
   for ( int i_cluster_1st = 0; i_cluster_1st < numOfCluster-1; ++i_cluster_1st) 
   {
     for ( int i_cluster_3rd = i_cluster_1st+1; i_cluster_3rd < numOfCluster; ++i_cluster_3rd) 
@@ -631,41 +689,46 @@ void IstTracking::fillTracking_ARMDisplay(IstCluster istcluster[], int numOfClus
       TVector3 Normal, Track;
       // Find a hit on layer 1 and a hit on layer 3, we only have a sensor 0 in both layers
       if ( 
-	  ( ( istcluster[i_cluster_1st].filled == true ) && ( istcluster[i_cluster_3rd].filled == true ) ) &&
+	  ( ( istcluster[i_cluster_1st].clusterSize > 0 ) && ( istcluster[i_cluster_3rd].clusterSize > 0 ) ) &&
 	  ( ( ( istcluster[i_cluster_1st].layer  ==  1 ) && ( istcluster[i_cluster_3rd].layer  ==  3 ) ) || ( ( istcluster[i_cluster_1st].layer  ==  3 ) && ( istcluster[i_cluster_3rd].layer  ==  1 ) )  )
 	 ) 
       {
-	float x1 = istcluster[i_cluster_1st].x;
-	float y1 = istcluster[i_cluster_1st].y;
-	float z1 = istcluster[i_cluster_1st].z;
+	float x1 = istcluster[i_cluster_1st].meanColumn*IST::pitchColumn;
+	float y1 = istcluster[i_cluster_1st].meanRow*IST::pitchRow;
+	float z1;
+	if(istcluster[i_cluster_1st].layer == 1) z1 = 0.0;
+	if(istcluster[i_cluster_1st].layer == 3) z1 = IST::pitchLayer12+IST::pitchLayer23;
 
-	float x3 = istcluster[i_cluster_3rd].x;
-	float y3 = istcluster[i_cluster_3rd].y;
-	float z3 = istcluster[i_cluster_3rd].z;
+	float x3 = istcluster[i_cluster_3rd].meanColumn*IST::pitchColumn;
+	float y3 = istcluster[i_cluster_3rd].meanRow*IST::pitchRow;
+	float z3;
+	if(istcluster[i_cluster_3rd].layer == 3) z3 = IST::pitchLayer12+IST::pitchLayer23;
+	if(istcluster[i_cluster_3rd].layer == 1) z3 = 0.0;
+
 
 	Normal.SetXYZ(0, 0, z3-z1);
 	Track.SetXYZ(x3-x1, y3-y1, z3-z1);
-	h_mTrackAngle->Fill(IST::rad2deg*Track.Angle(Normal), 1.0);
+	h_mTrackAngle_ARMDisplay->Fill(IST::rad2deg*Track.Angle(Normal), 1.0);
 	// Cut on maximum track angle to weed out invalid 2-hit combinations a bit
 	if ( IST::rad2deg*Track.Angle(Normal) < IST::maxAngle ) 
 	{
 	  // not angle corrected hits on a track
-	  h_mAdc_Layer1->Fill(istcluster[i_cluster_1st].adc, 1.0);
-	  h_mAdc_Layer3->Fill(istcluster[i_cluster_3rd].adc, 1.0);
+	  h_mAdc_Layer1_ARMDisplay->Fill(istcluster[i_cluster_1st].totAdc, 1.0);
+	  h_mAdc_Layer3_ARMDisplay->Fill(istcluster[i_cluster_3rd].totAdc, 1.0);
 	  // angle corrected hits on a track
-	  h_mAdcAngleCorr_Layer1->Fill((istcluster[i_cluster_1st].adc)*cos(Track.Angle(Normal)), 1.0);
-	  h_mAdcAngleCorr_Layer3->Fill((istcluster[i_cluster_3rd].adc)*cos(Track.Angle(Normal)), 1.0);
+	  h_mAdcAngleCorr_Layer1_ARMDisplay->Fill((istcluster[i_cluster_1st].totAdc)*cos(Track.Angle(Normal)), 1.0);
+	  h_mAdcAngleCorr_Layer3_ARMDisplay->Fill((istcluster[i_cluster_3rd].totAdc)*cos(Track.Angle(Normal)), 1.0);
 	  // Do the residuals of the found track with the hit from Layer 2
 	  for ( int i_cluster_2nd = 0; i_cluster_2nd < numOfCluster; ++i_cluster_2nd) 
 	  {
-	    if ( ( istcluster[i_cluster_2nd].filled ==  true) &&
+	    if ( ( istcluster[i_cluster_2nd].clusterSize > 0) &&
 		( istcluster[i_cluster_2nd].layer  ==  2 )
 	       ) 
 	    {
 	      // Calculate randomized position of hit
-	      float x2 = istcluster[i_cluster_2nd].x;
-	      float y2 = istcluster[i_cluster_2nd].y;
-	      float z2 = istcluster[i_cluster_2nd].z;
+	      float x2 = istcluster[i_cluster_2nd].meanColumn*IST::pitchColumn;
+	      float y2 = istcluster[i_cluster_2nd].meanRow*IST::pitchRow;
+	      float z2 = IST::pitchLayer12;
 
 	      float x2proj = x1 + (x3-x1)*IST::pitchLayer12/(IST::pitchLayer12+IST::pitchLayer23);
 	      float y2proj = y1 + (y3-y1)*IST::pitchLayer12/(IST::pitchLayer12+IST::pitchLayer23);
@@ -674,8 +737,8 @@ void IstTracking::fillTracking_ARMDisplay(IstCluster istcluster[], int numOfClus
 	      //Residual = sqrt( (x2-x2proj)*(x2-x2proj) + (y2-y2proj)*(y2-y2proj) );
 	      float xResidual = (x2-x2proj);
 	      float yResidual = (y2-y2proj);
-	      h_mXResidual->Fill(xResidual, 1.0);
-	      h_mYResidual->Fill(yResidual, 1.0);
+	      h_mXResidual_ARMDisplay->Fill(xResidual, 1.0);
+	      h_mYResidual_ARMDisplay->Fill(yResidual, 1.0);
 	    }
 	  }
 	}
@@ -684,63 +747,165 @@ void IstTracking::fillTracking_ARMDisplay(IstCluster istcluster[], int numOfClus
   }
 }
 
-int IstTracking::Finish()
-{
-  cout << "IstTracking::Finish => " << endl;
-  writePedestal();
-  writeHitDisplay();
-  writeTracking_ARMDisplay();
-
-  return 1;
-}
-
-void IstTracking::writePedestal()
-{
-  cout << "IstTracking::writePedestal => save ped mean & sigma!" << endl;
-
-  g_mPedMean_Layer1->SetName("g_mPedMean_Layer1");
-  g_mPedMean_Layer1->Write();
-  g_mPedSigma_Layer1->SetName("g_mPedSigma_Layer1");
-  g_mPedSigma_Layer1->Write();
-
-  g_mPedMean_Layer2->SetName("g_mPedMean_Layer2");
-  g_mPedMean_Layer2->Write();
-  g_mPedSigma_Layer2->SetName("g_mPedSigma_Layer2");
-  g_mPedSigma_Layer2->Write();
-
-  g_mPedMean_Layer3->SetName("g_mPedMean_Layer3");
-  g_mPedMean_Layer3->Write();
-  g_mPedSigma_Layer3->SetName("g_mPedSigma_Layer3");
-  g_mPedSigma_Layer3->Write();
-}
-
-void IstTracking::writeHitDisplay()
-{
-  cout << "IstTracking::writeHitDisplay => save Hits at each Layer!" << endl;
-  h_mHitDisplay_Layer1->Write();
-  h_mHitDisplay_Layer2->Write();
-  h_mHitDisplay_Layer3->Write();
-
-  h_mMaxTb_Layer1->Write();
-  h_mMaxTb_Layer2->Write();
-  h_mMaxTb_Layer3->Write();
-}
-
 void IstTracking::writeTracking_ARMDisplay()
 {
-  h_mXResidual->Write();
-  h_mYResidual->Write();
+  h_mXResidual_ARMDisplay->Write();
+  h_mYResidual_ARMDisplay->Write();
 
-  h_mAdc_Layer1->Write();
-  h_mAdc_Layer3->Write();
-  h_mAdcAngleCorr_Layer1->Write();
-  h_mAdcAngleCorr_Layer3->Write();
+  h_mAdc_Layer1_ARMDisplay->Write();
+  h_mAdc_Layer3_ARMDisplay->Write();
+  h_mAdcAngleCorr_Layer1_ARMDisplay->Write();
+  h_mAdcAngleCorr_Layer3_ARMDisplay->Write();
 
-  h_mTrackAngle->Write();
+  h_mTrackAngle_ARMDisplay->Write();
+}
+//--------------cluster with ARMDisplay---------------------
+
+//--------------cluster with Simple Algorithm---------------------
+bool IstTracking::clearCluster_Simple()
+{
+  mIstClusterVec_Simple.clear();
+
+  return true;
 }
 
+bool IstTracking::initTracking_Simple()
+{
+  h_mXResidual_Simple = new TH1F("h_mXResidual_Simple","h_mXResidual_Simple",150,-9,9);
+  h_mYResidual_Simple = new TH1F("h_mYResidual_Simple","h_mYResidual_Simple",150,-9,9);
 
-//------------------------------------------
+  h_mAdc_Layer1_Simple = new TH1F("h_mAdc_Layer1_Simple","h_mAdc_Layer1_Simple",100,0,4000);
+  h_mAdc_Layer3_Simple = new TH1F("h_mAdc_Layer3_Simple","h_mAdc_Layer3_Simple",100,0,4000);
+  h_mAdcAngleCorr_Layer1_Simple = new TH1F("h_mAdcAngleCorr_Layer1_Simple","h_mAdcAngleCorr_Layer1_Simple",100,0,4000);
+  h_mAdcAngleCorr_Layer3_Simple = new TH1F("h_mAdcAngleCorr_Layer3_Simple","h_mAdcAngleCorr_Layer3_Simple",100,0,4000);
+
+  h_mTrackAngle_Simple = new TH1F("h_mTrackAngle_Simple","h_mTrackAngle_Simple",100,0,90);
+
+  return true;
+}
+
+bool IstTracking::findCluster_Simple(std::vector<IstHit> isthit_orig)
+{
+  clearCluster_Simple();
+  int numOfHits = isthit_orig.size();
+  std::vector<IstHit> isthit;
+  isthit.clear();
+  isthit.reserve(isthit_orig.size());
+  for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
+  { // set temp ist hit container
+    isthit.push_back(isthit_orig[i_hit]);
+  }
+
+  // find cluster
+  if(isthit.size() > 0)
+  {
+    // set 1st cluster to 1st hit
+    std::vector<IstHit>::iterator hitIt = isthit.begin();
+
+    IstCluster istcluster_temp;
+    istcluster_temp.layer        = (*hitIt).layer;
+    istcluster_temp.sensor       = (*hitIt).sensor;
+    istcluster_temp.meanColumn   = (*hitIt).column;
+    istcluster_temp.meanRow      = (*hitIt).row;
+    istcluster_temp.totAdc       = (*hitIt).maxAdc;
+    istcluster_temp.maxTb        = (*hitIt).maxTb;
+    istcluster_temp.clusterSize  = 1;
+    istcluster_temp.clusterSizeX = 1;
+    istcluster_temp.clusterSizeY = 1;
+    istcluster_temp.clusterType  = 1; // Simple
+
+    mIstClusterVec_Simple.push_back(istcluster_temp);
+
+    std::vector<IstHit> isthit_saved; // save hits for ith cluster
+    isthit_saved.clear();
+    isthit_saved.push_back( (*hitIt) );
+
+    isthit.erase(hitIt); // remove 1st hit from ist hit container
+
+  }
+
+  /*
+  for(int i_hit_1st = 0; i_hit_1st < numOfHits-1; ++i_hit_1st) 
+  { 
+    for(int i_hit_2nd = i_hit_1st+1; i_hit_2nd < numOfHits; ++i_hit_2nd) 
+    {
+      if(isthit[i_hit_1st].layer == isthit[i_hit_2nd].layer && isthit[i_hit_1st].sensor == isthit[i_hit_2nd].sensor) 
+      {
+	if ( 
+	    ( isthit[i_hit_1st].column == isthit[i_hit_2nd].column && (isthit[i_hit_1st].row == isthit[i_hit_2nd].row-1 || isthit[i_hit_1st].row == isthit[i_hit_2nd].row+1) ) ||
+	    ( isthit[i_hit_1st].row == isthit[i_hit_2nd].row && (isthit[i_hit_1st].column == isthit[i_hit_2nd].column-1 || isthit[i_hit_1st].column == isthit[i_hit_2nd].column +1))
+	   ) 
+	{
+	  if(isthit[i_hit_1st].maxAdc > isthit[i_hit_2nd].maxAdc) 
+	  {
+	    isthit[i_hit_1st].maxAdc += isthit[i_hit_2nd].maxAdc;
+	    isthit[i_hit_2nd].maxAdc  = -1.0*isthit[i_hit_2nd].maxAdc;
+	    isthit[i_hit_2nd].filled = false;
+	  }
+	  else 
+	  {
+	    isthit[i_hit_2nd].maxAdc += isthit[i_hit_1st].maxAdc;
+	    isthit[i_hit_1st].maxAdc  = -1.0*isthit[i_hit_1st].maxAdc;
+	    isthit[i_hit_1st].filled = false;
+	  }
+	}
+      }
+    } 
+  }
+  */
+
+  /*
+  // fill cluster
+  int numOfCluster = 0;
+  for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
+  {
+    if(isthit[i_hit].filled == true) 
+    {
+      IstCluster istcluster_temp;
+      istcluster_temp.layer = isthit[i_hit].layer;
+      istcluster_temp.sensor = isthit[i_hit].sensor;
+      // istcluster_temp.x = isthit[i_hit].column*IST::pitchColumn + (IST::pitchColumn*rand()/double(RAND_MAX));
+      // istcluster_temp.y = isthit[i_hit].row*IST::pitchRow + (IST::pitchRow*rand()/double(RAND_MAX));
+      // if( isthit[i_hit].layer == 1) istcluster_temp.z = 0.0;
+      // if( isthit[i_hit].layer == 2) istcluster_temp.z = IST::pitchLayer12;
+      // if( isthit[i_hit].layer == 3) istcluster_temp.z = IST::pitchLayer12+IST::pitchLayer23;
+      istcluster_temp.x = isthit[i_hit].column*IST::pitchColumn;
+      istcluster_temp.y = isthit[i_hit].row*IST::pitchRow;
+      if( isthit[i_hit].layer == 1) istcluster_temp.z = 0.0;
+      if( isthit[i_hit].layer == 2) istcluster_temp.z = IST::pitchLayer12;
+      if( isthit[i_hit].layer == 3) istcluster_temp.z = IST::pitchLayer12+IST::pitchLayer23;
+      istcluster_temp.adc = isthit[i_hit].maxAdc;
+      istcluster_temp.filled = true;
+
+      mIstClusterVec_Simple.push_back(istcluster_temp);
+      numOfCluster++;
+    }
+  }
+
+  if(numOfCluster > 0 && numOfCluster <= IST::maxNHitsPerEvent)
+  {
+    fillTracking_ARMDisplay(mIstClusterVec_ARMDisplay);
+  }
+  */
+
+  return true;
+}
+
+void IstTracking::writeTracking_Simple()
+{
+  h_mXResidual_Simple->Write();
+  h_mYResidual_Simple->Write();
+
+  h_mAdc_Layer1_Simple->Write();
+  h_mAdc_Layer3_Simple->Write();
+  h_mAdcAngleCorr_Layer1_Simple->Write();
+  h_mAdcAngleCorr_Layer3_Simple->Write();
+
+  h_mTrackAngle_Simple->Write();
+}
+//--------------cluster with Simple Algorithm---------------------
+
+//--------------Utility---------------------
 int IstTracking::getLayer(int arm, int port)
 {
   if(arm == 0 && port == 0) return 1; // top IST
@@ -780,3 +945,4 @@ int IstTracking::getRow(int apv, int ch)
 
   return row;
 }
+//--------------Utility---------------------
