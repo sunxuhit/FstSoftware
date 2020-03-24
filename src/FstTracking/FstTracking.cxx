@@ -39,6 +39,7 @@ int FstTracking::Init()
   bool isPed = initPedestal(); // initialize pedestal array;
   bool isSig = initSignal(); // initialize signal array;
   bool isHit = initHit(); // initialize Hit array;
+  bool isTracking_simple = initTracking_Simple();
 
   if(!isInPut) 
   {
@@ -58,6 +59,11 @@ int FstTracking::Init()
   if(!isHit) 
   {
     cout << "Failed to initialize FST & IST Hits!" << endl;
+    return -1;
+  }
+  if(!isTracking_simple) 
+  {
+    cout << "Failed to initialize tracing with simple cluster method!" << endl;
     return -1;
   }
 
@@ -162,7 +168,7 @@ bool FstTracking::clearSignal()
 
 bool FstTracking::clearHit()
 {
-  mHITsVec.clear();
+  mHitsVec.clear();
 
   return true;
 }
@@ -179,7 +185,8 @@ int FstTracking::Make()
   }
 
   long NumOfEvents = (long)mChainInPut->GetEntries();
-  // if(NumOfEvents > 1000) NumOfEvents = 1000;
+  if(NumOfEvents > 1000) NumOfEvents = 1000;
+  NumOfEvents = 100;
   mChainInPut->GetEntry(0);
 
   for(int i_event = 0; i_event < NumOfEvents; ++i_event)
@@ -264,16 +271,16 @@ int FstTracking::Make()
 	      }
 	      if(isHit && numOfHits < FST::maxNHits)
 	      { // set Hit info
-		HIT isthit_temp;
-		isthit_temp.layer = getLayer(i_arm,i_port);
-		isthit_temp.sensor = getSensor(i_arm,i_port,i_apv);
-		isthit_temp.column = getColumn(i_arm,i_port,i_apv,i_ch); // phi for FST, x for IST
-		isthit_temp.row = getRow(i_arm,i_port,i_apv,i_ch); // r_strip for FST, y for IST
-		isthit_temp.maxAdc = maxADC;
-		isthit_temp.maxTb = maxTB;
-		isthit_temp.filled = isHit;
+		HIT hit_temp;
+		hit_temp.layer = getLayer(i_arm,i_port);
+		hit_temp.sensor = getSensor(i_arm,i_port,i_apv);
+		hit_temp.column = getColumn(i_arm,i_port,i_apv,i_ch); // phi for FST, x for IST
+		hit_temp.row = getRow(i_arm,i_port,i_apv,i_ch); // r_strip for FST, y for IST
+		hit_temp.maxAdc = maxADC;
+		hit_temp.maxTb = maxTB;
+		hit_temp.filled = isHit;
 
-		mHITsVec.push_back(isthit_temp);
+		mHitsVec.push_back(hit_temp);
 		numOfHits++;
 	      }
 	    }
@@ -284,10 +291,10 @@ int FstTracking::Make()
 
     if(numOfHits > 0 && numOfHits <= FST::maxNHitsPerEvent) // maximum hits to expect per event is 10
     {
-      fillHitDisplay(mHITsVec); // fill hit display
+      fillHitDisplay(mHitsVec); // fill hit display
 
-      // findCluster_ARMDisplay(mHITsVec); // find cluster with ARMDisplay
-      // findCluster_Simple(mHITsVec); // find cluster with ARMDisplay
+      // findCluster_ARMDisplay(mHitsVec); // find cluster with ARMDisplay
+      findCluster_Simple(mHitsVec); // find cluster with ARMDisplay
     }
   }
 
@@ -302,6 +309,7 @@ int FstTracking::Finish()
   writePedestal();
   writeHitDisplay();
   // writeTracking_ARMDisplay();
+  writeTracking_Simple();
 
   return 1;
 }
@@ -343,7 +351,7 @@ bool FstTracking::initPedestal()
     g_mPedSigma[i_layer]->SetName(gName.c_str());
 
     std::string HistName = Form("h_mPedDisplay_Layer%d",i_layer);
-    if(i_layer == 0) h_mPedDisplay[i_layer] = new TH2F(HistName.c_str(),HistName.c_str(),FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5,FST::numRStrip,-0.5,FST::numRStrip-0.5);
+    if(i_layer == 0) h_mPedDisplay[i_layer] = new TH2F(HistName.c_str(),HistName.c_str(),FST::numRStrip,-0.5,FST::numRStrip-0.5,FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5);
     else h_mPedDisplay[i_layer] = new TH2F(HistName.c_str(),HistName.c_str(),FST::noColumns,-0.5,FST::noColumns-0.5,FST::noRows,-0.5,FST::noRows-0.5);
   }
 
@@ -554,7 +562,7 @@ bool FstTracking::initHitDisplay()
   for(int i_layer = 0; i_layer < 4; ++i_layer)
   {
     std::string HistName = Form("h_mHitDisplay_Layer%d",i_layer);
-    if(i_layer == 0) h_mHitDisplay[i_layer] = new TH2F(HistName.c_str(),HistName.c_str(),FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5,FST::numRStrip,-0.5,FST::numRStrip-0.5);
+    if(i_layer == 0) h_mHitDisplay[i_layer] = new TH2F(HistName.c_str(),HistName.c_str(),FST::numRStrip,-0.5,FST::numRStrip-0.5,FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5);
     else h_mHitDisplay[i_layer] = new TH2F(HistName.c_str(),HistName.c_str(),FST::noColumns,-0.5,FST::noColumns-0.5,FST::noRows,-0.5,FST::noRows-0.5);
     
     HistName = Form("h_mMaxTb_Layer%d",i_layer);
@@ -564,17 +572,17 @@ bool FstTracking::initHitDisplay()
   return true;
 }
 
-void FstTracking::fillHitDisplay(std::vector<HIT> isthitvec)
+void FstTracking::fillHitDisplay(std::vector<HIT> hitVec)
 {
-  if(isthitvec.size() < FST::maxNHits)
+  if(hitVec.size() < FST::maxNHits)
   {
-    for(int i_hit = 0; i_hit < isthitvec.size(); ++i_hit)
+    for(int i_hit = 0; i_hit < hitVec.size(); ++i_hit)
     {
-      if(isthitvec[i_hit].filled == true)
+      if(hitVec[i_hit].filled == true)
       {
-	int layer = isthitvec[i_hit].layer;
-	h_mHitDisplay[layer]->Fill(isthitvec[i_hit].column,isthitvec[i_hit].row);
-	h_mMaxTb[layer]->Fill(isthitvec[i_hit].maxTb);
+	int layer = hitVec[i_hit].layer;
+	h_mHitDisplay[layer]->Fill(hitVec[i_hit].column,hitVec[i_hit].row);
+	h_mMaxTb[layer]->Fill(hitVec[i_hit].maxTb);
       }
     }
   }
@@ -591,199 +599,10 @@ void FstTracking::writeHitDisplay()
 }
 //--------------hit display---------------------
 
-
-#if 0
-//--------------cluster with ARMDisplay---------------------
-bool FstTracking::clearCluster_ARMDisplay()
-{
-  mCLUSTERVec_ARMDisplay.clear();
-
-  return true;
-}
-
-bool FstTracking::initTracking_ARMDisplay()
-{
-  h_mXResidual_ARMDisplay = new TH1F("h_mXResidual_ARMDisplay","h_mXResidual_ARMDisplay",150,-9,9);
-  h_mYResidual_ARMDisplay = new TH1F("h_mYResidual_ARMDisplay","h_mYResidual_ARMDisplay",150,-9,9);
-
-  h_mAdc_Layer1_ARMDisplay = new TH1F("h_mAdc_Layer1_ARMDisplay","h_mAdc_Layer1_ARMDisplay",100,0,4000);
-  h_mAdc_Layer3_ARMDisplay = new TH1F("h_mAdc_Layer3_ARMDisplay","h_mAdc_Layer3_ARMDisplay",100,0,4000);
-  h_mAdcAngleCorr_Layer1_ARMDisplay = new TH1F("h_mAdcAngleCorr_Layer1_ARMDisplay","h_mAdcAngleCorr_Layer1_ARMDisplay",100,0,4000);
-  h_mAdcAngleCorr_Layer3_ARMDisplay = new TH1F("h_mAdcAngleCorr_Layer3_ARMDisplay","h_mAdcAngleCorr_Layer3_ARMDisplay",100,0,4000);
-
-  h_mTrackAngle_ARMDisplay = new TH1F("h_mTrackAngle_ARMDisplay","h_mTrackAngle_ARMDisplay",100,0,90);
-
-  return true;
-}
-
-bool FstTracking::findCluster_ARMDisplay(std::vector<HIT> isthit_orig)
-{
-  clearCluster_ARMDisplay();
-  int numOfHits = isthit_orig.size();
-  std::vector<HIT> isthit;
-  isthit.clear();
-  isthit.reserve(isthit.size());
-  for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
-  { // set temp ist hit container
-    isthit.push_back(isthit_orig[i_hit]);
-  }
-
-  // find cluster
-  for(int i_hit_1st = 0; i_hit_1st < numOfHits-1; ++i_hit_1st) 
-  { 
-    for(int i_hit_2nd = i_hit_1st+1; i_hit_2nd < numOfHits; ++i_hit_2nd) 
-    {
-      if(isthit[i_hit_1st].layer == isthit[i_hit_2nd].layer && isthit[i_hit_1st].sensor == isthit[i_hit_2nd].sensor) 
-      {
-	if ( 
-	    ( isthit[i_hit_1st].column == isthit[i_hit_2nd].column && (isthit[i_hit_1st].row == isthit[i_hit_2nd].row-1 || isthit[i_hit_1st].row == isthit[i_hit_2nd].row+1) ) ||
-	    ( isthit[i_hit_1st].row == isthit[i_hit_2nd].row && (isthit[i_hit_1st].column == isthit[i_hit_2nd].column-1 || isthit[i_hit_1st].column == isthit[i_hit_2nd].column +1))
-	   ) 
-	{
-	  if(isthit[i_hit_1st].maxAdc > isthit[i_hit_2nd].maxAdc) 
-	  {
-	    isthit[i_hit_1st].maxAdc += isthit[i_hit_2nd].maxAdc;
-	    isthit[i_hit_2nd].maxAdc  = -1.0*isthit[i_hit_2nd].maxAdc;
-	    isthit[i_hit_2nd].filled = false;
-	  }
-	  else 
-	  {
-	    isthit[i_hit_2nd].maxAdc += isthit[i_hit_1st].maxAdc;
-	    isthit[i_hit_1st].maxAdc  = -1.0*isthit[i_hit_1st].maxAdc;
-	    isthit[i_hit_1st].filled = false;
-	  }
-	}
-      }
-    } 
-  }
-
-  // fill cluster
-  int numOfCluster = 0;
-  for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
-  {
-    if(isthit[i_hit].filled == true) 
-    {
-      CLUSTER istcluster_temp;
-      istcluster_temp.layer = isthit[i_hit].layer;
-      istcluster_temp.sensor = isthit[i_hit].sensor;
-      istcluster_temp.meanColumn = isthit[i_hit].column;
-      istcluster_temp.meanRow = isthit[i_hit].row;
-      istcluster_temp.totAdc = isthit[i_hit].maxAdc;
-      istcluster_temp.maxTb = isthit[i_hit].maxTb;
-      istcluster_temp.clusterSize = 1; // not real cluster size
-      istcluster_temp.clusterSizeR = 1; // not real cluster size
-      istcluster_temp.clusterSizePhi = 1; // not real cluster size
-      istcluster_temp.clusterType = 0; // ARMDisplay
-
-      mCLUSTERVec_ARMDisplay.push_back(istcluster_temp);
-      numOfCluster++;
-    }
-  }
-
-  if(numOfCluster > 0 && numOfCluster <= FST::maxNHitsPerEvent)
-  {
-    fillTracking_ARMDisplay(mCLUSTERVec_ARMDisplay);
-  }
-
-  return true;
-}
-
-void FstTracking::fillTracking_ARMDisplay(std::vector<CLUSTER> istcluster_orig)
-{
-  int numOfCluster = istcluster_orig.size();
-  std::vector<CLUSTER> istcluster;
-  istcluster.clear();
-  istcluster.reserve(istcluster_orig.size());
-  for(int i_cluster = 0; i_cluster < numOfCluster; ++i_cluster)
-  { // set temp ist cluster container
-    istcluster.push_back(istcluster_orig[i_cluster]);
-  }
-
-  for ( int i_cluster_1st = 0; i_cluster_1st < numOfCluster-1; ++i_cluster_1st) 
-  {
-    for ( int i_cluster_3rd = i_cluster_1st+1; i_cluster_3rd < numOfCluster; ++i_cluster_3rd) 
-    {
-      TVector3 Normal, Track;
-      // Find a hit on layer 1 and a hit on layer 3, we only have a sensor 0 in both layers
-      if ( 
-	  ( ( istcluster[i_cluster_1st].clusterSize > 0 ) && ( istcluster[i_cluster_3rd].clusterSize > 0 ) ) &&
-	  ( ( ( istcluster[i_cluster_1st].layer  ==  1 ) && ( istcluster[i_cluster_3rd].layer  ==  3 ) ) || ( ( istcluster[i_cluster_1st].layer  ==  3 ) && ( istcluster[i_cluster_3rd].layer  ==  1 ) )  )
-	 ) 
-      {
-	float x1 = istcluster[i_cluster_1st].meanColumn*FST::pitchColumn;
-	float y1 = istcluster[i_cluster_1st].meanRow*FST::pitchRow;
-	float z1;
-	if(istcluster[i_cluster_1st].layer == 1) z1 = 0.0;
-	if(istcluster[i_cluster_1st].layer == 3) z1 = FST::pitchLayer12+FST::pitchLayer23;
-
-	float x3 = istcluster[i_cluster_3rd].meanColumn*FST::pitchColumn;
-	float y3 = istcluster[i_cluster_3rd].meanRow*FST::pitchRow;
-	float z3;
-	if(istcluster[i_cluster_3rd].layer == 3) z3 = FST::pitchLayer12+FST::pitchLayer23;
-	if(istcluster[i_cluster_3rd].layer == 1) z3 = 0.0;
-
-
-	Normal.SetXYZ(0, 0, z3-z1);
-	Track.SetXYZ(x3-x1, y3-y1, z3-z1);
-	h_mTrackAngle_ARMDisplay->Fill(FST::rad2deg*Track.Angle(Normal), 1.0);
-	// Cut on maximum track angle to weed out invalid 2-hit combinations a bit
-	if ( FST::rad2deg*Track.Angle(Normal) < FST::maxAngle ) 
-	{
-	  // not angle corrected hits on a track
-	  h_mAdc_Layer1_ARMDisplay->Fill(istcluster[i_cluster_1st].totAdc, 1.0);
-	  h_mAdc_Layer3_ARMDisplay->Fill(istcluster[i_cluster_3rd].totAdc, 1.0);
-	  // angle corrected hits on a track
-	  h_mAdcAngleCorr_Layer1_ARMDisplay->Fill((istcluster[i_cluster_1st].totAdc)*cos(Track.Angle(Normal)), 1.0);
-	  h_mAdcAngleCorr_Layer3_ARMDisplay->Fill((istcluster[i_cluster_3rd].totAdc)*cos(Track.Angle(Normal)), 1.0);
-	  // Do the residuals of the found track with the hit from Layer 2
-	  for ( int i_cluster_2nd = 0; i_cluster_2nd < numOfCluster; ++i_cluster_2nd) 
-	  {
-	    if ( ( istcluster[i_cluster_2nd].clusterSize > 0) &&
-		( istcluster[i_cluster_2nd].layer  ==  2 )
-	       ) 
-	    {
-	      // Calculate randomized position of hit
-	      float x2 = istcluster[i_cluster_2nd].meanColumn*FST::pitchColumn;
-	      float y2 = istcluster[i_cluster_2nd].meanRow*FST::pitchRow;
-	      float z2 = FST::pitchLayer12;
-
-	      float x2proj = x1 + (x3-x1)*FST::pitchLayer12/(FST::pitchLayer12+FST::pitchLayer23);
-	      float y2proj = y1 + (y3-y1)*FST::pitchLayer12/(FST::pitchLayer12+FST::pitchLayer23);
-	      float z2proj = FST::pitchLayer12 ;
-	      // Calculate residual
-	      //Residual = sqrt( (x2-x2proj)*(x2-x2proj) + (y2-y2proj)*(y2-y2proj) );
-	      float xResidual = (x2-x2proj);
-	      float yResidual = (y2-y2proj);
-	      h_mXResidual_ARMDisplay->Fill(xResidual, 1.0);
-	      h_mYResidual_ARMDisplay->Fill(yResidual, 1.0);
-	    }
-	  }
-	}
-      }
-    }
-  }
-}
-
-void FstTracking::writeTracking_ARMDisplay()
-{
-  h_mXResidual_ARMDisplay->Write();
-  h_mYResidual_ARMDisplay->Write();
-
-  h_mAdc_Layer1_ARMDisplay->Write();
-  h_mAdc_Layer3_ARMDisplay->Write();
-  h_mAdcAngleCorr_Layer1_ARMDisplay->Write();
-  h_mAdcAngleCorr_Layer3_ARMDisplay->Write();
-
-  h_mTrackAngle_ARMDisplay->Write();
-}
-//--------------cluster with ARMDisplay---------------------
-#endif
-
-#if 0
 //--------------cluster with Simple Algorithm---------------------
 bool FstTracking::clearCluster_Simple()
 {
-  mCLUSTERVec_Simple.clear();
+  mClustersVec_Simple.clear();
 
   return true;
 }
@@ -793,131 +612,153 @@ bool FstTracking::initTracking_Simple()
   h_mXResidual_Simple = new TH1F("h_mXResidual_Simple","h_mXResidual_Simple",150,-9,9);
   h_mYResidual_Simple = new TH1F("h_mYResidual_Simple","h_mYResidual_Simple",150,-9,9);
 
-  h_mAdc_Layer1_Simple = new TH1F("h_mAdc_Layer1_Simple","h_mAdc_Layer1_Simple",100,0,4000);
-  h_mAdc_Layer3_Simple = new TH1F("h_mAdc_Layer3_Simple","h_mAdc_Layer3_Simple",100,0,4000);
-  h_mAdcAngleCorr_Layer1_Simple = new TH1F("h_mAdcAngleCorr_Layer1_Simple","h_mAdcAngleCorr_Layer1_Simple",100,0,4000);
-  h_mAdcAngleCorr_Layer3_Simple = new TH1F("h_mAdcAngleCorr_Layer3_Simple","h_mAdcAngleCorr_Layer3_Simple",100,0,4000);
+  for(int i_layer = 0; i_layer < 4; ++i_layer)
+  {
+    std::string HistName = Form("h_mAdc_Simple_Layer%d",i_layer);
+    h_mAdc_Simple[i_layer] = new TH1F(HistName.c_str(),HistName.c_str(),100,0,4000);
+
+    HistName = Form("h_mAdcAngleCorr_Simple_Layer%d",i_layer);
+    h_mAdcAngleCorr_Simple[i_layer] = new TH1F(HistName.c_str(),HistName.c_str(),100,0,4000);
+  }
 
   h_mTrackAngle_Simple = new TH1F("h_mTrackAngle_Simple","h_mTrackAngle_Simple",100,0,90);
 
   return true;
 }
 
-bool FstTracking::findCluster_Simple(std::vector<HIT> isthit_orig)
+bool FstTracking::findCluster_Simple(std::vector<HIT> hitVec_orig)
 {
+  float meanRow = 0., meanColumn = 0.;
+  float totAdc = 0.;
+  int clusterSize = 0, clusterSizeR = 0, clusterSizePhi = 0;
+
   clearCluster_Simple();
-  int numOfHits = isthit_orig.size();
-  std::vector<HIT> isthit;
-  isthit.clear();
-  isthit.reserve(isthit_orig.size());
+  int numOfHits = hitVec_orig.size();
+  std::vector<HIT> hitVec;
+  hitVec.clear();
+  hitVec.reserve(hitVec_orig.size());
   for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
   { // set temp ist hit container
-    isthit.push_back(isthit_orig[i_hit]);
+    hitVec.push_back(hitVec_orig[i_hit]);
   }
 
   // find cluster
-  if(isthit.size() > 0)
+  if(hitVec.size() > 0)
   {
     // set 1st cluster to 1st hit
-    std::vector<HIT>::iterator hitIt = isthit.begin();
+    std::vector<HIT>::iterator hitVecIt = hitVec.begin();
 
     CLUSTER istcluster_temp;
-    istcluster_temp.layer        = (*hitIt).layer;
-    istcluster_temp.sensor       = (*hitIt).sensor;
-    istcluster_temp.meanColumn   = (*hitIt).column;
-    istcluster_temp.meanRow      = (*hitIt).row;
-    istcluster_temp.totAdc       = (*hitIt).maxAdc;
-    istcluster_temp.maxTb        = (*hitIt).maxTb;
+    istcluster_temp.layer        = (*hitVecIt).layer;
+    istcluster_temp.sensor       = (*hitVecIt).sensor;
+    istcluster_temp.meanColumn   = (*hitVecIt).column;
+    istcluster_temp.meanRow      = (*hitVecIt).row;
+    istcluster_temp.totAdc       = (*hitVecIt).maxAdc;
+    istcluster_temp.maxTb        = (*hitVecIt).maxTb;
     istcluster_temp.clusterSize  = 1;
     istcluster_temp.clusterSizeR = 1;
     istcluster_temp.clusterSizePhi = 1;
     istcluster_temp.clusterType  = 1; // Simple
 
-    mCLUSTERVec_Simple.push_back(istcluster_temp);
+    mClustersVec_Simple.push_back(istcluster_temp);
 
-    std::vector<HIT> isthit_saved; // save hits for ith cluster
-    isthit_saved.clear();
-    isthit_saved.push_back( (*hitIt) );
+    std::vector<HIT> hitVec_clustered; // save hits for ith cluster
+    hitVec_clustered.clear();
+    hitVec_clustered.push_back( (*hitVecIt) );
 
-    isthit.erase(hitIt); // remove 1st hit from ist hit container
+    hitVec.erase(hitVecIt); // remove 1st hit from ist hit container
 
-    /*
-    if( isthit.size() !=0)
+    if( hitVec.size() !=0)
     {
       float weight, tempSumAdc;
-      std::vector<CLUSTER>::iterator clusterIt = mCLUSTERVec_Simple.begin(); // get the begin of cluster container
+      std::vector<CLUSTER>::iterator clusterIt = mClustersVec_Simple.begin(); // get the begin of cluster container
 
-      //loop the existed clusters vector constainer
-      while( clusterIt != mCLUSTERVec_Simple.end() && !isthit.empty() )
-      {
-      }
-    }
-    */
-  }
+      while( clusterIt != mClustersVec_Simple.end() && !hitVec.empty() )
+      { //loop the existed clusters vector constainer
+	for(std::vector<HIT>::iterator cHitVecIt = hitVec_clustered.begin(); cHitVecIt != hitVec_clustered.end(); cHitVecIt++) 
+	{ // loop over the hit belong to ith cluster
+	  HIT cHit_temp = *cHitVecIt; // get hit from hitVec_clustered
+	  hitVecIt = hitVec.begin(); // get hit from the rest of hitVec
 
-  /*
-  for(int i_hit_1st = 0; i_hit_1st < numOfHits-1; ++i_hit_1st) 
-  { 
-    for(int i_hit_2nd = i_hit_1st+1; i_hit_2nd < numOfHits; ++i_hit_2nd) 
-    {
-      if(isthit[i_hit_1st].layer == isthit[i_hit_2nd].layer && isthit[i_hit_1st].sensor == isthit[i_hit_2nd].sensor) 
-      {
-	if ( 
-	    ( isthit[i_hit_1st].column == isthit[i_hit_2nd].column && (isthit[i_hit_1st].row == isthit[i_hit_2nd].row-1 || isthit[i_hit_1st].row == isthit[i_hit_2nd].row+1) ) ||
-	    ( isthit[i_hit_1st].row == isthit[i_hit_2nd].row && (isthit[i_hit_1st].column == isthit[i_hit_2nd].column-1 || isthit[i_hit_1st].column == isthit[i_hit_2nd].column +1))
-	   ) 
-	{
-	  if(isthit[i_hit_1st].maxAdc > isthit[i_hit_2nd].maxAdc) 
-	  {
-	    isthit[i_hit_1st].maxAdc += isthit[i_hit_2nd].maxAdc;
-	    isthit[i_hit_2nd].maxAdc  = -1.0*isthit[i_hit_2nd].maxAdc;
-	    isthit[i_hit_2nd].filled = false;
-	  }
-	  else 
-	  {
-	    isthit[i_hit_2nd].maxAdc += isthit[i_hit_1st].maxAdc;
-	    isthit[i_hit_1st].maxAdc  = -1.0*isthit[i_hit_1st].maxAdc;
-	    isthit[i_hit_1st].filled = false;
+	  while( hitVecIt != hitVec.end() ) 
+	  { // loop over the rest of hits in hitVec
+	    if( ( ((*hitVecIt).layer == cHit_temp.layer) && ((*hitVecIt).sensor == cHit_temp.sensor) && ((*hitVecIt).row == cHit_temp.row) && ( ((*hitVecIt).column == cHit_temp.column + 1) || ((*hitVecIt).column == cHit_temp.column - 1) )) ||
+		( ((*hitVecIt).layer == cHit_temp.layer) && ((*hitVecIt).sensor == cHit_temp.sensor) && ((*hitVecIt).column == cHit_temp.column) && ( ((*hitVecIt).row == cHit_temp.row + 1) || ((*hitVecIt).row == cHit_temp.row - 1) ))   ) 
+	    {
+	      clusterSize = (*clusterIt).clusterSize + 1;
+	      if( (*hitVecIt).row == cHit_temp.row ) clusterSizePhi = (*clusterIt).clusterSizePhi + 1; //same row
+	      if( (*hitVecIt).column == cHit_temp.column ) clusterSizeR = (*clusterIt).clusterSizeR + 1; //same column
+
+	      float currentAdc = (*hitVecIt).maxAdc;
+	      tempSumAdc = (*clusterIt).totAdc + currentAdc;
+	      weight = currentAdc/tempSumAdc;
+
+	      int layer_temp        = (*clusterIt).layer;
+	      int sensor_temp        = (*clusterIt).sensor;
+	      double meanColumn_temp = (1.0 - weight) * (*clusterIt).meanColumn + weight * (*hitVecIt).column;
+	      double meanRow_temp    = (1.0 - weight) * (*clusterIt).meanRow    + weight * (*hitVecIt).row;
+	      double totAdc_temp     = tempSumAdc;
+
+	      (*clusterIt).layer = layer_temp;
+	      (*clusterIt).sensor = sensor_temp;
+	      (*clusterIt).meanColumn = meanColumn_temp;
+	      (*clusterIt).meanRow = meanRow_temp;
+	      (*clusterIt).totAdc = totAdc_temp;
+	      // (*clusterIt).maxTb = maxTb_temp;
+	      (*clusterIt).clusterSize = clusterSize;
+	      (*clusterIt).clusterSizeR = clusterSizeR;
+	      (*clusterIt).clusterSizePhi = clusterSizePhi;
+	      // (*clusterIt).clusterType = 1;
+
+	      //include the hit to the cluster's component vector
+	      int itPosition = std::distance(hitVec_clustered.begin(), cHitVecIt);
+	      hitVec_clustered.push_back( (*hitVecIt) );
+	      cHitVecIt = hitVec_clustered.begin() + itPosition;
+
+	      //remove the clustered ith raw hit from the raw hits list
+	      int distance = std::distance(hitVec.begin(), hitVecIt);
+	      hitVec.erase(hitVecIt);
+	      hitVecIt = hitVec.begin() + distance;
+	    }
+	    else
+	    {
+	      hitVecIt++;
+	    }
 	  }
 	}
+
+	//if the hitVecIt_th hit does not belong to the existed ith clusters then create a new cluster.
+	if(hitVec.size() < 1) continue;
+
+	hitVecIt = hitVec.begin();
+
+	CLUSTER istcluster_next;
+	istcluster_next.layer        = (*hitVecIt).layer;
+	istcluster_next.sensor       = (*hitVecIt).sensor;
+	istcluster_next.meanColumn   = (*hitVecIt).column;
+	istcluster_next.meanRow      = (*hitVecIt).row;
+	istcluster_next.totAdc       = (*hitVecIt).maxAdc;
+	istcluster_next.maxTb        = (*hitVecIt).maxTb;
+	istcluster_next.clusterSize  = 1;
+	istcluster_next.clusterSizeR = 1;
+	istcluster_next.clusterSizePhi = 1;
+	istcluster_next.clusterType  = 1; // Simple
+
+	mClustersVec_Simple.push_back(istcluster_next);
+
+	int distanceCluster = std::distance(mClustersVec_Simple.begin(), clusterIt);
+
+	clusterIt = mClustersVec_Simple.begin() + distanceCluster;
+	clusterIt++;
+
+	hitVec_clustered.clear(); // clear hitVec for cluster
+	hitVec_clustered.push_back( (*hitVecIt) ); // rest hitVec_clustered to new 1st hit in hitVec
+	hitVec.erase(hitVecIt); //remove the new clustered 1st hit from the hits list
       }
-    } 
-  }
-  */
-
-  /*
-  // fill cluster
-  int numOfCluster = 0;
-  for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
-  {
-    if(isthit[i_hit].filled == true) 
-    {
-      CLUSTER istcluster_temp;
-      istcluster_temp.layer = isthit[i_hit].layer;
-      istcluster_temp.sensor = isthit[i_hit].sensor;
-      // istcluster_temp.x = isthit[i_hit].column*FST::pitchColumn + (FST::pitchColumn*rand()/double(RAND_MAX));
-      // istcluster_temp.y = isthit[i_hit].row*FST::pitchRow + (FST::pitchRow*rand()/double(RAND_MAX));
-      // if( isthit[i_hit].layer == 1) istcluster_temp.z = 0.0;
-      // if( isthit[i_hit].layer == 2) istcluster_temp.z = FST::pitchLayer12;
-      // if( isthit[i_hit].layer == 3) istcluster_temp.z = FST::pitchLayer12+FST::pitchLayer23;
-      istcluster_temp.x = isthit[i_hit].column*FST::pitchColumn;
-      istcluster_temp.y = isthit[i_hit].row*FST::pitchRow;
-      if( isthit[i_hit].layer == 1) istcluster_temp.z = 0.0;
-      if( isthit[i_hit].layer == 2) istcluster_temp.z = FST::pitchLayer12;
-      if( isthit[i_hit].layer == 3) istcluster_temp.z = FST::pitchLayer12+FST::pitchLayer23;
-      istcluster_temp.adc = isthit[i_hit].maxAdc;
-      istcluster_temp.filled = true;
-
-      mCLUSTERVec_Simple.push_back(istcluster_temp);
-      numOfCluster++;
     }
   }
 
-  if(numOfCluster > 0 && numOfCluster <= FST::maxNHitsPerEvent)
-  {
-    fillTracking_ARMDisplay(mCLUSTERVec_ARMDisplay);
-  }
-  */
+  // cout << "hitVec_orig.size = " << hitVec_orig.size() << ", mClustersVec_Simple.size = " << mClustersVec_Simple.size() << endl;
 
   return true;
 }
@@ -927,15 +768,15 @@ void FstTracking::writeTracking_Simple()
   h_mXResidual_Simple->Write();
   h_mYResidual_Simple->Write();
 
-  h_mAdc_Layer1_Simple->Write();
-  h_mAdc_Layer3_Simple->Write();
-  h_mAdcAngleCorr_Layer1_Simple->Write();
-  h_mAdcAngleCorr_Layer3_Simple->Write();
+  for(int i_layer = 0; i_layer < 4; ++i_layer)
+  {
+    h_mAdc_Simple[i_layer]->Write();
+    h_mAdcAngleCorr_Simple[i_layer]->Write();
+  }
 
   h_mTrackAngle_Simple->Write();
 }
 //--------------cluster with Simple Algorithm---------------------
-#endif
 
 //--------------Utility---------------------
 int FstTracking::getLayer(int arm, int port)
@@ -969,11 +810,16 @@ int FstTracking::getColumn(int arm, int port, int apv, int ch)
 {
   int col = -1;
   int layer = this->getLayer(arm,port);
+  int sensor = this->getSensor(arm,port,apv);
 
   if(layer == 0)
   { // layer = 0 for FST
-    col = this->getPhiSeg(apv,ch);
+    if(this->getRStrip(apv,ch) >= 0)
+    {
+      col = 4*sensor + this->getRStrip(apv,ch);
+    }
   }
+
   else
   { // layer = 1-3 for IST
     if(ch >= 0 && ch <= 63) col = apv*2;
@@ -987,14 +833,9 @@ int FstTracking::getRow(int arm, int port, int apv, int ch)
 {
   int row = -1;
   int layer = this->getLayer(arm,port);
-  int sensor = this->getSensor(arm,port,apv);
-
   if(layer == 0)
   { // layer = 0 for FST
-    if(this->getRStrip(apv,ch) >= 0)
-    {
-      row = 4*sensor + this->getRStrip(apv,ch);
-    }
+    row = this->getPhiSeg(apv,ch);
   }
   else
   { // layer = 1-3 for IST

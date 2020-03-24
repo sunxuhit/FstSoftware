@@ -32,8 +32,8 @@ typedef struct
   double totAdc;
   int maxTb;
   int clusterSize;
-  int clusterSizeR; // R in FST & X in IST
-  int clusterSizePhi; // Phi in FST & Y in IST
+  int clusterSizeR; // R in FST & X in IST && col
+  int clusterSizePhi; // Phi in FST & Y in IST && row
   int clusterType; // 0 for ARMDisplay | 1 for Simple | 2 for Scan
 } CLUSTER;
 
@@ -83,6 +83,7 @@ class FstTracking : public TObject
     bool findCluster_ARMDisplay(std::vector<HIT> isthit_orig);
     void fillTracking_ARMDisplay(std::vector<CLUSTER> istcluster_orig);
     void writeTracking_ARMDisplay();
+    */
 
     // cluster with Simple Algorithm
     bool clearCluster_Simple();
@@ -90,7 +91,6 @@ class FstTracking : public TObject
     bool findCluster_Simple(std::vector<HIT> isthit_orig);
     // void fillTracking_Simple(std::vector<CLUSTER> istcluster_orig);
     void writeTracking_Simple();
-    */
 
   private:
     std::string mHome, mList;
@@ -113,7 +113,7 @@ class FstTracking : public TObject
     double mSigPedCorr[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins];
 
     // Hit for FST & IST
-    std::vector<HIT> mHITsVec; // store hit information for FST & IST after ped subtraction
+    std::vector<HIT> mHitsVec; // store hit information for FST & IST after ped subtraction
 
     // Hit Display
     TH2F *h_mHitDisplay[4]; // 0 for FST, 1-3 for IST
@@ -121,7 +121,7 @@ class FstTracking : public TObject
 
 
     /*
-    std::vector<CLUSTER> mCLUSTERVec_ARMDisplay; // cluster with ARMDisplay
+    std::vector<CLUSTER> mClustersVec_ARMDisplay; // cluster with ARMDisplay
     TH1F *h_mXResidual_ARMDisplay;
     TH1F *h_mYResidual_ARMDisplay;
     TH1F *h_mAdc_Layer1_ARMDisplay;
@@ -129,16 +129,15 @@ class FstTracking : public TObject
     TH1F *h_mAdcAngleCorr_Layer1_ARMDisplay;
     TH1F *h_mAdcAngleCorr_Layer3_ARMDisplay;
     TH1F *h_mTrackAngle_ARMDisplay;
+    */
 
-    std::vector<CLUSTER> mCLUSTERVec_Simple; // cluster with Simple Algorithm
+    std::vector<CLUSTER> mClustersVec_Simple; // cluster with Simple Algorithm
     TH1F *h_mXResidual_Simple;
     TH1F *h_mYResidual_Simple;
-    TH1F *h_mAdc_Layer1_Simple;
-    TH1F *h_mAdc_Layer3_Simple;
-    TH1F *h_mAdcAngleCorr_Layer1_Simple;
-    TH1F *h_mAdcAngleCorr_Layer3_Simple;
+
+    TH1F *h_mAdc_Simple[4];
+    TH1F *h_mAdcAngleCorr_Simple[4];
     TH1F *h_mTrackAngle_Simple;
-    */
 
     // Utility for tracking
     int getLayer(int arm, int port); // return layer based on arm & port
