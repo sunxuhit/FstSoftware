@@ -10,4 +10,5 @@ src/*.swp
 
 # ignore tmp root file
 macros/*.root
+macros/*/*.root
 

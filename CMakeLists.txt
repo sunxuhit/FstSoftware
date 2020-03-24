@@ -32,6 +32,10 @@ include(${ROOT_USE_FILE})
 include_directories("${PROJECT_SOURCE_DIR}/src/IstTracking")
 add_subdirectory(src/IstTracking)
 
+# include FstTracking
+include_directories("${PROJECT_SOURCE_DIR}/src/FstTracking")
+add_subdirectory(src/FstTracking)
+
 # add the executable
 # add_executable(FstTracking ${PROJECT_SOURCE_DIR}/src/IstTracking/IstTracking.cxx)
 # target_link_libraries(FstTracking)
