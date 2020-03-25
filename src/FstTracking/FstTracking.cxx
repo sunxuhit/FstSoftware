@@ -39,7 +39,8 @@ int FstTracking::Init()
   bool isPed = initPedestal(); // initialize pedestal array;
   bool isSig = initSignal(); // initialize signal array;
   bool isHit = initHit(); // initialize Hit array;
-  bool isTracking_simple = initTracking_Simple();
+  bool isTracking_Hits = initTracking_Hits();
+  bool isTracking_Clusters = initTracking_Clusters();
 
   if(!isInPut) 
   {
@@ -61,9 +62,14 @@ int FstTracking::Init()
     cout << "Failed to initialize FST & IST Hits!" << endl;
     return -1;
   }
-  if(!isTracking_simple) 
+  if(!isTracking_Hits) 
   {
-    cout << "Failed to initialize tracing with simple cluster method!" << endl;
+    cout << "Failed to initialize tracing with Hits method!" << endl;
+    return -1;
+  }
+  if(!isTracking_Clusters) 
+  {
+    cout << "Failed to initialize tracing with Clusters method!" << endl;
     return -1;
   }
 
@@ -185,8 +191,8 @@ int FstTracking::Make()
   }
 
   long NumOfEvents = (long)mChainInPut->GetEntries();
-  if(NumOfEvents > 1000) NumOfEvents = 1000;
-  NumOfEvents = 100;
+  // if(NumOfEvents > 1000) NumOfEvents = 1000;
+  // NumOfEvents = 100;
   mChainInPut->GetEntry(0);
 
   for(int i_event = 0; i_event < NumOfEvents; ++i_event)
@@ -295,6 +301,7 @@ int FstTracking::Make()
 
       // findCluster_ARMDisplay(mHitsVec); // find cluster with ARMDisplay
       findCluster_Simple(mHitsVec); // find cluster with ARMDisplay
+      doTracking_Hits(mHitsVec); // do tracking based on Hits
     }
   }
 
@@ -309,7 +316,8 @@ int FstTracking::Finish()
   writePedestal();
   writeHitDisplay();
   // writeTracking_ARMDisplay();
-  writeTracking_Simple();
+  writeTracking_Hits();
+  // writeTracking_Clusters();
 
   return 1;
 }
@@ -607,25 +615,6 @@ bool FstTracking::clearCluster_Simple()
   return true;
 }
 
-bool FstTracking::initTracking_Simple()
-{
-  h_mXResidual_Simple = new TH1F("h_mXResidual_Simple","h_mXResidual_Simple",150,-9,9);
-  h_mYResidual_Simple = new TH1F("h_mYResidual_Simple","h_mYResidual_Simple",150,-9,9);
-
-  for(int i_layer = 0; i_layer < 4; ++i_layer)
-  {
-    std::string HistName = Form("h_mAdc_Simple_Layer%d",i_layer);
-    h_mAdc_Simple[i_layer] = new TH1F(HistName.c_str(),HistName.c_str(),100,0,4000);
-
-    HistName = Form("h_mAdcAngleCorr_Simple_Layer%d",i_layer);
-    h_mAdcAngleCorr_Simple[i_layer] = new TH1F(HistName.c_str(),HistName.c_str(),100,0,4000);
-  }
-
-  h_mTrackAngle_Simple = new TH1F("h_mTrackAngle_Simple","h_mTrackAngle_Simple",100,0,90);
-
-  return true;
-}
-
 bool FstTracking::findCluster_Simple(std::vector<HIT> hitVec_orig)
 {
   float meanRow = 0., meanColumn = 0.;
@@ -633,6 +622,7 @@ bool FstTracking::findCluster_Simple(std::vector<HIT> hitVec_orig)
   int clusterSize = 0, clusterSizeR = 0, clusterSizePhi = 0;
 
   clearCluster_Simple();
+
   int numOfHits = hitVec_orig.size();
   std::vector<HIT> hitVec;
   hitVec.clear();
@@ -744,11 +734,17 @@ bool FstTracking::findCluster_Simple(std::vector<HIT> hitVec_orig)
 	istcluster_next.clusterSizePhi = 1;
 	istcluster_next.clusterType  = 1; // Simple
 
-	mClustersVec_Simple.push_back(istcluster_next);
-
 	int distanceCluster = std::distance(mClustersVec_Simple.begin(), clusterIt);
-
+	mClustersVec_Simple.push_back(istcluster_next);
 	clusterIt = mClustersVec_Simple.begin() + distanceCluster;
+
+	// cout << "print clusters and hits information" << endl;
+	// cout << "mClustersVec_Simple.size = " << mClustersVec_Simple.size() << endl;
+	// cout <<  "distanceCluster = " << distanceCluster << endl;
+	// printClusters(*clusterIt);
+	// printHits(hitVec_clustered);
+	// cout << endl;
+
 	clusterIt++;
 
 	hitVec_clustered.clear(); // clear hitVec for cluster
@@ -763,7 +759,126 @@ bool FstTracking::findCluster_Simple(std::vector<HIT> hitVec_orig)
   return true;
 }
 
-void FstTracking::writeTracking_Simple()
+//--------------cluster with Simple Algorithm---------------------
+
+//--------------Tracking with Hits---------------------
+bool FstTracking::initTracking_Hits()
+{
+  const string CorrNameXR[4] = {"ist1x_ist3x","ist1x_fstR","ist3x_fstR","ist1x_ist3x_fstR"};
+  const string CorrNameYPhi[4] = {"ist1y_ist3y","ist1y_fstPhi","ist3y_fstPhi","ist1y_ist3y_fstPhi"};
+  for(int i_corr = 0; i_corr < 4; ++i_corr)
+  { // for QA
+    string HistName = Form("h_mHitsCorrXR_%s",CorrNameXR[i_corr].c_str());
+    if(i_corr == 0) h_mHitsCorrXR[i_corr] = new TH2F(HistName.c_str(),HistName.c_str(),FST::noColumns,-0.5,FST::noColumns-0.5,FST::noColumns,-0.5,FST::noColumns-0.5);
+    else h_mHitsCorrXR[i_corr] = new TH2F(HistName.c_str(),HistName.c_str(),FST::noColumns,-0.5,FST::noColumns-0.5,FST::numRStrip,-0.5,FST::numRStrip-0.5);
+
+    HistName = Form("h_mHitsCorrYPhi_%s",CorrNameYPhi[i_corr].c_str());
+    if(i_corr == 0) h_mHitsCorrYPhi[i_corr] = new TH2F(HistName.c_str(),HistName.c_str(),FST::noRows,-0.5,FST::noRows-0.5,FST::noRows,-0.5,FST::noRows-0.5);
+    else h_mHitsCorrYPhi[i_corr] = new TH2F(HistName.c_str(),HistName.c_str(),FST::noRows,-0.5,FST::noRows-0.5,FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5);
+  }
+
+  h_mXResidual_Hits = new TH1F("h_mXResidual_Hits","h_mXResidual_Simple",400,-100.0,300.0);
+  h_mYResidual_Hits = new TH1F("h_mYResidual_Hits","h_mYResidual_Simple",100,-50.0,50.0);
+
+  return true;
+}
+
+bool FstTracking::doTracking_Hits(std::vector<HIT> hitVec_orig)
+{
+  int numOfHits[4]; // 0 for fst | 1-3 for ist
+  std::vector<HIT> hitVec[4];
+  for(int i_layer = 0; i_layer < 4; ++i_layer)
+  {
+    numOfHits[i_layer] = 0;
+    hitVec[i_layer].clear();
+  }
+
+  for(int i_hit = 0; i_hit < hitVec_orig.size(); ++i_hit)
+  { // set temp ist hit container for each layer
+    int layer = hitVec_orig[i_hit].layer;
+    numOfHits[layer]++;
+    hitVec[layer].push_back(hitVec_orig[i_hit]);
+  }
+
+  if(numOfHits[0] > 0 && numOfHits[1] > 0 && numOfHits[3] > 0)
+  { // only do tracking when at least 1 hit is found in fst & ist1 & ist3
+    // cout << "numOfHits[0] = " << numOfHits[0] << ", hitVec.size = " << hitVec[0].size() << endl;
+    // cout << "numOfHits[1] = " << numOfHits[1] << ", hitVec.size = " << hitVec[1].size() << endl;
+    // cout << "numOfHits[2] = " << numOfHits[2] << ", hitVec.size = " << hitVec[2].size() << endl;
+    // cout << "numOfHits[3] = " << numOfHits[3] << ", hitVec.size = " << hitVec[3].size() << endl;
+    // cout << "hitVec_orig.size = " << hitVec_orig.size() << ", sum of each layer = " << hitVec[0].size()+hitVec[1].size()+hitVec[2].size()+hitVec[3].size() << endl;
+    // cout << endl;
+
+    // QA Histograms
+    h_mHitsCorrXR[0]->Fill(hitVec[1][0].column,hitVec[3][0].column);
+    h_mHitsCorrXR[1]->Fill(hitVec[1][0].column,hitVec[0][0].column);
+    h_mHitsCorrXR[2]->Fill(hitVec[3][0].column,hitVec[0][0].column);
+    h_mHitsCorrXR[3]->Fill(5.25/2*hitVec[1][0].column-3.25/2*hitVec[3][0].column,hitVec[0][0].column);
+
+    h_mHitsCorrYPhi[0]->Fill(hitVec[1][0].row,hitVec[3][0].row);
+    h_mHitsCorrYPhi[1]->Fill(hitVec[1][0].row,hitVec[0][0].row);
+    h_mHitsCorrYPhi[2]->Fill(hitVec[3][0].row,hitVec[0][0].row);
+    h_mHitsCorrYPhi[3]->Fill(5.25/2*hitVec[1][0].row-3.25/2*hitVec[3][0].row+20,hitVec[0][0].row);
+
+    float r_fst = FST::rOuter + (hitVec[0][0].column-4)*FST::pitchR + 0.5*FST::pitchR;
+    float phi_fst = (63-hitVec[0][0].row)*FST::pitchPhi + 0.5*FST::pitchPhi;
+    float x0_fst = r_fst*TMath::Cos(phi_fst); // x = r*cos(phi)
+    float y0_fst = r_fst*TMath::Sin(phi_fst); // y = r*sin(phi)
+    float z0_fst = FST::pitchLayer03;
+
+    float x1_ist = hitVec[1][0].column*FST::pitchColumn + 0.5*FST::pitchColumn;
+    float y1_ist = hitVec[1][0].row*FST::pitchRow + 0.5*FST::pitchRow;
+    float z1_ist = FST::pitchLayer12 + FST::pitchLayer23;
+
+    float x3_ist = hitVec[3][0].column*FST::pitchColumn + 0.5*FST::pitchColumn;
+    float y3_ist = hitVec[3][0].row*FST::pitchRow + 0.5*FST::pitchRow;
+    float z3_ist = 0.0;
+
+    float x0_proj = x3_ist + (x1_ist-x3_ist)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
+    float y0_proj = y3_ist + (y1_ist-y3_ist)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
+
+    float xResidual = x0_fst-x0_proj;
+    float yResidual = y0_fst-y0_proj;
+    h_mXResidual_Hits->Fill(xResidual);
+    h_mYResidual_Hits->Fill(yResidual);
+  }
+
+  return true;
+}
+
+void FstTracking::writeTracking_Hits()
+{
+  for(int i_corr = 0; i_corr < 4; ++i_corr)
+  {
+    h_mHitsCorrXR[i_corr]->Write();
+    h_mHitsCorrYPhi[i_corr]->Write();
+  }
+  h_mXResidual_Hits->Write();
+  h_mYResidual_Hits->Write();
+}
+//--------------Tracking with Hits---------------------
+
+//--------------Tracking with Clusters---------------------
+bool FstTracking::initTracking_Clusters()
+{
+  h_mXResidual_Simple = new TH1F("h_mXResidual_Simple","h_mXResidual_Simple",150,-9,9);
+  h_mYResidual_Simple = new TH1F("h_mYResidual_Simple","h_mYResidual_Simple",150,-9,9);
+
+  for(int i_layer = 0; i_layer < 4; ++i_layer)
+  {
+    std::string HistName = Form("h_mAdc_Simple_Layer%d",i_layer);
+    h_mAdc_Simple[i_layer] = new TH1F(HistName.c_str(),HistName.c_str(),100,0,4000);
+
+    HistName = Form("h_mAdcAngleCorr_Simple_Layer%d",i_layer);
+    h_mAdcAngleCorr_Simple[i_layer] = new TH1F(HistName.c_str(),HistName.c_str(),100,0,4000);
+  }
+
+  h_mTrackAngle_Simple = new TH1F("h_mTrackAngle_Simple","h_mTrackAngle_Simple",100,0,90);
+
+  return true;
+}
+
+void FstTracking::writeTracking_Clusters()
 {
   h_mXResidual_Simple->Write();
   h_mYResidual_Simple->Write();
@@ -776,7 +891,7 @@ void FstTracking::writeTracking_Simple()
 
   h_mTrackAngle_Simple->Write();
 }
-//--------------cluster with Simple Algorithm---------------------
+//--------------Tracking with Clusters---------------------
 
 //--------------Utility---------------------
 int FstTracking::getLayer(int arm, int port)
@@ -877,5 +992,34 @@ bool FstTracking::isBadAPV(int arm, int port, int apv)
   // if(arm == 1 && port==1 && (apv == 6||apv == 7)) bAPV = true;
 
   return bAPV;
+}
+
+void FstTracking::printHits(std::vector<HIT> hitVec)
+{
+  cout << "Number of Hits: " << hitVec.size() << endl;
+  for(int i_hit = 0; i_hit < hitVec.size(); ++i_hit)
+  {
+    cout << "hitVec.layer  = " << hitVec[i_hit].layer << endl;
+    cout << "hitVec.sensor = " << hitVec[i_hit].sensor << endl;
+    cout << "hitVec.column = " << hitVec[i_hit].column << endl;
+    cout << "hitVec.row    = " << hitVec[i_hit].row << endl;
+    cout << "hitVec.maxAdc = " << hitVec[i_hit].maxAdc << endl;
+    cout << "hitVec.maxTb  = " << hitVec[i_hit].maxTb << endl;
+    cout << "hitVec.filled = " << hitVec[i_hit].filled << endl;
+  }
+}
+
+void FstTracking::printClusters(CLUSTER cluster)
+{
+  cout << "cluster.layer          = "  << cluster.layer  << endl;
+  cout << "cluster.sensor         = " << cluster.sensor << endl;
+  cout << "cluster.meanColumn     = " << cluster.meanColumn << endl;
+  cout << "cluster.meanRow        = "    << cluster.meanRow << endl;
+  cout << "cluster.totAdc         = " << cluster.totAdc << endl;
+  cout << "cluster.maxTb          = "  << cluster.maxTb  << endl;
+  cout << "cluster.clusterSize    = " << cluster.clusterSize << endl;
+  cout << "cluster.clusterSizeR   = " << cluster.clusterSizeR << endl;
+  cout << "cluster.clusterSizePhi = " << cluster.clusterSizePhi << endl;
+  cout << "cluster.clusterType    = " << cluster.clusterType << endl;
 }
 //--------------Utility---------------------

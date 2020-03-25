@@ -73,24 +73,22 @@ class FstTracking : public TObject
 
     // hit display
     bool initHitDisplay();
-    void fillHitDisplay(std::vector<HIT> isthitvec);
+    void fillHitDisplay(std::vector<HIT> hitVec);
     void writeHitDisplay();
-
-    /*
-    // cluster with ARMDisplay
-    bool clearCluster_ARMDisplay();
-    bool initTracking_ARMDisplay();
-    bool findCluster_ARMDisplay(std::vector<HIT> isthit_orig);
-    void fillTracking_ARMDisplay(std::vector<CLUSTER> istcluster_orig);
-    void writeTracking_ARMDisplay();
-    */
 
     // cluster with Simple Algorithm
     bool clearCluster_Simple();
-    bool initTracking_Simple();
-    bool findCluster_Simple(std::vector<HIT> isthit_orig);
+    bool findCluster_Simple(std::vector<HIT> hitVec_orig);
     // void fillTracking_Simple(std::vector<CLUSTER> istcluster_orig);
-    void writeTracking_Simple();
+
+    // tracking
+    bool initTracking_Hits();
+    bool doTracking_Hits(std::vector<HIT> hitVec_orig);
+    void writeTracking_Hits();
+
+    bool initTracking_Clusters();
+    // bool doTracking_Clusters(std::vector<CLUSTER> clusterVec_orig);
+    void writeTracking_Clusters();
 
   private:
     std::string mHome, mList;
@@ -119,17 +117,11 @@ class FstTracking : public TObject
     TH2F *h_mHitDisplay[4]; // 0 for FST, 1-3 for IST
     TH1F *h_mMaxTb[4]; 
 
-
-    /*
-    std::vector<CLUSTER> mClustersVec_ARMDisplay; // cluster with ARMDisplay
-    TH1F *h_mXResidual_ARMDisplay;
-    TH1F *h_mYResidual_ARMDisplay;
-    TH1F *h_mAdc_Layer1_ARMDisplay;
-    TH1F *h_mAdc_Layer3_ARMDisplay;
-    TH1F *h_mAdcAngleCorr_Layer1_ARMDisplay;
-    TH1F *h_mAdcAngleCorr_Layer3_ARMDisplay;
-    TH1F *h_mTrackAngle_ARMDisplay;
-    */
+    // Tracking based on Hits
+    TH2F *h_mHitsCorrXR[4]; // 0: ist1x vs. ist3x | 1: ist1x vs. fstr | 2: ist3x vs. fstr | 3: ist1x+ist3x vs. fstr
+    TH2F *h_mHitsCorrYPhi[4]; // 0: ist1y vs. ist3y | 1: ist1y vs. fstphi | 2: ist3y vs. fstphi | 3: ist1y+ist3y vs. fstphi
+    TH1F *h_mXResidual_Hits;
+    TH1F *h_mYResidual_Hits;
 
     std::vector<CLUSTER> mClustersVec_Simple; // cluster with Simple Algorithm
     TH1F *h_mXResidual_Simple;
@@ -147,6 +139,8 @@ class FstTracking : public TObject
     int getPhiSeg(int apv, int ch); // return FST Phi segmentation based on apv & ch
     int getRStrip(int apv, int ch); // return FST R strip based on apv & ch
     bool isBadAPV(int arm, int port, int apv);
+    void printHits(std::vector<HIT> hitVec);
+    void printClusters(CLUSTER cluster);
 
     TChain *mChainInPut; // input TTree
     int evt_rdo[FST::numARMs][FST::numPorts][FST::numAPVs];
