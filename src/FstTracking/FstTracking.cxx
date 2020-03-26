@@ -22,6 +22,7 @@ FstTracking::FstTracking() : mList("../../list/FST/FstPed_HV70.list"), mOutPutFi
 {
   cout << "FstTracking::FstTracking() -------- Constructor!  --------" << endl;
   mHome = getenv("HOME");
+  isSaveHits = false;
 }
 
 FstTracking::~FstTracking()
@@ -183,6 +184,19 @@ int FstTracking::Make()
 {
   cout << "FstTracking::Make => " << endl;
 
+
+  if(isSaveHits)
+  {
+    string outputfile = "./hits.txt";
+    file_mHits.open(outputfile.c_str());
+    cout << "Open file_mHits.txt to save Hits info!" << endl;
+    if (!file_mHits.is_open())
+    {
+      std::cout << "failed to open " << outputfile.c_str() << endl;
+      return -1;
+    }
+  }
+
   bool isPed = calPedestal(); // calculate pedestals with first 1000 events
   if( !isPed ) 
   {
@@ -306,6 +320,12 @@ int FstTracking::Make()
   }
 
   cout << "processed events:  " << NumOfEvents << "/" << NumOfEvents << endl;
+
+  if(isSaveHits)
+  {
+    cout << "Close file_mHits.txt for hits infor!" << endl;
+    file_mHits.close();
+  }
 
   return 1;
 }
@@ -777,8 +797,10 @@ bool FstTracking::initTracking_Hits()
     else h_mHitsCorrYPhi[i_corr] = new TH2F(HistName.c_str(),HistName.c_str(),FST::noRows,-0.5,FST::noRows-0.5,FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5);
   }
 
-  h_mXResidual_Hits = new TH1F("h_mXResidual_Hits","h_mXResidual_Simple",400,-100.0,300.0);
-  h_mYResidual_Hits = new TH1F("h_mYResidual_Hits","h_mYResidual_Simple",100,-50.0,50.0);
+  h_mXResidual_Hits = new TH1F("h_mXResidual_Hits","h_mXResidual_Hits",100,-100.0,100.0);
+  h_mYResidual_Hits = new TH1F("h_mYResidual_Hits","h_mYResidual_Hits",100,-50.0,50.0);
+  h_mRResidual_Hits = new TH1F("h_mRResidual_Hits","h_mRResidual_Hits",100,-50.0,50.0);
+  h_mPhiResidual_Hits = new TH1F("h_mPhiResidual_Hits","h_mPhiResidual_Hits",100,-5.0*FST::pitchPhi,5.0*FST::pitchPhi);
 
   return true;
 }
@@ -827,20 +849,34 @@ bool FstTracking::doTracking_Hits(std::vector<HIT> hitVec_orig)
     float z0_fst = FST::pitchLayer03;
 
     float x1_ist = hitVec[1][0].column*FST::pitchColumn + 0.5*FST::pitchColumn;
-    float y1_ist = hitVec[1][0].row*FST::pitchRow + 0.5*FST::pitchRow;
+    float y1_ist = (63-hitVec[1][0].row)*FST::pitchRow + 0.5*FST::pitchRow;
     float z1_ist = FST::pitchLayer12 + FST::pitchLayer23;
 
     float x3_ist = hitVec[3][0].column*FST::pitchColumn + 0.5*FST::pitchColumn;
-    float y3_ist = hitVec[3][0].row*FST::pitchRow + 0.5*FST::pitchRow;
+    float y3_ist = (63-hitVec[3][0].row)*FST::pitchRow + 0.5*FST::pitchRow;
     float z3_ist = 0.0;
 
     float x0_proj = x3_ist + (x1_ist-x3_ist)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
     float y0_proj = y3_ist + (y1_ist-y3_ist)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
 
+    if(isSaveHits)
+    {
+      file_mHits << x0_fst << "    " << y0_fst << "    " << x0_proj << "    " << y0_proj << endl;
+    }
+
+    /*
     float xResidual = x0_fst-x0_proj;
     float yResidual = y0_fst-y0_proj;
     h_mXResidual_Hits->Fill(xResidual);
     h_mYResidual_Hits->Fill(yResidual);
+
+    // float r_proj = TMath::Sqrt(x0_proj*x0_proj+y0_proj*y0_proj);
+    // float phi_proj = TMath::ATan2(y0_proj,x0_proj);
+    float rResidual = r_fst-r_proj;
+    float phiResidual = phi_fst-phi_proj;
+    h_mRResidual_Hits->Fill(rResidual);
+    h_mPhiResidual_Hits->Fill(phiResidual);
+    */
   }
 
   return true;
@@ -855,6 +891,8 @@ void FstTracking::writeTracking_Hits()
   }
   h_mXResidual_Hits->Write();
   h_mYResidual_Hits->Write();
+  h_mRResidual_Hits->Write();
+  h_mPhiResidual_Hits->Write();
 }
 //--------------Tracking with Hits---------------------
 
@@ -934,7 +972,6 @@ int FstTracking::getColumn(int arm, int port, int apv, int ch)
       col = 4*sensor + this->getRStrip(apv,ch);
     }
   }
-
   else
   { // layer = 1-3 for IST
     if(ch >= 0 && ch <= 63) col = apv*2;
@@ -988,7 +1025,8 @@ bool FstTracking::isBadAPV(int arm, int port, int apv)
 
   if(arm == 0 && port==0 && (apv == 5||apv == 6)) bAPV = true;
   if(arm == 0 && port==1 && (apv <= 9)) bAPV = true;
-  if(arm == 1 && port==0 && (apv == 0||apv == 1)) bAPV = true;
+  // if(arm == 1 && port==0 && (apv == 0||apv == 1)) bAPV = true;
+  if(arm == 1 && port==0 && (apv == 0)) bAPV = true;
   // if(arm == 1 && port==1 && (apv == 6||apv == 7)) bAPV = true;
 
   return bAPV;

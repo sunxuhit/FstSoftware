@@ -4,6 +4,7 @@
 #include <TObject.h>
 #include <./FstTrackingCons.h>
 #include <vector>
+#include <fstream>
 
 class TFile;
 class TChain;
@@ -122,6 +123,11 @@ class FstTracking : public TObject
     TH2F *h_mHitsCorrYPhi[4]; // 0: ist1y vs. ist3y | 1: ist1y vs. fstphi | 2: ist3y vs. fstphi | 3: ist1y+ist3y vs. fstphi
     TH1F *h_mXResidual_Hits;
     TH1F *h_mYResidual_Hits;
+    TH1F *h_mRResidual_Hits;
+    TH1F *h_mPhiResidual_Hits;
+
+    bool isSaveHits;
+    std::ofstream file_mHits;
 
     std::vector<CLUSTER> mClustersVec_Simple; // cluster with Simple Algorithm
     TH1F *h_mXResidual_Simple;

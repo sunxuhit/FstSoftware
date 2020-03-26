@@ -16,11 +16,13 @@ namespace FST
   // FST Geometry
   const int numRStrip = 8; // 0-3 for inner sector | 4-7 for outer sector
   const int numPhiSeg = 128; // 128 segmentations in phi direction
-  const float rInner = 49.0; // mm | smallest radius of inner sector
-  const float rOuter = 164.0; // mm | smallest radius of outer sector
-  const float pitchR  = 29.55; // mm | (282.2-164)/4.0
-  const float pitchPhi = TMath::Pi()*32.0/180.0/numPhiSeg; // rad | 32 degree with 128 segmentations
+  const float rInner = 50.0; // mm | smallest radius of inner sector
+  const float rOuter = 165.0; // mm | smallest radius of outer sector
+  const float pitchR  = 28.75; // mm | (280-165)/4.0
+  const float pitchPhi = TMath::Pi()*30.0/180.0/numPhiSeg; // rad | 30 degree with 128 segmentations
   const float pitchLayer03 = 134.9375; // mm
+  // const float shiftX = 142.1; //mm
+  // const float shiftY = -22.6; //mm
 
   // IST Cosmic Test Stand Geometry
   const int noRows    = 64; // for one group of sensors
