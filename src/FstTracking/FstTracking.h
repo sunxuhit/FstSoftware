@@ -121,6 +121,8 @@ class FstTracking : public TObject
     // Tracking based on Hits
     TH2F *h_mHitsCorrXR[4]; // 0: ist1x vs. ist3x | 1: ist1x vs. fstr | 2: ist3x vs. fstr | 3: ist1x+ist3x vs. fstr
     TH2F *h_mHitsCorrYPhi[4]; // 0: ist1y vs. ist3y | 1: ist1y vs. fstphi | 2: ist3y vs. fstphi | 3: ist1y+ist3y vs. fstphi
+    TH1F *h_mXResidual_Hits_Before;
+    TH1F *h_mYResidual_Hits_Before;
     TH1F *h_mXResidual_Hits;
     TH1F *h_mYResidual_Hits;
     TH1F *h_mRResidual_Hits;

@@ -637,8 +637,8 @@ bool FstTracking::clearCluster_Simple()
 
 bool FstTracking::findCluster_Simple(std::vector<HIT> hitVec_orig)
 {
-  float meanRow = 0., meanColumn = 0.;
-  float totAdc = 0.;
+  double meanRow = 0., meanColumn = 0.;
+  double totAdc = 0.;
   int clusterSize = 0, clusterSizeR = 0, clusterSizePhi = 0;
 
   clearCluster_Simple();
@@ -680,7 +680,7 @@ bool FstTracking::findCluster_Simple(std::vector<HIT> hitVec_orig)
 
     if( hitVec.size() !=0)
     {
-      float weight, tempSumAdc;
+      double weight, tempSumAdc;
       std::vector<CLUSTER>::iterator clusterIt = mClustersVec_Simple.begin(); // get the begin of cluster container
 
       while( clusterIt != mClustersVec_Simple.end() && !hitVec.empty() )
@@ -699,7 +699,7 @@ bool FstTracking::findCluster_Simple(std::vector<HIT> hitVec_orig)
 	      if( (*hitVecIt).row == cHit_temp.row ) clusterSizePhi = (*clusterIt).clusterSizePhi + 1; //same row
 	      if( (*hitVecIt).column == cHit_temp.column ) clusterSizeR = (*clusterIt).clusterSizeR + 1; //same column
 
-	      float currentAdc = (*hitVecIt).maxAdc;
+	      double currentAdc = (*hitVecIt).maxAdc;
 	      tempSumAdc = (*clusterIt).totAdc + currentAdc;
 	      weight = currentAdc/tempSumAdc;
 
@@ -797,6 +797,8 @@ bool FstTracking::initTracking_Hits()
     else h_mHitsCorrYPhi[i_corr] = new TH2F(HistName.c_str(),HistName.c_str(),FST::noRows,-0.5,FST::noRows-0.5,FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5);
   }
 
+  h_mXResidual_Hits_Before = new TH1F("h_mXResidual_Hits_Before","h_mXResidual_Hits_Before",100,-500.0,500.0);
+  h_mYResidual_Hits_Before = new TH1F("h_mYResidual_Hits_Before","h_mYResidual_Hits_Before",100,-50.0,50.0);
   h_mXResidual_Hits = new TH1F("h_mXResidual_Hits","h_mXResidual_Hits",100,-100.0,100.0);
   h_mYResidual_Hits = new TH1F("h_mYResidual_Hits","h_mYResidual_Hits",100,-50.0,50.0);
   h_mRResidual_Hits = new TH1F("h_mRResidual_Hits","h_mRResidual_Hits",100,-50.0,50.0);
@@ -842,41 +844,55 @@ bool FstTracking::doTracking_Hits(std::vector<HIT> hitVec_orig)
     h_mHitsCorrYPhi[2]->Fill(hitVec[3][0].row,hitVec[0][0].row);
     h_mHitsCorrYPhi[3]->Fill(5.25/2*hitVec[1][0].row-3.25/2*hitVec[3][0].row+20,hitVec[0][0].row);
 
-    float r_fst = FST::rOuter + (hitVec[0][0].column-4)*FST::pitchR + 0.5*FST::pitchR;
-    float phi_fst = (63-hitVec[0][0].row)*FST::pitchPhi + 0.5*FST::pitchPhi;
-    float x0_fst = r_fst*TMath::Cos(phi_fst); // x = r*cos(phi)
-    float y0_fst = r_fst*TMath::Sin(phi_fst); // y = r*sin(phi)
-    float z0_fst = FST::pitchLayer03;
+    double r_fst = FST::rOuter + (hitVec[0][0].column-4)*FST::pitchR + 0.5*FST::pitchR;
+    double phi_fst = (63-hitVec[0][0].row)*FST::pitchPhi + 0.5*FST::pitchPhi;
+    double x0_fst = r_fst*TMath::Cos(phi_fst); // x = r*cos(phi)
+    double y0_fst = r_fst*TMath::Sin(phi_fst); // y = r*sin(phi)
+    double z0_fst = FST::pitchLayer03;
 
-    float x1_ist = hitVec[1][0].column*FST::pitchColumn + 0.5*FST::pitchColumn;
-    float y1_ist = (63-hitVec[1][0].row)*FST::pitchRow + 0.5*FST::pitchRow;
-    float z1_ist = FST::pitchLayer12 + FST::pitchLayer23;
+    double x1_ist = hitVec[1][0].column*FST::pitchColumn + 0.5*FST::pitchColumn;
+    double y1_ist = (63-hitVec[1][0].row)*FST::pitchRow + 0.5*FST::pitchRow;
+    double z1_ist = FST::pitchLayer12 + FST::pitchLayer23;
 
-    float x3_ist = hitVec[3][0].column*FST::pitchColumn + 0.5*FST::pitchColumn;
-    float y3_ist = (63-hitVec[3][0].row)*FST::pitchRow + 0.5*FST::pitchRow;
-    float z3_ist = 0.0;
+    double x3_ist = hitVec[3][0].column*FST::pitchColumn + 0.5*FST::pitchColumn;
+    double y3_ist = (63-hitVec[3][0].row)*FST::pitchRow + 0.5*FST::pitchRow;
+    double z3_ist = 0.0;
 
-    float x0_proj = x3_ist + (x1_ist-x3_ist)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
-    float y0_proj = y3_ist + (y1_ist-y3_ist)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
+    double x0_proj = x3_ist + (x1_ist-x3_ist)*z0_fst/z1_ist;
+    double y0_proj = y3_ist + (y1_ist-y3_ist)*z0_fst/z1_ist;
+
+    h_mXResidual_Hits_Before->Fill(x0_fst-x0_proj);
+    h_mYResidual_Hits_Before->Fill(y0_fst-y0_proj);
 
     if(isSaveHits)
     {
-      file_mHits << x0_fst << "    " << y0_fst << "    " << x0_proj << "    " << y0_proj << endl;
+      file_mHits << x0_fst << "    " << y0_fst << "    " << x1_ist << "    " << y1_ist<< "    " << x3_ist << "    " << y3_ist  << endl;
     }
 
+    double x0_corr = x0_proj*TMath::Cos(FST::phi_rot) + y0_proj*TMath::Sin(FST::phi_rot) + FST::x_shift;
+    double y0_corr = y0_proj*TMath::Cos(FST::phi_rot) - x0_proj*TMath::Sin(FST::phi_rot) + FST::y_shift;
     /*
-    float xResidual = x0_fst-x0_proj;
-    float yResidual = y0_fst-y0_proj;
+    double x1_corr = x1_ist*TMath::Cos(FST::phi_rot_ist1) + y1_ist*TMath::Sin(FST::phi_rot_ist1) + FST::x_shift;
+    double y1_corr = y1_ist*TMath::Cos(FST::phi_rot_ist1) - x1_ist*TMath::Sin(FST::phi_rot_ist1) + FST::y_shift;
+
+    double x3_corr = x3_ist*TMath::Cos(FST::phi_rot_ist3) + y3_ist*TMath::Sin(FST::phi_rot_ist3) + FST::x_shift;
+    double y3_corr = y3_ist*TMath::Cos(FST::phi_rot_ist3) - x3_ist*TMath::Sin(FST::phi_rot_ist3) + FST::y_shift;
+
+    double x0_corr = x3_corr + (x1_corr-x3_corr)*z0_fst/z1_ist;
+    double y0_corr = y3_corr + (y1_corr-y3_corr)*z0_fst/z1_ist;
+    */
+
+    double xResidual = x0_fst-x0_corr;
+    double yResidual = y0_fst-y0_corr;
     h_mXResidual_Hits->Fill(xResidual);
     h_mYResidual_Hits->Fill(yResidual);
 
-    // float r_proj = TMath::Sqrt(x0_proj*x0_proj+y0_proj*y0_proj);
-    // float phi_proj = TMath::ATan2(y0_proj,x0_proj);
-    float rResidual = r_fst-r_proj;
-    float phiResidual = phi_fst-phi_proj;
+    double r_corr = TMath::Sqrt(x0_corr*x0_corr+y0_corr*y0_corr);
+    double phi_corr = TMath::ATan2(y0_corr,x0_corr);
+    double rResidual = r_fst-r_corr;
+    double phiResidual = phi_fst-phi_corr;
     h_mRResidual_Hits->Fill(rResidual);
     h_mPhiResidual_Hits->Fill(phiResidual);
-    */
   }
 
   return true;
@@ -889,6 +905,8 @@ void FstTracking::writeTracking_Hits()
     h_mHitsCorrXR[i_corr]->Write();
     h_mHitsCorrYPhi[i_corr]->Write();
   }
+  h_mXResidual_Hits_Before->Write();
+  h_mYResidual_Hits_Before->Write();
   h_mXResidual_Hits->Write();
   h_mYResidual_Hits->Write();
   h_mRResidual_Hits->Write();
