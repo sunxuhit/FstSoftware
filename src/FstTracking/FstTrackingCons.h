@@ -21,16 +21,16 @@ namespace FST
   const double pitchR  = 28.75; // mm | (280-165)/4.0
   const double pitchPhi = TMath::Pi()*30.0/180.0/numPhiSeg; // rad | 30 degree with 128 segmentations
   const double pitchLayer03 = 134.9375; // mm
-  // const double phi_rot = 0.049982273; // rad from Zhenyu
-  // const double x_shift = 133.23313; // mm from Zhenyu 
-  // const double y_shift = -18.801690; // mm from Zhenyu 
+  const double phi_rot = 0.049982273; // rad from Zhenyu
+  const double x_shift = 133.23313; // mm from Zhenyu 
+  const double y_shift = -18.801690; // mm from Zhenyu 
   // const double phi_rot = 0.0499824;  // rad
   // const double x_shift = 133.229; // mm
   // const double y_shift = -18.8284; // mm
-  const double phi_rot_ist1 = 0.0487786; // rad
-  const double phi_rot_ist3 = 0.0473428; // rad
-  const double x_shift = 133.236; // mm
-  const double y_shift = -18.7917; // mm
+  // const double phi_rot_ist1 = 0.0487786; // rad
+  // const double phi_rot_ist3 = 0.0473428; // rad
+  // const double x_shift = 133.236; // mm
+  // const double y_shift = -18.7917; // mm
 
   // IST Cosmic Test Stand Geometry
   const int noRows    = 64; // for one group of sensors

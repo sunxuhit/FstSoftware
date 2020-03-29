@@ -42,6 +42,7 @@ int FstTracking::Init()
   bool isHit = initHit(); // initialize Hit array;
   bool isTracking_Hits = initTracking_Hits();
   bool isTracking_Clusters = initTracking_Clusters();
+  bool isEfficiency_Hits = initEfficiency_Hits();
 
   if(!isInPut) 
   {
@@ -71,6 +72,11 @@ int FstTracking::Init()
   if(!isTracking_Clusters) 
   {
     cout << "Failed to initialize tracing with Clusters method!" << endl;
+    return -1;
+  }
+  if(!isEfficiency_Hits) 
+  {
+    cout << "Failed to initialize efficiency with Hits method!" << endl;
     return -1;
   }
 
@@ -316,6 +322,7 @@ int FstTracking::Make()
       // findCluster_ARMDisplay(mHitsVec); // find cluster with ARMDisplay
       findCluster_Simple(mHitsVec); // find cluster with ARMDisplay
       doTracking_Hits(mHitsVec); // do tracking based on Hits
+      doEfficiency_Hits(mHitsVec); // do tracking based on Hits
     }
   }
 
@@ -338,6 +345,7 @@ int FstTracking::Finish()
   // writeTracking_ARMDisplay();
   writeTracking_Hits();
   // writeTracking_Clusters();
+  writeEfficiency_Hits();
 
   return 1;
 }
@@ -876,10 +884,9 @@ bool FstTracking::doTracking_Hits(std::vector<HIT> hitVec_orig)
       file_mHits << x0_fst << "    " << y0_fst << "    " << x1_ist << "    " << y1_ist<< "    " << x3_ist << "    " << y3_ist  << endl;
     }
 
-    /*
     double x0_corr = x0_proj*TMath::Cos(FST::phi_rot) + y0_proj*TMath::Sin(FST::phi_rot) + FST::x_shift;
     double y0_corr = y0_proj*TMath::Cos(FST::phi_rot) - x0_proj*TMath::Sin(FST::phi_rot) + FST::y_shift;
-    */
+    /*
     double x1_corr = x1_ist*TMath::Cos(FST::phi_rot_ist1) + y1_ist*TMath::Sin(FST::phi_rot_ist1) + FST::x_shift;
     double y1_corr = y1_ist*TMath::Cos(FST::phi_rot_ist1) - x1_ist*TMath::Sin(FST::phi_rot_ist1) + FST::y_shift;
 
@@ -888,6 +895,7 @@ bool FstTracking::doTracking_Hits(std::vector<HIT> hitVec_orig)
 
     double x0_corr = x3_corr + (x1_corr-x3_corr)*z0_fst/z1_ist;
     double y0_corr = y3_corr + (y1_corr-y3_corr)*z0_fst/z1_ist;
+    */
 
     double xResidual = x0_fst-x0_corr;
     double yResidual = y0_fst-y0_corr;
@@ -955,6 +963,106 @@ void FstTracking::writeTracking_Clusters()
   h_mTrackAngle_Simple->Write();
 }
 //--------------Tracking with Clusters---------------------
+
+//--------------Efficiency with Hits---------------------
+bool FstTracking::initEfficiency_Hits()
+{
+  h_mHits_IST = new TH2F("h_mHits_IST","h_mHits_IST",20,165.0,280.0,20,0.0,80.0);
+  h_mHits_FST = new TH2F("h_mHits_FST","h_mHits_FST",20,165.0,280.0,20,0.0,80.0);
+
+  return true;
+}
+
+bool FstTracking::doEfficiency_Hits(std::vector<HIT> hitVec_orig)
+{
+  int numOfHits[4]; // 0 for fst | 1-3 for ist
+  std::vector<HIT> hitVec[4];
+  for(int i_layer = 0; i_layer < 4; ++i_layer)
+  {
+    numOfHits[i_layer] = 0;
+    hitVec[i_layer].clear();
+  }
+
+  for(int i_hit = 0; i_hit < hitVec_orig.size(); ++i_hit)
+  { // set temp ist hit container for each layer
+    int layer = hitVec_orig[i_hit].layer;
+    numOfHits[layer]++;
+    hitVec[layer].push_back(hitVec_orig[i_hit]);
+  }
+
+  const double rMax = FST::rOuter + 4.0*FST::pitchR;
+  const double rMin = FST::rOuter;
+  const double phiMax = 64.0*FST::pitchPhi;
+  const double phiMin = 0.0;
+
+  if(numOfHits[1] > 0 && numOfHits[3] > 0)
+  { // only do efficiency when at least 1 hit is found in ist1 & ist3
+    // cout << "numOfHits[1] = " << numOfHits[1] << ", hitVec.size = " << hitVec[1].size() << endl;
+    // cout << "numOfHits[2] = " << numOfHits[2] << ", hitVec.size = " << hitVec[2].size() << endl;
+    // cout << "numOfHits[3] = " << numOfHits[3] << ", hitVec.size = " << hitVec[3].size() << endl;
+    // cout << "hitVec_orig.size = " << hitVec_orig.size() << ", sum of each layer = " << hitVec[0].size()+hitVec[1].size()+hitVec[2].size()+hitVec[3].size() << endl;
+    // cout << endl;
+
+    double z0_fst = FST::pitchLayer03;
+
+    double x1_ist = hitVec[1][0].column*FST::pitchColumn + 0.5*FST::pitchColumn;
+    double y1_ist = (63-hitVec[1][0].row)*FST::pitchRow + 0.5*FST::pitchRow;
+    double z1_ist = FST::pitchLayer12 + FST::pitchLayer23;
+
+    double x3_ist = hitVec[3][0].column*FST::pitchColumn + 0.5*FST::pitchColumn;
+    double y3_ist = (63-hitVec[3][0].row)*FST::pitchRow + 0.5*FST::pitchRow;
+    double z3_ist = 0.0;
+
+    double x0_proj = x3_ist + (x1_ist-x3_ist)*z0_fst/z1_ist;
+    double y0_proj = y3_ist + (y1_ist-y3_ist)*z0_fst/z1_ist;
+
+    double x0_corr = x0_proj*TMath::Cos(FST::phi_rot) + y0_proj*TMath::Sin(FST::phi_rot) + FST::x_shift;
+    double y0_corr = y0_proj*TMath::Cos(FST::phi_rot) - x0_proj*TMath::Sin(FST::phi_rot) + FST::y_shift;
+
+    /*
+    double x1_corr = x1_ist*TMath::Cos(FST::phi_rot_ist1) + y1_ist*TMath::Sin(FST::phi_rot_ist1) + FST::x_shift;
+    double y1_corr = y1_ist*TMath::Cos(FST::phi_rot_ist1) - x1_ist*TMath::Sin(FST::phi_rot_ist1) + FST::y_shift;
+
+    double x3_corr = x3_ist*TMath::Cos(FST::phi_rot_ist3) + y3_ist*TMath::Sin(FST::phi_rot_ist3) + FST::x_shift;
+    double y3_corr = y3_ist*TMath::Cos(FST::phi_rot_ist3) - x3_ist*TMath::Sin(FST::phi_rot_ist3) + FST::y_shift;
+
+    double x0_corr = x3_corr + (x1_corr-x3_corr)*z0_fst/z1_ist;
+    double y0_corr = y3_corr + (y1_corr-y3_corr)*z0_fst/z1_ist;
+    */
+
+    double r_corr = TMath::Sqrt(x0_corr*x0_corr+y0_corr*y0_corr);
+    double phi_corr = TMath::ATan2(y0_corr,x0_corr);
+    // cout << "x0_corr = " << x0_corr << "y0_corr = " << y0_corr << endl;
+
+    if(r_corr >= rMin && r_corr <= rMax && phi_corr >= phiMin && phi_corr <= phiMax)
+    { // used for efficiency only if the projected position is within FST acceptance
+      h_mHits_IST->Fill(x0_corr,y0_corr);
+
+      if(numOfHits[0] > 0)
+      {
+	double r_fst = FST::rOuter + (hitVec[0][0].column-4)*FST::pitchR + 0.5*FST::pitchR;
+	double phi_fst = (63-hitVec[0][0].row)*FST::pitchPhi + 0.5*FST::pitchPhi;
+	double x0_fst = r_fst*TMath::Cos(phi_fst); // x = r*cos(phi)
+	double y0_fst = r_fst*TMath::Sin(phi_fst); // y = r*sin(phi)
+
+	// h_mHits_FST->Fill(x0_corr,y0_corr);
+	if(abs(x0_fst-x0_corr) < 80 && abs(y0_fst-y0_corr) < 8)
+	{
+	  h_mHits_FST->Fill(x0_corr,y0_corr);
+	}
+      }
+    }
+  }
+
+  return true;
+}
+
+void FstTracking::writeEfficiency_Hits()
+{
+  h_mHits_IST->Write();
+  h_mHits_FST->Write();
+}
+//--------------Efficiency with Hits---------------------
 
 //--------------Utility---------------------
 int FstTracking::getLayer(int arm, int port)

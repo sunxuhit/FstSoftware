@@ -91,6 +91,11 @@ class FstTracking : public TObject
     // bool doTracking_Clusters(std::vector<CLUSTER> clusterVec_orig);
     void writeTracking_Clusters();
 
+    // efficiency
+    bool initEfficiency_Hits();
+    bool doEfficiency_Hits(std::vector<HIT> hitVec_orig);
+    void writeEfficiency_Hits();
+
   private:
     std::string mHome, mList;
     std::string mOutPutFile;
@@ -118,6 +123,11 @@ class FstTracking : public TObject
     TH2F *h_mHitDisplay[4]; // 0 for FST, 1-3 for IST
     TH1F *h_mMaxTb[4]; 
 
+    // Cluster for FST & IST
+    std::vector<CLUSTER> mClustersVec_Simple; // cluster with Simple Algorithm
+    TH1F *h_mXResidual_Simple;
+    TH1F *h_mYResidual_Simple;
+
     // Tracking based on Hits
     TH2F *h_mHitsCorrXR[4]; // 0: ist1x vs. ist3x | 1: ist1x vs. fstr | 2: ist3x vs. fstr | 3: ist1x+ist3x vs. fstr
     TH2F *h_mHitsCorrYPhi[4]; // 0: ist1y vs. ist3y | 1: ist1y vs. fstphi | 2: ist3y vs. fstphi | 3: ist1y+ist3y vs. fstphi
@@ -131,13 +141,14 @@ class FstTracking : public TObject
     bool isSaveHits;
     std::ofstream file_mHits;
 
-    std::vector<CLUSTER> mClustersVec_Simple; // cluster with Simple Algorithm
-    TH1F *h_mXResidual_Simple;
-    TH1F *h_mYResidual_Simple;
-
+    // Tracking based on Clusters
     TH1F *h_mAdc_Simple[4];
     TH1F *h_mAdcAngleCorr_Simple[4];
     TH1F *h_mTrackAngle_Simple;
+
+    // Efficiency based on Hits
+    TH2F *h_mHits_IST; // position on FST from IST projection
+    TH2F *h_mHits_FST; // position on FST from FST measurement
 
     // Utility for tracking
     int getLayer(int arm, int port); // return layer based on arm & port
