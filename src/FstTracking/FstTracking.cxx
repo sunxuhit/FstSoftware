@@ -876,9 +876,10 @@ bool FstTracking::doTracking_Hits(std::vector<HIT> hitVec_orig)
       file_mHits << x0_fst << "    " << y0_fst << "    " << x1_ist << "    " << y1_ist<< "    " << x3_ist << "    " << y3_ist  << endl;
     }
 
+    /*
     double x0_corr = x0_proj*TMath::Cos(FST::phi_rot) + y0_proj*TMath::Sin(FST::phi_rot) + FST::x_shift;
     double y0_corr = y0_proj*TMath::Cos(FST::phi_rot) - x0_proj*TMath::Sin(FST::phi_rot) + FST::y_shift;
-    /*
+    */
     double x1_corr = x1_ist*TMath::Cos(FST::phi_rot_ist1) + y1_ist*TMath::Sin(FST::phi_rot_ist1) + FST::x_shift;
     double y1_corr = y1_ist*TMath::Cos(FST::phi_rot_ist1) - x1_ist*TMath::Sin(FST::phi_rot_ist1) + FST::y_shift;
 
@@ -887,7 +888,6 @@ bool FstTracking::doTracking_Hits(std::vector<HIT> hitVec_orig)
 
     double x0_corr = x3_corr + (x1_corr-x3_corr)*z0_fst/z1_ist;
     double y0_corr = y3_corr + (y1_corr-y3_corr)*z0_fst/z1_ist;
-    */
 
     double xResidual = x0_fst-x0_corr;
     double yResidual = y0_fst-y0_corr;
