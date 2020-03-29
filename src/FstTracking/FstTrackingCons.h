@@ -10,7 +10,7 @@ namespace FST
   const int numAPVs     = 12; // no actual Port information, we just introduce Port information ourselves
   const int numROChannels = 1152; // numFstChannels*numFstTBins
   const int numChannels = 128;
-  const int numTBins    = 9;
+  const int numTBins    = 7;
   const int pedTimeBin  = 0; // time bin used for pedestal calculation
 
   // FST Geometry
@@ -21,13 +21,16 @@ namespace FST
   const double pitchR  = 28.75; // mm | (280-165)/4.0
   const double pitchPhi = TMath::Pi()*30.0/180.0/numPhiSeg; // rad | 30 degree with 128 segmentations
   const double pitchLayer03 = 134.9375; // mm
-  const double phi_rot = 0.049982273; // rad
-  const double x_shift = 133.23313; // mm 
-  const double y_shift = -18.801690; // mm 
-  // const double phi_rot_ist1 = 0.137147; // rad
-  // const double phi_rot_ist3 = 0.140883; // rad
-  // const double x_shift = 127.024; //mm
-  // const double y_shift = -11.0273; //mm
+  // const double phi_rot = 0.049982273; // rad
+  // const double x_shift = 133.23313; // mm 
+  // const double y_shift = -18.801690; // mm 
+  const double phi_rot = 0.0499824; 
+  const double x_shift = 133.229; 
+  const double y_shift = -18.8284;
+  // const double phi_rot_ist1 = 0.0674768; // rad
+  // const double phi_rot_ist3 = 0.0714665; // rad
+  // const double x_shift = 129.384; //mm
+  // const double y_shift = -17.5406; //mm
 
   // IST Cosmic Test Stand Geometry
   const int noRows    = 64; // for one group of sensors
