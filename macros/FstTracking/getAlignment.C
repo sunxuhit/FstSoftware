@@ -78,12 +78,12 @@ int getAlignment()
 
   int nFit = 0;
   cout << "Iteration " << nFit << " ==> " << endl;
-  tPars initPars = std::make_tuple(0.01,120.0,-10.0,1000.0,1000.0,0); // set initial fit parameters
+  tPars initPars = std::make_tuple(0.00,0.0,0.0,1000.0,1000.0,0); // set initial fit parameters
   tPars fitPars = minuitAlignment(x0_fst, y0_fst, x1_ist, y1_ist, x3_ist, y3_ist, initPars);
   cout << endl;
 
-  // reject hits with xCut = 80 and yCut = 8
-  tPars itPars = updateFitParameters(fitPars, 80, 8, 1);
+  // reject hits with xCut = 50 and yCut = 5
+  tPars itPars = updateFitParameters(fitPars, 50, 5, 1);
   int nOffset_temp = std::get<5>(itPars);
   while(nOffset_temp > 0)
   { 
@@ -91,12 +91,12 @@ int getAlignment()
     cout << "Iteration " << nFit << " ==> " << endl;
     fitPars = minuitAlignment(x0_fst, y0_fst, x1_ist, y1_ist, x3_ist, y3_ist, itPars);
     nOffset_temp = std::get<5>(fitPars);
-    itPars = updateFitParameters(fitPars,80,8,nOffset_temp);
+    itPars = updateFitParameters(fitPars,50,5,nOffset_temp);
     cout << endl;
   }
 
-  // reject hits with xCut = 40 and yCut = 3
-  itPars = updateFitParameters(fitPars, 40, 3, 1);
+  // reject hits with xCut = 25 and yCut = 2.5 
+  itPars = updateFitParameters(fitPars, 25, 2.5, 1);
   nOffset_temp = std::get<5>(itPars);
   while(nOffset_temp > 0)
   {
@@ -104,7 +104,7 @@ int getAlignment()
     cout << "Iteration " << nFit << " ==> " << endl;
     fitPars = minuitAlignment(x0_fst, y0_fst, x1_ist, y1_ist, x3_ist, y3_ist, itPars);
     nOffset_temp = std::get<5>(fitPars);
-    itPars = updateFitParameters(fitPars,40,3,nOffset_temp);
+    itPars = updateFitParameters(fitPars,25,2.5,nOffset_temp);
     cout << endl;
   }
 
@@ -224,7 +224,8 @@ tPars minuitAlignment(dVec x0_orig, dVec y0_orig, dVec x1_orig, dVec y1_orig, dV
   ROOT::Math::Functor fcn(chi2Function,3);
   ROOT::Fit::Fitter fitter;
 
-  double pStart[3] = {0.01,140,-20};
+  // double pStart[3] = {0.01,140,-20};
+  double pStart[3] = {phi_rot_temp,x_shift_temp,y_shift_temp};
   fitter.SetFCN(fcn, pStart);
   fitter.Config().ParSettings(0).SetName("phi_rot");
   fitter.Config().ParSettings(1).SetName("x_shift");

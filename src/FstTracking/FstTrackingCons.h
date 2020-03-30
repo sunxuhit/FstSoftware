@@ -10,8 +10,8 @@ namespace FST
   const int numAPVs     = 12; // no actual Port information, we just introduce Port information ourselves
   const int numROChannels = 1152; // numFstChannels*numFstTBins
   const int numChannels = 128;
-  const int numTBins    = 7;
-  const int pedTimeBin  = 0; // time bin used for pedestal calculation
+  const int numTBins    = 9;
+  const int pedTimeBin  = 3; // time bin used for pedestal calculation
 
   // FST Geometry
   const int numRStrip = 8; // 0-3 for inner sector | 4-7 for outer sector
@@ -21,12 +21,12 @@ namespace FST
   const double pitchR  = 28.75; // mm | (280-165)/4.0
   const double pitchPhi = TMath::Pi()*30.0/180.0/numPhiSeg; // rad | 30 degree with 128 segmentations
   const double pitchLayer03 = 134.9375; // mm
-  const double phi_rot = 0.049982273; // rad from Zhenyu
-  const double x_shift = 133.23313; // mm from Zhenyu 
-  const double y_shift = -18.801690; // mm from Zhenyu 
-  // const double phi_rot = 0.0499824;  // rad
-  // const double x_shift = 133.229; // mm
-  // const double y_shift = -18.8284; // mm
+  const double phi_rot = 0.044779502; // rad from Zhenyu
+  const double x_shift = 137.85319; // mm from Zhenyu 
+  const double y_shift = -19.153708; // mm from Zhenyu 
+  // const double phi_rot = 0.0444571; 
+  // const double x_shift = 137.824; 
+  // const double y_shift = -19.1714;
   // const double phi_rot_ist1 = 0.0487786; // rad
   // const double phi_rot_ist3 = 0.0473428; // rad
   // const double x_shift = 133.236; // mm
@@ -41,7 +41,9 @@ namespace FST
   const double pitchLayer23  = 30.1625; //mm, distances between the 2nd & 3rd Layer
 
   const int nPedCuts = 3;
-  const int nHitCuts = 5;
+  // const int nHitCuts = 5;
+  const float nFstHitCuts = 4.5;
+  const float nHitCuts = 5.5;
   const int maxNHits = 15; // max number of hits array
   const int maxNHitsPerEvent = 10; // max number of hits per event => bail the event if found more than this number
   const double MinNoise = 10.0;

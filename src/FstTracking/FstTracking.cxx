@@ -273,12 +273,14 @@ int FstTracking::Make()
 	      int maxTB = 0;
 	      double preADC = maxADC;
 	      bool isHit = false;
+	      float nCuts = FST::nHitCuts; // 5.5 for IST
+	      if(i_arm == 1 && i_port == 1) nCuts = FST::nFstHitCuts; // 4.5 for FST
 	      for(int i_tb = 1; i_tb < FST::numTBins-1; ++i_tb)
 	      { // only if 3 consequetive timebins of a ch exceed the threshold cut is considered as a hit
 		if( 
-		    ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > FST::nHitCuts*mPedStdDev[i_arm][i_port][i_apv][i_ch]) &&
-		    ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > FST::nHitCuts*mPedStdDev[i_arm][i_port][i_apv][i_ch]) &&
-		    ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > FST::nHitCuts*mPedStdDev[i_arm][i_port][i_apv][i_ch])
+		    ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nCuts*mPedStdDev[i_arm][i_port][i_apv][i_ch]) &&
+		    ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nCuts*mPedStdDev[i_arm][i_port][i_apv][i_ch]) &&
+		    ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > nCuts*mPedStdDev[i_arm][i_port][i_apv][i_ch])
 		  ) 
 		{
 		  isHit = true; // set isHit to true if 3 consequetive time bins exceed the threshold
@@ -817,7 +819,7 @@ bool FstTracking::initTracking_Hits()
   h_mXResidual_Hits = new TH1F("h_mXResidual_Hits","h_mXResidual_Hits",100,-80.0,80.0);
   h_mYResidual_Hits = new TH1F("h_mYResidual_Hits","h_mYResidual_Hits",100,-16.0,16.0);
   h_mRResidual_Hits = new TH1F("h_mRResidual_Hits","h_mRResidual_Hits",100,-80.0,80.0);
-  h_mPhiResidual_Hits = new TH1F("h_mPhiResidual_Hits","h_mPhiResidual_Hits",100,-0.12,0.12);
+  h_mPhiResidual_Hits = new TH1F("h_mPhiResidual_Hits","h_mPhiResidual_Hits",100,-0.05,0.05);
 
   return true;
 }
@@ -876,10 +878,7 @@ bool FstTracking::doTracking_Hits(std::vector<HIT> hitVec_orig)
     double x0_proj = x3_ist + (x1_ist-x3_ist)*z0_fst/z1_ist;
     double y0_proj = y3_ist + (y1_ist-y3_ist)*z0_fst/z1_ist;
 
-    h_mXResidual_Hits_Before->Fill(x0_fst-x0_proj);
-    h_mYResidual_Hits_Before->Fill(y0_fst-y0_proj);
-
-    if(isSaveHits)
+    if(isSaveHits && abs(hitVec[1][0].row-hitVec[3][0].row) < 17)
     {
       file_mHits << x0_fst << "    " << y0_fst << "    " << x1_ist << "    " << y1_ist<< "    " << x3_ist << "    " << y3_ist  << endl;
     }
@@ -897,17 +896,23 @@ bool FstTracking::doTracking_Hits(std::vector<HIT> hitVec_orig)
     double y0_corr = y3_corr + (y1_corr-y3_corr)*z0_fst/z1_ist;
     */
 
-    double xResidual = x0_fst-x0_corr;
-    double yResidual = y0_fst-y0_corr;
-    h_mXResidual_Hits->Fill(xResidual);
-    h_mYResidual_Hits->Fill(yResidual);
+    if(abs(hitVec[1][0].row-hitVec[3][0].row) < 17)
+    {
+      h_mXResidual_Hits_Before->Fill(x0_fst-x0_proj);
+      h_mYResidual_Hits_Before->Fill(y0_fst-y0_proj);
 
-    double r_corr = TMath::Sqrt(x0_corr*x0_corr+y0_corr*y0_corr);
-    double phi_corr = TMath::ATan2(y0_corr,x0_corr);
-    double rResidual = r_fst-r_corr;
-    double phiResidual = phi_fst-phi_corr;
-    h_mRResidual_Hits->Fill(rResidual);
-    h_mPhiResidual_Hits->Fill(phiResidual);
+      double xResidual = x0_fst-x0_corr;
+      double yResidual = y0_fst-y0_corr;
+      h_mXResidual_Hits->Fill(xResidual);
+      h_mYResidual_Hits->Fill(yResidual);
+
+      double r_corr = TMath::Sqrt(x0_corr*x0_corr+y0_corr*y0_corr);
+      double phi_corr = TMath::ATan2(y0_corr,x0_corr);
+      double rResidual = r_fst-r_corr;
+      double phiResidual = phi_fst-phi_corr;
+      h_mRResidual_Hits->Fill(rResidual);
+      h_mPhiResidual_Hits->Fill(phiResidual);
+    }
   }
 
   return true;
@@ -1046,7 +1051,7 @@ bool FstTracking::doEfficiency_Hits(std::vector<HIT> hitVec_orig)
 	double y0_fst = r_fst*TMath::Sin(phi_fst); // y = r*sin(phi)
 
 	// h_mHits_FST->Fill(x0_corr,y0_corr);
-	if(abs(x0_fst-x0_corr) < 80 && abs(y0_fst-y0_corr) < 8)
+	if(abs(x0_fst-x0_corr) < FST::pitchR*3.0 && abs(y0_fst-y0_corr) < 3.5)
 	{
 	  h_mHits_FST->Fill(x0_corr,y0_corr);
 	}

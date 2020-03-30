@@ -9,7 +9,8 @@ using namespace std;
 
 void plotResidual()
 {
-  gStyle->SetOptStat(1101);
+  // gStyle->SetOptStat(1101);
+  gStyle->SetOptStat(11111);
   gStyle->SetOptFit(1001);
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
   gStyle->SetStatW(0.15); gStyle->SetStatH(0.25);
