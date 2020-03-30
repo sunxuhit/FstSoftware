@@ -2,7 +2,7 @@
 #define FstTracking_h
 
 #include <TObject.h>
-#include <./FstTrackingCons.h>
+#include "../FstUtil/FstCons.h"
 #include <vector>
 #include <fstream>
 
@@ -149,6 +149,9 @@ class FstTracking : public TObject
     // Efficiency based on Hits
     TH2F *h_mHits_IST; // position on FST from IST projection
     TH2F *h_mHits_FST; // position on FST from FST measurement
+
+    TH2F *h_mHits_IST13;
+    TH2F *h_mHits_IST2;
 
     // Utility for tracking
     int getLayer(int arm, int port); // return layer based on arm & port

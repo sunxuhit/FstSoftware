@@ -1,6 +1,6 @@
 ROOT_GENERATE_DICTIONARY(G__FstTracking
   ${CMAKE_CURRENT_SOURCE_DIR}/FstTracking.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/FstTrackingCons.h
+  ${CMAKE_SOURCE_DIR}/src/FstUtil/FstCons.h
   LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/FstTrackingLinkDef.h)
 
 add_library(FstTracking SHARED FstTracking.cxx G__FstTracking.cxx)

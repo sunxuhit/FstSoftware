@@ -974,10 +974,14 @@ bool FstTracking::initEfficiency_Hits()
 {
   h_mHits_IST = new TH2F("h_mHits_IST","h_mHits_IST",20,165.0,280.0,20,0.0,80.0);
   h_mHits_FST = new TH2F("h_mHits_FST","h_mHits_FST",20,165.0,280.0,20,0.0,80.0);
+ 
+  h_mHits_IST13 = new TH2F("h_mHits_IST13","h_mHits_IST13",FST::noColumns,0.0,24*FST::pitchColumn,FST::noRows,0.0,64*FST::pitchRow);
+  h_mHits_IST2 = new TH2F("h_mHits_IST2","h_mHits_IST2",FST::noColumns,0.0,24*FST::pitchColumn,FST::noRows,0.0,64*FST::pitchRow);
 
   return true;
 }
 
+#if 0
 bool FstTracking::doEfficiency_Hits(std::vector<HIT> hitVec_orig)
 {
   int numOfHits[4]; // 0 for fst | 1-3 for ist
@@ -1061,11 +1065,81 @@ bool FstTracking::doEfficiency_Hits(std::vector<HIT> hitVec_orig)
 
   return true;
 }
+#endif
+
+bool FstTracking::doEfficiency_Hits(std::vector<HIT> hitVec_orig)
+{
+  int numOfHits[4]; // 0 for fst | 1-3 for ist
+  std::vector<HIT> hitVec[4];
+  for(int i_layer = 0; i_layer < 4; ++i_layer)
+  {
+    numOfHits[i_layer] = 0;
+    hitVec[i_layer].clear();
+  }
+
+  for(int i_hit = 0; i_hit < hitVec_orig.size(); ++i_hit)
+  { // set temp ist hit container for each layer
+    int layer = hitVec_orig[i_hit].layer;
+    numOfHits[layer]++;
+    hitVec[layer].push_back(hitVec_orig[i_hit]);
+  }
+
+  const double rMax = FST::rOuter + 4.0*FST::pitchR;
+  const double rMin = FST::rOuter;
+  const double phiMax = 64.0*FST::pitchPhi;
+  const double phiMin = 0.0;
+
+  const double xMax = 23.0*FST::pitchColumn + 0.5*FST::pitchColumn;
+  const double xMin = 20.0*FST::pitchColumn + 0.5*FST::pitchColumn;
+  // const double yMax = 23.0*FST::pitchColumn + 0.5*FST::pitchColumn;
+  // const double yMin = 20.0*FST::pitchColumn + 0.5*FST::pitchColumn;
+
+  if(numOfHits[1] > 0 && numOfHits[3] > 0)
+  { // only do efficiency when at least 1 hit is found in ist1 & ist3
+    // cout << "numOfHits[1] = " << numOfHits[1] << ", hitVec.size = " << hitVec[1].size() << endl;
+    // cout << "numOfHits[2] = " << numOfHits[2] << ", hitVec.size = " << hitVec[2].size() << endl;
+    // cout << "numOfHits[3] = " << numOfHits[3] << ", hitVec.size = " << hitVec[3].size() << endl;
+    // cout << "hitVec_orig.size = " << hitVec_orig.size() << ", sum of each layer = " << hitVec[0].size()+hitVec[1].size()+hitVec[2].size()+hitVec[3].size() << endl;
+    // cout << endl;
+
+    double z0_fst = FST::pitchLayer03;
+
+    double x1_ist = hitVec[1][0].column*FST::pitchColumn + 0.5*FST::pitchColumn;
+    double y1_ist = (63-hitVec[1][0].row)*FST::pitchRow + 0.5*FST::pitchRow;
+    double z1_ist = FST::pitchLayer12 + FST::pitchLayer23;
+
+    double x3_ist = hitVec[3][0].column*FST::pitchColumn + 0.5*FST::pitchColumn;
+    double y3_ist = (63-hitVec[3][0].row)*FST::pitchRow + 0.5*FST::pitchRow;
+    double z3_ist = 0.0;
+
+    double x2_proj = x3_ist + (x1_ist-x3_ist)*FST::pitchLayer23/(FST::pitchLayer12+FST::pitchLayer23);
+    double y2_proj = y3_ist + (y1_ist-y3_ist)*FST::pitchLayer23/(FST::pitchLayer12+FST::pitchLayer23);
+    double z2_ist = FST::pitchLayer23;
+
+    if(x2_proj >= xMin && x2_proj <= xMax)
+    { // used for efficiency only if the projected position is within FST acceptance
+      h_mHits_IST13->Fill(x2_proj,y2_proj);
+
+      if(numOfHits[2] > 0)
+      {
+	double x2_ist = hitVec[2][0].column*FST::pitchColumn + 0.5*FST::pitchColumn;
+	double y2_ist = (63-hitVec[2][0].row)*FST::pitchRow + 0.5*FST::pitchRow;
+
+	h_mHits_IST2->Fill(x2_proj,y2_proj);
+      }
+    }
+  }
+
+  return true;
+}
 
 void FstTracking::writeEfficiency_Hits()
 {
   h_mHits_IST->Write();
   h_mHits_FST->Write();
+
+  h_mHits_IST13->Write();
+  h_mHits_IST2->Write();
 }
 //--------------Efficiency with Hits---------------------
 

@@ -12,6 +12,7 @@ namespace FST
   const int numChannels = 128;
   const int numTBins    = 9;
   const int pedTimeBin  = 3; // time bin used for pedestal calculation
+  const int defaultTimeBin  = 3; // default time bin
 
   // FST Geometry
   const int numRStrip = 8; // 0-3 for inner sector | 4-7 for outer sector

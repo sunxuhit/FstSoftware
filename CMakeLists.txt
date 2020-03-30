@@ -29,8 +29,12 @@ find_package(ROOT REQUIRED COMPONENTS RIO Net)
 include(${ROOT_USE_FILE})
 
 # include IstTracking
-include_directories("${PROJECT_SOURCE_DIR}/src/IstTracking")
-add_subdirectory(src/IstTracking)
+# include_directories("${PROJECT_SOURCE_DIR}/src/IstTracking")
+# add_subdirectory(src/IstTracking)
+
+# include FstUtil
+include_directories("${PROJECT_SOURCE_DIR}/src/FstUtil")
+add_subdirectory(src/FstUtil)
 
 # include FstTracking
 include_directories("${PROJECT_SOURCE_DIR}/src/FstTracking")
