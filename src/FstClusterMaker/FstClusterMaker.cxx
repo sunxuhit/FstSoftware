@@ -1,0 +1,842 @@
+#include "./FstClusterMaker.h"
+#include "../FstUtil/FstRawHit.h"
+#include "../FstUtil/FstCluster.h"
+
+#include <iostream>
+#include <fstream>
+#include <cmath>
+
+#include <TFile.h>
+#include <TChain.h>
+#include <TGraph.h>
+#include <TH1F.h>
+#include <TH2F.h>
+#include <TMath.h>
+#include <TVector3.h>
+
+using namespace std;
+
+ClassImp(FstClusterMaker)
+
+//------------------------------------------
+
+FstClusterMaker::FstClusterMaker() : mList("../../list/FST/FstPed_HV70.list"), mOutPutFile("./FstPed_HV70.root")
+{
+  cout << "FstClusterMaker::FstClusterMaker() -------- Constructor!  --------" << endl;
+  mHome = getenv("HOME");
+}
+
+FstClusterMaker::~FstClusterMaker()
+{
+  cout << "FstClusterMaker::~FstClusterMaker() -------- Release Memory!  --------" << endl;
+}
+
+//------------------------------------------
+int FstClusterMaker::Init()
+{
+  cout << "FstClusterMaker::Init => " << endl;
+  File_mOutPut = new TFile(mOutPutFile.c_str(),"RECREATE");
+
+  bool isInPut = initChain(); // initialize input data/ped TChain;
+  bool isPed = initPedestal(); // initialize pedestal array;
+  bool isSig = initSignal(); // initialize signal array;
+  bool isHit = initHit(); // initialize Hit array;
+
+  if(!isInPut) 
+  {
+    cout << "Failed to initialize input data!" << endl;
+    return -1;
+  }
+  if(!isPed) 
+  {
+    cout << "Failed to initialize pedestals!" << endl;
+    return -1;
+  }
+  if(!isSig) 
+  {
+    cout << "Failed to initialize signal!" << endl;
+    return -1;
+  }
+  if(!isHit) 
+  {
+    cout << "Failed to initialize FST & IST Hits!" << endl;
+    return -1;
+  }
+
+  initHitDisplay(); // initialize hit display
+  // initTracking_ARMDisplay(); // initialize tracking as ARMDisplay
+
+  return 1;
+}
+
+bool FstClusterMaker::initChain()
+{
+  cout << "FstClusterMaker::initChain -> " << endl;
+
+  mChainInPut = new TChain("tree_Hits");
+
+  if (!mList.empty())   // if input file is ok
+  {
+    cout << "Open input probability file list" << endl;
+    ifstream in(mList.c_str());  // input stream
+    if(in)
+    {
+      cout << "input file probability list is ok" << endl;
+      char str[255];       // char array for each file name
+      Long64_t entries_save = 0;
+      while(in)
+      {
+	in.getline(str,255);  // take the lines of the file list
+	if(str[0] != 0)
+	{
+	  string addfile;
+	  addfile = str;
+	  mChainInPut->AddFile(addfile.c_str(),-1,"tree_Hits");
+	  Long64_t file_entries = mChainInPut->GetEntries();
+	  cout << "File added to data chain: " << addfile.c_str() << " with " << (file_entries-entries_save) << " entries" << endl;
+	  entries_save = file_entries;
+	}
+      }
+    }
+    else
+    {
+      cout << "WARNING: input probability file input is problemtic" << endl;
+      return false;
+    }
+  }
+
+  mChainInPut->SetBranchAddress("evt_rdo",evt_rdo);
+  mChainInPut->SetBranchAddress("evt_arm",evt_arm);
+  mChainInPut->SetBranchAddress("evt_port",evt_port);
+  mChainInPut->SetBranchAddress("evt_apv",evt_apv);
+  mChainInPut->SetBranchAddress("hit_ch",hit_ch);
+  mChainInPut->SetBranchAddress("hit_tb",hit_tb);
+  mChainInPut->SetBranchAddress("hit_adc",hit_adc);
+
+  long NumOfEvents = (long)mChainInPut->GetEntries();
+  cout << "total number of events: " << NumOfEvents << endl;
+
+  return true;
+}
+
+bool FstClusterMaker::initSignal()
+{
+  cout << "FstClusterMaker::initSignal -> " << endl;
+  return clearSignal();
+}
+
+bool FstClusterMaker::initHit()
+{
+  cout << "FstClusterMaker::initHit -> " << endl;
+  return clearHit();
+}
+
+//------------------------------------------
+bool FstClusterMaker::clearSignal()
+{
+  for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+  {
+    for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+    {
+      for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+      {
+	for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+	{
+	  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+	  {
+	    mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
+	    mRawSig[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
+	  }
+	}
+      }
+    }
+  }
+
+  return true;
+}
+
+bool FstClusterMaker::clearHit()
+{
+  mRawHitsVec.clear();
+
+  return true;
+}
+//------------------------------------------
+int FstClusterMaker::Make()
+{
+  cout << "FstClusterMaker::Make => " << endl;
+
+  bool isPed = calPedestal(); // calculate pedestals with first 1000 events
+  if( !isPed ) 
+  {
+    cout << "No Pedestal!!!" << endl;
+    return -1;
+  }
+
+  long NumOfEvents = (long)mChainInPut->GetEntries();
+  // if(NumOfEvents > 1000) NumOfEvents = 1000;
+  // NumOfEvents = 300;
+  mChainInPut->GetEntry(0);
+
+  for(int i_event = 0; i_event < NumOfEvents; ++i_event)
+  {
+    if(i_event%1000==0) cout << "processing events:  " << i_event << "/" << NumOfEvents << endl;
+    mChainInPut->GetEntry(i_event);
+    clearHit();
+    clearSignal();
+
+    // calculate ped corrected signal for each ch & time bin
+    // ped is calcualte from pedTimeBin = 0
+    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+    {
+      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+      {
+	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+	{
+	  int rdo  = evt_rdo[i_arm][i_port][i_apv];
+	  int arm  = evt_arm[i_arm][i_port][i_apv];
+	  int port = evt_port[i_arm][i_port][i_apv];
+	  int apv  = evt_apv[i_arm][i_port][i_apv];
+
+	  // NOTE THAT RDO/ARM/PORT ARE HARDWIRED HERE!!!
+	  bool pass = ( ( rdo == 1 ) && ( (arm == 0) || (arm == 1 ) ) && ( (port == 0) || (port == 1) ) &&  ( apv >= 0 ) && ( apv < FST::numAPVs ) ) ;
+	  bool bAPV = isBadAPV(arm,port,apv);
+	  if(pass && !bAPV)
+	  {
+	    for(int i_ro = 0; i_ro < FST::numROChannels; ++i_ro)
+	    {
+	      int tb = hit_tb[i_arm][i_port][i_apv][i_ro]; // time bin
+	      int ch = hit_ch[i_arm][i_port][i_apv][i_ro]; // real channel number 
+	      int adc = hit_adc[i_arm][i_port][i_apv][i_ro];
+
+	      mSigPedCorr[i_arm][i_port][i_apv][ch][tb] = adc-mPed[i_arm][i_port][i_apv][ch]; // adc - ped
+	      mRawSig[i_arm][i_port][i_apv][ch][tb] = adc;
+	    }
+	  }
+	}
+      }
+    }
+
+    // find Hits
+    int numOfHits = 0;
+    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+    {
+      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+      {
+	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+	{
+	  for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+	  {
+	    if( // some hit quality cuts => 1st one is questionable | 2nd made sure ch shows reasonable noise
+		( mSigPedCorr[i_arm][i_port][i_apv][i_ch][0] < mSigPedCorr[i_arm][i_port][i_apv][i_ch][3] ) &&
+		( mPedStdDev[i_arm][i_port][i_apv][i_ch] > FST::MinNoise)  
+	      )
+	    {
+	      double maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][0]; // init with 1st tb
+	      int maxTB = 0;
+	      double preADC = maxADC;
+	      bool isHit = false;
+	      float nCuts = FST::nHitCuts; // 5.5 for IST
+	      if(i_arm == 1 && i_port == 1) nCuts = FST::nFstHitCuts; // 4.5 for FST
+	      for(int i_tb = 1; i_tb < FST::numTBins-1; ++i_tb)
+	      { // only if 3 consequetive timebins of a ch exceed the threshold cut is considered as a hit
+		if( 
+		    ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nCuts*mPedStdDev[i_arm][i_port][i_apv][i_ch]) &&
+		    ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nCuts*mPedStdDev[i_arm][i_port][i_apv][i_ch]) &&
+		    ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > nCuts*mPedStdDev[i_arm][i_port][i_apv][i_ch])
+		  ) 
+		{
+		  isHit = true; // set isHit to true if 3 consequetive time bins exceed the threshold
+		  if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
+		  { // find time bin with max adc for 0-FST::numTBins-2
+		    maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb];
+		    maxTB = i_tb;
+		    preADC = maxADC;
+		  }
+		  if(i_tb == FST::numTBins-2 && mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > preADC)
+		  { // check if last time bin has the max ADC
+		    maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1];
+		    maxTB = i_tb+1;
+		  }
+		}
+	      }
+	      if(isHit && numOfHits < FST::maxNHits)
+	      { // set Hit info
+		FstRawHit *fstRawHit = new FstRawHit();
+		fstRawHit->Clear();
+		fstRawHit->setLayer(getLayer(i_arm,i_port));
+		fstRawHit->setSensor(getSensor(i_arm,i_port,i_apv));
+		fstRawHit->setColumn(getColumn(i_arm,i_port,i_apv,i_ch));
+		fstRawHit->setRow(getRow(i_arm,i_port,i_apv,i_ch));
+		fstRawHit->setCharge(maxADC, maxTB);
+		fstRawHit->setMaxTb(maxTB);
+		fstRawHit->setHitId(numOfHits);
+		mRawHitsVec.push_back(fstRawHit);
+
+		numOfHits++;
+	      }
+	    }
+	  }
+	}
+      }
+    }
+
+    if(numOfHits > 0 && numOfHits <= FST::maxNHitsPerEvent) // maximum hits to expect per event is 10
+    {
+      fillHitDisplay(mRawHitsVec); // fill hit display
+      std::vector<FstCluster *> cluster_simple = findCluster_Simple(mRawHitsVec);
+    }
+  }
+
+  cout << "processed events:  " << NumOfEvents << "/" << NumOfEvents << endl;
+
+  return 1;
+}
+
+int FstClusterMaker::Finish()
+{
+  cout << "FstClusterMaker::Finish => " << endl;
+  writePedestal();
+  writeHitDisplay();
+
+  return 1;
+}
+
+//--------------pedestal---------------------
+bool FstClusterMaker::clearPedestal()
+{
+  for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+  {
+    for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+    {
+      for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+      {
+	for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+	{
+	  mPed[i_arm][i_port][i_apv][i_ch] = -1.0;
+	  mPedStdDev[i_arm][i_port][i_apv][i_ch] = -1.0;
+	  // pedRMS[i_arm][i_port][i_apv][i_ch] = -1.0;
+	}
+      }
+    }
+  }
+
+  return true;
+}
+
+bool FstClusterMaker::initPedestal()
+{
+  cout << "FstClusterMaker::initPedestal -> " << endl;
+
+  for(int i_layer = 0; i_layer < 4; ++i_layer)
+  {
+    std::string gName = Form("g_mPedMean_Layer%d",i_layer);
+    g_mPedMean[i_layer] = new TGraph();
+    g_mPedMean[i_layer]->SetName(gName.c_str());
+
+    gName = Form("g_mPedSigma_Layer%d",i_layer);
+    g_mPedSigma[i_layer] = new TGraph();
+    g_mPedSigma[i_layer]->SetName(gName.c_str());
+
+    std::string HistName = Form("h_mPedDisplay_Layer%d",i_layer);
+    if(i_layer == 0) h_mPedDisplay[i_layer] = new TH2F(HistName.c_str(),HistName.c_str(),FST::numRStrip,-0.5,FST::numRStrip-0.5,FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5);
+    else h_mPedDisplay[i_layer] = new TH2F(HistName.c_str(),HistName.c_str(),FST::noColumns,-0.5,FST::noColumns-0.5,FST::noRows,-0.5,FST::noRows-0.5);
+  }
+
+  return clearPedestal();
+}
+
+bool FstClusterMaker::calPedestal()
+{
+  cout << "FstClusterMaker::calPedestal -> " << endl;
+  cout << " Only use first 1000 event for Pedstal Calculation!" << endl;
+
+  int NumOfEvents = (int)mChainInPut->GetEntries();
+  if(NumOfEvents > 1000) NumOfEvents = 1000;
+  // const int NumOfEvents = 1000;
+  mChainInPut->GetEntry(0);
+
+  //  Calculate a rolling average and standard deviation
+  int counters[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels];
+  double sumValues[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels];
+  double sumValuesSquared[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels];
+
+  //--------------------------------------------------------
+  // 1st loop to get a rough estimate of ped (including Hits)
+  cout << "=====>First Pedestal Pass...." << endl;
+  for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+  {
+    for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+    {
+      for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+      {
+	for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+	{
+	  counters[i_arm][i_port][i_apv][i_ch] = 0;
+	  sumValues[i_arm][i_port][i_apv][i_ch] = 0.0;
+	  sumValuesSquared[i_arm][i_port][i_apv][i_ch] = 0.0;
+	}
+      }
+    }
+  }
+
+  for(int i_event = 0; i_event < NumOfEvents; ++i_event)
+  { 
+    // if(i_event%1000==0) cout << "processing events:  " << i_event << "/" << NumOfEvents << endl;
+    mChainInPut->GetEntry(i_event);
+
+    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+    {
+      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+      {
+	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+	{
+	  int rdo  = evt_rdo[i_arm][i_port][i_apv];
+	  int arm  = evt_arm[i_arm][i_port][i_apv];
+	  int port = evt_port[i_arm][i_port][i_apv];
+	  int apv  = evt_apv[i_arm][i_port][i_apv];
+
+	  // NOTE THAT RDO/ARM/PORT ARE HARDWIRED HERE!!!
+	  bool pass = ( ( rdo == 1 ) && ( (arm == 0) || (arm == 1 ) ) && ( (port == 0) || (port == 1) ) &&  ( apv >= 0 ) && ( apv < FST::numAPVs ) ) ;
+	  bool bAPV = isBadAPV(arm,port,apv);
+	  if(pass && !bAPV)
+	  {
+	    for(int i_ro = 0; i_ro < FST::numROChannels; ++i_ro)
+	    {
+	      int tb = hit_tb[i_arm][i_port][i_apv][i_ro]; // time bin
+	      if(tb == FST::pedTimeBin)
+	      {
+		int ch = hit_ch[i_arm][i_port][i_apv][i_ro]; // real channel number 
+		int adc = hit_adc[i_arm][i_port][i_apv][i_ro];
+		sumValues[arm][port][apv][ch] += adc;
+		sumValuesSquared[arm][port][apv][ch] += adc * adc;
+		counters[arm][port][apv][ch]++;
+	      }
+	    }
+	  }
+	}
+      }
+    }
+  }
+
+  // rough estimate of ped (including Hits)
+  for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+  {
+    for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+    {
+      for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+      {
+	for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+	{
+	  if(counters[i_arm][i_port][i_apv][i_ch] > 0) // eject bad channels
+	  {
+	    mPed[i_arm][i_port][i_apv][i_ch] = sumValues[i_arm][i_port][i_apv][i_ch]/counters[i_arm][i_port][i_apv][i_ch];
+	    mPedStdDev[i_arm][i_port][i_apv][i_ch] = sqrt((sumValuesSquared[i_arm][i_port][i_apv][i_ch]-(double)counters[i_arm][i_port][i_apv][i_ch]*mPed[i_arm][i_port][i_apv][i_ch]*mPed[i_arm][i_port][i_apv][i_ch])/(double)(counters[i_arm][i_port][i_apv][i_ch]-1));
+	    // pedRMS[i_arm][i_port][i_apv][i_ch] = sqrt(mPed[i_arm][i_port][i_apv][i_ch]*mPed[i_arm][i_port][i_apv][i_ch]-mPedStdDev[i_arm][i_port][i_apv][i_ch]*mPedStdDev[i_arm][i_port][i_apv][i_ch]);
+	  }
+	}
+      }
+    }
+  }
+  //--------------------------------------------------------
+
+  //--------------------------------------------------------
+  // 2nd loop to find ped excluding Hits
+  cout << "=====>Second Pedestal Pass...." << endl;
+  for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+  {
+    for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+    {
+      for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+      {
+	for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+	{
+	  counters[i_arm][i_port][i_apv][i_ch] = 0;
+	  sumValues[i_arm][i_port][i_apv][i_ch] = 0.0;
+	  sumValuesSquared[i_arm][i_port][i_apv][i_ch] = 0.0;
+	}
+      }
+    }
+  }
+  for(int i_event = 0; i_event < NumOfEvents; ++i_event)
+  { 
+    // if(i_event%1000==0) cout << "processing events:  " << i_event << "/" << NumOfEvents << endl;
+    mChainInPut->GetEntry(i_event);
+
+    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+    {
+      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+      {
+	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+	{
+	  int rdo  = evt_rdo[i_arm][i_port][i_apv];
+	  int arm  = evt_arm[i_arm][i_port][i_apv];
+	  int port = evt_port[i_arm][i_port][i_apv];
+	  int apv  = evt_apv[i_arm][i_port][i_apv];
+
+	  // NOTE THAT RDO/ARM/PORT ARE HARDWIRED HERE!!!
+	  bool pass = ( ( rdo == 1 ) && ( (arm == 0) || (arm == 1 ) ) && ( (port == 0) || (port == 1) ) &&  ( apv >= 0 ) && ( apv < FST::numAPVs ) ) ;
+	  bool bAPV = isBadAPV(arm,port,apv);
+	  if(pass && !bAPV)
+	  {
+	    for(int i_ro = 0; i_ro < FST::numROChannels; ++i_ro)
+	    {
+	      int tb = hit_tb[i_arm][i_port][i_apv][i_ro]; // time bin
+	      if(tb == FST::pedTimeBin)
+	      {
+		int ch = hit_ch[i_arm][i_port][i_apv][i_ro]; // real channel number 
+		int adc = hit_adc[i_arm][i_port][i_apv][i_ro];
+		if ( (adc < mPed[arm][port][apv][ch]+FST::nPedCuts*mPedStdDev[arm][port][apv][ch]) && ( adc >= 0 && adc < 4096) )
+		{ // only adc belew ped+3sigma are considered for 2nd loop
+		  sumValues[arm][port][apv][ch] += adc;
+		  sumValuesSquared[arm][port][apv][ch] += adc * adc;
+		  counters[arm][port][apv][ch]++;
+		}
+	      }
+	    }
+	  }
+	}
+      }
+    }
+  }
+  // calculate ped excluding Hits
+  for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+  {
+    for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+    {
+      for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+      {
+	for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+	{
+	  if(counters[i_arm][i_port][i_apv][i_ch] > 0) // eject bad channels
+	  {
+	    mPed[i_arm][i_port][i_apv][i_ch] = sumValues[i_arm][i_port][i_apv][i_ch]/counters[i_arm][i_port][i_apv][i_ch];
+	    mPedStdDev[i_arm][i_port][i_apv][i_ch] = sqrt((sumValuesSquared[i_arm][i_port][i_apv][i_ch]-(double)counters[i_arm][i_port][i_apv][i_ch]*mPed[i_arm][i_port][i_apv][i_ch]*mPed[i_arm][i_port][i_apv][i_ch])/(double)(counters[i_arm][i_port][i_apv][i_ch]-1));
+	    // pedRMS[i_arm][i_port][i_apv][i_ch] = sqrt(mPed[i_arm][i_port][i_apv][i_ch]*mPed[i_arm][i_port][i_apv][i_ch]-mPedStdDev[i_arm][i_port][i_apv][i_ch]*mPedStdDev[i_arm][i_port][i_apv][i_ch]);
+	  }
+
+	  int layer = this->getLayer(i_arm,i_port);
+	  int col = this->getColumn(i_arm,i_port,i_apv,i_ch);
+	  int row = this->getRow(i_arm,i_port,i_apv,i_ch);
+
+	  g_mPedMean[layer]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mPed[i_arm][i_port][i_apv][i_ch]);
+	  g_mPedSigma[layer]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mPedStdDev[i_arm][i_port][i_apv][i_ch]);
+	  h_mPedDisplay[layer]->Fill(col,row,mPedStdDev[i_arm][i_port][i_apv][i_ch]);
+	}
+      }
+    }
+  }
+  //--------------------------------------------------------
+
+  return true;
+}
+
+void FstClusterMaker::writePedestal()
+{
+  cout << "FstClusterMaker::writePedestal => save ped mean & sigma!" << endl;
+
+  for(int i_layer = 0; i_layer < 4; ++i_layer)
+  {
+    g_mPedMean[i_layer]->Write();
+    g_mPedSigma[i_layer]->Write();
+    h_mPedDisplay[i_layer]->Write();
+  }
+}
+//--------------pedestal---------------------
+
+//--------------hit display---------------------
+bool FstClusterMaker::initHitDisplay()
+{
+  for(int i_layer = 0; i_layer < 4; ++i_layer)
+  {
+    std::string HistName = Form("h_mHitDisplay_Layer%d",i_layer);
+    if(i_layer == 0) h_mHitDisplay[i_layer] = new TH2F(HistName.c_str(),HistName.c_str(),FST::numRStrip,-0.5,FST::numRStrip-0.5,FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5);
+    else h_mHitDisplay[i_layer] = new TH2F(HistName.c_str(),HistName.c_str(),FST::noColumns,-0.5,FST::noColumns-0.5,FST::noRows,-0.5,FST::noRows-0.5);
+    
+    HistName = Form("h_mMaxTb_Layer%d",i_layer);
+    h_mMaxTb[i_layer] = new TH1F(HistName.c_str(),HistName.c_str(),10,-0.5,9.5); 
+  }
+
+  return true;
+}
+
+void FstClusterMaker::fillHitDisplay(std::vector<FstRawHit *> rawHitsVec)
+{
+  if(rawHitsVec.size() < FST::maxNHits)
+  {
+    for(int i_hit = 0; i_hit < rawHitsVec.size(); ++i_hit)
+    {
+      int layer = rawHitsVec[i_hit]->getLayer();
+      h_mHitDisplay[layer]->Fill(rawHitsVec[i_hit]->getColumn(),rawHitsVec[i_hit]->getRow());
+      h_mMaxTb[layer]->Fill(rawHitsVec[i_hit]->getMaxTb());
+    }
+  }
+}
+
+void FstClusterMaker::writeHitDisplay()
+{
+  cout << "FstClusterMaker::writeHitDisplay => save Hits at each Layer!" << endl;
+  for(int i_layer = 0; i_layer < 4; ++i_layer)
+  {
+    h_mHitDisplay[i_layer]->Write();
+    h_mMaxTb[i_layer]->Write();
+  }
+}
+//--------------hit display---------------------
+
+//--------------cluster with Simple Algorithm---------------------
+bool FstClusterMaker::initCluster_Simple()
+{
+  cout << "FstClusterMaker::initCluster_Simple -> " << endl;
+
+  return clearCluster_Simple();
+}
+
+bool FstClusterMaker::clearCluster_Simple()
+{
+  mClustersVec.clear();
+
+  return true;
+}
+
+std::vector<FstCluster *> FstClusterMaker::findCluster_Simple(std::vector<FstRawHit *> rawHitsVec_orig)
+{
+  double meanRow = 0., meanColumn = 0.;
+  double totAdc = 0.;
+  int nRawHits = 0, nRawHitsR = 0, nRawHitsPhi = 0;
+
+  clearCluster_Simple();
+
+  int numOfHits = rawHitsVec_orig.size();
+  std::vector<FstRawHit *> rawHitsVec;
+  rawHitsVec.clear();
+  rawHitsVec.reserve(rawHitsVec_orig.size());
+  for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
+  { // set temp ist hit container
+    rawHitsVec.push_back(rawHitsVec_orig[i_hit]);
+  }
+
+  // find cluster
+  std::vector<FstCluster *> clustersVec_Simple;
+  clustersVec_Simple.clear();
+  if(rawHitsVec.size() > 0)
+  {
+    // set 1st cluster to 1st hit
+    std::vector<FstRawHit *>::iterator rawHitsIt = rawHitsVec.begin();
+
+    FstCluster *fstCluster_tmp = new FstCluster();
+    fstCluster_tmp->Clear();
+    fstCluster_tmp->setLayer((*rawHitsIt)->getLayer());
+    fstCluster_tmp->setSensor((*rawHitsIt)->getSensor());
+    fstCluster_tmp->setMeanColumn((*rawHitsIt)->getColumn());
+    fstCluster_tmp->setMeanRow((*rawHitsIt)->getRow());
+    fstCluster_tmp->setTotCharge((*rawHitsIt)->getCharge((*rawHitsIt)->getMaxTb()));
+    fstCluster_tmp->setMaxTb((*rawHitsIt)->getMaxTb());
+    fstCluster_tmp->setClusterType(1);
+    fstCluster_tmp->setNRawHits(1);
+    fstCluster_tmp->setNRawHitsR(1);
+    fstCluster_tmp->setNRawHitsPhi(1);
+    fstCluster_tmp->addRawHit((*rawHitsIt)); // save hits for ith cluster
+
+    clustersVec_Simple.push_back(fstCluster_tmp);
+
+    rawHitsVec.erase(rawHitsIt); // remove 1st hit from ist hit container
+
+    if( rawHitsVec.size() !=0 )
+    {
+      double weight, tempSumAdc;
+      std::vector<FstCluster *>::iterator clusterIt = clustersVec_Simple.begin(); // get the begin of cluster container
+
+      while( clusterIt != clustersVec_Simple.end() && !rawHitsVec.empty() )
+      { //loop the existed clusters vector constainer
+	std::vector<FstRawHit *> clusteredHitsVec = (*clusterIt)->getRawHitVec(); // get hits stored in current cluster
+	for(std::vector<FstRawHit *>::iterator clusteredHitsIt = clusteredHitsVec.begin(); clusteredHitsIt != clusteredHitsVec.end(); clusteredHitsIt++) 
+	{ // loop over the hit belong to ith cluster
+	  rawHitsIt = rawHitsVec.begin(); // get hit from the rest of rawHitsVec
+
+	  while( rawHitsIt != rawHitsVec.end() ) 
+	  { // loop over the rest of hits in rawHitsVec
+	    if( ( ((*rawHitsIt)->getLayer() == (*clusteredHitsIt)->getLayer()) && ((*rawHitsIt)->getSensor() == (*clusteredHitsIt)->getSensor()) && ((*rawHitsIt)->getRow() == (*clusteredHitsIt)->getRow()) && ( ((*rawHitsIt)->getColumn() == (*clusteredHitsIt)->getColumn() + 1) || ((*rawHitsIt)->getColumn() == (*clusteredHitsIt)->getColumn() - 1) )) ||
+		( ((*rawHitsIt)->getLayer() == (*clusteredHitsIt)->getLayer()) && ((*rawHitsIt)->getSensor() == (*clusteredHitsIt)->getSensor()) && ((*rawHitsIt)->getColumn() == (*clusteredHitsIt)->getColumn()) && ( ((*rawHitsIt)->getRow() == (*clusteredHitsIt)->getRow() + 1) || ((*rawHitsIt)->getRow() == (*clusteredHitsIt)->getRow() - 1) ))   ) 
+	    {
+	      nRawHits = (*clusterIt)->getNRawHits() + 1;
+	      if( (*rawHitsIt)->getRow() == (*clusteredHitsIt)->getRow() ) nRawHitsR = (*clusterIt)->getNRawHitsR() + 1; //same phi
+	      if( (*rawHitsIt)->getColumn() == (*clusteredHitsIt)->getColumn() ) nRawHitsPhi = (*clusterIt)->getNRawHitsPhi() + 1; //same R
+
+	      int maxTb_temp = (*rawHitsIt)->getMaxTb();
+	      double currentAdc = (*rawHitsIt)->getCharge(maxTb_temp);
+	      tempSumAdc = (*clusterIt)->getTotCharge() + currentAdc;
+	      weight = currentAdc/tempSumAdc;
+
+	      int layer_temp        = (*clusterIt)->getLayer();
+	      int sensor_temp        = (*clusterIt)->getSensor();
+	      double meanColumn_temp = (1.0 - weight) * (*clusterIt)->getMeanColumn() + weight * (*rawHitsIt)->getColumn();
+	      double meanRow_temp    = (1.0 - weight) * (*clusterIt)->getMeanRow()    + weight * (*rawHitsIt)->getRow();
+	      double totAdc_temp     = tempSumAdc;
+
+	      (*clusterIt)->setLayer(layer_temp);
+	      (*clusterIt)->setSensor(sensor_temp);
+	      (*clusterIt)->setMeanColumn(meanColumn_temp);
+	      (*clusterIt)->setMeanRow(meanRow_temp);
+	      (*clusterIt)->setTotCharge(totAdc_temp);
+	      (*clusterIt)->setMaxTb(maxTb_temp);
+	      (*clusterIt)->setNRawHits(nRawHits);
+	      (*clusterIt)->setNRawHitsR(nRawHitsR);
+	      (*clusterIt)->setNRawHitsPhi(nRawHitsPhi);
+	      (*clusterIt)->setClusterType(1);
+	      (*clusterIt)->addRawHit((*rawHitsIt));
+
+	      //include the hit to the cluster's component vector
+	      int itPosition = std::distance(clusteredHitsVec.begin(), clusteredHitsIt);
+	      clusteredHitsVec = (*clusterIt)->getRawHitVec();
+	      clusteredHitsIt = clusteredHitsVec.begin() + itPosition;
+
+	      //remove the clustered ith raw hit from the raw hits list
+	      int distance = std::distance(rawHitsVec.begin(), rawHitsIt);
+	      rawHitsVec.erase(rawHitsIt);
+	      rawHitsIt = rawHitsVec.begin() + distance;
+	    }
+	    else
+	    {
+	      rawHitsIt++;
+	    }
+	  }
+	}
+
+	//if the rawHitsIt_th hit does not belong to the existed ith clusters then create a new cluster.
+	if(rawHitsVec.size() < 1) continue;
+
+	rawHitsIt = rawHitsVec.begin();
+
+	FstCluster *fstCluster_next = new FstCluster();
+	fstCluster_next->Clear();
+	fstCluster_next->setLayer((*rawHitsIt)->getLayer());
+	fstCluster_next->setSensor((*rawHitsIt)->getSensor());
+	fstCluster_next->setMeanColumn((*rawHitsIt)->getColumn());
+	fstCluster_next->setMeanRow((*rawHitsIt)->getRow());
+	fstCluster_next->setTotCharge((*rawHitsIt)->getCharge((*rawHitsIt)->getMaxTb()));
+	fstCluster_next->setMaxTb((*rawHitsIt)->getMaxTb());
+	fstCluster_next->setClusterType(1);
+	fstCluster_next->setNRawHits(1);
+	fstCluster_next->setNRawHitsR(1);
+	fstCluster_next->setNRawHitsPhi(1);
+	fstCluster_next->addRawHit((*rawHitsIt)); // save hits for ith cluster
+
+	rawHitsVec.erase(rawHitsIt); //remove the new clustered 1st hit from the hits list
+
+	int distanceCluster = std::distance(clustersVec_Simple.begin(), clusterIt);
+	clustersVec_Simple.push_back(fstCluster_next); // push new cluster to container
+	clusterIt = clustersVec_Simple.begin() + distanceCluster;
+	clusterIt++;
+      }
+    }
+  }
+
+  // cout << "rawHitsVec_orig.size = " << rawHitsVec_orig.size() << ", clustersVec_Simple.size = " << clustersVec_Simple.size() << endl;
+
+  return clustersVec_Simple;
+}
+
+//--------------cluster with Simple Algorithm---------------------
+
+//--------------Utility---------------------
+int FstClusterMaker::getLayer(int arm, int port)
+{
+  if(arm == 0 && port == 0) return 1; // top IST
+  if(arm == 0 && port == 1) return 2; // middle IST
+  if(arm == 1 && port == 0) return 3; // bottom IST
+  if(arm == 1 && port == 1) return 0; // FST module
+
+  return -1;
+}
+
+int FstClusterMaker::getSensor(int arm, int port, int apv)
+{
+  int layer = this->getLayer(arm,port);
+  if(layer == 0)
+  { // layer = 0 for FST
+    if(apv >= 0 && apv <= 3) return 0; // inner sector
+    if(apv >= 4 && apv <= 7) return 1; // outer sector
+  }
+  else
+  { // layer = 1-3 for IST
+    if(apv >= 0 && apv <= 5) return 0; // sensor 0 for first half group of APVs
+    if(apv >= 6 && apv <= 11) return 1; // sensor 1 for second half group of APVs 
+  }
+
+  return -1;
+}
+
+int FstClusterMaker::getColumn(int arm, int port, int apv, int ch)
+{
+  int col = -1;
+  int layer = this->getLayer(arm,port);
+  int sensor = this->getSensor(arm,port,apv);
+
+  if(layer == 0)
+  { // layer = 0 for FST
+    if(this->getRStrip(apv,ch) >= 0)
+    {
+      col = 4*sensor + this->getRStrip(apv,ch);
+    }
+  }
+  else
+  { // layer = 1-3 for IST
+    if(ch >= 0 && ch <= 63) col = apv*2;
+    else col = apv*2 + 1;
+  }
+
+  return col;
+}
+
+int FstClusterMaker::getRow(int arm, int port, int apv, int ch)
+{
+  int row = -1;
+  int layer = this->getLayer(arm,port);
+  if(layer == 0)
+  { // layer = 0 for FST
+    row = this->getPhiSeg(apv,ch);
+  }
+  else
+  { // layer = 1-3 for IST
+    if(ch >= 0 && ch <= 63) row = ch;
+    else row = 127 - ch;
+  }
+
+  return row;
+}
+
+int FstClusterMaker::getRStrip(int apv, int ch)
+{
+  int r_strip = -1;
+
+  // only apply to half outer sector for now
+  if(apv == 4) r_strip = ch%4;
+  if(apv == 5) r_strip = 3-ch%4;
+
+  return r_strip;
+}
+
+int FstClusterMaker::getPhiSeg(int apv, int ch)
+{
+  int phi_seg = -1;
+
+  if(apv >= 0 && apv <= 3) phi_seg = apv*32 + ch/4; // inner
+  if(apv >= 4 && apv <= 7) phi_seg = (apv-4)*32 + ch/4; // outer
+
+  return phi_seg;
+}
+
+bool FstClusterMaker::isBadAPV(int arm, int port, int apv)
+{
+  bool bAPV = false;
+
+  if(arm == 0 && port==0 && (apv == 5||apv == 6)) bAPV = true;
+  if(arm == 0 && port==1 && (apv <= 9)) bAPV = true;
+  // if(arm == 1 && port==0 && (apv == 0||apv == 1)) bAPV = true;
+  if(arm == 1 && port==0 && (apv == 0)) bAPV = true;
+  // if(arm == 1 && port==1 && (apv == 6||apv == 7)) bAPV = true;
+
+  return bAPV;
+}
+//--------------Utility---------------------

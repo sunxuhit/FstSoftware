@@ -27,6 +27,7 @@ class FstRawHit : public TObject
     int getHitId() const;
 
     void Print() const;
+    void Clear();
 
   private:
     int mLayer; // 0 for FST | 1-3 for IST

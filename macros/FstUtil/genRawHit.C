@@ -61,6 +61,9 @@ int genRawHit()
   mRawHitVec[0]->Print();
   mRawHitVec[1]->Print();
 
+  mRawHitVec[1]->Clear();
+  mRawHitVec[1]->Print();
+
   std::cout << "All done" << std::endl;
 
   return 1;

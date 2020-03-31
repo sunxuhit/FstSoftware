@@ -9,16 +9,7 @@ ClassImp(FstRawHit)
 
 FstRawHit::FstRawHit()
 {
-  mLayer = -1;
-  mSensor = -1;
-  mColumn = -1;
-  mRow = -1;
-  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
-  {
-    mCharge[i_tb] = -1.0;
-  }
-  mMaxTb = -1;
-  mHitId = -1;
+  Clear();
 
   mDefaultTb = FST::defaultTimeBin; // use 3 for now
 }
@@ -104,4 +95,18 @@ void FstRawHit::Print() const
   cout << "mHitId =" << mHitId << endl;
   cout << "mDefaultTb = " << mDefaultTb  << endl;
   cout << endl;
+}
+
+void FstRawHit::Clear()
+{
+  mLayer = -1;
+  mSensor = -1;
+  mColumn = -1;
+  mRow = -1;
+  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+  {
+    mCharge[i_tb] = -1.0;
+  }
+  mMaxTb = -1;
+  mHitId = -1;
 }

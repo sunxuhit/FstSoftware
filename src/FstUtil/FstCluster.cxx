@@ -9,17 +9,7 @@ ClassImp(FstCluster)
 
 FstCluster::FstCluster()
 {
-    mLayer = -1;
-    mSensor = -1;
-    mMeanColumn = -1;
-    mMeanRow = -1;
-    mTotCharge = -1;
-    mMaxTb = -1;
-    mClusterType = -1;
-    mNRawHits = -1;
-    mNRawHitsR = -1;
-    mNRawHitsPhi = -1;
-    mRawHitVec.clear();
+  Clear();
 }
 
 FstCluster::~FstCluster()
@@ -142,3 +132,19 @@ void FstCluster::Print() const
   }
   cout << endl;
 }
+
+void FstCluster::Clear()
+{
+  mLayer = -1;
+  mSensor = -1;
+  mMeanColumn = -1;
+  mMeanRow = -1;
+  mTotCharge = -1;
+  mMaxTb = -1;
+  mClusterType = -1;
+  mNRawHits = -1;
+  mNRawHitsR = -1;
+  mNRawHitsPhi = -1;
+  mRawHitVec.clear();
+}
+

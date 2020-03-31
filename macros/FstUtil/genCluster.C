@@ -78,6 +78,9 @@ int genCluster()
   mClusterVec[0]->Print();
   mClusterVec[1]->Print();
 
+  mClusterVec[0]->Clear();
+  mClusterVec[0]->Print();
+
   std::cout << "All done" << std::endl;
 
 
