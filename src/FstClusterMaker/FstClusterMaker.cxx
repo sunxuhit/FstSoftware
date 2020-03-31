@@ -8,6 +8,7 @@
 
 #include <TFile.h>
 #include <TChain.h>
+#include <TTree.h>
 #include <TGraph.h>
 #include <TH1F.h>
 #include <TH2F.h>
@@ -41,6 +42,7 @@ int FstClusterMaker::Init()
   bool isPed = initPedestal(); // initialize pedestal array;
   bool isSig = initSignal(); // initialize signal array;
   bool isHit = initHit(); // initialize Hit array;
+  bool isTree = initTree();
 
   if(!isInPut) 
   {
@@ -62,9 +64,13 @@ int FstClusterMaker::Init()
     cout << "Failed to initialize FST & IST Hits!" << endl;
     return -1;
   }
+  if(!isTree) 
+  {
+    cout << "Failed to initialize TTree for FST & IST Hits & Clusters!" << endl;
+    return -1;
+  }
 
   initHitDisplay(); // initialize hit display
-  // initTracking_ARMDisplay(); // initialize tracking as ARMDisplay
 
   return 1;
 }
@@ -182,7 +188,6 @@ int FstClusterMaker::Make()
   {
     if(i_event%1000==0) cout << "processing events:  " << i_event << "/" << NumOfEvents << endl;
     mChainInPut->GetEntry(i_event);
-    clearHit();
     clearSignal();
 
     // calculate ped corrected signal for each ch & time bin
@@ -218,6 +223,8 @@ int FstClusterMaker::Make()
     }
 
     // find Hits
+    std::vector<FstRawHit *> rawHitsVec_temp;
+    rawHitsVec_temp.clear();
     int numOfHits = 0;
     for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
     {
@@ -271,7 +278,7 @@ int FstClusterMaker::Make()
 		fstRawHit->setCharge(maxADC, maxTB);
 		fstRawHit->setMaxTb(maxTB);
 		fstRawHit->setHitId(numOfHits);
-		mRawHitsVec.push_back(fstRawHit);
+		rawHitsVec_temp.push_back(fstRawHit);
 
 		numOfHits++;
 	      }
@@ -283,8 +290,22 @@ int FstClusterMaker::Make()
 
     if(numOfHits > 0 && numOfHits <= FST::maxNHitsPerEvent) // maximum hits to expect per event is 10
     {
-      fillHitDisplay(mRawHitsVec); // fill hit display
-      std::vector<FstCluster *> cluster_simple = findCluster_Simple(mRawHitsVec);
+      fillHitDisplay(rawHitsVec_temp); // fill hit display
+      std::vector<FstCluster *> cluster_simple = findCluster_Simple(rawHitsVec_temp);
+
+      clearHit();
+      mNumOfHits = rawHitsVec_temp.size();
+      for(int i_hit = 0; i_hit < mNumOfHits; ++i_hit)
+      {
+	mRawHitsVec.push_back(rawHitsVec_temp[i_hit]);
+      }
+      clearCluster_Simple();
+      mNumOfClusters = cluster_simple.size();
+      for(int i_cluster = 0; i_cluster < mNumOfClusters; ++i_cluster)
+      {
+	mClustersVec.push_back(cluster_simple[i_cluster]);
+      }
+      mTree_FstClusters->Fill();
     }
   }
 
@@ -298,6 +319,7 @@ int FstClusterMaker::Finish()
   cout << "FstClusterMaker::Finish => " << endl;
   writePedestal();
   writeHitDisplay();
+  writeTree();
 
   return 1;
 }
@@ -603,9 +625,9 @@ std::vector<FstCluster *> FstClusterMaker::findCluster_Simple(std::vector<FstRaw
 {
   double meanRow = 0., meanColumn = 0.;
   double totAdc = 0.;
-  int nRawHits = 0, nRawHitsR = 0, nRawHitsPhi = 0;
+  int nRawHits = 1, nRawHitsR = 1, nRawHitsPhi = 1;
 
-  clearCluster_Simple();
+  // clearCluster_Simple();
 
   int numOfHits = rawHitsVec_orig.size();
   std::vector<FstRawHit *> rawHitsVec;
@@ -633,9 +655,9 @@ std::vector<FstCluster *> FstClusterMaker::findCluster_Simple(std::vector<FstRaw
     fstCluster_tmp->setTotCharge((*rawHitsIt)->getCharge((*rawHitsIt)->getMaxTb()));
     fstCluster_tmp->setMaxTb((*rawHitsIt)->getMaxTb());
     fstCluster_tmp->setClusterType(1);
-    fstCluster_tmp->setNRawHits(1);
-    fstCluster_tmp->setNRawHitsR(1);
-    fstCluster_tmp->setNRawHitsPhi(1);
+    fstCluster_tmp->setNRawHits(nRawHits);
+    fstCluster_tmp->setNRawHitsR(nRawHitsR);
+    fstCluster_tmp->setNRawHitsPhi(nRawHitsPhi);
     fstCluster_tmp->addRawHit((*rawHitsIt)); // save hits for ith cluster
 
     clustersVec_Simple.push_back(fstCluster_tmp);
@@ -680,10 +702,10 @@ std::vector<FstCluster *> FstClusterMaker::findCluster_Simple(std::vector<FstRaw
 	      (*clusterIt)->setMeanRow(meanRow_temp);
 	      (*clusterIt)->setTotCharge(totAdc_temp);
 	      (*clusterIt)->setMaxTb(maxTb_temp);
+	      (*clusterIt)->setClusterType(1);
 	      (*clusterIt)->setNRawHits(nRawHits);
 	      (*clusterIt)->setNRawHitsR(nRawHitsR);
 	      (*clusterIt)->setNRawHitsPhi(nRawHitsPhi);
-	      (*clusterIt)->setClusterType(1);
 	      (*clusterIt)->addRawHit((*rawHitsIt));
 
 	      //include the hit to the cluster's component vector
@@ -736,8 +758,27 @@ std::vector<FstCluster *> FstClusterMaker::findCluster_Simple(std::vector<FstRaw
 
   return clustersVec_Simple;
 }
-
 //--------------cluster with Simple Algorithm---------------------
+
+//--------------Output TTree---------------------
+bool FstClusterMaker::initTree()
+{
+  mTree_FstClusters = new TTree("mTree_FstClusters","Fst Hits and Clusters Info");
+  mTree_FstClusters->Branch("mNumOfHits",&mNumOfHits,"mNumOfHits/I");
+  mTree_FstClusters->Branch("mRawHitsVec",&mRawHitsVec);
+  mTree_FstClusters->Branch("mNumOfClusters",&mNumOfClusters,"mNumOfClusters/I");
+  mTree_FstClusters->Branch("mClustersVec",&mClustersVec);
+  mTree_FstClusters->SetAutoSave(50000000);
+
+  return true;
+}
+
+void FstClusterMaker::writeTree()
+{
+  mTree_FstClusters->Write();
+}
+
+//--------------Output TTree---------------------
 
 //--------------Utility---------------------
 int FstClusterMaker::getLayer(int arm, int port)

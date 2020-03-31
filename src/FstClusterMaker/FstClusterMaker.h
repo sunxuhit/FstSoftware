@@ -8,9 +8,9 @@
 
 class TFile;
 class TChain;
+class TTree;
 class TH1F;
 class TH2F;
-class TH3F;
 class TGraph;
 class FstRawHit;
 class FstCluster;
@@ -30,26 +30,24 @@ class FstClusterMaker : public TObject
       mOutPutFile = outputfile;
     }
 
-    bool clearSignal();
-    bool clearHit();
-
     int Init();
-    bool initChain();
-    bool initSignal();
-    bool initHit();
-    // bool initCluster();
-
     int Make(); // subtract pedestal => signal & find Hits
-
     int Finish();
 
-    // pedestal
+    // input TChain
+    bool initChain();
+
+    // pedestal & signal
     bool clearPedestal();
     bool initPedestal();
     bool calPedestal(); // extract pedestal for each ch and fill TGraphs for ped mean & sigma (noise)
     void writePedestal();
+    bool clearSignal();
+    bool initSignal();
 
-    // hit display
+    // hit & hit display
+    bool clearHit();
+    bool initHit();
     bool initHitDisplay();
     void fillHitDisplay(std::vector<FstRawHit *> rawHitsVec);
     void writeHitDisplay();
@@ -58,7 +56,10 @@ class FstClusterMaker : public TObject
     bool initCluster_Simple();
     bool clearCluster_Simple();
     std::vector<FstCluster *> findCluster_Simple(std::vector<FstRawHit *> rawHitsVec_orig);
-    // void fillTracking_Simple(std::vector<CLUSTER> istcluster_orig);
+
+    // Output TTree for hits and clusters
+    bool initTree();
+    void writeTree();
 
   private:
     std::string mHome, mList;
@@ -80,14 +81,17 @@ class FstClusterMaker : public TObject
     double mRawSig[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins];
     double mSigPedCorr[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins];
 
-    // Hit for FST & IST
-    std::vector<FstRawHit *> mRawHitsVec;
-
     // Hit Display
     TH2F *h_mHitDisplay[4]; // 0 for FST, 1-3 for IST
     TH1F *h_mMaxTb[4]; 
 
+    // Output TTree for hits and clusters
+    TTree *mTree_FstClusters;
+    // Hit for FST & IST
+    int mNumOfHits;
+    std::vector<FstRawHit *> mRawHitsVec;
     // Cluster for FST & IST
+    int mNumOfClusters;
     std::vector<FstCluster *> mClustersVec;
 
     // Utility for tracking
