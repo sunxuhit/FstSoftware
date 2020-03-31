@@ -10,8 +10,6 @@ ClassImp(FstRawHit)
 FstRawHit::FstRawHit()
 {
   Clear();
-
-  mDefaultTb = FST::defaultTimeBin; // use 3 for now
 }
 
 FstRawHit::~FstRawHit()
@@ -49,6 +47,10 @@ void FstRawHit::setHitId(int hitId)
 {
   mHitId = hitId;
 }
+void FstRawHit::setDefaultTb(int tb)
+{
+  mDefaultTb = tb;
+}
 
 // accessors
 int FstRawHit::getLayer() const
@@ -78,6 +80,10 @@ int FstRawHit::getMaxTb() const
 int FstRawHit::getHitId() const
 {
   return mHitId;
+}
+int FstRawHit::getDefaultTb() const
+{
+  return mDefaultTb;
 }
 
 //------------------------------------------
@@ -109,4 +115,5 @@ void FstRawHit::Clear()
   }
   mMaxTb = -1;
   mHitId = -1;
+  mDefaultTb = FST::defaultTimeBin;
 }

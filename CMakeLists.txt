@@ -33,8 +33,8 @@ include(${ROOT_USE_FILE})
 # add_subdirectory(src/IstTracking)
 
 # include FstUtil
-# include_directories("${PROJECT_SOURCE_DIR}/src/FstUtil")
-# add_subdirectory(src/FstUtil)
+include_directories("${PROJECT_SOURCE_DIR}/src/FstUtil")
+add_subdirectory(src/FstUtil)
 
 # include FstClusterMaker
 include_directories("${PROJECT_SOURCE_DIR}/src/FstClusterMaker")

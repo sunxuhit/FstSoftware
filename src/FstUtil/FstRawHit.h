@@ -17,6 +17,7 @@ class FstRawHit : public TObject
     void setCharge(double charge, int tb);
     void setMaxTb(int maxTb);
     void setHitId(int hitId);
+    void setDefaultTb(int tb);
 
     int getLayer() const;
     int getSensor() const;
@@ -25,6 +26,7 @@ class FstRawHit : public TObject
     double getCharge(int tb = 0) const;
     int getMaxTb() const;
     int getHitId() const;
+    int getDefaultTb() const;
 
     void Print() const;
     void Clear();
@@ -37,7 +39,6 @@ class FstRawHit : public TObject
     double mCharge[FST::numTBins]; // pedestal subtracted ADC for each time bin
     int mMaxTb;
     int mHitId; // hit id
-
     int mDefaultTb;
 
     ClassDef(FstRawHit,1)

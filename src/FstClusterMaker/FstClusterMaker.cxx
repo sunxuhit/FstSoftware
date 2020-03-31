@@ -278,6 +278,7 @@ int FstClusterMaker::Make()
 		fstRawHit->setCharge(maxADC, maxTB);
 		fstRawHit->setMaxTb(maxTB);
 		fstRawHit->setHitId(numOfHits);
+		fstRawHit->setDefaultTb(FST::defaultTimeBin);
 		rawHitsVec_temp.push_back(fstRawHit);
 
 		numOfHits++;
