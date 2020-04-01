@@ -1,6 +1,7 @@
 #include "./FstClusterMaker.h"
 #include "../FstUtil/FstRawHit.h"
 #include "../FstUtil/FstCluster.h"
+#include "../FstUtil/FstEvent.h"
 
 #include <iostream>
 #include <fstream>
@@ -41,7 +42,6 @@ int FstClusterMaker::Init()
   bool isInPut = initChain(); // initialize input data/ped TChain;
   bool isPed = initPedestal(); // initialize pedestal array;
   bool isSig = initSignal(); // initialize signal array;
-  bool isHit = initHit(); // initialize Hit array;
   bool isTree = initTree();
 
   if(!isInPut) 
@@ -57,11 +57,6 @@ int FstClusterMaker::Init()
   if(!isSig) 
   {
     cout << "Failed to initialize signal!" << endl;
-    return -1;
-  }
-  if(!isHit) 
-  {
-    cout << "Failed to initialize FST & IST Hits!" << endl;
     return -1;
   }
   if(!isTree) 
@@ -131,12 +126,6 @@ bool FstClusterMaker::initSignal()
   return clearSignal();
 }
 
-bool FstClusterMaker::initHit()
-{
-  cout << "FstClusterMaker::initHit -> " << endl;
-  return clearHit();
-}
-
 //------------------------------------------
 bool FstClusterMaker::clearSignal()
 {
@@ -161,12 +150,6 @@ bool FstClusterMaker::clearSignal()
   return true;
 }
 
-bool FstClusterMaker::clearHit()
-{
-  mRawHitsVec.clear();
-
-  return true;
-}
 //------------------------------------------
 int FstClusterMaker::Make()
 {
@@ -292,21 +275,47 @@ int FstClusterMaker::Make()
     if(numOfHits > 0 && numOfHits <= FST::maxNHitsPerEvent) // maximum hits to expect per event is 10
     {
       fillHitDisplay(rawHitsVec_temp); // fill hit display
-      std::vector<FstCluster *> cluster_simple = findCluster_Simple(rawHitsVec_temp);
 
-      clearHit();
-      mNumOfHits = rawHitsVec_temp.size();
-      for(int i_hit = 0; i_hit < mNumOfHits; ++i_hit)
+      mFstEvent->clearRawHitsList();
+      int nHits = rawHitsVec_temp.size();
+      for(int i_hit = 0; i_hit < nHits; ++i_hit)
       {
-	mRawHitsVec.push_back(rawHitsVec_temp[i_hit]);
+	mFstRawHit = mFstEvent->createRawHit();
+	mFstRawHit->setLayer(rawHitsVec_temp[i_hit]->getLayer());
+	mFstRawHit->setSensor(rawHitsVec_temp[i_hit]->getSensor());
+	mFstRawHit->setColumn(rawHitsVec_temp[i_hit]->getColumn());
+	mFstRawHit->setRow(rawHitsVec_temp[i_hit]->getRow());
+	mFstRawHit->setCharge(rawHitsVec_temp[i_hit]->getCharge(rawHitsVec_temp[i_hit]->getMaxTb()),rawHitsVec_temp[i_hit]->getMaxTb());
+	mFstRawHit->setMaxTb(rawHitsVec_temp[i_hit]->getMaxTb());
+	mFstRawHit->setHitId(rawHitsVec_temp[i_hit]->getHitId());
+	mFstRawHit->setDefaultTb(rawHitsVec_temp[i_hit]->getDefaultTb());
       }
-      clearCluster_Simple();
-      mNumOfClusters = cluster_simple.size();
-      for(int i_cluster = 0; i_cluster < mNumOfClusters; ++i_cluster)
+
+      std::vector<FstCluster *> cluster_simple = findCluster_Simple(rawHitsVec_temp);
+      mFstEvent->clearClustersList();
+      int nClusters = cluster_simple.size();
+      for(int i_cluster = 0; i_cluster < nClusters; ++i_cluster)
       {
-	mClustersVec.push_back(cluster_simple[i_cluster]);
+	mFstCluster = mFstEvent->createCluster();
+	mFstCluster->setLayer(cluster_simple[i_cluster]->getLayer());
+	mFstCluster->setSensor(cluster_simple[i_cluster]->getSensor());
+	mFstCluster->setMeanColumn(cluster_simple[i_cluster]->getMeanColumn());
+	mFstCluster->setMeanRow(cluster_simple[i_cluster]->getMeanRow());
+	mFstCluster->setTotCharge(cluster_simple[i_cluster]->getTotCharge());
+	mFstCluster->setMaxTb(cluster_simple[i_cluster]->getMaxTb());
+	mFstCluster->setClusterType(cluster_simple[i_cluster]->getClusterType());
+	mFstCluster->setNRawHits(cluster_simple[i_cluster]->getNRawHits());
+	mFstCluster->setNRawHitsR(cluster_simple[i_cluster]->getNRawHitsR());
+	mFstCluster->setNRawHitsPhi(cluster_simple[i_cluster]->getNRawHitsPhi());
+	
+	std::vector<FstRawHit *> rawHitsVec = cluster_simple[i_cluster]->getRawHitVec(); // get raw hits vec from cluster finder
+	for(int i_hit = 0; i_hit < rawHitsVec.size(); ++i_hit)
+	{
+	  mFstCluster->setHitId(i_hit, rawHitsVec[i_hit]->getHitId());
+	}
       }
-      mTree_FstClusters->Fill();
+
+      mTree_FstEvent->Fill();
     }
   }
 
@@ -608,27 +617,11 @@ void FstClusterMaker::writeHitDisplay()
 //--------------hit display---------------------
 
 //--------------cluster with Simple Algorithm---------------------
-bool FstClusterMaker::initCluster_Simple()
-{
-  cout << "FstClusterMaker::initCluster_Simple -> " << endl;
-
-  return clearCluster_Simple();
-}
-
-bool FstClusterMaker::clearCluster_Simple()
-{
-  mClustersVec.clear();
-
-  return true;
-}
-
 std::vector<FstCluster *> FstClusterMaker::findCluster_Simple(std::vector<FstRawHit *> rawHitsVec_orig)
 {
   double meanRow = 0., meanColumn = 0.;
   double totAdc = 0.;
   int nRawHits = 1, nRawHitsR = 1, nRawHitsPhi = 1;
-
-  // clearCluster_Simple();
 
   int numOfHits = rawHitsVec_orig.size();
   std::vector<FstRawHit *> rawHitsVec;
@@ -764,19 +757,17 @@ std::vector<FstCluster *> FstClusterMaker::findCluster_Simple(std::vector<FstRaw
 //--------------Output TTree---------------------
 bool FstClusterMaker::initTree()
 {
-  mTree_FstClusters = new TTree("mTree_FstClusters","Fst Hits and Clusters Info");
-  mTree_FstClusters->Branch("mNumOfHits",&mNumOfHits,"mNumOfHits/I");
-  mTree_FstClusters->Branch("mRawHitsVec",&mRawHitsVec);
-  mTree_FstClusters->Branch("mNumOfClusters",&mNumOfClusters,"mNumOfClusters/I");
-  mTree_FstClusters->Branch("mClustersVec",&mClustersVec);
-  mTree_FstClusters->SetAutoSave(50000000);
+  mTree_FstEvent = new TTree("mTree_FstEvent","Fst Hits and Clusters Info");
+  mFstEvent = new FstEvent();
+  mTree_FstEvent->Branch("FstEvent","FstEvent",&mFstEvent);
+  mTree_FstEvent->SetAutoSave(50000000);
 
   return true;
 }
 
 void FstClusterMaker::writeTree()
 {
-  mTree_FstClusters->Write();
+  mTree_FstEvent->Write();
 }
 
 //--------------Output TTree---------------------

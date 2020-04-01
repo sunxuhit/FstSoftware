@@ -14,6 +14,7 @@ class TH2F;
 class TGraph;
 class FstRawHit;
 class FstCluster;
+class FstEvent;
 
 class FstClusterMaker : public TObject
 {
@@ -46,15 +47,11 @@ class FstClusterMaker : public TObject
     bool initSignal();
 
     // hit & hit display
-    bool clearHit();
-    bool initHit();
     bool initHitDisplay();
     void fillHitDisplay(std::vector<FstRawHit *> rawHitsVec);
     void writeHitDisplay();
 
     // cluster with Simple Algorithm
-    bool initCluster_Simple();
-    bool clearCluster_Simple();
     std::vector<FstCluster *> findCluster_Simple(std::vector<FstRawHit *> rawHitsVec_orig);
 
     // Output TTree for hits and clusters
@@ -86,13 +83,10 @@ class FstClusterMaker : public TObject
     TH1F *h_mMaxTb[4]; 
 
     // Output TTree for hits and clusters
-    TTree *mTree_FstClusters;
-    // Hit for FST & IST
-    int mNumOfHits;
-    std::vector<FstRawHit *> mRawHitsVec;
-    // Cluster for FST & IST
-    int mNumOfClusters;
-    std::vector<FstCluster *> mClustersVec;
+    TTree *mTree_FstEvent;
+    FstEvent *mFstEvent;
+    FstRawHit *mFstRawHit;
+    FstCluster *mFstCluster;
 
     // Utility for tracking
     int getLayer(int arm, int port); // return layer based on arm & port

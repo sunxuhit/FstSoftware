@@ -10,6 +10,9 @@ ClassImp(FstCluster)
 FstCluster::FstCluster()
 {
   Clear();
+
+  // mNumOfRawHits = 0;
+  // mFstRawHits = new TClonesArray("FstRawHit", 10);
 }
 
 FstCluster::~FstCluster()
@@ -63,6 +66,10 @@ void FstCluster::addRawHit(FstRawHit *fstRawHit)
 {
   mRawHitVec.push_back(fstRawHit);
 }
+void FstCluster::setHitId(int i_hit, int hitId)
+{
+  mHitId[i_hit] = hitId;
+}
 
 // accessors
 int FstCluster::getLayer() const
@@ -109,6 +116,10 @@ std::vector<FstRawHit *> FstCluster::getRawHitVec() const
 {
   return mRawHitVec;
 }
+int FstCluster::getHitId(int i_hit) const
+{
+  return mHitId[i_hit];
+}
 
 //------------------------------------------
 
@@ -124,11 +135,9 @@ void FstCluster::Print() const
   cout << "mNRawHits = " << mNRawHits << endl;
   cout << "mNRawHitsR = " << mNRawHitsR << endl;
   cout << "mNRawHitsPhi = " << mNRawHitsPhi << endl;
-  cout << "number of hits: " << mRawHitVec.size() << endl;
-  for(int i_hit = 0; i_hit < mRawHitVec.size(); ++i_hit)
+  for(int i_hit = 0; i_hit < mNRawHits; ++i_hit)
   {
-    cout << "hit " << i_hit << ":" << endl;
-    mRawHitVec[i_hit]->Print();
+    cout << "mHitId = " << mHitId[i_hit] << endl;
   }
   cout << endl;
 }
@@ -146,5 +155,42 @@ void FstCluster::Clear()
   mNRawHitsR = -1;
   mNRawHitsPhi = -1;
   mRawHitVec.clear();
+  for(int i_hit = 0; i_hit < FST::maxNHits; ++i_hit)
+  {
+    mHitId[i_hit] = -1;
+  }
 }
 
+#if 0
+// FstRawHit
+FstRawHit* FstCluster::createRawHit()
+{
+  if(mNumOfRawHits == mFstRawHits->GetSize())
+    mFstRawHits->Expand( mNumOfRawHits + 10 );
+  if(mNumOfRawHits >= 15)
+  {
+    Fatal( "FstEvent::createRawHit()", "ERROR: Too many hits (>15)!" );
+    exit( 2 );
+  }
+
+  new((*mFstRawHits)[mNumOfRawHits++]) FstRawHit;
+  return (FstRawHit*)((*mFstRawHits)[mNumOfRawHits - 1]);
+}
+
+void FstCluster::clearRawHitsList()
+{
+  mNumOfRawHits = 0;
+  mFstRawHits->Clear();
+}
+
+int FstCluster::getNumRawHits() const
+{
+  return mNumOfRawHits;
+}
+
+FstRawHit* FstCluster::getRawHit(int i_hit) const
+{
+  return i_hit < mNumOfRawHits ? (FstRawHit*)((*mFstRawHits)[i_hit]) : NULL;
+}
+// FstRawHit
+#endif

@@ -6,6 +6,16 @@
 
 class FstRawHit : public TObject
 {
+  private:
+    int mLayer; // 0 for FST | 1-3 for IST
+    int mSensor;
+    int mColumn; // phi for FST | x for IST
+    int mRow; // r_strip for FST | y for IST
+    double mCharge[FST::numTBins]; // pedestal subtracted ADC for each time bin
+    int mMaxTb;
+    int mHitId; // hit id
+    int mDefaultTb;
+
   public:
     FstRawHit();
     ~FstRawHit();
@@ -30,16 +40,6 @@ class FstRawHit : public TObject
 
     void Print() const;
     void Clear();
-
-  private:
-    int mLayer; // 0 for FST | 1-3 for IST
-    int mSensor;
-    int mColumn; // phi for FST | x for IST
-    int mRow; // r_strip for FST | y for IST
-    double mCharge[FST::numTBins]; // pedestal subtracted ADC for each time bin
-    int mMaxTb;
-    int mHitId; // hit id
-    int mDefaultTb;
 
     ClassDef(FstRawHit,1)
 };

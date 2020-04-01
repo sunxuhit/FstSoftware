@@ -23,3 +23,17 @@ install(TARGETS FstCluster DESTINATION lib)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libFstCluster_rdict.pcm" DESTINATION lib)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libFstCluster.rootmap" DESTINATION lib)
 
+ROOT_GENERATE_DICTIONARY(G__FstEvent
+  ${CMAKE_CURRENT_SOURCE_DIR}/FstEvent.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/FstCons.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/FstRawHit.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/FstCluster.h
+  LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/FstEventLinkDef.h)
+
+add_library(FstEvent SHARED FstEvent.cxx ${CMAKE_CURRENT_SOURCE_DIR}/FstRawHit.cxx ${CMAKE_CURRENT_SOURCE_DIR}/FstCluster.cxx G__FstEvent.cxx)
+target_link_libraries(FstEvent ${ROOT_LIBRARIES})
+
+install(TARGETS FstEvent DESTINATION lib)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libFstEvent_rdict.pcm" DESTINATION lib)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libFstEvent.rootmap" DESTINATION lib)
+

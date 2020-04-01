@@ -1,6 +1,4 @@
 #include "./FstTracking.h"
-#include "../FstUtil/FstRawHit.h"
-#include "../FstUtil/FstCluster.h"
 
 #include <iostream>
 #include <fstream>
@@ -54,29 +52,27 @@ int FstTracking::Make()
 
   long NumOfEvents = (long)mChainInPut->GetEntries();
   // if(NumOfEvents > 1000) NumOfEvents = 1000;
-  // NumOfEvents = 100;
+  NumOfEvents = 1000;
   mChainInPut->GetEntry(0);
 
   for(int i_event = 0; i_event < NumOfEvents; ++i_event)
   {
     if(i_event%1000==0) cout << "processing events:  " << i_event << "/" << NumOfEvents << endl;
     mChainInPut->GetEntry(i_event);
-    cout << "mNumOfHits = " << mNumOfHits << endl;
-    cout << "mNumOfClusters = " << mNumOfClusters << endl;
-    /*
-    cout << "mRawHitsVec.size = " << mRawHitsVec.size() << endl;
-    for(int i_hit = 0; i_hit < mRawHitsVec.size(); ++i_hit)
+    cout << "mNumOfHits = " << mFstEvent->getNumRawHits() << endl;
+    for(int i_hit = 0; i_hit < mFstEvent->getNumRawHits(); ++i_hit)
     {
-      mRawHitsVec[i_hit]->Print();
+      mFstRawHit = mFstEvent->getRawHit(i_hit);
+      mFstRawHit->Print();
     }
-    cout << "mClustersVec.size = " << mClustersVec.size() << endl;
-    for(int i_cluster = 0; i_cluster < mClustersVec.size(); ++i_cluster)
+    cout << "mNumOfClusters = " << mFstEvent->getNumClusters() << endl;
+    for(int i_cluster = 0; i_cluster < mFstEvent->getNumClusters(); ++i_cluster)
     {
-      mClustersVec[i_cluster]->Print();
+      mFstCluster = mFstEvent->getCluster(i_cluster);
+      mFstCluster->Print();
     }
-    */
 
-    fillHitDisplay(mRawHitsVec);
+    // fillHitDisplay(mRawHitsVec);
   }
 
   cout << "processed events:  " << NumOfEvents << "/" << NumOfEvents << endl;
@@ -98,7 +94,7 @@ bool FstTracking::initChain()
 {
   cout << "FstTracking::initChain -> " << endl;
 
-  mChainInPut = new TChain("mTree_FstClusters");
+  mChainInPut = new TChain("mTree_FstEvent");
 
   if (!mList.empty())   // if input file is ok
   {
@@ -116,7 +112,7 @@ bool FstTracking::initChain()
 	{
 	  string addfile;
 	  addfile = str;
-	  mChainInPut->AddFile(addfile.c_str(),-1,"mTree_FstClusters");
+	  mChainInPut->AddFile(addfile.c_str(),-1,"mTree_FstEvent");
 	  Long64_t file_entries = mChainInPut->GetEntries();
 	  cout << "File added to data chain: " << addfile.c_str() << " with " << (file_entries-entries_save) << " entries" << endl;
 	  entries_save = file_entries;
@@ -130,10 +126,8 @@ bool FstTracking::initChain()
     }
   }
 
-  mChainInPut->SetBranchAddress("mNumOfHits",&mNumOfHits);
-  mChainInPut->SetBranchAddress("mRawHitsVec",&mRawHitsVec, &b_RawHits);
-  mChainInPut->SetBranchAddress("mNumOfClusters",&mNumOfClusters);
-  mChainInPut->SetBranchAddress("mClustersVec",&mClustersVec);
+  mFstEvent = new FstEvent();
+  mChainInPut->SetBranchAddress("FstEvent",&mFstEvent);
 
   long NumOfEvents = (long)mChainInPut->GetEntries();
   cout << "total number of events: " << NumOfEvents << endl;
@@ -158,6 +152,7 @@ bool FstTracking::initHitDisplay()
   return true;
 }
 
+/*
 void FstTracking::fillHitDisplay(std::vector<FstRawHit *> rawHitsVec)
 {
   if(rawHitsVec.size() < FST::maxNHits)
@@ -170,6 +165,7 @@ void FstTracking::fillHitDisplay(std::vector<FstRawHit *> rawHitsVec)
     }
   }
 }
+*/
 
 void FstTracking::writeHitDisplay()
 {

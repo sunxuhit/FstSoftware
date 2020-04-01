@@ -3,6 +3,9 @@
 
 #include <TObject.h>
 #include "../FstUtil/FstCons.h"
+#include "../FstUtil/FstRawHit.h"
+#include "../FstUtil/FstCluster.h"
+#include "../FstUtil/FstEvent.h"
 #include <vector>
 #include <fstream>
 
@@ -13,8 +16,6 @@ class TH1F;
 class TH2F;
 class TH3F;
 class TGraph;
-class FstRawHit;
-class FstCluster;
 
 class FstTracking : public TObject
 {
@@ -40,7 +41,7 @@ class FstTracking : public TObject
 
     // hit display
     bool initHitDisplay();
-    void fillHitDisplay(std::vector<FstRawHit *> rawHitsVec);
+    // void fillHitDisplay(std::vector<FstRawHit *> rawHitsVec);
     void writeHitDisplay();
 
 #if 0
@@ -98,9 +99,12 @@ class FstTracking : public TObject
     // Input TChain for hits and clusters
     TChain *mChainInPut; // input TTree
     int mNumOfHits; // Hit for FST & IST
-    std::vector<FstRawHit *> mRawHitsVec;
+    std::vector<FstRawHit> mRawHitsVec;
     int mNumOfClusters; // Cluster for FST & IST
-    std::vector<FstCluster *> mClustersVec;
+    std::vector<FstCluster> mClustersVec;
+    FstEvent *mFstEvent;
+    FstRawHit *mFstRawHit;
+    FstCluster *mFstCluster;
 
     ClassDef(FstTracking,1)
 };
