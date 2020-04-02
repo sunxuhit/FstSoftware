@@ -10,9 +10,11 @@ FstEvent::FstEvent()
 {
   mNumOfHits = 0;
   mNumOfClusters = 0;
+  mNumOfTracks = 0;
 
   mRawHits = new TClonesArray("FstRawHit", 10);
   mClusters = new TClonesArray("FstCluster", 10);
+  mTracks = new TClonesArray("FstTrack", 10);
 }
 
 FstEvent::~FstEvent()
@@ -87,3 +89,35 @@ FstCluster* FstEvent::getCluster(int i_cluster) const
   return i_cluster < mNumOfClusters ? (FstCluster*)((*mClusters)[i_cluster]) : NULL;
 }
 // FstCluster
+
+// FstTrack
+FstTrack* FstEvent::createTrack()
+{
+  if(mNumOfTracks == mTracks->GetSize())
+    mTracks->Expand( mNumOfTracks + 10 );
+  if(mNumOfTracks >= 15)
+  {
+    Fatal( "FstEvent::createTrack()", "ERROR: Too many tracks (>15)!" );
+    exit( 2 );
+  }
+
+  new((*mTracks)[mNumOfTracks++]) FstTrack;
+  return (FstTrack*)((*mTracks)[mNumOfTracks - 1]);
+}
+
+void FstEvent::clearTracksList()
+{
+  mNumOfTracks = 0;
+  mTracks->Clear();
+}
+
+int FstEvent::getNumTracks() const
+{
+  return mNumOfTracks;
+}
+
+FstTrack* FstEvent::getTrack(int i_track) const
+{
+  return i_track < mNumOfTracks ? (FstTrack*)((*mTracks)[i_track]) : NULL;
+}
+// FstTrack

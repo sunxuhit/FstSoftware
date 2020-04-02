@@ -1,6 +1,7 @@
 #include "./FstClusterMaker.h"
 #include "../FstUtil/FstRawHit.h"
 #include "../FstUtil/FstCluster.h"
+// #include "../FstUtil/FstTrack.h"
 #include "../FstUtil/FstEvent.h"
 
 #include <iostream>
@@ -307,6 +308,7 @@ int FstClusterMaker::Make()
 	mFstCluster->setNRawHits(cluster_simple[i_cluster]->getNRawHits());
 	mFstCluster->setNRawHitsR(cluster_simple[i_cluster]->getNRawHitsR());
 	mFstCluster->setNRawHitsPhi(cluster_simple[i_cluster]->getNRawHitsPhi());
+	mFstCluster->setClusterId(i_cluster);
 	
 	std::vector<FstRawHit *> rawHitsVec = cluster_simple[i_cluster]->getRawHitVec(); // get raw hits vec from cluster finder
 	for(int i_hit = 0; i_hit < rawHitsVec.size(); ++i_hit)
@@ -314,6 +316,8 @@ int FstClusterMaker::Make()
 	  mFstCluster->setHitId(i_hit, rawHitsVec[i_hit]->getHitId());
 	}
       }
+      // mFstEvent->clearTracksList();
+      // mFstTrack = mFstEvent->createTrack();
 
       mTree_FstEvent->Fill();
     }
@@ -769,7 +773,6 @@ void FstClusterMaker::writeTree()
 {
   mTree_FstEvent->Write();
 }
-
 //--------------Output TTree---------------------
 
 //--------------Utility---------------------

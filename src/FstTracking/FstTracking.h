@@ -5,17 +5,16 @@
 #include "../FstUtil/FstCons.h"
 #include "../FstUtil/FstRawHit.h"
 #include "../FstUtil/FstCluster.h"
+#include "../FstUtil/FstTrack.h"
 #include "../FstUtil/FstEvent.h"
 #include <vector>
 #include <fstream>
 
 class TFile;
 class TChain;
-class TBranch;
+class TTree;
 class TH1F;
 class TH2F;
-class TH3F;
-class TGraph;
 
 class FstTracking : public TObject
 {
@@ -41,15 +40,18 @@ class FstTracking : public TObject
 
     // hit display
     bool initHitDisplay();
-    // void fillHitDisplay(std::vector<FstRawHit *> rawHitsVec);
+    void fillHitDisplay(std::vector<FstRawHit *> rawHitVec_orig);
     void writeHitDisplay();
 
-#if 0
     // tracking
     bool initTracking_Hits();
-    bool doTracking_Hits(std::vector<FstRawHit *> rawHitVec_orig);
+    void fillTrackingQA_Hits(std::vector<FstRawHit *> rawHitVec_orig);
     void writeTracking_Hits();
 
+    std::vector<FstTrack *> findTrack_Hits(std::vector<FstRawHit *> rawHitVec_orig);
+    // FstTrack *findTrack_Clusters(std::vector<FstCluster *> clusterVec_orig);
+
+#if 0
     bool initTracking_Clusters();
     bool doTracking_Clusters(std::vector<FstCluster *> clusterVec_orig);
     void writeTracking_Clusters();
@@ -59,6 +61,10 @@ class FstTracking : public TObject
     bool doEfficiency_Hits(std::vector<FstRawHit *> rawHitVec_orig);
     void writeEfficiency_Hits();
 #endif
+
+    // Output TTree for hits and clusters
+    bool initTree();
+    void writeTree();
 
   private:
     std::string mHome, mList;
@@ -70,7 +76,6 @@ class FstTracking : public TObject
     TH2F *h_mHitDisplay[4]; // 0 for FST, 1-3 for IST
     TH1F *h_mMaxTb[4]; 
 
-#if 0
     // Tracking based on Hits
     TH2F *h_mHitsCorrXR[4]; // 0: ist1x vs. ist3x | 1: ist1x vs. fstr | 2: ist3x vs. fstr | 3: ist1x+ist3x vs. fstr
     TH2F *h_mHitsCorrYPhi[4]; // 0: ist1y vs. ist3y | 1: ist1y vs. fstphi | 2: ist3y vs. fstphi | 3: ist1y+ist3y vs. fstphi
@@ -81,6 +86,7 @@ class FstTracking : public TObject
     TH1F *h_mRResidual_Hits;
     TH1F *h_mPhiResidual_Hits;
 
+#if 0
     // Tracking based on Clusters
     TH1F *h_mAdc_Simple[4];
     TH1F *h_mAdcAngleCorr_Simple[4];
@@ -98,13 +104,13 @@ class FstTracking : public TObject
 
     // Input TChain for hits and clusters
     TChain *mChainInPut; // input TTree
-    int mNumOfHits; // Hit for FST & IST
-    std::vector<FstRawHit> mRawHitsVec;
-    int mNumOfClusters; // Cluster for FST & IST
-    std::vector<FstCluster> mClustersVec;
-    FstEvent *mFstEvent;
+    FstEvent *mFstEvent_InPut;
+
+    TTree *mTree_FstEvent_OutPut;
+    FstEvent *mFstEvent_OutPut;
     FstRawHit *mFstRawHit;
     FstCluster *mFstCluster;
+    FstTrack *mFstTrack;
 
     ClassDef(FstTracking,1)
 };

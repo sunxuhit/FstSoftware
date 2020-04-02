@@ -5,15 +5,18 @@
 #include <TClonesArray.h>
 #include "./FstRawHit.h"
 #include "./FstCluster.h"
+#include "./FstTrack.h"
 
 class FstEvent : public TObject
 {
   private:
     int mNumOfHits;
     int mNumOfClusters;
+    int mNumOfTracks;
 
     TClonesArray *mRawHits;      //->
     TClonesArray *mClusters;     //->
+    TClonesArray *mTracks;       //->
 
   public:
     FstEvent();
@@ -28,6 +31,11 @@ class FstEvent : public TObject
     void clearClustersList();
     int getNumClusters() const;
     FstCluster* getCluster(int i_cluster) const;
+
+    FstTrack* createTrack();
+    void clearTracksList();
+    int getNumTracks() const;
+    FstTrack* getTrack(int i_track) const;
 
     ClassDef(FstEvent,1)
 };

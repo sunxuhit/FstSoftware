@@ -14,6 +14,7 @@ class TH2F;
 class TGraph;
 class FstRawHit;
 class FstCluster;
+// class FstTrack;
 class FstEvent;
 
 class FstClusterMaker : public TObject
@@ -87,6 +88,7 @@ class FstClusterMaker : public TObject
     FstEvent *mFstEvent;
     FstRawHit *mFstRawHit;
     FstCluster *mFstCluster;
+    // FstCluster *mFstTrack;
 
     // Utility for tracking
     int getLayer(int arm, int port); // return layer based on arm & port

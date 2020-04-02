@@ -66,6 +66,10 @@ void FstCluster::addRawHit(FstRawHit *fstRawHit)
 {
   mRawHitVec.push_back(fstRawHit);
 }
+void FstCluster::setClusterId(int clusterId)
+{
+  mClusterId = clusterId;
+}
 void FstCluster::setHitId(int i_hit, int hitId)
 {
   mHitId[i_hit] = hitId;
@@ -116,6 +120,10 @@ std::vector<FstRawHit *> FstCluster::getRawHitVec() const
 {
   return mRawHitVec;
 }
+int FstCluster::getClusterId() const
+{
+  return mClusterId;
+}
 int FstCluster::getHitId(int i_hit) const
 {
   return mHitId[i_hit];
@@ -135,6 +143,7 @@ void FstCluster::Print() const
   cout << "mNRawHits = " << mNRawHits << endl;
   cout << "mNRawHitsR = " << mNRawHitsR << endl;
   cout << "mNRawHitsPhi = " << mNRawHitsPhi << endl;
+  cout << "mClusterId = " << mClusterId << endl;
   for(int i_hit = 0; i_hit < mNRawHits; ++i_hit)
   {
     cout << "mHitId = " << mHitId[i_hit] << endl;
@@ -155,6 +164,7 @@ void FstCluster::Clear()
   mNRawHitsR = -1;
   mNRawHitsPhi = -1;
   mRawHitVec.clear();
+  mClusterId = -1;
   for(int i_hit = 0; i_hit < FST::maxNHits; ++i_hit)
   {
     mHitId[i_hit] = -1;
