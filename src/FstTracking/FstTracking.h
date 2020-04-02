@@ -43,13 +43,14 @@ class FstTracking : public TObject
     void fillHitDisplay(std::vector<FstRawHit *> rawHitVec_orig);
     void writeHitDisplay();
 
-    // tracking
+    // track QA
     bool initTracking_Hits();
     void fillTrackingQA_Hits(std::vector<FstRawHit *> rawHitVec_orig);
     void writeTracking_Hits();
 
+    // find track
     std::vector<FstTrack *> findTrack_Hits(std::vector<FstRawHit *> rawHitVec_orig);
-    // FstTrack *findTrack_Clusters(std::vector<FstCluster *> clusterVec_orig);
+    std::vector<FstTrack *> findTrack_Clusters(std::vector<FstCluster *> clusterVec_orig);
 
 #if 0
     bool initTracking_Clusters();

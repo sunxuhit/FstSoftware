@@ -95,9 +95,9 @@ FstTrack* FstEvent::createTrack()
 {
   if(mNumOfTracks == mTracks->GetSize())
     mTracks->Expand( mNumOfTracks + 10 );
-  if(mNumOfTracks >= 15)
+  if(mNumOfTracks >= 30)
   {
-    Fatal( "FstEvent::createTrack()", "ERROR: Too many tracks (>15)!" );
+    Fatal( "FstEvent::createTrack()", "ERROR: Too many tracks (>30)!" );
     exit( 2 );
   }
 
