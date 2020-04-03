@@ -43,29 +43,32 @@ class FstTracking : public TObject
     void fillHitDisplay(std::vector<FstRawHit *> rawHitVec_orig);
     void writeHitDisplay();
 
+    bool initClusterDisplay();
+    void fillClusterDisplay(std::vector<FstCluster *> clusterVec_orig);
+    void writeClusterDisplay();
+
     // track QA
-    bool initTracking_Hits();
+    bool initTrackingQA_Hits();
     void fillTrackingQA_Hits(std::vector<FstRawHit *> rawHitVec_orig);
+    void writeTrackingQA_Hits();
+
+    // track resolution
+    void initTracking_Hits();
+    void calResolution_Hits(std::vector<FstTrack *> trackHitVec_orig);
     void writeTracking_Hits();
 
-    // find track
-    std::vector<FstTrack *> findTrack_Hits(std::vector<FstRawHit *> rawHitVec_orig);
-    std::vector<FstTrack *> findTrack_Clusters(std::vector<FstCluster *> clusterVec_orig);
-
-#if 0
-    bool initTracking_Clusters();
-    bool doTracking_Clusters(std::vector<FstCluster *> clusterVec_orig);
+    void initTracking_Clusters();
+    void calResolution_Clusters(std::vector<FstTrack *> trackClusterVec_orig);
     void writeTracking_Clusters();
 
     // efficiency
-    bool initEfficiency_Hits();
-    bool doEfficiency_Hits(std::vector<FstRawHit *> rawHitVec_orig);
+    void initEfficiency_Hits();
+    void calEfficiency_Hits(std::vector<FstTrack *> trackHitVec_orig);
     void writeEfficiency_Hits();
-#endif
 
-    // Output TTree for hits and clusters
-    bool initTree();
-    void writeTree();
+    void initEfficiency_Clusters();
+    void calEfficiency_Clusters(std::vector<FstTrack *> trackClusterVec_orig);
+    void writeEfficiency_Clusters();
 
   private:
     std::string mHome, mList;
@@ -76,8 +79,9 @@ class FstTracking : public TObject
     // Hit Display
     TH2F *h_mHitDisplay[4]; // 0 for FST, 1-3 for IST
     TH1F *h_mMaxTb[4]; 
+    TH2F *h_mClusterDisplay[4]; // 0 for FST, 1-3 for IST
 
-    // Tracking based on Hits
+    // Tracking QA based on Hits
     TH2F *h_mHitsCorrXR[4]; // 0: ist1x vs. ist3x | 1: ist1x vs. fstr | 2: ist3x vs. fstr | 3: ist1x+ist3x vs. fstr
     TH2F *h_mHitsCorrYPhi[4]; // 0: ist1y vs. ist3y | 1: ist1y vs. fstphi | 2: ist3y vs. fstphi | 3: ist1y+ist3y vs. fstphi
     TH1F *h_mXResidual_Hits_Before;
@@ -87,6 +91,16 @@ class FstTracking : public TObject
     TH1F *h_mRResidual_Hits;
     TH1F *h_mPhiResidual_Hits;
 
+    TH1F *h_mTrackXRes_Hits;
+    TH1F *h_mTrackYRes_Hits;
+    TH1F *h_mTrackRRes_Hits;
+    TH1F *h_mTrackPhiRes_Hits;
+
+    TH1F *h_mTrackXRes_Clusters;
+    TH1F *h_mTrackYRes_Clusters;
+    TH1F *h_mTrackRRes_Clusters;
+    TH1F *h_mTrackPhiRes_Clusters;
+
 #if 0
     // Tracking based on Clusters
     TH1F *h_mAdc_Simple[4];
@@ -94,21 +108,18 @@ class FstTracking : public TObject
     TH1F *h_mTrackAngle_Simple;
     TH1F *h_mXResidual_Simple;
     TH1F *h_mYResidual_Simple;
+#endif
 
     // Efficiency based on Hits
-    TH2F *h_mHits_IST; // position on FST from IST projection
-    TH2F *h_mHits_FST; // position on FST from FST measurement
+    TH2F *h_mTrackHits_IST; // position on FST from IST projection
+    TH2F *h_mTrackHits_FST; // position on FST from FST measurement
 
-    TH2F *h_mHits_IST13;
-    TH2F *h_mHits_IST2;
-#endif
+    TH2F *h_mTrackClusters_IST; // position on FST from IST projection
+    TH2F *h_mTrackClusters_FST; // position on FST from FST measurement
 
     // Input TChain for hits and clusters
     TChain *mChainInPut; // input TTree
     FstEvent *mFstEvent_InPut;
-
-    TTree *mTree_FstEvent_OutPut;
-    FstEvent *mFstEvent_OutPut;
     FstRawHit *mFstRawHit;
     FstCluster *mFstCluster;
     FstTrack *mFstTrack;

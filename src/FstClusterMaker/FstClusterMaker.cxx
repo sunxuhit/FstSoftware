@@ -325,7 +325,6 @@ int FstClusterMaker::Make()
       for(int i_track = 0; i_track < fstTrackVec_Hits.size(); ++i_track)
       { // get track from hits
 	mFstTrack = mFstEvent->createTrack();
-	// mFstTrack = fstTrackVec_Hits[i_track];
 	mFstTrack->setTrackId(fstTrackVec_Hits[i_track]->getTrackId());
 	mFstTrack->setTrackType(fstTrackVec_Hits[i_track]->getTrackType());
 	for(int i_layer = 0; i_layer < 4; ++i_layer)
@@ -339,7 +338,6 @@ int FstClusterMaker::Make()
       for(int i_track = 0; i_track < fstTrackVec_Clusters.size(); ++i_track)
       { // get track from clusters
 	mFstTrack = mFstEvent->createTrack();
-	// mFstTrack = fstTrackVec_Clusters[i_track];
 	mFstTrack->setTrackId(fstTrackVec_Clusters[i_track]->getTrackId());
 	mFstTrack->setTrackType(fstTrackVec_Clusters[i_track]->getTrackType());
 	for(int i_layer = 0; i_layer < 4; ++i_layer)
