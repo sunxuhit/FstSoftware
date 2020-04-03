@@ -70,14 +70,14 @@ class FstClusterMaker : public TObject
     TFile *File_mOutPut;
 
     // Pedestal
-    double mPed[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels];
-    double mPedStdDev[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels];
+    double mPed[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // ped for each time bin
+    double mPedStdDev[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins];
     // double pedRMS[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels];
 
     // Pedestal Display
-    TGraph *g_mPedMean[4]; // 0 for FST, 1-3 for IST
-    TGraph *g_mPedSigma[4];
-    TH2F *h_mPedDisplay[4]; // phi & r_strip
+    TGraph *g_mPedMean[4][FST::numTBins]; // 0 for FST, 1-3 for IST
+    TGraph *g_mPedSigma[4][FST::numTBins];
+    TH2F *h_mPedDisplay[4][FST::numTBins]; // phi & r_strip
 
     // Signal
     double mRawSig[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins];
