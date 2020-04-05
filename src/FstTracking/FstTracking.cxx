@@ -40,6 +40,8 @@ int FstTracking::Init()
   initEfficiency_Hits();
   initEfficiency_Clusters();
 
+  initQAPlots();
+
   if(!isInPut) 
   {
     cout << "Failed to initialize input data!" << endl;
@@ -63,7 +65,7 @@ int FstTracking::Make()
 
   long NumOfEvents = (long)mChainInPut->GetEntries();
   // if(NumOfEvents > 1000) NumOfEvents = 1000;
-  // NumOfEvents = 100;
+  // NumOfEvents = 5000;
   mChainInPut->GetEntry(0);
 
   std::vector<FstRawHit *> rawHitVec;
@@ -74,6 +76,8 @@ int FstTracking::Make()
   {
     if(i_event%1000==0) cout << "processing events:  " << i_event << "/" << NumOfEvents << endl;
     mChainInPut->GetEntry(i_event);
+
+    fillQAPlots(mFstEvent_InPut);
 
     rawHitVec.clear(); // clear the container for hits
     for(int i_hit = 0; i_hit < mFstEvent_InPut->getNumRawHits(); ++i_hit)
@@ -130,6 +134,8 @@ int FstTracking::Finish()
   writeEfficiency_Hits();
   writeEfficiency_Clusters();
 
+  writeQAPlots();
+
   return 1;
 }
 
@@ -179,6 +185,57 @@ bool FstTracking::initChain()
   return true;
 }
 // init Input TChain
+
+//--------------QA---------------------
+void FstTracking::initQAPlots()
+{
+  for(int i_layer = 0; i_layer < 4; ++i_layer)
+  {
+    std::string HistName = Form("h_mCounts_Hits_Layer%d",i_layer);
+    h_mCounts_Hits[i_layer] = new TH1F(HistName.c_str(),HistName.c_str(),15,-0.5,14.5);
+    HistName = Form("h_mCounts_Clusters_Layer%d",i_layer);
+    h_mCounts_Clusters[i_layer] = new TH1F(HistName.c_str(),HistName.c_str(),15,-0.5,14.5);
+    HistName = Form("h_mCounts_Corr_Layer%d",i_layer);
+    h_mCounts_Corr[i_layer] = new TH2F(HistName.c_str(),HistName.c_str(),15,-0.5,14.5,15,-0.5,14.5);
+  }
+}
+
+void FstTracking::fillQAPlots(FstEvent *fstEvent)
+{
+  int numOfHits[4] = {0,0,0,0};
+  for(int i_hit = 0; i_hit < fstEvent->getNumRawHits(); ++i_hit)
+  { // get Hits info
+    FstRawHit *fstRawHit = fstEvent->getRawHit(i_hit);
+    int layer = fstRawHit->getLayer();
+    numOfHits[layer]++;
+  }
+  int numOfClusters[4] = {0,0,0,0};
+  for(int i_cluster = 0; i_cluster < fstEvent->getNumClusters(); ++i_cluster)
+  { // get Clusters info
+    FstCluster *fstCluster = fstEvent->getCluster(i_cluster);
+    int layer = fstCluster->getLayer();
+    numOfClusters[layer]++;
+  }
+
+  for(int i_layer = 0; i_layer < 4; ++i_layer)
+  {
+    h_mCounts_Hits[i_layer]->Fill(numOfHits[i_layer]);
+    h_mCounts_Clusters[i_layer]->Fill(numOfClusters[i_layer]);
+    h_mCounts_Corr[i_layer]->Fill(numOfHits[i_layer],numOfClusters[i_layer]);
+  }
+}
+
+void FstTracking::writeQAPlots()
+{
+  for(int i_layer = 0; i_layer < 4; ++i_layer)
+  {
+    h_mCounts_Hits[i_layer]->Write();
+    h_mCounts_Clusters[i_layer]->Write();
+    h_mCounts_Corr[i_layer]->Write();
+  }
+}
+
+//--------------QA---------------------
 
 //--------------hit display---------------------
 bool FstTracking::initHitDisplay()

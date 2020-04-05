@@ -165,7 +165,7 @@ int FstClusterMaker::Make()
 
   long NumOfEvents = (long)mChainInPut->GetEntries();
   // if(NumOfEvents > 1000) NumOfEvents = 1000;
-  // NumOfEvents = 300;
+  NumOfEvents = 1000;
   mChainInPut->GetEntry(0);
 
   for(int i_event = 0; i_event < NumOfEvents; ++i_event)
@@ -257,10 +257,17 @@ int FstClusterMaker::Make()
 		fstRawHit->Clear();
 		fstRawHit->setLayer(getLayer(i_arm,i_port));
 		fstRawHit->setSensor(getSensor(i_arm,i_port,i_apv));
+		fstRawHit->setAPV(i_apv);
+		fstRawHit->setChannel(i_ch);
 		fstRawHit->setColumn(getColumn(i_arm,i_port,i_apv,i_ch));
 		fstRawHit->setRow(getRow(i_arm,i_port,i_apv,i_ch));
+		fstRawHit->setPosX(getPosX(i_arm,i_port,i_apv,i_ch));
+		fstRawHit->setPosY(getPosY(i_arm,i_port,i_apv,i_ch));
 		for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
 		{
+		  fstRawHit->setPedMean(mPed[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
+		  fstRawHit->setPedStdDev(mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
+		  fstRawHit->setPedRMS(mPedRMS[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
 		  fstRawHit->setCharge(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
 		}
 		// fstRawHit->setCharge(maxADC, maxTB);
@@ -283,26 +290,37 @@ int FstClusterMaker::Make()
 
       mFstEvent->clearRawHitsList();
       int nHits = rawHitsVec_temp.size();
+      int numOfFstHits = 0;
       for(int i_hit = 0; i_hit < nHits; ++i_hit)
       {
 	mFstRawHit = mFstEvent->createRawHit();
 	mFstRawHit->setLayer(rawHitsVec_temp[i_hit]->getLayer());
 	mFstRawHit->setSensor(rawHitsVec_temp[i_hit]->getSensor());
+	mFstRawHit->setAPV(rawHitsVec_temp[i_hit]->getAPV());
+	mFstRawHit->setChannel(rawHitsVec_temp[i_hit]->getChannel());
 	mFstRawHit->setColumn(rawHitsVec_temp[i_hit]->getColumn());
 	mFstRawHit->setRow(rawHitsVec_temp[i_hit]->getRow());
+	mFstRawHit->setPosX(rawHitsVec_temp[i_hit]->getPosX());
+	mFstRawHit->setPosY(rawHitsVec_temp[i_hit]->getPosY());
 	for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
 	{
+	  mFstRawHit->setPedMean(rawHitsVec_temp[i_hit]->getPedMean(i_tb), i_tb);
+	  mFstRawHit->setPedStdDev(rawHitsVec_temp[i_hit]->getPedStdDev(i_tb), i_tb);
+	  mFstRawHit->setPedRMS(rawHitsVec_temp[i_hit]->getPedRMS(i_tb), i_tb);
 	  mFstRawHit->setCharge(rawHitsVec_temp[i_hit]->getCharge(i_tb), i_tb);
 	}
 	// mFstRawHit->setCharge(rawHitsVec_temp[i_hit]->getCharge(rawHitsVec_temp[i_hit]->getMaxTb()),rawHitsVec_temp[i_hit]->getMaxTb());
 	mFstRawHit->setMaxTb(rawHitsVec_temp[i_hit]->getMaxTb());
 	mFstRawHit->setHitId(rawHitsVec_temp[i_hit]->getHitId());
 	mFstRawHit->setDefaultTb(rawHitsVec_temp[i_hit]->getDefaultTb());
+	if(mFstRawHit->getLayer() == 0) numOfFstHits++;
       }
+      mFstEvent->setNumFstRawHits(numOfFstHits);
 
       mFstEvent->clearClustersList();
       std::vector<FstCluster *> cluster_simple = findCluster_Simple(rawHitsVec_temp);
       int nClusters = cluster_simple.size();
+      int numOfFstClusters = 0;
       for(int i_cluster = 0; i_cluster < nClusters; ++i_cluster)
       {
 	cluster_simple[i_cluster]->setClusterId(i_cluster);
@@ -325,12 +343,15 @@ int FstClusterMaker::Make()
 	{
 	  mFstCluster->setHitId(i_hit, rawHitsVec[i_hit]->getHitId());
 	}
+	if(mFstCluster->getLayer() == 0) numOfFstClusters++;
       }
+      mFstEvent->setNumFstClusters(numOfFstClusters);
 
       mFstEvent->clearTracksList(); // FstTrack
       std::vector<FstTrack *> fstTrackVec_Hits = findTrack_Hits(rawHitsVec_temp); // find tracks with Hits
       for(int i_track = 0; i_track < fstTrackVec_Hits.size(); ++i_track)
       { // get track from hits
+	// if(mFstEvent->getNumTracks() > 30) continue; // only save first 30 tracks | will drop the event with more than 10 trakcs anyway
 	mFstTrack = mFstEvent->createTrack();
 	mFstTrack->setTrackId(fstTrackVec_Hits[i_track]->getTrackId());
 	mFstTrack->setTrackType(fstTrackVec_Hits[i_track]->getTrackType());
@@ -346,6 +367,7 @@ int FstClusterMaker::Make()
       for(int i_track = 0; i_track < fstTrackVec_Clusters.size(); ++i_track)
       { // get track from clusters
 	mFstTrack = mFstEvent->createTrack();
+	// if(mFstEvent->getNumTracks() > 30) continue; // only save first 30 tracks | will drop the event with more than 10 trakcs anyway
 	mFstTrack->setTrackId(fstTrackVec_Clusters[i_track]->getTrackId());
 	mFstTrack->setTrackType(fstTrackVec_Clusters[i_track]->getTrackType());
 	for(int i_layer = 0; i_layer < 4; ++i_layer)
@@ -391,7 +413,7 @@ bool FstClusterMaker::clearPedestal()
 	  {
 	    mPed[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
 	    mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
-	    // pedRMS[i_arm][i_port][i_apv][i_ch] = -1.0;
+	    mPedRMS[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
 	  }
 	}
       }
@@ -517,7 +539,7 @@ bool FstClusterMaker::calPedestal()
 	    {
 	      mPed[i_arm][i_port][i_apv][i_ch][i_tb] = sumValues[i_arm][i_port][i_apv][i_ch][i_tb]/counters[i_arm][i_port][i_apv][i_ch][i_tb];
 	      mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb] = sqrt((sumValuesSquared[i_arm][i_port][i_apv][i_ch][i_tb]-(double)counters[i_arm][i_port][i_apv][i_ch][i_tb]*mPed[i_arm][i_port][i_apv][i_ch][i_tb]*mPed[i_arm][i_port][i_apv][i_ch][i_tb])/(double)(counters[i_arm][i_port][i_apv][i_ch][i_tb]-1));
-	      // pedRMS[i_arm][i_port][i_apv][i_ch] = sqrt(mPed[i_arm][i_port][i_apv][i_ch]*mPed[i_arm][i_port][i_apv][i_ch]-mPedStdDev[i_arm][i_port][i_apv][i_ch]*mPedStdDev[i_arm][i_port][i_apv][i_ch]);
+	      mPedRMS[i_arm][i_port][i_apv][i_ch][i_tb] = sqrt(mPed[i_arm][i_port][i_apv][i_ch][i_tb]*mPed[i_arm][i_port][i_apv][i_ch][i_tb]+mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]); // rms^2 = mean^2+std^2
 	    }
 	  }
 	}
@@ -603,7 +625,7 @@ bool FstClusterMaker::calPedestal()
 	    {
 	      mPed[i_arm][i_port][i_apv][i_ch][i_tb] = sumValues[i_arm][i_port][i_apv][i_ch][i_tb]/counters[i_arm][i_port][i_apv][i_ch][i_tb];
 	      mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb] = sqrt((sumValuesSquared[i_arm][i_port][i_apv][i_ch][i_tb]-(double)counters[i_arm][i_port][i_apv][i_ch][i_tb]*mPed[i_arm][i_port][i_apv][i_ch][i_tb]*mPed[i_arm][i_port][i_apv][i_ch][i_tb])/(double)(counters[i_arm][i_port][i_apv][i_ch][i_tb]-1));
-	      // pedRMS[i_arm][i_port][i_apv][i_ch] = sqrt(mPed[i_arm][i_port][i_apv][i_ch]*mPed[i_arm][i_port][i_apv][i_ch]-mPedStdDev[i_arm][i_port][i_apv][i_ch]*mPedStdDev[i_arm][i_port][i_apv][i_ch]);
+	      mPedRMS[i_arm][i_port][i_apv][i_ch][i_tb] = sqrt(mPed[i_arm][i_port][i_apv][i_ch][i_tb]*mPed[i_arm][i_port][i_apv][i_ch][i_tb]+mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]); // rms^2 = mean^2+std^2
 	    }
 
 	    int layer = this->getLayer(i_arm,i_port);
@@ -1372,6 +1394,42 @@ int FstClusterMaker::getPhiSeg(int apv, int ch)
   if(apv >= 4 && apv <= 7) phi_seg = (apv-4)*32 + ch/4; // outer
 
   return phi_seg;
+}
+
+double FstClusterMaker::getPosX(int arm, int port, int apv, int ch)
+{
+  double posX = -999.9;
+  int layer = this->getLayer(arm,port);
+  if(layer == 0) // FST
+  {
+    double r_fst = FST::rOuter + (this->getColumn(arm,port,apv,ch)-4)*FST::pitchR + 0.5*FST::pitchR;
+    double phi_fst = (63-this->getRow(arm,port,apv,ch))*FST::pitchPhi + 0.5*FST::pitchPhi;
+    posX = r_fst*TMath::Cos(phi_fst); // x = r*cos(phi)
+  }
+  else // IST1-3
+  {
+    posX = this->getColumn(arm,port,apv,ch)*FST::pitchColumn + 0.5*FST::pitchColumn;
+  }
+
+  return posX;
+}
+
+double FstClusterMaker::getPosY(int arm, int port, int apv, int ch)
+{
+  double posY = -999.9;
+  int layer = this->getLayer(arm,port);
+  if(layer == 0) // FST
+  {
+    double r_fst = FST::rOuter + (this->getColumn(arm,port,apv,ch)-4)*FST::pitchR + 0.5*FST::pitchR;
+    double phi_fst = (63-this->getRow(arm,port,apv,ch))*FST::pitchPhi + 0.5*FST::pitchPhi;
+    posY = r_fst*TMath::Sin(phi_fst); // y = r*sin(phi)
+  }
+  else // IST1-3
+  {
+    posY = (63-this->getRow(arm,port,apv,ch))*FST::pitchRow + 0.5*FST::pitchRow;
+  }
+
+  return posY;
 }
 
 bool FstClusterMaker::isBadAPV(int arm, int port, int apv)

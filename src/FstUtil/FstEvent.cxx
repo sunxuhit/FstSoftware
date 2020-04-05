@@ -8,13 +8,15 @@ ClassImp(FstEvent)
 //------------------------------------------
 FstEvent::FstEvent()
 {
-  mNumOfHits = 0;
-  mNumOfClusters = 0;
-  mNumOfTracks = 0;
+  mNumOfHits        = 0;
+  mNumOfFstHits     = 0;
+  mNumOfClusters    = 0;
+  mNumOfFstClusters = 0;
+  mNumOfTracks      = 0;
 
-  mRawHits = new TClonesArray("FstRawHit", 10);
+  mRawHits  = new TClonesArray("FstRawHit", 10);
   mClusters = new TClonesArray("FstCluster", 10);
-  mTracks = new TClonesArray("FstTrack", 10);
+  mTracks   = new TClonesArray("FstTrack", 10);
 }
 
 FstEvent::~FstEvent()
@@ -23,6 +25,8 @@ FstEvent::~FstEvent()
   mRawHits = NULL;
   delete mClusters;
   mClusters = NULL;
+  delete mTracks;
+  mTracks = NULL;
 }
 //------------------------------------------
 
@@ -44,6 +48,7 @@ FstRawHit* FstEvent::createRawHit()
 void FstEvent::clearRawHitsList()
 {
   mNumOfHits = 0;
+  mNumOfFstHits = 0;
   mRawHits->Clear();
 }
 
@@ -55,6 +60,16 @@ int FstEvent::getNumRawHits() const
 FstRawHit* FstEvent::getRawHit(int i_hit) const
 {
   return i_hit < mNumOfHits ? (FstRawHit*)((*mRawHits)[i_hit]) : NULL;
+}
+
+void FstEvent::setNumFstRawHits(int numOfFstHits)
+{
+  mNumOfFstHits = numOfFstHits;
+}
+
+int FstEvent::getNumFstRawHits() const
+{
+  return mNumOfFstHits;
 }
 // FstRawHit
 
@@ -76,6 +91,7 @@ FstCluster* FstEvent::createCluster()
 void FstEvent::clearClustersList()
 {
   mNumOfClusters = 0;
+  mNumOfFstClusters = 0;
   mClusters->Clear();
 }
 
@@ -88,6 +104,16 @@ FstCluster* FstEvent::getCluster(int i_cluster) const
 {
   return i_cluster < mNumOfClusters ? (FstCluster*)((*mClusters)[i_cluster]) : NULL;
 }
+
+void FstEvent::setNumFstClusters(int numOfFstClusters)
+{
+  mNumOfFstClusters = numOfFstClusters;
+}
+
+int FstEvent::getNumFstClusters() const
+{
+  return mNumOfFstClusters;
+}
 // FstCluster
 
 // FstTrack
@@ -95,9 +121,9 @@ FstTrack* FstEvent::createTrack()
 {
   if(mNumOfTracks == mTracks->GetSize())
     mTracks->Expand( mNumOfTracks + 10 );
-  if(mNumOfTracks >= 30)
+  if(mNumOfTracks >= 80)
   {
-    Fatal( "FstEvent::createTrack()", "ERROR: Too many tracks (>30)!" );
+    Fatal( "FstEvent::createTrack()", "ERROR: Too many tracks (>80)!" );
     exit( 2 );
   }
 

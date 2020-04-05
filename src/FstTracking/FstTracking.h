@@ -38,11 +38,17 @@ class FstTracking : public TObject
     // init input TChain
     bool initChain();
 
+    // QA
+    void initQAPlots();
+    void fillQAPlots(FstEvent *fstEvent);
+    void writeQAPlots();
+
     // hit display
     bool initHitDisplay();
     void fillHitDisplay(std::vector<FstRawHit *> rawHitVec_orig);
     void writeHitDisplay();
 
+    // cluster display
     bool initClusterDisplay();
     void fillClusterDisplay(std::vector<FstCluster *> clusterVec_orig);
     void writeClusterDisplay();
@@ -76,10 +82,18 @@ class FstTracking : public TObject
 
     TFile *File_mOutPut;
 
-    // Hit Display
+    // QA
+    TH1F *h_mCounts_Hits[4]; // 0 for FST, 1-3 for IST
+    TH1F *h_mCounts_Clusters[4]; // 0 for FST, 1-3 for IST
+    TH2F *h_mCounts_Corr[4];
+
+    // hit Display
     TH2F *h_mHitDisplay[4]; // 0 for FST, 1-3 for IST
     TH1F *h_mMaxTb[4]; 
+    // cluster Display
     TH2F *h_mClusterDisplay[4]; // 0 for FST, 1-3 for IST
+
+    // cluster QA
 
     // Tracking QA based on Hits
     TH2F *h_mHitsCorrXR[4]; // 0: ist1x vs. ist3x | 1: ist1x vs. fstr | 2: ist3x vs. fstr | 3: ist1x+ist3x vs. fstr
@@ -91,6 +105,7 @@ class FstTracking : public TObject
     TH1F *h_mRResidual_Hits;
     TH1F *h_mPhiResidual_Hits;
 
+    // Tracking
     TH1F *h_mTrackXRes_Hits;
     TH1F *h_mTrackYRes_Hits;
     TH1F *h_mTrackRRes_Hits;
@@ -100,15 +115,6 @@ class FstTracking : public TObject
     TH1F *h_mTrackYRes_Clusters;
     TH1F *h_mTrackRRes_Clusters;
     TH1F *h_mTrackPhiRes_Clusters;
-
-#if 0
-    // Tracking based on Clusters
-    TH1F *h_mAdc_Simple[4];
-    TH1F *h_mAdcAngleCorr_Simple[4];
-    TH1F *h_mTrackAngle_Simple;
-    TH1F *h_mXResidual_Simple;
-    TH1F *h_mYResidual_Simple;
-#endif
 
     // Efficiency based on Hits
     TH2F *h_mTrackHits_IST; // position on FST from IST projection

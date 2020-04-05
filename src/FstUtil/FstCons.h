@@ -43,8 +43,8 @@ namespace FST
 
   const int nPedCuts = 3;
   // const int nHitCuts = 5;
-  const float nFstHitCuts = 4.5;
-  const float nHitCuts = 5.5;
+  const float nFstHitCuts = 6.0;
+  const float nHitCuts = 6.0;
   const int maxNHits = 15; // max number of hits array
   const int maxNHitsPerEvent = 10; // max number of hits per event => bail the event if found more than this number
   const double MinNoise = 10.0;
