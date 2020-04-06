@@ -22,6 +22,7 @@ class FstRawHit : public TObject
     int mMaxTb;
     int mHitId; // hit id
     int mDefaultTb;
+    bool mIsHit;
 
   public:
     FstRawHit();
@@ -42,6 +43,7 @@ class FstRawHit : public TObject
     void setMaxTb(int maxTb);
     void setHitId(int hitId);
     void setDefaultTb(int tb);
+    void setIsHit(bool isHit);
 
     int getLayer() const;
     int getSensor() const;
@@ -58,6 +60,7 @@ class FstRawHit : public TObject
     int getMaxTb() const;
     int getHitId() const;
     int getDefaultTb() const;
+    bool getIsHit() const;
 
     void Print() const;
     void Clear();

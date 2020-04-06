@@ -79,6 +79,10 @@ void FstRawHit::setDefaultTb(int tb)
 {
   mDefaultTb = tb;
 }
+void FstRawHit::setIsHit(bool isHit)
+{
+  mIsHit = isHit;
+}
 
 // accessors
 int FstRawHit::getLayer() const
@@ -141,6 +145,10 @@ int FstRawHit::getDefaultTb() const
 {
   return mDefaultTb;
 }
+bool FstRawHit::getIsHit() const
+{
+  return mIsHit;
+}
 
 //------------------------------------------
 void FstRawHit::Print() const
@@ -163,6 +171,7 @@ void FstRawHit::Print() const
   cout << "mMaxTb =" << mMaxTb << endl;
   cout << "mHitId =" << mHitId << endl;
   cout << "mDefaultTb = " << mDefaultTb  << endl;
+  cout << "mIsHit = " << mIsHit << endl;
   cout << endl;
 }
 
@@ -186,4 +195,5 @@ void FstRawHit::Clear()
   mMaxTb = -1;
   mHitId = -1;
   mDefaultTb = FST::defaultTimeBin;
+  mIsHit = false;
 }

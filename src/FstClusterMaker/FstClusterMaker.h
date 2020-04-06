@@ -31,6 +31,10 @@ class FstClusterMaker : public TObject
     {
       mOutPutFile = outputfile;
     }
+    void set_saveped(bool savePed)
+    {
+      mSavePed = savePed;
+    }
 
     int Init();
     int Make(); // subtract pedestal => signal & find Hits
@@ -93,6 +97,7 @@ class FstClusterMaker : public TObject
     FstRawHit *mFstRawHit;
     FstCluster *mFstCluster;
     FstTrack *mFstTrack;
+    bool mSavePed;
 
     // Utility for tracking
     int getLayer(int arm, int port); // return layer based on arm & port

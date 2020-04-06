@@ -41,12 +41,14 @@ namespace FST
   const double pitchLayer12  = 34.925; //mm, distances between the 1st & 2nd Layer => Added by Xu Sun @ 02/13/2020
   const double pitchLayer23  = 30.1625; //mm, distances between the 2nd & 3rd Layer
 
-  const int nPedCuts = 3;
+  // const int nPedCuts = 3;
   // const int nHitCuts = 5;
-  const float nFstHitCuts = 6.0;
-  const float nHitCuts = 6.0;
-  const int maxNHits = 15; // max number of hits array
-  const int maxNHitsPerEvent = 10; // max number of hits per event => bail the event if found more than this number
+  const int nFstPedsCut = 3;
+  const int nIstPedsCut = 3;
+  const float nFstHitsCut = 4.5;
+  const float nIstHitsCut = 5.5;
+  const int maxNHits = 25; // max number of hits array
+  const int maxNHitsPerEvent = 20; // max number of hits per event => bail the event if found more than this number
   const double MinNoise = 10.0;
   const double maxAngle = 100.0;
   const double rad2deg = 180.0/3.141593;

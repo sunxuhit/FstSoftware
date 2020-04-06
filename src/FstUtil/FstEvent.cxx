@@ -35,9 +35,9 @@ FstRawHit* FstEvent::createRawHit()
 {
   if(mNumOfHits == mRawHits->GetSize())
     mRawHits->Expand( mNumOfHits + 10 );
-  if(mNumOfHits >= 15)
+  if(mNumOfHits >= 25)
   {
-    Fatal( "FstEvent::createRawHit()", "ERROR: Too many hits (>15)!" );
+    Fatal( "FstEvent::createRawHit()", "ERROR: Too many hits (>25)!" );
     exit( 2 );
   }
 
@@ -78,9 +78,9 @@ FstCluster* FstEvent::createCluster()
 {
   if(mNumOfClusters == mClusters->GetSize())
     mClusters->Expand( mNumOfClusters + 10 );
-  if(mNumOfClusters >= 15)
+  if(mNumOfClusters >= 25)
   {
-    Fatal( "FstEvent::createCluster()", "ERROR: Too many clusters (>15)!" );
+    Fatal( "FstEvent::createCluster()", "ERROR: Too many clusters (>25)!" );
     exit( 2 );
   }
 
@@ -121,9 +121,9 @@ FstTrack* FstEvent::createTrack()
 {
   if(mNumOfTracks == mTracks->GetSize())
     mTracks->Expand( mNumOfTracks + 10 );
-  if(mNumOfTracks >= 80)
+  if(mNumOfTracks >= 1000)
   {
-    Fatal( "FstEvent::createTrack()", "ERROR: Too many tracks (>80)!" );
+    Fatal( "FstEvent::createTrack()", "ERROR: Too many tracks (>1000)!" );
     exit( 2 );
   }
 
