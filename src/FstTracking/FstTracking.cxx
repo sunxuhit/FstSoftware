@@ -40,8 +40,6 @@ int FstTracking::Init()
   initEfficiency_Hits();
   initEfficiency_Clusters();
 
-  initQAPlots();
-
   if(!isInPut) 
   {
     cout << "Failed to initialize input data!" << endl;
@@ -76,8 +74,6 @@ int FstTracking::Make()
   {
     if(i_event%1000==0) cout << "processing events:  " << i_event << "/" << NumOfEvents << endl;
     mChainInPut->GetEntry(i_event);
-
-    fillQAPlots(mFstEvent_InPut);
 
     rawHitVec.clear(); // clear the container for hits
     for(int i_hit = 0; i_hit < mFstEvent_InPut->getNumRawHits(); ++i_hit)
@@ -134,8 +130,6 @@ int FstTracking::Finish()
   writeEfficiency_Hits();
   writeEfficiency_Clusters();
 
-  writeQAPlots();
-
   return 1;
 }
 
@@ -185,57 +179,6 @@ bool FstTracking::initChain()
   return true;
 }
 // init Input TChain
-
-//--------------QA---------------------
-void FstTracking::initQAPlots()
-{
-  for(int i_layer = 0; i_layer < 4; ++i_layer)
-  {
-    std::string HistName = Form("h_mCounts_Hits_Layer%d",i_layer);
-    h_mCounts_Hits[i_layer] = new TH1F(HistName.c_str(),HistName.c_str(),15,-0.5,14.5);
-    HistName = Form("h_mCounts_Clusters_Layer%d",i_layer);
-    h_mCounts_Clusters[i_layer] = new TH1F(HistName.c_str(),HistName.c_str(),15,-0.5,14.5);
-    HistName = Form("h_mCounts_Corr_Layer%d",i_layer);
-    h_mCounts_Corr[i_layer] = new TH2F(HistName.c_str(),HistName.c_str(),15,-0.5,14.5,15,-0.5,14.5);
-  }
-}
-
-void FstTracking::fillQAPlots(FstEvent *fstEvent)
-{
-  int numOfHits[4] = {0,0,0,0};
-  for(int i_hit = 0; i_hit < fstEvent->getNumRawHits(); ++i_hit)
-  { // get Hits info
-    FstRawHit *fstRawHit = fstEvent->getRawHit(i_hit);
-    int layer = fstRawHit->getLayer();
-    numOfHits[layer]++;
-  }
-  int numOfClusters[4] = {0,0,0,0};
-  for(int i_cluster = 0; i_cluster < fstEvent->getNumClusters(); ++i_cluster)
-  { // get Clusters info
-    FstCluster *fstCluster = fstEvent->getCluster(i_cluster);
-    int layer = fstCluster->getLayer();
-    numOfClusters[layer]++;
-  }
-
-  for(int i_layer = 0; i_layer < 4; ++i_layer)
-  {
-    h_mCounts_Hits[i_layer]->Fill(numOfHits[i_layer]);
-    h_mCounts_Clusters[i_layer]->Fill(numOfClusters[i_layer]);
-    h_mCounts_Corr[i_layer]->Fill(numOfHits[i_layer],numOfClusters[i_layer]);
-  }
-}
-
-void FstTracking::writeQAPlots()
-{
-  for(int i_layer = 0; i_layer < 4; ++i_layer)
-  {
-    h_mCounts_Hits[i_layer]->Write();
-    h_mCounts_Clusters[i_layer]->Write();
-    h_mCounts_Corr[i_layer]->Write();
-  }
-}
-
-//--------------QA---------------------
 
 //--------------hit display---------------------
 bool FstTracking::initHitDisplay()
@@ -563,8 +506,8 @@ void FstTracking::writeTracking_Clusters()
 //--------------Efficiency with Hits---------------------
 void FstTracking::initEfficiency_Hits()
 {
-  h_mTrackHits_IST = new TH2F("h_mTrackHits_IST","h_mTrackHits_IST",4,FST::rOuter,FST::rOuter+4.0*FST::pitchR,64,0.0,64.0*FST::pitchPhi);
-  h_mTrackHits_FST = new TH2F("h_mTrackHits_FST","h_mTrackHits_FST",4,FST::rOuter,FST::rOuter+4.0*FST::pitchR,64,0.0,64.0*FST::pitchPhi);
+  h_mTrackHits_IST = new TH2F("h_mTrackHits_IST","h_mTrackHits_IST",20,FST::rOuter-FST::pitchR,FST::rOuter+5.0*FST::pitchR,64,0.0,64.0*FST::pitchPhi);
+  h_mTrackHits_FST = new TH2F("h_mTrackHits_FST","h_mTrackHits_FST",20,FST::rOuter-FST::pitchR,FST::rOuter+5.0*FST::pitchR,64,0.0,64.0*FST::pitchPhi);
 }
 
 void FstTracking::calEfficiency_Hits(std::vector<FstTrack *> trackHitVec_orig)
@@ -576,8 +519,8 @@ void FstTracking::calEfficiency_Hits(std::vector<FstTrack *> trackHitVec_orig)
     trackHitVec.push_back(trackHitVec_orig[i_track]);
   }
 
-  const double rMax = FST::rOuter + 4.0*FST::pitchR;
-  const double rMin = FST::rOuter;
+  const double rMax = FST::rOuter + 5.0*FST::pitchR;
+  const double rMin = FST::rOuter - 1.0*FST::pitchR;
   const double phiMax = 64.0*FST::pitchPhi;
   const double phiMin = 0.0;
 
@@ -616,8 +559,8 @@ void FstTracking::writeEfficiency_Hits()
 //--------------Efficiency with Clusters---------------------
 void FstTracking::initEfficiency_Clusters()
 {
-  h_mTrackClusters_IST = new TH2F("h_mTrackClusters_IST","h_mTrackClusters_IST",4,FST::rOuter,FST::rOuter+4.0*FST::pitchR,64,0.0,64.0*FST::pitchPhi);
-  h_mTrackClusters_FST = new TH2F("h_mTrackClusters_FST","h_mTrackClusters_FST",4,FST::rOuter,FST::rOuter+4.0*FST::pitchR,64,0.0,64.0*FST::pitchPhi);
+  h_mTrackClusters_IST = new TH2F("h_mTrackClusters_IST","h_mTrackClusters_IST",4,FST::rOuter-FST::pitchR,FST::rOuter+5.0*FST::pitchR,64,0.0,64.0*FST::pitchPhi);
+  h_mTrackClusters_FST = new TH2F("h_mTrackClusters_FST","h_mTrackClusters_FST",4,FST::rOuter-FST::pitchR,FST::rOuter+5.0*FST::pitchR,64,0.0,64.0*FST::pitchPhi);
 }
 
 void FstTracking::calEfficiency_Clusters(std::vector<FstTrack *> trackClusterVec_orig)
@@ -629,8 +572,8 @@ void FstTracking::calEfficiency_Clusters(std::vector<FstTrack *> trackClusterVec
     trackClusterVec.push_back(trackClusterVec_orig[i_track]);
   }
 
-  const double rMax = FST::rOuter + 4.0*FST::pitchR;
-  const double rMin = FST::rOuter;
+  const double rMax = FST::rOuter + 5.0*FST::pitchR;
+  const double rMin = FST::rOuter - 1.0*FST::pitchR;
   const double phiMax = 64.0*FST::pitchPhi;
   const double phiMin = 0.0;
 

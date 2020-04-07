@@ -11,8 +11,8 @@ class FstRawHit : public TObject
     int mSensor;
     int mAPV;
     int mChannel;
-    int mColumn; // phi for FST | x for IST
-    int mRow; // r_strip for FST | y for IST
+    int mColumn; // r_strip for FST | x for IST
+    int mRow; // phi for FST | y for IST
     double mPosX; // extracted from column & row
     double mPosY;
     double mPedMean[FST::numTBins]; // mean pedestal for each time bin

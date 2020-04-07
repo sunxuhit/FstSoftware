@@ -33,16 +33,20 @@ include(${ROOT_USE_FILE})
 # add_subdirectory(src/IstTracking)
 
 # include FstUtil
-include_directories("${PROJECT_SOURCE_DIR}/src/FstUtil")
-add_subdirectory(src/FstUtil)
+# include_directories("${PROJECT_SOURCE_DIR}/src/FstUtil")
+# add_subdirectory(src/FstUtil)
 
 # include FstClusterMaker
 include_directories("${PROJECT_SOURCE_DIR}/src/FstClusterMaker")
 add_subdirectory(src/FstClusterMaker)
 
+# include FstQAStudy
+include_directories("${PROJECT_SOURCE_DIR}/src/FstQAStudy")
+add_subdirectory(src/FstQAStudy)
+
 # include FstTracking
-include_directories("${PROJECT_SOURCE_DIR}/src/FstTracking")
-add_subdirectory(src/FstTracking)
+# include_directories("${PROJECT_SOURCE_DIR}/src/FstTracking")
+# add_subdirectory(src/FstTracking)
 
 # add the executable
 # add_executable(FstTracking ${PROJECT_SOURCE_DIR}/src/IstTracking/IstTracking.cxx)

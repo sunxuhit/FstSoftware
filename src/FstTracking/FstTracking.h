@@ -38,11 +38,6 @@ class FstTracking : public TObject
     // init input TChain
     bool initChain();
 
-    // QA
-    void initQAPlots();
-    void fillQAPlots(FstEvent *fstEvent);
-    void writeQAPlots();
-
     // hit display
     bool initHitDisplay();
     void fillHitDisplay(std::vector<FstRawHit *> rawHitVec_orig);
