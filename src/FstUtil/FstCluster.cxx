@@ -11,12 +11,14 @@ FstCluster::FstCluster()
 {
   Clear();
 
-  // mNumOfRawHits = 0;
-  // mFstRawHits = new TClonesArray("FstRawHit", 10);
+  mNumOfRawHits = 0;
+  mFstRawHits = new TClonesArray("FstRawHit", 10);
 }
 
 FstCluster::~FstCluster()
 {
+  delete mFstRawHits;
+  mFstRawHits = NULL;
 }
 
 //------------------------------------------
@@ -70,10 +72,10 @@ void FstCluster::setClusterId(int clusterId)
 {
   mClusterId = clusterId;
 }
-void FstCluster::setHitId(int i_hit, int hitId)
-{
-  mHitId[i_hit] = hitId;
-}
+// void FstCluster::setHitId(int i_hit, int hitId)
+// {
+//   mHitId[i_hit] = hitId;
+// }
 
 // accessors
 int FstCluster::getLayer() const
@@ -124,10 +126,10 @@ int FstCluster::getClusterId() const
 {
   return mClusterId;
 }
-int FstCluster::getHitId(int i_hit) const
-{
-  return mHitId[i_hit];
-}
+// int FstCluster::getHitId(int i_hit) const
+// {
+//   return mHitId[i_hit];
+// }
 
 //------------------------------------------
 
@@ -144,9 +146,13 @@ void FstCluster::Print() const
   cout << "mNRawHitsR = " << mNRawHitsR << endl;
   cout << "mNRawHitsPhi = " << mNRawHitsPhi << endl;
   cout << "mClusterId = " << mClusterId << endl;
+  cout << endl;
   for(int i_hit = 0; i_hit < mNRawHits; ++i_hit)
   {
-    cout << "mHitId = " << mHitId[i_hit] << endl;
+    cout << "Print " << i_hit << "th hit:" << endl;
+    // cout << "mHitId = " << mHitId[i_hit] << endl;
+    FstRawHit *fstRawHit = this->getRawHit(i_hit);
+    fstRawHit->Print();
   }
   cout << endl;
 }
@@ -165,21 +171,22 @@ void FstCluster::Clear()
   mNRawHitsPhi = -1;
   mRawHitVec.clear();
   mClusterId = -1;
-  for(int i_hit = 0; i_hit < FST::maxNHits; ++i_hit)
-  {
-    mHitId[i_hit] = -1;
-  }
+  // for(int i_hit = 0; i_hit < FST::maxNHits; ++i_hit)
+  // {
+  //   mHitId[i_hit] = -1;
+  // }
+
+  // clearRawHitsList();
 }
 
-#if 0
 // FstRawHit
 FstRawHit* FstCluster::createRawHit()
 {
   if(mNumOfRawHits == mFstRawHits->GetSize())
     mFstRawHits->Expand( mNumOfRawHits + 10 );
-  if(mNumOfRawHits >= 15)
+  if(mNumOfRawHits >= 25)
   {
-    Fatal( "FstEvent::createRawHit()", "ERROR: Too many hits (>15)!" );
+    Fatal( "FstCluster::createRawHit()", "ERROR: Too many hits (>25)!" );
     exit( 2 );
   }
 
@@ -203,4 +210,3 @@ FstRawHit* FstCluster::getRawHit(int i_hit) const
   return i_hit < mNumOfRawHits ? (FstRawHit*)((*mFstRawHits)[i_hit]) : NULL;
 }
 // FstRawHit
-#endif

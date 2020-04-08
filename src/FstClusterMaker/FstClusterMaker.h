@@ -96,6 +96,7 @@ class FstClusterMaker : public TObject
     FstEvent *mFstEvent;
     FstRawHit *mFstRawHit;
     FstCluster *mFstCluster;
+    FstRawHit *mFstClusteredRawHit;
     FstTrack *mFstTrack;
     bool mSavePed;
 

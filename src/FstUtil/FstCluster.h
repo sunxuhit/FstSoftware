@@ -20,12 +20,12 @@ class FstCluster : public TObject
     int mNRawHits; // number of hits in the cluster
     int mNRawHitsR; // number of hits in the cluster along the R direction
     int mNRawHitsPhi; // number of hits in the cluster along the phi direction
-    std::vector<FstRawHit *> mRawHitVec; // container to save raw hits which contribute to the cluster
+    std::vector<FstRawHit *> mRawHitVec; //! container to save raw hits which contribute to the cluster => don't save in TTree
     int mClusterId; // cluster Id
-    int mHitId[FST::maxNHits];
+    // int mHitId[FST::maxNHits];
 
-    // int mNumOfRawHits; // number of raw hits in the cluster
-    // TClonesArray *mFstRawHits; //->
+    int mNumOfRawHits; // number of raw hits in the cluster
+    TClonesArray *mFstRawHits; //->
 
   public:
     FstCluster();
@@ -43,7 +43,7 @@ class FstCluster : public TObject
     void setNRawHitsPhi(int nRawHitsPhi);
     void addRawHit(FstRawHit *fstRawHit);
     void setClusterId(int clusterId);
-    void setHitId(int i_hit, int hitId);
+    // void setHitId(int i_hit, int hitId);
 
     int getLayer() const;
     int getSensor() const;
@@ -57,14 +57,13 @@ class FstCluster : public TObject
     int getNRawHitsPhi() const;
     std::vector<FstRawHit *> getRawHitVec() const;
     int getClusterId() const;
-    int getHitId(int i_hit) const;
+    // int getHitId(int i_hit) const;
 
-#if 0
+    // FstRawHit
     FstRawHit* createRawHit();
     void clearRawHitsList();
     int getNumRawHits() const;
     FstRawHit* getRawHit(int i_hit) const;
-#endif
 
     void Print() const;
     void Clear();

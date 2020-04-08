@@ -53,7 +53,7 @@ int FstQAStudy::Make()
 
   long NumOfEvents = (long)mChainInPut->GetEntries();
   // if(NumOfEvents > 1000) NumOfEvents = 1000;
-  // NumOfEvents = 1000;
+  NumOfEvents = 1000;
   mChainInPut->GetEntry(0);
 
   std::vector<FstRawHit *> rawHitVec;
@@ -80,6 +80,18 @@ int FstQAStudy::Make()
     { // get Clusters info
       FstCluster *fstCluster = mFstEvent_InPut->getCluster(i_cluster);
       clusterVec.push_back(fstCluster);
+      int nHits = fstCluster->getNRawHitsR();
+      if(nHits > 1)
+      {
+	cout << "nHits = " << nHits << endl;
+	fstCluster->Print();
+	// for(int i_hit = 0; i_hit < nHits; ++i_hit)
+	// {
+	//   cout << "hitId = " << fstCluster->getHitId(i_hit) << endl;
+	//   FstRawHit *fstRawHit_Cluster = fstCluster->getRawHit(i_hit);
+	//   fstRawHit_Cluster->Print();
+	// }
+      }
     }
 
     trackHitsVec.clear(); // clear the container for clusters
@@ -265,6 +277,7 @@ void FstQAStudy::fillAdcFst(FstEvent *fstEvent)
       int TimeBin[nHits];
       double charge[nHits];
       int numOfHits = 0;
+      /*
       for(int i_clusterHit = 0; i_clusterHit < fstCluster->getNRawHits(); ++i_clusterHit)
       {
 	int cHitId = fstCluster->getHitId(i_clusterHit);
@@ -287,6 +300,7 @@ void FstQAStudy::fillAdcFst(FstEvent *fstEvent)
 	}
 	numOfHits++;
       }
+      */
 
       double maxCharge = charge[0];
       int maxHitIt = 0;
