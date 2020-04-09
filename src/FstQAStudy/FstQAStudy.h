@@ -15,6 +15,8 @@ class TChain;
 class TTree;
 class TH1F;
 class TH2F;
+class TH3F;
+class TProfile;
 class TProfile2D;
 
 class FstQAStudy : public TObject
@@ -39,15 +41,33 @@ class FstQAStudy : public TObject
     // init input TChain
     bool initChain();
 
-    // QA
+    // Counts
     void initCounts();
     void fillCounts(FstEvent *fstEvent);
     void writeCounts();
 
     // ADC
-    void initAdcFst();
-    void fillAdcFst(FstEvent *fstEvent);
-    void writeAdcFst();
+    void initAdc_Hits();
+    void fillAdc_Hits(std::vector<FstRawHit *> rawHitVec_orig);
+    void writeAdc_Hits();
+
+    void initAdc_Clusters();
+    void fillAdc_Clusters(std::vector<FstCluster *> clusterVec_orig);
+    void writeAdc_Cluster();
+
+    // cluster size
+    void initClusterSize();
+    void fillClusterSize(std::vector<FstCluster *> clusterVec_orig);
+    void writeClusterSize();
+
+    void initClusterSize_TrackClusters();
+    void fillClusterSize_TrackClusters(FstEvent *fstEvent);
+    void writeClusterSize_TrackClusters();
+
+    // Event Display
+    void initEventDisplay_TrackClusters();
+    void fillEventDisplay_TrackClusters(FstEvent *fstEvent, int numOfEvent);
+    void writeEventDisplay_TrackClusters();
 
   private:
     std::string mHome, mList;
@@ -55,7 +75,7 @@ class FstQAStudy : public TObject
 
     TFile *File_mOutPut;
 
-    // QA
+    // Counts
     TH1F *h_mCounts_Hits[4]; // 0 for FST, 1-3 for IST
     TH1F *h_mCounts_Clusters[4]; // 0 for FST, 1-3 for IST
     TH2F *h_mCounts_Corr[4];
@@ -63,18 +83,30 @@ class FstQAStudy : public TObject
 
     // ADC
     TH1F *h_mAdcFst_Hits[4]; // 0-3 r_strip
-    TProfile2D *p_mAdcFst_Hits; // r_strip vs phi
+    TH1F *h_mAdcIst_Hits[4]; // 0: FST | 1: ISST
+
+    TH1F *h_mAdcFst_Clusters[4]; // 0-3 r_strip
+    TH1F *h_mAdcIst_Clusters[4]; // 0: FST | 1: ISST
     TProfile2D *p_mAdcFst_Column; // cluster mean column vs. hit column
     TProfile2D *p_mAdcFst_Row; // cluster mean row vs. hit row 
 
-    // Time Bin
-    TProfile2D *p_mMaxTbFst_Column;
-    TProfile2D *p_mMaxTbFst_Row;
-    TH1F *h_mTbDiff_Clusters;
+    // cluster size
+    TProfile *p_mNHitsR_meanColumn; // <R>
+    TProfile *p_mNHitsR_meanRow; // <phi>
+    TProfile *p_mNHitsPhi_meanColumn;
+    TProfile *p_mNHitsPhi_meanRow;
+    TProfile *p_mTbDiffR;
+    TProfile *p_mTbDiffPhi;
 
-    // Position
-    TH2F *h_mPositionR_Clusters;
-    TH2F *h_mPositionPhi_Clusters;
+    // Cluster size with track 
+    TProfile *p_mNHitsR_rP[4]; // 0: no matching | 1-3 matching within (1-3)*pitchR in r & (1-3)*pitchPhi in phi
+    TProfile *p_mNHitsR_phiP[4];
+    TProfile *p_mNHitsPhi_rP[4];
+    TProfile *p_mNHitsPhi_phiP[4];
+
+    // Event Display
+    TH2F *h_mEventDisplay[100]; // 100 random event
+    TH2F *h_mEventProjection[100];
 
     // Input TChain for hits and clusters
     TChain *mChainInPut; // input TTree

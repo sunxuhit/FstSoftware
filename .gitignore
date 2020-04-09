@@ -12,4 +12,5 @@ src/*.swp
 macros/*.root
 macros/*/*.root
 macros/*/figures/*.eps
+macros/*/figures/*.pdf
 

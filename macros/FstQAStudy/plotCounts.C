@@ -38,21 +38,25 @@ void plotCounts()
     c_play->cd(i_pad+1)->SetBottomMargin(0.15);
     c_play->cd(i_pad+1)->SetTicks(1,1);
     c_play->cd(i_pad+1)->SetGrid(0,0);
+    c_play->cd(i_pad+1)->SetLogz();
   }
 
   for(int i_layer = 0; i_layer < 4; ++i_layer)
   {
     c_play->cd(4*i_layer+1);
+    c_play->cd(4*i_layer+1)->SetLogy();
     h_mCounts_Hits[i_layer]->GetXaxis()->SetTitle("Num of Hits");
     h_mCounts_Hits[i_layer]->GetXaxis()->SetTitleSize(0.06);
     h_mCounts_Hits[i_layer]->Draw();
 
     c_play->cd(4*i_layer+2);
+    c_play->cd(4*i_layer+2)->SetLogy();
     h_mCounts_Clusters[i_layer]->GetXaxis()->SetTitle("Num of Clusters");
     h_mCounts_Clusters[i_layer]->GetXaxis()->SetTitleSize(0.06);
     h_mCounts_Clusters[i_layer]->Draw();
 
     c_play->cd(4*i_layer+3);
+    c_play->cd(4*i_layer+3)->SetLogz();
     h_mCounts_Corr[i_layer]->GetXaxis()->SetTitle("Num of Hits");
     h_mCounts_Corr[i_layer]->GetXaxis()->SetTitleSize(0.06);
     h_mCounts_Corr[i_layer]->GetYaxis()->SetTitle("Num of Clusters");
@@ -60,6 +64,7 @@ void plotCounts()
     h_mCounts_Corr[i_layer]->Draw("colz");
 
     c_play->cd(4*i_layer+4);
+    c_play->cd(4*i_layer+4)->SetLogz();
     if(i_layer == 0) 
     {
       h_mCounts_RPhi[i_layer]->GetXaxis()->SetTitle("Size of Clusters in R");
