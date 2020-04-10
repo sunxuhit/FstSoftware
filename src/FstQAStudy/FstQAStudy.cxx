@@ -556,9 +556,17 @@ void FstQAStudy::initEventDisplay_TrackClusters()
 
   mTree_EventDisplay = new TTree("mTree_EventDisplay","Fst Hits Clusters Tracks Display");
   mTree_EventDisplay->Branch("mNumOfFstRawHits",&mNumOfFstRawHits,"mNumOfFstRawHits/I");
+  mTree_EventDisplay->Branch("mNumOfIst1RawHits",&mNumOfIst1RawHits,"mNumOfIst1RawHits/I");
+  mTree_EventDisplay->Branch("mNumOfIst2RawHits",&mNumOfIst2RawHits,"mNumOfIst2RawHits/I");
+  mTree_EventDisplay->Branch("mNumOfIst3RawHits",&mNumOfIst3RawHits,"mNumOfIst3RawHits/I");
   mTree_EventDisplay->Branch("h_mFstRawHitsDisplay","TH2F",&h_mFstRawHitsDisplay);
+
   mTree_EventDisplay->Branch("mNumOfFstClusters",&mNumOfFstClusters,"mNumOfFstClusters/I");
+  mTree_EventDisplay->Branch("mNumOfIst1Clusters",&mNumOfIst1Clusters,"mNumOfIst1Clusters/I");
+  mTree_EventDisplay->Branch("mNumOfIst2Clusters",&mNumOfIst2Clusters,"mNumOfIst2Clusters/I");
+  mTree_EventDisplay->Branch("mNumOfIst3Clusters",&mNumOfIst3Clusters,"mNumOfIst3Clusters/I");
   mTree_EventDisplay->Branch("h_mFstClustersDisplay","TH2F",&h_mFstClustersDisplay);
+
   mTree_EventDisplay->Branch("mNumOfHitTracks",&mNumOfHitTracks,"mNumOfHitTracks/I");
   mTree_EventDisplay->Branch("h_mHitTracksDisplay","TH2F",&h_mHitTracksDisplay);
   mTree_EventDisplay->Branch("mNumOfClusterTracks",&mNumOfClusterTracks,"mNumOfClusterTracks/I");
@@ -569,9 +577,18 @@ void FstQAStudy::initEventDisplay_TrackClusters()
 void FstQAStudy::clearEventDisplay_TrackClusters()
 {
   mNumOfFstRawHits = 0;
+  mNumOfIst1RawHits = 0;
+  mNumOfIst2RawHits = 0;
+  mNumOfIst3RawHits = 0;
+
   mNumOfFstClusters = 0;
+  mNumOfIst1Clusters = 0;
+  mNumOfIst2Clusters = 0;
+  mNumOfIst3Clusters = 0;
+
   mNumOfHitTracks = 0;
   mNumOfClusterTracks = 0;
+
   h_mFstRawHitsDisplay->Reset();
   h_mFstClustersDisplay->Reset();
   h_mHitTracksDisplay->Reset();
@@ -596,6 +613,9 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
       double adc = fstRawHit->getCharge(maxTb);
       h_mFstRawHitsDisplay->Fill(r_fst,phi_fst,adc);
     }
+    if(fstRawHit->getLayer() == 1) mNumOfIst1RawHits++;
+    if(fstRawHit->getLayer() == 2) mNumOfIst2RawHits++;
+    if(fstRawHit->getLayer() == 3) mNumOfIst3RawHits++;
   }
   // cout << "mNumOfFstRawHits = " << mNumOfFstRawHits << ", fstEvent->getNumRawHits = " << fstEvent->getNumFstClusters() << endl;
 
@@ -613,6 +633,9 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
       // h_mFstClustersDisplay->Fill(r_fst,phi_fst,adc);
       h_mFstClustersDisplay->Fill(r_fst,phi_fst);
     }
+    if(fstCluster->getLayer() == 1) mNumOfIst1Clusters++;
+    if(fstCluster->getLayer() == 2) mNumOfIst2Clusters++;
+    if(fstCluster->getLayer() == 3) mNumOfIst3Clusters++;
   }
   // cout << "mNumOfFstClusters = " << mNumOfFstClusters << ", fstEvent->getNumClusters = " << fstEvent->getNumFstClusters() << endl;
 

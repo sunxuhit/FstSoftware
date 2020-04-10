@@ -24,7 +24,15 @@ void plotEventDisplay_Tree()
   const double phiMin = -128.0*FST::pitchPhi;
 
   int mNumOfFstRawHits;
+  int mNumOfIst1RawHits;
+  int mNumOfIst2RawHits;
+  int mNumOfIst3RawHits;
+
   int mNumOfFstClusters;
+  int mNumOfIst1Clusters;
+  int mNumOfIst2Clusters;
+  int mNumOfIst3Clusters;
+
   int mNumOfHitTracks;
   int mNumOfClusterTracks;
   TH2F *h_mFstRawHitsDisplay = new TH2F("h_mFstRawHitsDisplay","h_mFstRawHitsDisplay",6,rMin,rMax,FST::numPhiSeg*2,phiMin,phiMax);
@@ -37,9 +45,17 @@ void plotEventDisplay_Tree()
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TTree *mTree_EventDisplay = (TTree*)File_InPut->Get("mTree_EventDisplay");
   mTree_EventDisplay->SetBranchAddress("mNumOfFstRawHits",&mNumOfFstRawHits);
+  mTree_EventDisplay->SetBranchAddress("mNumOfIst1RawHits",&mNumOfIst1RawHits);
+  mTree_EventDisplay->SetBranchAddress("mNumOfIst2RawHits",&mNumOfIst2RawHits);
+  mTree_EventDisplay->SetBranchAddress("mNumOfIst3RawHits",&mNumOfIst3RawHits);
   mTree_EventDisplay->SetBranchAddress("h_mFstRawHitsDisplay",&h_mFstRawHitsDisplay);
+
   mTree_EventDisplay->SetBranchAddress("mNumOfFstClusters",&mNumOfFstClusters);
+  mTree_EventDisplay->SetBranchAddress("mNumOfIst1Clusters",&mNumOfIst1Clusters);
+  mTree_EventDisplay->SetBranchAddress("mNumOfIst2Clusters",&mNumOfIst2Clusters);
+  mTree_EventDisplay->SetBranchAddress("mNumOfIst3Clusters",&mNumOfIst3Clusters);
   mTree_EventDisplay->SetBranchAddress("h_mFstClustersDisplay",&h_mFstClustersDisplay);
+
   mTree_EventDisplay->SetBranchAddress("mNumOfHitTracks",&mNumOfHitTracks);
   mTree_EventDisplay->SetBranchAddress("h_mHitTracksDisplay",&h_mHitTracksDisplay);
   mTree_EventDisplay->SetBranchAddress("mNumOfClusterTracks",&mNumOfClusterTracks);
@@ -86,8 +102,12 @@ void plotEventDisplay_Tree()
     // if(mNumOfFstRawHits > 0 && mNumOfHitTracks > 0)
     // if(mNumOfFstRawHits > 0 && mNumOfHitTracks == 1)
     // if(mNumOfFstRawHits > 0)
-    if(mNumOfHitTracks == 1)
+    // if(mNumOfHitTracks == 1)
+    if(mNumOfIst1RawHits == 1 && mNumOfIst2RawHits == 1 && mNumOfIst3RawHits == 1)
     {
+      // string Title = Form("Event %d", i_event);
+      string Title = Form("Event %d", numOfUsedEvent);
+      h_mFstRawHitsDisplay->SetTitle(Title.c_str());
       h_mFstRawHitsDisplay->SetStats(0);
       h_mFstRawHitsDisplay->GetXaxis()->SetTitle("R");
       h_mFstRawHitsDisplay->GetXaxis()->SetTitleSize(0.06);
@@ -103,6 +123,7 @@ void plotEventDisplay_Tree()
       h_mHitTracksDisplay->SetMarkerSize(1.0);
       h_mHitTracksDisplay->Draw("p Same");
 
+      // h_mFstClustersDisplay->Draw("col Same");
       h_mFstClustersDisplay->SetMarkerStyle(25);
       h_mFstClustersDisplay->SetMarkerColor(2);
       h_mFstClustersDisplay->SetMarkerSize(0.8);
