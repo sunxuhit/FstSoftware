@@ -10,8 +10,8 @@ int doFstQAStudy()
 
   FstQAStudy *fst = new FstQAStudy();
 
-  // bool isSavePed = true;
-  bool isSavePed = false;
+  bool isSavePed = true;
+  // bool isSavePed = false;
   std::string hv = "HV140";
   std::string inputlist;
   if(isSavePed) inputlist  = "/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/list/FST/FstQAStudy_" + hv + "_withPed.list";

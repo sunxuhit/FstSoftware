@@ -66,7 +66,8 @@ class FstQAStudy : public TObject
 
     // Event Display
     void initEventDisplay_TrackClusters();
-    void fillEventDisplay_TrackClusters(FstEvent *fstEvent, int numOfEvent);
+    void clearEventDisplay_TrackClusters();
+    void fillEventDisplay_TrackClusters(FstEvent *fstEvent);
     void writeEventDisplay_TrackClusters();
 
   private:
@@ -104,9 +105,18 @@ class FstQAStudy : public TObject
     TProfile *p_mNHitsPhi_rP[4];
     TProfile *p_mNHitsPhi_phiP[4];
 
+    // Output TTree for Event Display
+    TTree *mTree_EventDisplay;
+    int mNumOfFstRawHits;
+    int mNumOfFstClusters;
+    int mNumOfHitTracks;
+    int mNumOfClusterTracks;
+
     // Event Display
-    TH2F *h_mEventDisplay[100]; // 100 random event
-    TH2F *h_mEventProjection[100];
+    TH2F *h_mFstRawHitsDisplay; // save event display histogram into a TTree
+    TH2F *h_mFstClustersDisplay;
+    TH2F *h_mHitTracksDisplay;
+    TH2F *h_mClusterTracksDisplay;
 
     // Input TChain for hits and clusters
     TChain *mChainInPut; // input TTree

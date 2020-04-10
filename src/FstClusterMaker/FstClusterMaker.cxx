@@ -227,7 +227,7 @@ int FstClusterMaker::Make()
 	      int maxTB = 0;
 	      double preADC = maxADC;
 	      bool isHit = false;
-	      float nHitsCut = FST::nIstHitsCut; // 5.5 for IST
+	      float nHitsCut = FST::nIstHitsCut; // 6.0 for IST
 	      if(i_arm == 1 && i_port == 1) nHitsCut = FST::nFstHitsCut; // 4.5 for FST
 	      for(int i_tb = 1; i_tb < FST::numTBins-1; ++i_tb)
 	      { // only if 3 consequetive timebins of a ch exceed the threshold cut is considered as a hit
@@ -258,7 +258,8 @@ int FstClusterMaker::Make()
 		maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][0]; // init with 1st tb
 		maxTB = 0;
 		preADC = maxADC;
-		float nPedsCut = FST::nIstPedsCut; // 3.0 for IST
+		// float nPedsCut = FST::nIstPedsCut; // 3.0 for IST
+		float nPedsCut = FST::nIstHitsCut; // 6.0 for IST => only save hits for IST
 		if(i_arm == 1 && i_port == 1) nPedsCut = FST::nFstPedsCut; // 3.0 for FST
 		for(int i_tb = 1; i_tb < FST::numTBins-1; ++i_tb)
 		{ // only if 3 consequetive timebins of a ch exceed the threshold cut is considered as a hit

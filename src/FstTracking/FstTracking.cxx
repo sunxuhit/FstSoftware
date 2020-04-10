@@ -506,8 +506,8 @@ void FstTracking::writeTracking_Clusters()
 //--------------Efficiency with Hits---------------------
 void FstTracking::initEfficiency_Hits()
 {
-  h_mTrackHits_IST = new TH2F("h_mTrackHits_IST","h_mTrackHits_IST",20,FST::rOuter-FST::pitchR,FST::rOuter+5.0*FST::pitchR,64,0.0,64.0*FST::pitchPhi);
-  h_mTrackHits_FST = new TH2F("h_mTrackHits_FST","h_mTrackHits_FST",20,FST::rOuter-FST::pitchR,FST::rOuter+5.0*FST::pitchR,64,0.0,64.0*FST::pitchPhi);
+  h_mTrackHits_IST = new TH2F("h_mTrackHits_IST","h_mTrackHits_IST",40,FST::rOuter-FST::pitchR,FST::rOuter+5.0*FST::pitchR,128,-64.0*FST::pitchPhi,64.0*FST::pitchPhi);
+  h_mTrackHits_FST = new TH2F("h_mTrackHits_FST","h_mTrackHits_FST",40,FST::rOuter-FST::pitchR,FST::rOuter+5.0*FST::pitchR,128,-64.0*FST::pitchPhi,64.0*FST::pitchPhi);
 }
 
 void FstTracking::calEfficiency_Hits(std::vector<FstTrack *> trackHitVec_orig)
@@ -522,7 +522,7 @@ void FstTracking::calEfficiency_Hits(std::vector<FstTrack *> trackHitVec_orig)
   const double rMax = FST::rOuter + 5.0*FST::pitchR;
   const double rMin = FST::rOuter - 1.0*FST::pitchR;
   const double phiMax = 64.0*FST::pitchPhi;
-  const double phiMin = 0.0;
+  const double phiMin = -64.0*FST::pitchPhi;
 
   // fill residual histograms
   for(int i_track = 0; i_track < trackHitVec.size(); ++i_track)
@@ -559,8 +559,8 @@ void FstTracking::writeEfficiency_Hits()
 //--------------Efficiency with Clusters---------------------
 void FstTracking::initEfficiency_Clusters()
 {
-  h_mTrackClusters_IST = new TH2F("h_mTrackClusters_IST","h_mTrackClusters_IST",4,FST::rOuter-FST::pitchR,FST::rOuter+5.0*FST::pitchR,64,0.0,64.0*FST::pitchPhi);
-  h_mTrackClusters_FST = new TH2F("h_mTrackClusters_FST","h_mTrackClusters_FST",4,FST::rOuter-FST::pitchR,FST::rOuter+5.0*FST::pitchR,64,0.0,64.0*FST::pitchPhi);
+  h_mTrackClusters_IST = new TH2F("h_mTrackClusters_IST","h_mTrackClusters_IST",40,FST::rOuter-FST::pitchR,FST::rOuter+5.0*FST::pitchR,128,-64.0*FST::pitchPhi,64.0*FST::pitchPhi);
+  h_mTrackClusters_FST = new TH2F("h_mTrackClusters_FST","h_mTrackClusters_FST",40,FST::rOuter-FST::pitchR,FST::rOuter+5.0*FST::pitchR,128,-64.0*FST::pitchPhi,64.0*FST::pitchPhi);
 }
 
 void FstTracking::calEfficiency_Clusters(std::vector<FstTrack *> trackClusterVec_orig)
@@ -575,7 +575,7 @@ void FstTracking::calEfficiency_Clusters(std::vector<FstTrack *> trackClusterVec
   const double rMax = FST::rOuter + 5.0*FST::pitchR;
   const double rMin = FST::rOuter - 1.0*FST::pitchR;
   const double phiMax = 64.0*FST::pitchPhi;
-  const double phiMin = 0.0;
+  const double phiMin = -64.0*FST::pitchPhi;
 
   // fill residual histograms
   for(int i_track = 0; i_track < trackClusterVec.size(); ++i_track)

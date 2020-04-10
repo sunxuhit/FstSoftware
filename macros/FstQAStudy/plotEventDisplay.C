@@ -64,7 +64,11 @@ void plotEventDisplay()
       h_mEventDisplay[numOfUsedEvent]->GetZaxis()->SetRangeUser(1.0,2000.0);
       h_mEventDisplay[numOfUsedEvent]->Draw("colz");
       // h_mEventDisplay[numOfUsedEvent]->Draw("TEXT Same");
-      h_mEventProjection[numOfUsedEvent]->Draw("col Same");
+      // h_mEventProjection[numOfUsedEvent]->Draw("col Same");
+      h_mEventProjection[numOfUsedEvent]->SetMarkerStyle(24);
+      h_mEventProjection[numOfUsedEvent]->SetMarkerColor(2);
+      h_mEventProjection[numOfUsedEvent]->SetMarkerSize(0.8);
+      h_mEventProjection[numOfUsedEvent]->Draw("p Same");
       PlotLine(rMin, rMax, phiMin, phiMin, 1, 2, 2);
       PlotLine(rMin, rMax, phiMax, phiMax, 1, 2, 2);
       PlotLine(rMin, rMin, phiMin, phiMax, 1, 2, 2);

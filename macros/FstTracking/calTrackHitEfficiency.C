@@ -58,6 +58,7 @@ void calTrackHitEfficiency()
 
   c_play->cd(3);
   h_mPhi_IST->GetXaxis()->SetTitle("phi_{proj} (mm)");
+  h_mPhi_IST->GetXaxis()->SetRangeUser(-0.05,0.24);
   h_mPhi_IST->Draw("HIST");
 
   // measured position from FST
@@ -72,6 +73,7 @@ void calTrackHitEfficiency()
 
   c_play->cd(6);
   h_mPhi_FST->GetXaxis()->SetTitle("phi_{proj} (rad)");
+  h_mPhi_FST->GetXaxis()->SetRangeUser(-0.05,0.24);
   h_mPhi_FST->Draw("HIST");
 
   c_play->cd(7);
@@ -85,6 +87,7 @@ void calTrackHitEfficiency()
 
   c_play->cd(9);
   h_mEffPhi->GetXaxis()->SetTitle("phi_{proj} (rad)");
+  h_mEffPhi->GetXaxis()->SetRangeUser(-0.05,0.24);
   h_mEffPhi->Draw("pE");
 
   c_play->SaveAs("Efficiency_TrackHit_HV140V.eps");
