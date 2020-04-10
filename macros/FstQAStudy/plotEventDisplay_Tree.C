@@ -87,8 +87,8 @@ void plotEventDisplay_Tree()
   string output_start = "./figures/EventDisplay_QA.pdf[";
   c_EventDisplay->Print(output_start.c_str()); // open pdf file
 
-  for(int i_event = 0; i_event < NumOfEvents; ++i_event)
-  // for(int i_event = 0; i_event < 100; ++i_event)
+  // for(int i_event = 0; i_event < NumOfEvents; ++i_event)
+  for(int i_event = 0; i_event < 100; ++i_event)
   {
     if(i_event%1000==0) cout << "processing events:  " << i_event << "/" << NumOfEvents << endl;
     mTree_EventDisplay->GetEntry(i_event);
@@ -126,7 +126,7 @@ void plotEventDisplay_Tree()
       // h_mFstClustersDisplay->Draw("col Same");
       h_mFstClustersDisplay->SetMarkerStyle(25);
       h_mFstClustersDisplay->SetMarkerColor(2);
-      h_mFstClustersDisplay->SetMarkerSize(0.8);
+      h_mFstClustersDisplay->SetMarkerSize(1.0);
       h_mFstClustersDisplay->Draw("p Same");
       // h_mClusterTracksDisplay->SetMarkerStyle(36);
       // h_mClusterTracksDisplay->SetMarkerColor(2);

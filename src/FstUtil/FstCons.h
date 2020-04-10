@@ -23,7 +23,7 @@ namespace FST
   const double pitchPhi = TMath::Pi()*30.0/180.0/numPhiSeg; // rad | 30 degree with 128 segmentations
   const double pitchLayer03 = 134.9375; // mm
   const double phi_rot = 0.044779502; // rad from Zhenyu
-  const double x_shift = 137.85319; // mm from Zhenyu 
+  const double x_shift = 145.85319; // mm from Zhenyu 137.85319 + 8
   const double y_shift = -19.153708; // mm from Zhenyu 
   // const double phi_rot = 0.0444571; 
   // const double x_shift = 137.824; 

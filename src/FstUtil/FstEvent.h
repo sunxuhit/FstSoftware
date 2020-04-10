@@ -15,6 +15,9 @@ class FstEvent : public TObject
     int mNumOfClusters;
     int mNumOfFstClusters;
     int mNumOfTracks;
+    int mNumOfRawHitTracks;
+    int mNumOfClusterTracks;
+    int mEventId;
 
     TClonesArray *mRawHits;      //->
     TClonesArray *mClusters;     //->
@@ -42,6 +45,13 @@ class FstEvent : public TObject
     void clearTracksList();
     int getNumTracks() const;
     FstTrack* getTrack(int i_track) const;
+    void setNumRawHitTraks(int numOfRawHitTracks);
+    int getNumRawHitTraks() const;
+    void setNumClusterTraks(int numOfClusterTracks);
+    int getNumClusterTraks() const;
+
+    void setEventId(int eventId);
+    int getEventId() const;
 
     ClassDef(FstEvent,1)
 };

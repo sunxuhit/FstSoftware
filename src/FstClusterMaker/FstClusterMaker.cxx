@@ -165,7 +165,7 @@ int FstClusterMaker::Make()
 
   long NumOfEvents = (long)mChainInPut->GetEntries();
   // if(NumOfEvents > 1000) NumOfEvents = 1000;
-  // NumOfEvents = 10000;
+  NumOfEvents = 10000;
   mChainInPut->GetEntry(0);
 
   for(int i_event = 0; i_event < NumOfEvents; ++i_event)
@@ -425,6 +425,8 @@ int FstClusterMaker::Make()
 	  mFstTrack->setPosOrig(i_layer, fstTrackVec_Hits[i_track]->getPosOrig(i_layer));
 	}
       }
+      mFstEvent->setNumRawHitTraks(fstTrackVec_Hits.size());
+
       std::vector<FstTrack *> fstTrackVec_Clusters = findTrack_Clusters(cluster_simple); // find tracks with Clusters
       for(int i_track = 0; i_track < fstTrackVec_Clusters.size(); ++i_track)
       { // get track from clusters
@@ -440,6 +442,8 @@ int FstClusterMaker::Make()
 	  mFstTrack->setPosOrig(i_layer, fstTrackVec_Clusters[i_track]->getPosOrig(i_layer));
 	}
       }
+      mFstEvent->setNumClusterTraks(fstTrackVec_Clusters.size());
+      mFstEvent->setEventId(i_event);
 
       mTree_FstEvent->Fill();
     }
@@ -963,164 +967,30 @@ std::vector<FstTrack *> FstClusterMaker::findTrack_Hits(std::vector<FstRawHit *>
 	double y2_proj = y3_corr + (y1_corr-y3_corr)*z2_ist/z1_ist;
 	proj_ist2.SetXYZ(x2_proj,y2_proj,z2_ist);
 
-	if(numOfHits[0] > 0)
-	{
-	  for(int i_fst = 0; i_fst < numOfHits[0]; ++i_fst)
-	  {
-	    double r_fst = FST::rOuter + (rawHitVec[0][i_fst]->getColumn()-4)*FST::pitchR + 0.5*FST::pitchR;
-	    double phi_fst = (63-rawHitVec[0][i_fst]->getRow())*FST::pitchPhi + 0.5*FST::pitchPhi;
-	    double x0_fst = r_fst*TMath::Cos(phi_fst); // x = r*cos(phi)
-	    double y0_fst = r_fst*TMath::Sin(phi_fst); // y = r*sin(phi)
-	    pos_fst.SetXYZ(x0_fst,y0_fst,z0_fst); // set aligned pos of hits on fst
-	    pos_fst_orig.SetXYZ(x0_fst,y0_fst,z0_fst); // set original pos of hits on fst 
+	FstTrack *fstTrack = new FstTrack(); // generate a FstTrack when both ist1 and ist3 have a hit
+	fstTrack->Clear();
+	fstTrack->setTrackId(numOfTracks);
+	fstTrack->setTrackType(0);
 
-	    if(numOfHits[2] > 0)
-	    {
-	      for(int i_ist2 = 0; i_ist2 < numOfHits[2]; ++i_ist2)
-	      {
-		double x2_ist = rawHitVec[2][i_ist2]->getColumn()*FST::pitchColumn + 0.5*FST::pitchColumn;
-		double y2_ist = (63-rawHitVec[2][i_ist2]->getRow())*FST::pitchRow + 0.5*FST::pitchRow;
-		pos_ist2_orig.SetXYZ(x2_ist,y2_ist,z2_ist); // set original pos of hits on ist2
+	// set position
+	fstTrack->setId(1,rawHitVec[1][i_ist1]->getHitId());
+	fstTrack->setPosition(1,pos_ist1);
+	fstTrack->setId(3,rawHitVec[3][i_ist3]->getHitId());
+	fstTrack->setPosition(3,pos_ist3);
 
-		double x2_corr = x2_ist*TMath::Cos(FST::phi_rot) + y2_ist*TMath::Sin(FST::phi_rot) + FST::x_shift;
-		double y2_corr = y2_ist*TMath::Cos(FST::phi_rot) - x2_ist*TMath::Sin(FST::phi_rot) + FST::y_shift;
-		pos_ist2.SetXYZ(x2_corr,y2_corr,z2_ist); // set aligned pos of hits on ist2
+	// set projection
+	fstTrack->setProjection(0,proj_fst);
+	fstTrack->setProjection(2,proj_ist2);
 
-		FstTrack *fstTrack = new FstTrack(); // generate a FstTrack when both ist1 and ist3 have a hit
-		fstTrack->Clear();
-		fstTrack->setTrackId(numOfTracks);
-		fstTrack->setTrackType(0);
+	// set original position
+	fstTrack->setPosOrig(1,pos_ist1_orig);
+	fstTrack->setPosOrig(3,pos_ist3_orig);
 
-		// set aligned position
-		fstTrack->setId(0,rawHitVec[0][i_fst]->getHitId());
-		fstTrack->setPosition(0,pos_fst);
-		fstTrack->setId(1,rawHitVec[1][i_ist1]->getHitId());
-		fstTrack->setPosition(1,pos_ist1);
-		fstTrack->setId(2,rawHitVec[2][i_ist2]->getHitId());
-		fstTrack->setPosition(2,pos_ist2);
-		fstTrack->setId(3,rawHitVec[3][i_ist3]->getHitId());
-		fstTrack->setPosition(3,pos_ist3);
+	trackVec.push_back(fstTrack);
 
-		// set projection
-		fstTrack->setProjection(0,proj_fst);
-		fstTrack->setProjection(2,proj_ist2);
-
-		// set original position
-		fstTrack->setPosOrig(0,pos_fst_orig);
-		fstTrack->setPosOrig(1,pos_ist1_orig);
-		fstTrack->setPosOrig(2,pos_ist2_orig);
-		fstTrack->setPosOrig(3,pos_ist3_orig);
-
-		trackVec.push_back(fstTrack);
-
-		// cout << "numOfTracks = " << numOfTracks << endl;
-		// trackVec[numOfTracks]->Print();
-		numOfTracks++;
-	      }
-	    }
-	    else
-	    {
-	      FstTrack *fstTrack = new FstTrack(); // generate a FstTrack when both ist1 and ist3 have a hit
-	      fstTrack->Clear();
-	      fstTrack->setTrackId(numOfTracks);
-	      fstTrack->setTrackType(0);
-
-	      // set position
-	      fstTrack->setId(0,rawHitVec[0][i_fst]->getHitId());
-	      fstTrack->setPosition(0,pos_fst);
-	      fstTrack->setId(1,rawHitVec[1][i_ist1]->getHitId());
-	      fstTrack->setPosition(1,pos_ist1);
-	      fstTrack->setId(3,rawHitVec[3][i_ist3]->getHitId());
-	      fstTrack->setPosition(3,pos_ist3);
-
-	      // set projection
-	      fstTrack->setProjection(0,proj_fst);
-	      fstTrack->setProjection(2,proj_ist2);
-
-	      // set original position
-	      fstTrack->setPosOrig(0,pos_fst_orig);
-	      fstTrack->setPosOrig(1,pos_ist1_orig);
-	      fstTrack->setPosOrig(3,pos_ist3_orig);
-
-	      trackVec.push_back(fstTrack);
-
-	      // cout << "numOfTracks = " << numOfTracks << endl;
-	      // trackVec[numOfTracks]->Print();
-	      numOfTracks++;
-	    }
-	  }
-	}
-	else
-	{
-	  if(numOfHits[2] > 0)
-	  {
-	    for(int i_ist2 = 0; i_ist2 < numOfHits[2]; ++i_ist2)
-	    {
-	      double x2_ist = rawHitVec[2][i_ist2]->getColumn()*FST::pitchColumn + 0.5*FST::pitchColumn;
-	      double y2_ist = (63-rawHitVec[2][i_ist2]->getRow())*FST::pitchRow + 0.5*FST::pitchRow;
-	      pos_ist2_orig.SetXYZ(x2_ist,y2_ist,z2_ist); // set original pos of hits on ist2
-
-	      double x2_corr = x2_ist*TMath::Cos(FST::phi_rot) + y2_ist*TMath::Sin(FST::phi_rot) + FST::x_shift;
-	      double y2_corr = y2_ist*TMath::Cos(FST::phi_rot) - x2_ist*TMath::Sin(FST::phi_rot) + FST::y_shift;
-	      pos_ist2.SetXYZ(x2_corr,y2_corr,z2_ist); // set aligned pos of hits on ist2
-
-	      FstTrack *fstTrack = new FstTrack(); // generate a FstTrack when both ist1 and ist3 have a hit
-	      fstTrack->Clear();
-	      fstTrack->setTrackId(numOfTracks);
-	      fstTrack->setTrackType(0);
-
-	      // set position
-	      fstTrack->setId(1,rawHitVec[1][i_ist1]->getHitId());
-	      fstTrack->setPosition(1,pos_ist1);
-	      fstTrack->setId(2,rawHitVec[2][i_ist2]->getHitId());
-	      fstTrack->setPosition(2,pos_ist2);
-	      fstTrack->setId(3,rawHitVec[3][i_ist3]->getHitId());
-	      fstTrack->setPosition(3,pos_ist3);
-
-	      // set projection
-	      fstTrack->setProjection(0,proj_fst);
-	      fstTrack->setProjection(2,proj_ist2);
-
-	      // set original position
-	      fstTrack->setPosOrig(1,pos_ist1_orig);
-	      fstTrack->setPosOrig(2,pos_ist2_orig);
-	      fstTrack->setPosOrig(3,pos_ist3_orig);
-
-	      trackVec.push_back(fstTrack);
-
-	      // cout << "numOfTracks = " << numOfTracks << endl;
-	      // trackVec[numOfTracks]->Print();
-	      numOfTracks++;
-	    }
-	  }
-	  else
-	  {
-	    FstTrack *fstTrack = new FstTrack(); // generate a FstTrack when both ist1 and ist3 have a hit
-	    fstTrack->Clear();
-	    fstTrack->setTrackId(numOfTracks);
-	    fstTrack->setTrackType(0);
-
-	    // set position
-	    fstTrack->setId(1,rawHitVec[1][i_ist1]->getHitId());
-	    fstTrack->setPosition(1,pos_ist1);
-	    fstTrack->setId(3,rawHitVec[3][i_ist3]->getHitId());
-	    fstTrack->setPosition(3,pos_ist3);
-
-	    // set projection
-	    fstTrack->setProjection(0,proj_fst);
-	    fstTrack->setProjection(2,proj_ist2);
-
-	    // set original position
-	    fstTrack->setPosOrig(1,pos_ist1_orig);
-	    fstTrack->setPosOrig(3,pos_ist3_orig);
-
-	    trackVec.push_back(fstTrack);
-
-	    // cout << "numOfTracks = " << numOfTracks << endl;
-	    // trackVec[numOfTracks]->Print();
-	    numOfTracks++;
-	  }
-	}
+	// cout << "numOfTracks = " << numOfTracks << endl;
+	// trackVec[numOfTracks]->Print();
+	numOfTracks++;
       }
     }
   }
@@ -1189,164 +1059,30 @@ std::vector<FstTrack *> FstClusterMaker::findTrack_Clusters(std::vector<FstClust
 	double y2_proj = y3_corr + (y1_corr-y3_corr)*z2_ist/z1_ist;
 	proj_ist2.SetXYZ(x2_proj,y2_proj,z2_ist);
 
-	if(numOfClusters[0] > 0)
-	{
-	  for(int i_fst = 0; i_fst < numOfClusters[0]; ++i_fst)
-	  {
-	    double r_fst = FST::rOuter + (clusterVec[0][i_fst]->getMeanColumn()-4)*FST::pitchR + 0.5*FST::pitchR;
-	    double phi_fst = (63-clusterVec[0][i_fst]->getMeanRow())*FST::pitchPhi + 0.5*FST::pitchPhi;
-	    double x0_fst = r_fst*TMath::Cos(phi_fst); // x = r*cos(phi)
-	    double y0_fst = r_fst*TMath::Sin(phi_fst); // y = r*sin(phi)
-	    pos_fst.SetXYZ(x0_fst,y0_fst,z0_fst); // set aligned pos of hits on fst
-	    pos_fst_orig.SetXYZ(x0_fst,y0_fst,z0_fst); // set original pos of hits on fst 
+	FstTrack *fstTrack = new FstTrack(); // generate a FstTrack when both ist1 and ist3 have a hit
+	fstTrack->Clear();
+	fstTrack->setTrackId(numOfTracks);
+	fstTrack->setTrackType(1);
 
-	    if(numOfClusters[2] > 0)
-	    {
-	      for(int i_ist2 = 0; i_ist2 < numOfClusters[2]; ++i_ist2)
-	      {
-		double x2_ist = clusterVec[2][i_ist2]->getMeanColumn()*FST::pitchColumn + 0.5*FST::pitchColumn;
-		double y2_ist = (63-clusterVec[2][i_ist2]->getMeanRow())*FST::pitchRow + 0.5*FST::pitchRow;
-		pos_ist2_orig.SetXYZ(x2_ist,y2_ist,z2_ist); // set original pos of hits on ist2
+	// set position
+	fstTrack->setId(1,clusterVec[1][i_ist1]->getClusterId());
+	fstTrack->setPosition(1,pos_ist1);
+	fstTrack->setId(3,clusterVec[3][i_ist3]->getClusterId());
+	fstTrack->setPosition(3,pos_ist3);
 
-		double x2_corr = x2_ist*TMath::Cos(FST::phi_rot) + y2_ist*TMath::Sin(FST::phi_rot) + FST::x_shift;
-		double y2_corr = y2_ist*TMath::Cos(FST::phi_rot) - x2_ist*TMath::Sin(FST::phi_rot) + FST::y_shift;
-		pos_ist2.SetXYZ(x2_corr,y2_corr,z2_ist); // set aligned pos of hits on ist2
+	// set projection
+	fstTrack->setProjection(0,proj_fst);
+	fstTrack->setProjection(2,proj_ist2);
 
-		FstTrack *fstTrack = new FstTrack(); // generate a FstTrack when both ist1 and ist3 have a hit
-		fstTrack->Clear();
-		fstTrack->setTrackId(numOfTracks);
-		fstTrack->setTrackType(1);
+	// set original position
+	fstTrack->setPosOrig(1,pos_ist1_orig);
+	fstTrack->setPosOrig(3,pos_ist3_orig);
 
-		// set aligned position
-		fstTrack->setId(0,clusterVec[0][i_fst]->getClusterId());
-		fstTrack->setPosition(0,pos_fst);
-		fstTrack->setId(1,clusterVec[1][i_ist1]->getClusterId());
-		fstTrack->setPosition(1,pos_ist1);
-		fstTrack->setId(2,clusterVec[2][i_ist2]->getClusterId());
-		fstTrack->setPosition(2,pos_ist2);
-		fstTrack->setId(3,clusterVec[3][i_ist3]->getClusterId());
-		fstTrack->setPosition(3,pos_ist3);
+	trackVec.push_back(fstTrack);
 
-		// set projection
-		fstTrack->setProjection(0,proj_fst);
-		fstTrack->setProjection(2,proj_ist2);
-
-		// set original position
-		fstTrack->setPosOrig(0,pos_fst_orig);
-		fstTrack->setPosOrig(1,pos_ist1_orig);
-		fstTrack->setPosOrig(2,pos_ist2_orig);
-		fstTrack->setPosOrig(3,pos_ist3_orig);
-
-		trackVec.push_back(fstTrack);
-
-		// cout << "numOfTracks = " << numOfTracks << endl;
-		// trackVec[numOfTracks]->Print();
-		numOfTracks++;
-	      }
-	    }
-	    else
-	    {
-	      FstTrack *fstTrack = new FstTrack(); // generate a FstTrack when both ist1 and ist3 have a hit
-	      fstTrack->Clear();
-	      fstTrack->setTrackId(numOfTracks);
-	      fstTrack->setTrackType(1);
-
-	      // set position
-	      fstTrack->setId(0,clusterVec[0][i_fst]->getClusterId());
-	      fstTrack->setPosition(0,pos_fst);
-	      fstTrack->setId(1,clusterVec[1][i_ist1]->getClusterId());
-	      fstTrack->setPosition(1,pos_ist1);
-	      fstTrack->setId(3,clusterVec[3][i_ist3]->getClusterId());
-	      fstTrack->setPosition(3,pos_ist3);
-
-	      // set projection
-	      fstTrack->setProjection(0,proj_fst);
-	      fstTrack->setProjection(2,proj_ist2);
-
-	      // set original position
-	      fstTrack->setPosOrig(0,pos_fst_orig);
-	      fstTrack->setPosOrig(1,pos_ist1_orig);
-	      fstTrack->setPosOrig(3,pos_ist3_orig);
-
-	      trackVec.push_back(fstTrack);
-
-	      // cout << "numOfTracks = " << numOfTracks << endl;
-	      // trackVec[numOfTracks]->Print();
-	      numOfTracks++;
-	    }
-	  }
-	}
-	else
-	{
-	  if(numOfClusters[2] > 0)
-	  {
-	    for(int i_ist2 = 0; i_ist2 < numOfClusters[2]; ++i_ist2)
-	    {
-	      double x2_ist = clusterVec[2][i_ist2]->getMeanColumn()*FST::pitchColumn + 0.5*FST::pitchColumn;
-	      double y2_ist = (63-clusterVec[2][i_ist2]->getMeanRow())*FST::pitchRow + 0.5*FST::pitchRow;
-	      pos_ist2_orig.SetXYZ(x2_ist,y2_ist,z2_ist); // set original pos of hits on ist2
-
-	      double x2_corr = x2_ist*TMath::Cos(FST::phi_rot) + y2_ist*TMath::Sin(FST::phi_rot) + FST::x_shift;
-	      double y2_corr = y2_ist*TMath::Cos(FST::phi_rot) - x2_ist*TMath::Sin(FST::phi_rot) + FST::y_shift;
-	      pos_ist2.SetXYZ(x2_corr,y2_corr,z2_ist); // set aligned pos of hits on ist2
-
-	      FstTrack *fstTrack = new FstTrack(); // generate a FstTrack when both ist1 and ist3 have a hit
-	      fstTrack->Clear();
-	      fstTrack->setTrackId(numOfTracks);
-	      fstTrack->setTrackType(1);
-
-	      // set position
-	      fstTrack->setId(1,clusterVec[1][i_ist1]->getClusterId());
-	      fstTrack->setPosition(1,pos_ist1);
-	      fstTrack->setId(2,clusterVec[2][i_ist2]->getClusterId());
-	      fstTrack->setPosition(2,pos_ist2);
-	      fstTrack->setId(3,clusterVec[3][i_ist3]->getClusterId());
-	      fstTrack->setPosition(3,pos_ist3);
-
-	      // set projection
-	      fstTrack->setProjection(0,proj_fst);
-	      fstTrack->setProjection(2,proj_ist2);
-
-	      // set original position
-	      fstTrack->setPosOrig(1,pos_ist1_orig);
-	      fstTrack->setPosOrig(2,pos_ist2_orig);
-	      fstTrack->setPosOrig(3,pos_ist3_orig);
-
-	      trackVec.push_back(fstTrack);
-
-	      // cout << "numOfTracks = " << numOfTracks << endl;
-	      // trackVec[numOfTracks]->Print();
-	      numOfTracks++;
-	    }
-	  }
-	  else
-	  {
-	    FstTrack *fstTrack = new FstTrack(); // generate a FstTrack when both ist1 and ist3 have a hit
-	    fstTrack->Clear();
-	    fstTrack->setTrackId(numOfTracks);
-	    fstTrack->setTrackType(1);
-
-	    // set position
-	    fstTrack->setId(1,clusterVec[1][i_ist1]->getClusterId());
-	    fstTrack->setPosition(1,pos_ist1);
-	    fstTrack->setId(3,clusterVec[3][i_ist3]->getClusterId());
-	    fstTrack->setPosition(3,pos_ist3);
-
-	    // set projection
-	    fstTrack->setProjection(0,proj_fst);
-	    fstTrack->setProjection(2,proj_ist2);
-
-	    // set original position
-	    fstTrack->setPosOrig(1,pos_ist1_orig);
-	    fstTrack->setPosOrig(3,pos_ist3_orig);
-
-	    trackVec.push_back(fstTrack);
-
-	    // cout << "numOfTracks = " << numOfTracks << endl;
-	    // trackVec[numOfTracks]->Print();
-	    numOfTracks++;
-	  }
-	}
+	// cout << "numOfTracks = " << numOfTracks << endl;
+	// trackVec[numOfTracks]->Print();
+	numOfTracks++;
       }
     }
   }

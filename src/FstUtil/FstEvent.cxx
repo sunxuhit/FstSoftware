@@ -13,6 +13,9 @@ FstEvent::FstEvent()
   mNumOfClusters    = 0;
   mNumOfFstClusters = 0;
   mNumOfTracks      = 0;
+  mNumOfRawHitTracks = 0;
+  mNumOfClusterTracks = 0;
+  mEventId          = -1;
 
   mRawHits  = new TClonesArray("FstRawHit", 10);
   mClusters = new TClonesArray("FstCluster", 10);
@@ -146,4 +149,33 @@ FstTrack* FstEvent::getTrack(int i_track) const
 {
   return i_track < mNumOfTracks ? (FstTrack*)((*mTracks)[i_track]) : NULL;
 }
+
+void FstEvent::setNumRawHitTraks(int numOfRawHitTracks)
+{
+  mNumOfRawHitTracks = numOfRawHitTracks;
+}
+int FstEvent::getNumRawHitTraks() const
+{
+  return mNumOfRawHitTracks;
+}
+void FstEvent::setNumClusterTraks(int numOfClusterTracks)
+{
+  mNumOfClusterTracks = numOfClusterTracks;
+}
+int FstEvent::getNumClusterTraks() const
+{
+  return mNumOfClusterTracks;
+}
 // FstTrack
+
+// Event Id
+void FstEvent::setEventId(int eventId)
+{
+  mEventId = eventId;
+}
+
+int FstEvent::getEventId() const
+{
+  return mEventId;
+}
+// Event Id
