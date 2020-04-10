@@ -38,9 +38,10 @@ FstRawHit* FstEvent::createRawHit()
 {
   if(mNumOfHits == mRawHits->GetSize())
     mRawHits->Expand( mNumOfHits + 10 );
-  if(mNumOfHits >= 25)
+  // if(mNumOfHits >= 25)
+  if(mNumOfHits >= 1000)
   {
-    Fatal( "FstEvent::createRawHit()", "ERROR: Too many hits (>25)!" );
+    Fatal( "FstEvent::createRawHit()", "ERROR: Too many hits (>1000)!" );
     exit( 2 );
   }
 

@@ -165,7 +165,7 @@ int FstClusterMaker::Make()
 
   long NumOfEvents = (long)mChainInPut->GetEntries();
   // if(NumOfEvents > 1000) NumOfEvents = 1000;
-  NumOfEvents = 10000;
+  // NumOfEvents = 1000;
   mChainInPut->GetEntry(0);
 
   for(int i_event = 0; i_event < NumOfEvents; ++i_event)
@@ -207,9 +207,12 @@ int FstClusterMaker::Make()
     }
 
     // find Hits
-    std::vector<FstRawHit *> rawHitsVec_temp;
-    rawHitsVec_temp.clear();
+    std::vector<FstRawHit *> rawHitVec_orig;
+    rawHitVec_orig.clear();
+    std::vector<FstRawHit *> rawHitsVec_Used;
+    rawHitsVec_Used.clear();
     int numOfHits = 0;
+    int numOfHits_Used = 0;
     for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
     {
       for(int i_port = 0; i_port < FST::numPorts; ++i_port)
@@ -258,8 +261,8 @@ int FstClusterMaker::Make()
 		maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][0]; // init with 1st tb
 		maxTB = 0;
 		preADC = maxADC;
-		// float nPedsCut = FST::nIstPedsCut; // 3.0 for IST
-		float nPedsCut = FST::nIstHitsCut; // 6.0 for IST => only save hits for IST
+		float nPedsCut = FST::nIstPedsCut; // 3.0 for IST
+		// float nPedsCut = FST::nIstHitsCut; // 6.0 for IST => only save hits for IST
 		if(i_arm == 1 && i_port == 1) nPedsCut = FST::nFstPedsCut; // 3.0 for FST
 		for(int i_tb = 1; i_tb < FST::numTBins-1; ++i_tb)
 		{ // only if 3 consequetive timebins of a ch exceed the threshold cut is considered as a hit
@@ -286,7 +289,8 @@ int FstClusterMaker::Make()
 	      }
 
 
-	      if( (isHit || isPed) && numOfHits < FST::maxNHits)
+	      // if( (isHit || isPed) && numOfHits < FST::maxNHits)
+	      if( (isHit || isPed) && numOfHits_Used < FST::maxNHits)
 	      { // set Hit info
 		FstRawHit *fstRawHit = new FstRawHit();
 		fstRawHit->Clear();
@@ -310,9 +314,14 @@ int FstClusterMaker::Make()
 		fstRawHit->setHitId(numOfHits);
 		fstRawHit->setDefaultTb(FST::defaultTimeBin);
 		fstRawHit->setIsHit(isHit && !isPed);
-		rawHitsVec_temp.push_back(fstRawHit);
-
+		rawHitVec_orig.push_back(fstRawHit); // hit container includes RawHits & Peds
 		numOfHits++;
+
+		if(isHit && !isPed) 
+		{
+		  rawHitsVec_Used.push_back(fstRawHit); // hit container for RawHits only
+		  numOfHits_Used++;
+		}
 	      }
 	    }
 	  }
@@ -320,44 +329,46 @@ int FstClusterMaker::Make()
       }
     }
 
-    if(numOfHits > 0 && numOfHits <= FST::maxNHitsPerEvent) // maximum hits to expect per event is 10
+    // if(numOfHits > 0 && numOfHits <= FST::maxNHitsPerEvent) // maximum hits to expect per event is 10
+    if(numOfHits_Used > 0 && numOfHits_Used <= FST::maxNHitsPerEvent) // maximum hits to expect per event is 10
     {
-      fillHitDisplay(rawHitsVec_temp); // fill hit display
+      fillHitDisplay(rawHitVec_orig); // fill hit display
 
-      // set up FstRawHit
+      // set up FstRawHit with Hits & Peds
       mFstEvent->clearRawHitsList();
-      int nHits = rawHitsVec_temp.size();
+      int nHits = rawHitVec_orig.size();
       int numOfFstHits = 0;
       for(int i_hit = 0; i_hit < nHits; ++i_hit)
       {
 	mFstRawHit = mFstEvent->createRawHit();
-	mFstRawHit->setLayer(rawHitsVec_temp[i_hit]->getLayer());
-	mFstRawHit->setSensor(rawHitsVec_temp[i_hit]->getSensor());
-	mFstRawHit->setAPV(rawHitsVec_temp[i_hit]->getAPV());
-	mFstRawHit->setChannel(rawHitsVec_temp[i_hit]->getChannel());
-	mFstRawHit->setColumn(rawHitsVec_temp[i_hit]->getColumn());
-	mFstRawHit->setRow(rawHitsVec_temp[i_hit]->getRow());
-	mFstRawHit->setPosX(rawHitsVec_temp[i_hit]->getPosX());
-	mFstRawHit->setPosY(rawHitsVec_temp[i_hit]->getPosY());
+	mFstRawHit->setLayer(rawHitVec_orig[i_hit]->getLayer());
+	mFstRawHit->setSensor(rawHitVec_orig[i_hit]->getSensor());
+	mFstRawHit->setAPV(rawHitVec_orig[i_hit]->getAPV());
+	mFstRawHit->setChannel(rawHitVec_orig[i_hit]->getChannel());
+	mFstRawHit->setColumn(rawHitVec_orig[i_hit]->getColumn());
+	mFstRawHit->setRow(rawHitVec_orig[i_hit]->getRow());
+	mFstRawHit->setPosX(rawHitVec_orig[i_hit]->getPosX());
+	mFstRawHit->setPosY(rawHitVec_orig[i_hit]->getPosY());
 	for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
 	{
-	  mFstRawHit->setPedMean(rawHitsVec_temp[i_hit]->getPedMean(i_tb), i_tb);
-	  mFstRawHit->setPedStdDev(rawHitsVec_temp[i_hit]->getPedStdDev(i_tb), i_tb);
-	  mFstRawHit->setPedRMS(rawHitsVec_temp[i_hit]->getPedRMS(i_tb), i_tb);
-	  mFstRawHit->setCharge(rawHitsVec_temp[i_hit]->getCharge(i_tb), i_tb);
+	  mFstRawHit->setPedMean(rawHitVec_orig[i_hit]->getPedMean(i_tb), i_tb);
+	  mFstRawHit->setPedStdDev(rawHitVec_orig[i_hit]->getPedStdDev(i_tb), i_tb);
+	  mFstRawHit->setPedRMS(rawHitVec_orig[i_hit]->getPedRMS(i_tb), i_tb);
+	  mFstRawHit->setCharge(rawHitVec_orig[i_hit]->getCharge(i_tb), i_tb);
 	}
-	// mFstRawHit->setCharge(rawHitsVec_temp[i_hit]->getCharge(rawHitsVec_temp[i_hit]->getMaxTb()),rawHitsVec_temp[i_hit]->getMaxTb());
-	mFstRawHit->setMaxTb(rawHitsVec_temp[i_hit]->getMaxTb());
-	mFstRawHit->setHitId(rawHitsVec_temp[i_hit]->getHitId());
-	mFstRawHit->setDefaultTb(rawHitsVec_temp[i_hit]->getDefaultTb());
-	mFstRawHit->setIsHit(rawHitsVec_temp[i_hit]->getIsHit());
+	// mFstRawHit->setCharge(rawHitVec_orig[i_hit]->getCharge(rawHitVec_orig[i_hit]->getMaxTb()),rawHitVec_orig[i_hit]->getMaxTb());
+	mFstRawHit->setMaxTb(rawHitVec_orig[i_hit]->getMaxTb());
+	mFstRawHit->setHitId(rawHitVec_orig[i_hit]->getHitId());
+	mFstRawHit->setDefaultTb(rawHitVec_orig[i_hit]->getDefaultTb());
+	mFstRawHit->setIsHit(rawHitVec_orig[i_hit]->getIsHit());
 	if(mFstRawHit->getLayer() == 0) numOfFstHits++;
       }
       mFstEvent->setNumFstRawHits(numOfFstHits);
 
-      // set up FstCluster
+      // set up FstCluster with cluster from Hits
       mFstEvent->clearClustersList();
-      std::vector<FstCluster *> cluster_simple = findCluster_Simple(rawHitsVec_temp);
+      // std::vector<FstCluster *> cluster_simple = findCluster_Simple(rawHitVec_orig);
+      std::vector<FstCluster *> cluster_simple = findCluster_Simple(rawHitsVec_Used);
       int nClusters = cluster_simple.size();
       int numOfFstClusters = 0;
       for(int i_cluster = 0; i_cluster < nClusters; ++i_cluster)
@@ -398,7 +409,7 @@ int FstClusterMaker::Make()
 	    mFstClusteredRawHit->setPedRMS(rawHitsVec[i_hit]->getPedRMS(i_tb), i_tb);
 	    mFstClusteredRawHit->setCharge(rawHitsVec[i_hit]->getCharge(i_tb), i_tb);
 	  }
-	  // mFstRawHit->setCharge(rawHitsVec_temp[i_hit]->getCharge(rawHitsVec_temp[i_hit]->getMaxTb()),rawHitsVec_temp[i_hit]->getMaxTb());
+	  // mFstRawHit->setCharge(rawHitVec_orig[i_hit]->getCharge(rawHitVec_orig[i_hit]->getMaxTb()),rawHitVec_orig[i_hit]->getMaxTb());
 	  mFstClusteredRawHit->setMaxTb(rawHitsVec[i_hit]->getMaxTb());
 	  mFstClusteredRawHit->setHitId(rawHitsVec[i_hit]->getHitId());
 	  mFstClusteredRawHit->setDefaultTb(rawHitsVec[i_hit]->getDefaultTb());
@@ -408,9 +419,10 @@ int FstClusterMaker::Make()
       }
       mFstEvent->setNumFstClusters(numOfFstClusters);
 
-      // set up FstTrack
+      // set up FstTrack 
       mFstEvent->clearTracksList(); // FstTrack
-      std::vector<FstTrack *> fstTrackVec_Hits = findTrack_Hits(rawHitsVec_temp); // find tracks with Hits
+      // std::vector<FstTrack *> fstTrackVec_Hits = findTrack_Hits(rawHitVec_orig); // find tracks with Hits
+      std::vector<FstTrack *> fstTrackVec_Hits = findTrack_Hits(rawHitsVec_Used); // find tracks with Hits
       for(int i_track = 0; i_track < fstTrackVec_Hits.size(); ++i_track)
       { // get track from hits
 	// if(mFstEvent->getNumTracks() > 30) continue; // only save first 30 tracks | will drop the event with more than 10 trakcs anyway
@@ -747,15 +759,15 @@ bool FstClusterMaker::initHitDisplay()
 
 void FstClusterMaker::fillHitDisplay(std::vector<FstRawHit *> rawHitsVec)
 {
-  if(rawHitsVec.size() < FST::maxNHits)
+  // if(rawHitsVec.size() < FST::maxNHits)
+  // {
+  for(int i_hit = 0; i_hit < rawHitsVec.size(); ++i_hit)
   {
-    for(int i_hit = 0; i_hit < rawHitsVec.size(); ++i_hit)
-    {
-      int layer = rawHitsVec[i_hit]->getLayer();
-      h_mHitDisplay[layer]->Fill(rawHitsVec[i_hit]->getColumn(),rawHitsVec[i_hit]->getRow());
-      h_mMaxTb[layer]->Fill(rawHitsVec[i_hit]->getMaxTb());
-    }
+    int layer = rawHitsVec[i_hit]->getLayer();
+    h_mHitDisplay[layer]->Fill(rawHitsVec[i_hit]->getColumn(),rawHitsVec[i_hit]->getRow());
+    h_mMaxTb[layer]->Fill(rawHitsVec[i_hit]->getMaxTb());
   }
+  // }
 }
 
 void FstClusterMaker::writeHitDisplay()
