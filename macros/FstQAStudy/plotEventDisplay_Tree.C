@@ -23,6 +23,8 @@ void plotEventDisplay_Tree()
   const double phiMax = 128.0*FST::pitchPhi;
   const double phiMin = -128.0*FST::pitchPhi;
 
+  int mEventId;
+
   int mNumOfFstRawHits;
   int mNumOfIst1RawHits;
   int mNumOfIst2RawHits;
@@ -44,6 +46,7 @@ void plotEventDisplay_Tree()
   string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140_withPed.root";
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TTree *mTree_EventDisplay = (TTree*)File_InPut->Get("mTree_EventDisplay");
+  mTree_EventDisplay->SetBranchAddress("mEventId",&mEventId);
   mTree_EventDisplay->SetBranchAddress("mNumOfFstRawHits",&mNumOfFstRawHits);
   mTree_EventDisplay->SetBranchAddress("mNumOfIst1RawHits",&mNumOfIst1RawHits);
   mTree_EventDisplay->SetBranchAddress("mNumOfIst2RawHits",&mNumOfIst2RawHits);
@@ -79,6 +82,7 @@ void plotEventDisplay_Tree()
   c_EventDisplay->cd()->SetBottomMargin(0.15);
   c_EventDisplay->cd()->SetTicks(1,1);
   c_EventDisplay->cd()->SetGrid(0,0);
+  // c_EventDisplay->cd()->SetLogz();
   // TLegend *leg = new TLegend(0.4,0.6,0.85,0.8);
   // leg->SetBorderSize(0);
   // leg->SetFillColor(10);
@@ -88,7 +92,7 @@ void plotEventDisplay_Tree()
   c_EventDisplay->Print(output_start.c_str()); // open pdf file
 
   // for(int i_event = 0; i_event < NumOfEvents; ++i_event)
-  for(int i_event = 0; i_event < 100; ++i_event)
+  for(int i_event = 0; i_event < 2000; ++i_event)
   {
     if(i_event%1000==0) cout << "processing events:  " << i_event << "/" << NumOfEvents << endl;
     mTree_EventDisplay->GetEntry(i_event);
@@ -103,10 +107,11 @@ void plotEventDisplay_Tree()
     // if(mNumOfFstRawHits > 0 && mNumOfHitTracks == 1)
     // if(mNumOfFstRawHits > 0)
     // if(mNumOfHitTracks == 1)
-    if(mNumOfIst1RawHits == 1 && mNumOfIst2RawHits == 1 && mNumOfIst3RawHits == 1)
+    // if(mNumOfIst1RawHits == 1 && mNumOfIst2RawHits == 1 && mNumOfIst3RawHits == 1)
+    if(mNumOfIst1Clusters == 1 && mNumOfIst2Clusters == 1 && mNumOfIst3Clusters == 1)
     {
       // string Title = Form("Event %d", i_event);
-      string Title = Form("Event %d", numOfUsedEvent);
+      string Title = Form("Event %d", mEventId);
       h_mFstRawHitsDisplay->SetTitle(Title.c_str());
       h_mFstRawHitsDisplay->SetStats(0);
       h_mFstRawHitsDisplay->GetXaxis()->SetTitle("R");
@@ -118,20 +123,21 @@ void plotEventDisplay_Tree()
       h_mFstRawHitsDisplay->GetYaxis()->SetTitleSize(0.06);
       h_mFstRawHitsDisplay->GetZaxis()->SetRangeUser(1.0,2000.0);
       h_mFstRawHitsDisplay->Draw("colz");
-      h_mHitTracksDisplay->SetMarkerStyle(5);
-      h_mHitTracksDisplay->SetMarkerColor(1);
-      h_mHitTracksDisplay->SetMarkerSize(1.0);
-      h_mHitTracksDisplay->Draw("p Same");
+      h_mFstRawHitsDisplay->Draw("TEXT Same");
+      // h_mHitTracksDisplay->SetMarkerStyle(5);
+      // h_mHitTracksDisplay->SetMarkerColor(1);
+      // h_mHitTracksDisplay->SetMarkerSize(1.0);
+      // h_mHitTracksDisplay->Draw("p Same");
 
       // h_mFstClustersDisplay->Draw("col Same");
       h_mFstClustersDisplay->SetMarkerStyle(25);
       h_mFstClustersDisplay->SetMarkerColor(2);
       h_mFstClustersDisplay->SetMarkerSize(1.0);
       h_mFstClustersDisplay->Draw("p Same");
-      // h_mClusterTracksDisplay->SetMarkerStyle(36);
-      // h_mClusterTracksDisplay->SetMarkerColor(2);
-      // h_mClusterTracksDisplay->SetMarkerSize(1.0);
-      // h_mClusterTracksDisplay->Draw("p Same");
+      h_mClusterTracksDisplay->SetMarkerStyle(5);
+      h_mClusterTracksDisplay->SetMarkerColor(2);
+      h_mClusterTracksDisplay->SetMarkerSize(1.0);
+      h_mClusterTracksDisplay->Draw("p Same");
       PlotLine(rMinFst, rMaxFst, phiMinFst, phiMinFst, 1, 2, 2);
       PlotLine(rMinFst, rMaxFst, phiMaxFst, phiMaxFst, 1, 2, 2);
       PlotLine(rMinFst, rMinFst, phiMinFst, phiMaxFst, 1, 2, 2);
@@ -144,13 +150,14 @@ void plotEventDisplay_Tree()
 
       c_EventDisplay->Update();
       c_EventDisplay->Print(outputname.c_str()); // print integrated efficiency
+
       numOfUsedEvent++;
     }
   }
 
+  cout << "numOfUsedEvent = " << numOfUsedEvent << endl;
+
   string output_stop =  "./figures/EventDisplay_QA.pdf]";
   c_EventDisplay->Print(output_stop.c_str()); // close pdf file
-
-  cout << "numOfUsedEvent = " << numOfUsedEvent << endl;
 }
 

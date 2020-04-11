@@ -107,6 +107,7 @@ class FstQAStudy : public TObject
 
     // Output TTree for Event Display
     TTree *mTree_EventDisplay;
+    int mEventId;
     int mNumOfFstRawHits;
     int mNumOfIst1RawHits;
     int mNumOfIst2RawHits;
