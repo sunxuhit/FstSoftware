@@ -40,6 +40,14 @@ void FstCluster::setMeanRow(double row)
 {
   mMeanRow = row;
 }
+void FstCluster::setMeanX(double meanX)
+{
+  mMeanX = meanX;
+}
+void FstCluster::setMeanY(double meanY)
+{
+  mMeanY = meanY;
+}
 void FstCluster::setTotCharge(double charge)
 {
   mTotCharge = charge;
@@ -94,6 +102,14 @@ double FstCluster::getMeanRow() const
 {
   return mMeanRow;
 }
+double FstCluster::getMeanX() const
+{
+  return mMeanX;
+}
+double FstCluster::getMeanY() const
+{
+  return mMeanY;
+}
 double FstCluster::getTotCharge() const
 {
   return mTotCharge;
@@ -139,6 +155,8 @@ void FstCluster::Print() const
   cout << "mSensor = " << mSensor << endl;
   cout << "mMeanColumn = " << mMeanColumn << endl;
   cout << "mMeanRow = " << mMeanRow << endl;
+  cout << "mMeanX = " << mMeanX << endl;
+  cout << "mMeanY = " << mMeanY << endl;
   cout << "mTotCharge = " << mTotCharge << endl;
   cout << "mMaxTb =" << mMaxTb << endl;
   cout << "mClusterType =" << mClusterType << endl;
@@ -163,6 +181,8 @@ void FstCluster::Clear()
   mSensor = -1;
   mMeanColumn = -1;
   mMeanRow = -1;
+  mMeanX = -1;
+  mMeanY = -1;
   mTotCharge = -1;
   mMaxTb = -1;
   mClusterType = -1;

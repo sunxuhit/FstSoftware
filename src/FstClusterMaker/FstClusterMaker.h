@@ -109,6 +109,8 @@ class FstClusterMaker : public TObject
     int getRStrip(int apv, int ch); // return FST R strip based on apv & ch
     double getPosX(int arm, int port, int apv, int ch); // return FST/IST X based on arm & port & apv & ch
     double getPosY(int arm, int port, int apv, int ch); // return FST/IST Y based on arm & port & apv & ch
+    double getMeanX(int layer, double meanColumn); // return FST/IST meanX based on arm & port
+    double getMeanY(int layer, double meanRow); // return FST/IST meanY based on arm & port
     bool isBadAPV(int arm, int port, int apv);
 
     TChain *mChainInPut; // input TTree

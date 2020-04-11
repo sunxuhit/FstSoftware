@@ -14,7 +14,7 @@ class FstRawHit : public TObject
     int mColumn; // r_strip for FST | x for IST
     int mRow; // phi for FST | y for IST
     double mPosX; // extracted from column & row
-    double mPosY;
+    double mPosY; // r/phi for FST | x/y for IST
     double mPedMean[FST::numTBins]; // mean pedestal for each time bin
     double mPedStdDev[FST::numTBins]; // rms of pedestal for each time bin => noise level
     double mPedRMS[FST::numTBins]; // rms of pedestal for each time bin => noise level

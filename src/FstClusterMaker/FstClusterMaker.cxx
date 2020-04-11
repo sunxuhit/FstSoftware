@@ -380,6 +380,8 @@ int FstClusterMaker::Make()
 	mFstCluster->setSensor(cluster_simple[i_cluster]->getSensor());
 	mFstCluster->setMeanColumn(cluster_simple[i_cluster]->getMeanColumn());
 	mFstCluster->setMeanRow(cluster_simple[i_cluster]->getMeanRow());
+	mFstCluster->setMeanX(getMeanX(cluster_simple[i_cluster]->getLayer(),cluster_simple[i_cluster]->getMeanColumn()));
+	mFstCluster->setMeanY(getMeanY(cluster_simple[i_cluster]->getLayer(),cluster_simple[i_cluster]->getMeanRow()));
 	mFstCluster->setTotCharge(cluster_simple[i_cluster]->getTotCharge());
 	mFstCluster->setMaxTb(cluster_simple[i_cluster]->getMaxTb());
 	mFstCluster->setClusterType(cluster_simple[i_cluster]->getClusterType());
@@ -1214,9 +1216,10 @@ double FstClusterMaker::getPosX(int arm, int port, int apv, int ch)
   int layer = this->getLayer(arm,port);
   if(layer == 0) // FST
   {
-    double r_fst = FST::rOuter + (this->getColumn(arm,port,apv,ch)-4)*FST::pitchR + 0.5*FST::pitchR;
-    double phi_fst = (63-this->getRow(arm,port,apv,ch))*FST::pitchPhi + 0.5*FST::pitchPhi;
-    posX = r_fst*TMath::Cos(phi_fst); // x = r*cos(phi)
+    // double r_fst = FST::rOuter + (this->getColumn(arm,port,apv,ch)-4)*FST::pitchR + 0.5*FST::pitchR;
+    // double phi_fst = (63-this->getRow(arm,port,apv,ch))*FST::pitchPhi + 0.5*FST::pitchPhi;
+    // posX = r_fst*TMath::Cos(phi_fst); // x = r*cos(phi)
+    posX = FST::rOuter + (this->getColumn(arm,port,apv,ch)-4)*FST::pitchR + 0.5*FST::pitchR;
   }
   else // IST1-3
   {
@@ -1232,9 +1235,10 @@ double FstClusterMaker::getPosY(int arm, int port, int apv, int ch)
   int layer = this->getLayer(arm,port);
   if(layer == 0) // FST
   {
-    double r_fst = FST::rOuter + (this->getColumn(arm,port,apv,ch)-4)*FST::pitchR + 0.5*FST::pitchR;
-    double phi_fst = (63-this->getRow(arm,port,apv,ch))*FST::pitchPhi + 0.5*FST::pitchPhi;
-    posY = r_fst*TMath::Sin(phi_fst); // y = r*sin(phi)
+    // double r_fst = FST::rOuter + (this->getColumn(arm,port,apv,ch)-4)*FST::pitchR + 0.5*FST::pitchR;
+    // double phi_fst = (63-this->getRow(arm,port,apv,ch))*FST::pitchPhi + 0.5*FST::pitchPhi;
+    // posY = r_fst*TMath::Sin(phi_fst); // y = r*sin(phi)
+    posY = (63-this->getRow(arm,port,apv,ch))*FST::pitchPhi + 0.5*FST::pitchPhi;
   }
   else // IST1-3
   {
@@ -1242,6 +1246,39 @@ double FstClusterMaker::getPosY(int arm, int port, int apv, int ch)
   }
 
   return posY;
+}
+
+double FstClusterMaker::getMeanX(int layer, double meanColumn)
+{
+  double meanX = -999.9;
+  if(layer == 0) // FST
+  {
+    // double r_fst = FST::rOuter + (this->getColumn(arm,port,apv,ch)-4)*FST::pitchR + 0.5*FST::pitchR;
+    // double phi_fst = (63-this->getRow(arm,port,apv,ch))*FST::pitchPhi + 0.5*FST::pitchPhi;
+    // posX = r_fst*TMath::Cos(phi_fst); // x = r*cos(phi)
+    meanX = FST::rOuter + (meanColumn-4)*FST::pitchR + 0.5*FST::pitchR;
+  }
+  else // IST1-3
+  {
+    meanX = meanColumn*FST::pitchColumn + 0.5*FST::pitchColumn;
+  }
+
+  return meanX;
+}
+
+double FstClusterMaker::getMeanY(int layer, double meanRow)
+{
+  double meanY = -999.9;
+  if(layer == 0) // FST
+  {
+    meanY = (63-meanRow)*FST::pitchPhi + 0.5*FST::pitchPhi;
+  }
+  else // IST1-3
+  {
+    meanY = (63-meanRow)*FST::pitchRow + 0.5*FST::pitchRow;
+  }
+
+  return meanY;
 }
 
 bool FstClusterMaker::isBadAPV(int arm, int port, int apv)

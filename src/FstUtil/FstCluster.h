@@ -12,8 +12,10 @@ class FstCluster : public TObject
   private:
     int mLayer; // 0 for FST | 1-3 for IST
     int mSensor;
-    double mMeanColumn; // phi for FST | x for IST
-    double mMeanRow; // r_strip for FST | y for IST
+    double mMeanColumn; // r_strip for FST | x for IST
+    double mMeanRow;  // phi for FST | y for IST
+    double mMeanX; // extracted from column & row
+    double mMeanY; // r/phi for FST | x/y for IST
     double mTotCharge; // sum of pedestal subtracted ADC for max time bin of each hit in the cluster
     int mMaxTb;
     int mClusterType; // 0 for ARMDisplay | 1 for Simple | 2 for Scan
@@ -35,6 +37,8 @@ class FstCluster : public TObject
     void setSensor(int sensor);
     void setMeanColumn(double column);
     void setMeanRow(double row);
+    void setMeanX(double meanX);
+    void setMeanY(double meanY);
     void setTotCharge(double charge);
     void setMaxTb(int maxTb);
     void setClusterType(int type);
@@ -49,6 +53,8 @@ class FstCluster : public TObject
     int getSensor() const;
     double getMeanColumn() const;
     double getMeanRow() const;
+    double getMeanX() const;
+    double getMeanY() const;
     double getTotCharge() const;
     int getMaxTb() const;
     int getClusterType() const;
