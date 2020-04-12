@@ -18,6 +18,7 @@ class TH2F;
 class TH3F;
 class TProfile;
 class TProfile2D;
+class TGraph;
 
 class FstQAStudy : public TObject
 {
@@ -124,6 +125,10 @@ class FstQAStudy : public TObject
     TH2F *h_mFstClustersDisplay;
     TH2F *h_mHitTracksDisplay;
     TH2F *h_mClusterTracksDisplay;
+
+    TGraph *g_mFstClustersDisplay; // display only
+    TGraph *g_mHitTracksDisplay;
+    TGraph *g_mClusterTracksDisplay;
 
     // Input TChain for hits and clusters
     TChain *mChainInPut; // input TTree

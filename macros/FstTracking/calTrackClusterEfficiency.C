@@ -4,38 +4,82 @@
 #include <TFile.h>
 #include <TH1F.h>
 #include <TCanvas.h>
+#include <TString.h>
+#include "./draw.h"
+#include "../../src/FstUtil/FstCons.h"
 
 using namespace std;
 
 void calTrackClusterEfficiency()
 {
-  string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstTracking_HV140.root";
+  // bool isSavePed = true;
+  bool isSavePed = false;
+  std::string hv = "HV140";
+  std::string inputfile;
+  if(isSavePed) inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstTracking_" + hv + "_withPed.root";
+  if(!isSavePed) inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstTracking_" + hv + "_woPed.root";
+
   TFile *File_InPut = TFile::Open(inputfile.c_str());
-  TH2F *h_mTrackClusters_IST = (TH2F*)File_InPut->Get("h_mTrackClusters_IST");
-  h_mTrackClusters_IST->Sumw2();
-  TH1F *h_mR_IST = (TH1F*)h_mTrackClusters_IST->ProjectionX("h_mR_IST");
-  TH1F *h_mPhi_IST = (TH1F*)h_mTrackClusters_IST->ProjectionY("h_mPhi_IST");
+  TH2F *h_mTrackClusters_IST[4];
+  TH1F *h_mClustersR_IST[4];
+  TH1F *h_mClustersPhi_IST[4];
 
-  TH2F *h_mTrackClusters_FST = (TH2F*)File_InPut->Get("h_mTrackClusters_FST");
-  h_mTrackClusters_FST->Sumw2();
-  TH1F *h_mR_FST = (TH1F*)h_mTrackClusters_FST->ProjectionX("h_mR_FST");
-  TH1F *h_mPhi_FST = (TH1F*)h_mTrackClusters_FST->ProjectionY("h_mPhi_FST");
+  TH2F *h_mTrackClusters_FST[4];
+  TH1F *h_mClustersR_FST[4];
+  TH1F *h_mClustersPhi_FST[4];
+  for(int i_match = 0; i_match < 4; ++i_match)
+  {
+    string HistName;
+    HistName = Form("h_mTrackClusters_IST_SF%d",i_match);
+    h_mTrackClusters_IST[i_match] = (TH2F*)File_InPut->Get(HistName.c_str());
+    h_mTrackClusters_IST[i_match]->Sumw2();
+    HistName = Form("h_mClustersR_IST_SF%d",i_match);
+    h_mClustersR_IST[i_match] = (TH1F*)h_mTrackClusters_IST[i_match]->ProjectionX(HistName.c_str());
+    HistName = Form("h_mClustersPhi_IST_SF%d",i_match);
+    h_mClustersPhi_IST[i_match] = (TH1F*)h_mTrackClusters_IST[i_match]->ProjectionY(HistName.c_str());
 
-  TH2F *h_mEfficiency = (TH2F*)h_mTrackClusters_IST->Clone("h_mEfficiency");
-  h_mEfficiency->SetTitle("h_mEfficiency");
-  h_mEfficiency->Reset();
-  h_mEfficiency->Divide(h_mTrackClusters_FST,h_mTrackClusters_IST,1,1,"B");
+    HistName = Form("h_mTrackClusters_FST_SF%d",i_match);
+    h_mTrackClusters_FST[i_match] = (TH2F*)File_InPut->Get(HistName.c_str());
+    h_mTrackClusters_FST[i_match]->Sumw2();
+    HistName = Form("h_mClustersR_FST_SF%d",i_match);
+    h_mClustersR_FST[i_match] = (TH1F*)h_mTrackClusters_FST[i_match]->ProjectionX(HistName.c_str());
+    HistName = Form("h_mClustersPhi_FST_SF%d",i_match);
+    h_mClustersPhi_FST[i_match] = (TH1F*)h_mTrackClusters_FST[i_match]->ProjectionY(HistName.c_str());
+  }
 
-  TH1F *h_mEffR = (TH1F*)h_mR_IST->Clone("h_mEffR");
-  h_mEffR->SetTitle("h_mEffR");
-  h_mEffR->Reset();
-  h_mEffR->Divide(h_mR_FST,h_mR_IST,1,1,"B");
+  TH2F *h_mEfficiency[4];
+  TH1F *h_mEffR[4];
+  TH1F *h_mEffPhi[4];
+  for(int i_match = 0; i_match < 4; ++i_match)
+  {
+    string HistName;
+    HistName = Form("h_mEfficiency_SF%d",i_match);
+    h_mEfficiency[i_match] = (TH2F*)h_mTrackClusters_IST[i_match]->Clone(HistName.c_str());
+    h_mEfficiency[i_match]->SetTitle(HistName.c_str());
+    h_mEfficiency[i_match]->Reset();
+    h_mEfficiency[i_match]->Divide(h_mTrackClusters_FST[i_match],h_mTrackClusters_IST[i_match],1,1,"B");
 
-  TH1F *h_mEffPhi = (TH1F*)h_mPhi_IST->Clone("h_mEffPhi");
-  h_mEffPhi->SetTitle("h_mEffPhi");
-  h_mEffPhi->Reset();
-  h_mEffPhi->Divide(h_mPhi_FST,h_mPhi_IST,1,1,"B");
+    HistName = Form("h_mEffR_SF%d",i_match);
+    h_mEffR[i_match] = (TH1F*)h_mClustersR_IST[i_match]->Clone(HistName.c_str());
+    h_mEffR[i_match]->SetTitle(HistName.c_str());
+    h_mEffR[i_match]->Reset();
+    h_mEffR[i_match]->Divide(h_mClustersR_FST[i_match],h_mClustersR_IST[i_match],1,1,"B");
 
+    HistName = Form("h_mEffPhi_SF%d",i_match);
+    h_mEffPhi[i_match] = (TH1F*)h_mClustersPhi_IST[i_match]->Clone(HistName.c_str());
+    h_mEffPhi[i_match]->SetTitle(HistName.c_str());
+    h_mEffPhi[i_match]->Reset();
+    h_mEffPhi[i_match]->Divide(h_mClustersPhi_FST[i_match],h_mClustersPhi_IST[i_match],1,1,"B");
+  }
+
+  const double rMaxFst = FST::rOuter + 4.0*FST::pitchR;
+  const double rMinFst = FST::rOuter;
+  const double phiMaxFst = 64.0*FST::pitchPhi;
+  const double phiMinFst = 0.0;
+
+  string outputname;
+  if(isSavePed) outputname = Form("./figures/Efficiency_TrackHit_%s_withPed.pdf",hv.c_str());
+  if(!isSavePed) outputname = Form("./figures/Efficiency_TrackHit_%s_woPed.pdf",hv.c_str());
   TCanvas *c_play = new TCanvas("c_play","c_play",10,10,900,900);
   c_play->Divide(3,3);
   for(int i_pad = 0; i_pad < 9; ++i_pad)
@@ -46,49 +90,91 @@ void calTrackClusterEfficiency()
     c_play->cd(i_pad+1)->SetGrid(0,0);
   }
 
-  // projection position from IST
-  c_play->cd(1);
-  h_mTrackClusters_IST->GetXaxis()->SetTitle("r_{proj} (mm)");
-  h_mTrackClusters_IST->GetYaxis()->SetTitle("phi_{proj} (rad)");
-  h_mTrackClusters_IST->Draw("colz");
+  string output_start;
+  if(isSavePed) output_start = Form("./figures/Efficiency_TrackHit_%s_withPed.pdf[",hv.c_str());
+  if(!isSavePed) output_start = Form("./figures/Efficiency_TrackHit_%s_woPed.pdf[",hv.c_str());
+  c_play->Print(output_start.c_str()); // open pdf file
 
-  c_play->cd(2);
-  h_mR_IST->GetXaxis()->SetTitle("r_{proj} (mm)");
-  h_mR_IST->Draw("HIST");
+  for(int i_match = 0; i_match < 4; ++i_match)
+  {
+    // projection position from IST
+    c_play->cd(1);
+    h_mTrackClusters_IST[i_match]->GetXaxis()->SetTitle("r_{proj} (mm)");
+    h_mTrackClusters_IST[i_match]->GetYaxis()->SetTitle("phi_{proj} (rad)");
+    h_mTrackClusters_IST[i_match]->Draw("colz");
+    PlotLine(rMinFst, rMaxFst, phiMinFst, phiMinFst, 1, 2, 2);
+    PlotLine(rMinFst, rMaxFst, phiMaxFst, phiMaxFst, 1, 2, 2);
+    PlotLine(rMinFst, rMinFst, phiMinFst, phiMaxFst, 1, 2, 2);
+    PlotLine(rMaxFst, rMaxFst, phiMinFst, phiMaxFst, 1, 2, 2);
 
-  c_play->cd(3);
-  h_mPhi_IST->GetXaxis()->SetTitle("phi_{proj} (rad)");
-  h_mPhi_IST->GetXaxis()->SetRangeUser(-0.05,0.24);
-  h_mPhi_IST->Draw("HIST");
+    c_play->cd(2);
+    h_mClustersR_IST[i_match]->GetXaxis()->SetTitle("r_{proj} (mm)");
+    h_mClustersR_IST[i_match]->GetYaxis()->SetRangeUser(0.0,1.1*h_mClustersR_IST[i_match]->GetMaximum());
+    h_mClustersR_IST[i_match]->Draw("HIST");
+    PlotLine(rMinFst, rMinFst, 0.5, h_mClustersR_IST[i_match]->GetMaximum(), 1, 2, 2);
+    PlotLine(rMaxFst, rMaxFst, 0.5, h_mClustersR_IST[i_match]->GetMaximum(), 1, 2, 2);
 
-  // measured position from FST
-  c_play->cd(4);
-  h_mTrackClusters_FST->GetXaxis()->SetTitle("r_{proj} (mm)");
-  h_mTrackClusters_FST->GetYaxis()->SetTitle("phi_{proj} (rad)");
-  h_mTrackClusters_FST->Draw("colz");
+    c_play->cd(3);
+    h_mClustersPhi_IST[i_match]->GetXaxis()->SetTitle("phi_{proj} (mm)");
+    h_mClustersPhi_IST[i_match]->GetXaxis()->SetRangeUser(-0.05,phiMaxFst*1.2);
+    h_mClustersPhi_IST[i_match]->Draw("HIST");
+    PlotLine(phiMinFst, phiMinFst, 0.5, h_mClustersPhi_IST[i_match]->GetMaximum(), 1, 2, 2);
+    PlotLine(phiMaxFst, phiMaxFst, 0.5, h_mClustersPhi_IST[i_match]->GetMaximum(), 1, 2, 2);
 
-  c_play->cd(5);
-  h_mR_FST->GetXaxis()->SetTitle("r_{proj} (mm)");
-  h_mR_FST->Draw("HIST");
+    // measured position from FST
+    c_play->cd(4);
+    h_mTrackClusters_FST[i_match]->GetXaxis()->SetTitle("r_{proj} (mm)");
+    h_mTrackClusters_FST[i_match]->GetYaxis()->SetTitle("phi_{proj} (rad)");
+    h_mTrackClusters_FST[i_match]->Draw("colz");
+    PlotLine(rMinFst, rMaxFst, phiMinFst, phiMinFst, 1, 2, 2);
+    PlotLine(rMinFst, rMaxFst, phiMaxFst, phiMaxFst, 1, 2, 2);
+    PlotLine(rMinFst, rMinFst, phiMinFst, phiMaxFst, 1, 2, 2);
+    PlotLine(rMaxFst, rMaxFst, phiMinFst, phiMaxFst, 1, 2, 2);
 
-  c_play->cd(6);
-  h_mPhi_FST->GetXaxis()->SetTitle("phi_{proj} (rad)");
-  h_mPhi_FST->GetXaxis()->SetRangeUser(-0.05,0.24);
-  h_mPhi_FST->Draw("HIST");
+    c_play->cd(5);
+    h_mClustersR_FST[i_match]->GetXaxis()->SetTitle("r_{proj} (mm)");
+    h_mClustersR_FST[i_match]->GetYaxis()->SetRangeUser(0.0,1.1*h_mClustersR_FST[i_match]->GetMaximum());
+    h_mClustersR_FST[i_match]->Draw("HIST");
+    PlotLine(rMinFst, rMinFst, 0.5, h_mClustersR_FST[i_match]->GetMaximum(), 1, 2, 2);
+    PlotLine(rMaxFst, rMaxFst, 0.5, h_mClustersR_FST[i_match]->GetMaximum(), 1, 2, 2);
 
-  c_play->cd(7);
-  h_mEfficiency->GetXaxis()->SetTitle("r_{proj} (mm)");
-  h_mEfficiency->GetYaxis()->SetTitle("phi_{proj} (rad)");
-  h_mEfficiency->Draw("colz");
+    c_play->cd(6);
+    h_mClustersPhi_FST[i_match]->GetXaxis()->SetTitle("phi_{proj} (rad)");
+    h_mClustersPhi_FST[i_match]->GetXaxis()->SetRangeUser(-0.05,phiMaxFst*1.2);
+    h_mClustersPhi_FST[i_match]->Draw("HIST");
+    PlotLine(phiMinFst, phiMinFst, 0.5, h_mClustersPhi_FST[i_match]->GetMaximum(), 1, 2, 2);
+    PlotLine(phiMaxFst, phiMaxFst, 0.5, h_mClustersPhi_FST[i_match]->GetMaximum(), 1, 2, 2);
 
-  c_play->cd(8);
-  h_mEffR->GetXaxis()->SetTitle("r_{proj} (mm)");
-  h_mEffR->Draw("pE");
+    c_play->cd(7);
+    h_mEfficiency[i_match]->GetXaxis()->SetTitle("r_{proj} (mm)");
+    h_mEfficiency[i_match]->GetYaxis()->SetTitle("phi_{proj} (rad)");
+    h_mEfficiency[i_match]->Draw("colz");
+    PlotLine(rMinFst, rMaxFst, phiMinFst, phiMinFst, 1, 2, 2);
+    PlotLine(rMinFst, rMaxFst, phiMaxFst, phiMaxFst, 1, 2, 2);
+    PlotLine(rMinFst, rMinFst, phiMinFst, phiMaxFst, 1, 2, 2);
+    PlotLine(rMaxFst, rMaxFst, phiMinFst, phiMaxFst, 1, 2, 2);
 
-  c_play->cd(9);
-  h_mEffPhi->GetXaxis()->SetTitle("phi_{proj} (rad)");
-  h_mEffPhi->GetXaxis()->SetRangeUser(-0.05,0.24);
-  h_mEffPhi->Draw("pE");
+    c_play->cd(8);
+    h_mEffR[i_match]->GetXaxis()->SetTitle("r_{proj} (mm)");
+    h_mEffR[i_match]->GetYaxis()->SetRangeUser(0.0,1.0);
+    h_mEffR[i_match]->Draw("pE");
+    PlotLine(rMinFst, rMinFst, 0.0, 1.0, 1, 2, 2);
+    PlotLine(rMaxFst, rMaxFst, 0.0, 1.0, 1, 2, 2);
 
-  c_play->SaveAs("Efficiency_TrackCluster_HV140V.eps");
+    c_play->cd(9);
+    h_mEffPhi[i_match]->GetXaxis()->SetTitle("phi_{proj} (rad)");
+    h_mEffPhi[i_match]->GetXaxis()->SetRangeUser(-0.05,phiMaxFst*1.2);
+    h_mEffPhi[i_match]->GetYaxis()->SetRangeUser(0.0,1.0);
+    h_mEffPhi[i_match]->Draw("pE");
+    PlotLine(phiMinFst, phiMinFst, 0.0, 1.0, 1, 2, 2);
+    PlotLine(phiMaxFst, phiMaxFst, 0.0, 1.0, 1, 2, 2);
+
+    c_play->Update();
+    c_play->Print(outputname.c_str());
+  }
+
+  string output_stop;
+  if(isSavePed) output_stop = Form("./figures/Efficiency_TrackHit_%s_withPed.pdf]",hv.c_str());
+  if(!isSavePed) output_stop = Form("./figures/Efficiency_TrackHit_%s_woPed.pdf]",hv.c_str());
+  c_play->Print(output_stop.c_str()); // open pdf file
 }

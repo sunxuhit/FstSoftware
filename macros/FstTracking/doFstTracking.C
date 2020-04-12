@@ -10,11 +10,18 @@ int doFstTracking()
 
   FstTracking *fst = new FstTracking();
 
+  // bool isSavePed = true;
+  bool isSavePed = false;
   std::string hv = "HV140";
-  std::string inputlist = "/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/list/FST/FstClusters_" + hv + ".list";
-  std::string outputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstTracking_" + hv + ".root";
-
+  string inputlist;
+  if(isSavePed) inputlist  = "/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/list/FST/FstTracking_" + hv + "_withPed.list";
+  if(!isSavePed) inputlist  = "/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/list/FST/FstTracking_" + hv + "_woPed.list";
   cout << "input list set to: " << inputlist.c_str() << endl;
+
+  std::string outputfile;
+  if(isSavePed) outputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstTracking_" + hv + "_withPed.root";
+  if(!isSavePed) outputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstTracking_" + hv + "_woPed.root";
+
   cout << "output file set to: " << outputfile.c_str() << endl;
 
   fst->set_list(inputlist.c_str());

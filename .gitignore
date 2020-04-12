@@ -13,4 +13,5 @@ macros/*.root
 macros/*/*.root
 macros/*/figures/*.eps
 macros/*/figures/*.pdf
+macros/*/figures/backup/*.eps
 

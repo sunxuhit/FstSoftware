@@ -14,6 +14,7 @@
 #include <TVector3.h>
 #include <TProfile.h>
 #include <TProfile2D.h>
+#include <TGraph.h>
 
 using namespace std;
 
@@ -59,7 +60,7 @@ int FstQAStudy::Make()
 
   long NumOfEvents = (long)mChainInPut->GetEntries();
   // if(NumOfEvents > 1000) NumOfEvents = 1000;
-  // NumOfEvents = 1000;
+  // NumOfEvents = 2000;
   mChainInPut->GetEntry(0);
 
   int numOfUsedEvent = 0;
@@ -552,6 +553,13 @@ void FstQAStudy::initEventDisplay_TrackClusters()
   h_mHitTracksDisplay = new TH2F("h_mHitTracksDisplay","h_mHitTracksDisplay",60,rMin,rMax,FST::numPhiSeg*4,phiMin,phiMax);
   h_mClusterTracksDisplay = new TH2F("h_mClusterTracksDisplay","h_mClusterTracksDisplay",60,rMin,rMax,FST::numPhiSeg*4,phiMin,phiMax);
 
+  g_mFstClustersDisplay = new TGraph();
+  g_mFstClustersDisplay->SetName("g_mFstClustersDisplay");
+  g_mHitTracksDisplay = new TGraph();
+  g_mHitTracksDisplay->SetName("g_mHitTracksDisplay");
+  g_mClusterTracksDisplay = new TGraph();
+  g_mClusterTracksDisplay->SetName("g_mClusterTracksDisplay");
+
   mTree_EventDisplay = new TTree("mTree_EventDisplay","Fst Hits Clusters Tracks Display");
   mTree_EventDisplay->Branch("mEventId",&mEventId,"mEventId/I");
   mTree_EventDisplay->Branch("mNumOfFstRawHits",&mNumOfFstRawHits,"mNumOfFstRawHits/I");
@@ -570,6 +578,11 @@ void FstQAStudy::initEventDisplay_TrackClusters()
   mTree_EventDisplay->Branch("h_mHitTracksDisplay","TH2F",&h_mHitTracksDisplay);
   mTree_EventDisplay->Branch("mNumOfClusterTracks",&mNumOfClusterTracks,"mNumOfClusterTracks/I");
   mTree_EventDisplay->Branch("h_mClusterTracksDisplay","TH2F",&h_mClusterTracksDisplay);
+
+  mTree_EventDisplay->Branch("g_mFstClustersDisplay","TGraph",&g_mFstClustersDisplay);
+  mTree_EventDisplay->Branch("g_mHitTracksDisplay","TGraph",&g_mHitTracksDisplay);
+  mTree_EventDisplay->Branch("g_mClusterTracksDisplay","TGraph",&g_mClusterTracksDisplay);
+
   mTree_EventDisplay->SetAutoSave(50000000);
 }
 
@@ -593,6 +606,10 @@ void FstQAStudy::clearEventDisplay_TrackClusters()
   h_mFstClustersDisplay->Reset();
   h_mHitTracksDisplay->Reset();
   h_mClusterTracksDisplay->Reset();
+
+  g_mFstClustersDisplay->Set(-1);
+  g_mHitTracksDisplay->Set(-1);
+  g_mClusterTracksDisplay->Set(-1);
 }
 
 void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
@@ -629,8 +646,9 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
       double r_fst = fstCluster->getMeanX(); // r for fst
       double phi_fst = fstCluster->getMeanY(); // phi for fst
       double adc = fstCluster->getTotCharge();
-      // h_mFstClustersDisplay->Fill(r_fst,phi_fst,adc);
-      h_mFstClustersDisplay->Fill(r_fst,phi_fst);
+      // h_mFstClustersDisplay->Fill(r_fst,phi_fst);
+      h_mFstClustersDisplay->Fill(r_fst,phi_fst,adc);
+      g_mFstClustersDisplay->SetPoint(mNumOfFstClusters-1,r_fst,phi_fst);
     }
     if(fstCluster->getLayer() == 1) mNumOfIst1Clusters++;
     if(fstCluster->getLayer() == 2) mNumOfIst2Clusters++;
@@ -649,11 +667,13 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
     {
       mNumOfHitTracks++;
       h_mHitTracksDisplay->Fill(r_proj,phi_proj);
+      g_mHitTracksDisplay->SetPoint(mNumOfHitTracks-1,r_proj,phi_proj);
     }
     if(fstTrack->getTrackType() == 1) // track reconstructed with clusters
     {
       mNumOfClusterTracks++;
       h_mClusterTracksDisplay->Fill(r_proj,phi_proj);
+      g_mClusterTracksDisplay->SetPoint(mNumOfClusterTracks-1,r_proj,phi_proj);
     }
   }
   mTree_EventDisplay->Fill();

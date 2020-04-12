@@ -8,6 +8,7 @@
 #include <TLegend.h>
 #include <TF1.h>
 #include <TProfile2D.h>
+#include <TGraph.h>
 #include <TStyle.h>
 #include "./draw.h"
 #include "../../src/FstUtil/FstCons.h"
@@ -16,7 +17,8 @@ using namespace std;
 
 void plotEventDisplay_Tree()
 {
-  gStyle->SetPalette(kRainBow);
+  // gStyle->SetPalette(kRainBow);
+  gStyle->SetPalette(kBlackBody);
 
   const double rMax = FST::rOuter + 5.0*FST::pitchR;
   const double rMin = FST::rOuter - 1.0*FST::pitchR;
@@ -41,9 +43,13 @@ void plotEventDisplay_Tree()
   TH2F *h_mFstClustersDisplay = new TH2F("h_mFstClustersDisplay","h_mFstClustersDisplay",60,rMin,rMax,FST::numPhiSeg*4,phiMin,phiMax);
   TH2F *h_mHitTracksDisplay = new TH2F("h_mHitTracksDisplay","h_mHitTracksDisplay",60,rMin,rMax,FST::numPhiSeg*4,phiMin,phiMax);
   TH2F *h_mClusterTracksDisplay = new TH2F("h_mClusterTracksDisplay","h_mClusterTracksDisplay",60,rMin,rMax,FST::numPhiSeg*4,phiMin,phiMax);
+  TGraph *g_mFstClustersDisplay = new TGraph();
+  TGraph *g_mHitTracksDisplay = new TGraph();
+  TGraph *g_mClusterTracksDisplay = new TGraph();
 
-  // string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140_woPed.root";
+
   string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140_withPed.root";
+  // string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140_woPed.root";
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TTree *mTree_EventDisplay = (TTree*)File_InPut->Get("mTree_EventDisplay");
   mTree_EventDisplay->SetBranchAddress("mEventId",&mEventId);
@@ -64,6 +70,10 @@ void plotEventDisplay_Tree()
   mTree_EventDisplay->SetBranchAddress("mNumOfClusterTracks",&mNumOfClusterTracks);
   mTree_EventDisplay->SetBranchAddress("h_mClusterTracksDisplay",&h_mClusterTracksDisplay);
 
+  mTree_EventDisplay->SetBranchAddress("g_mFstClustersDisplay",&g_mFstClustersDisplay);
+  mTree_EventDisplay->SetBranchAddress("g_mHitTracksDisplay",&g_mHitTracksDisplay);
+  mTree_EventDisplay->SetBranchAddress("g_mClusterTracksDisplay",&g_mClusterTracksDisplay);
+
   long NumOfEvents = (long)mTree_EventDisplay->GetEntries();
   cout << "total number of events: " << NumOfEvents << endl;
   // if(NumOfEvents > 1000) NumOfEvents = 1000;
@@ -82,7 +92,7 @@ void plotEventDisplay_Tree()
   c_EventDisplay->cd()->SetBottomMargin(0.15);
   c_EventDisplay->cd()->SetTicks(1,1);
   c_EventDisplay->cd()->SetGrid(0,0);
-  // c_EventDisplay->cd()->SetLogz();
+  c_EventDisplay->cd()->SetLogz();
   // TLegend *leg = new TLegend(0.4,0.6,0.85,0.8);
   // leg->SetBorderSize(0);
   // leg->SetFillColor(10);
@@ -92,7 +102,7 @@ void plotEventDisplay_Tree()
   c_EventDisplay->Print(output_start.c_str()); // open pdf file
 
   // for(int i_event = 0; i_event < NumOfEvents; ++i_event)
-  for(int i_event = 0; i_event < 2000; ++i_event)
+  for(int i_event = 0; i_event < 1000; ++i_event)
   {
     if(i_event%1000==0) cout << "processing events:  " << i_event << "/" << NumOfEvents << endl;
     mTree_EventDisplay->GetEntry(i_event);
@@ -123,6 +133,7 @@ void plotEventDisplay_Tree()
       h_mFstRawHitsDisplay->GetYaxis()->SetTitleSize(0.06);
       h_mFstRawHitsDisplay->GetZaxis()->SetRangeUser(1.0,2000.0);
       h_mFstRawHitsDisplay->Draw("colz");
+      h_mFstRawHitsDisplay->SetBarOffset(1.5);
       h_mFstRawHitsDisplay->Draw("TEXT Same");
       // h_mHitTracksDisplay->SetMarkerStyle(5);
       // h_mHitTracksDisplay->SetMarkerColor(1);
@@ -130,14 +141,25 @@ void plotEventDisplay_Tree()
       // h_mHitTracksDisplay->Draw("p Same");
 
       // h_mFstClustersDisplay->Draw("col Same");
-      h_mFstClustersDisplay->SetMarkerStyle(25);
-      h_mFstClustersDisplay->SetMarkerColor(2);
-      h_mFstClustersDisplay->SetMarkerSize(1.0);
-      h_mFstClustersDisplay->Draw("p Same");
-      h_mClusterTracksDisplay->SetMarkerStyle(5);
-      h_mClusterTracksDisplay->SetMarkerColor(2);
-      h_mClusterTracksDisplay->SetMarkerSize(1.0);
-      h_mClusterTracksDisplay->Draw("p Same");
+      // h_mFstClustersDisplay->SetMarkerStyle(25);
+      // h_mFstClustersDisplay->SetMarkerColor(2);
+      // h_mFstClustersDisplay->SetMarkerSize(1.0);
+      // h_mFstClustersDisplay->Draw("p Same");
+      // h_mClusterTracksDisplay->SetMarkerStyle(5);
+      // h_mClusterTracksDisplay->SetMarkerColor(2);
+      // h_mClusterTracksDisplay->SetMarkerSize(1.0);
+      // h_mClusterTracksDisplay->Draw("col Same");
+      if(g_mFstClustersDisplay->GetN() > 0)
+      {
+	g_mFstClustersDisplay->SetMarkerStyle(25);
+	g_mFstClustersDisplay->SetMarkerColor(1);
+	g_mFstClustersDisplay->SetMarkerSize(1.0);
+	g_mFstClustersDisplay->Draw("p Same");
+      }
+      g_mClusterTracksDisplay->SetMarkerStyle(5);
+      g_mClusterTracksDisplay->SetMarkerColor(1);
+      g_mClusterTracksDisplay->SetMarkerSize(1.0);
+      g_mClusterTracksDisplay->Draw("p Same");
       PlotLine(rMinFst, rMaxFst, phiMinFst, phiMinFst, 1, 2, 2);
       PlotLine(rMinFst, rMaxFst, phiMaxFst, phiMaxFst, 1, 2, 2);
       PlotLine(rMinFst, rMinFst, phiMinFst, phiMaxFst, 1, 2, 2);

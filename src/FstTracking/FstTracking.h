@@ -55,20 +55,20 @@ class FstTracking : public TObject
 
     // track resolution
     void initTracking_Hits();
-    void calResolution_Hits(std::vector<FstTrack *> trackHitVec_orig);
+    void calResolution_Hits(FstEvent *fstEvent);
     void writeTracking_Hits();
 
     void initTracking_Clusters();
-    void calResolution_Clusters(std::vector<FstTrack *> trackClusterVec_orig);
+    void calResolution_Clusters(FstEvent *fstEvent);
     void writeTracking_Clusters();
 
     // efficiency
     void initEfficiency_Hits();
-    void calEfficiency_Hits(std::vector<FstTrack *> trackHitVec_orig);
+    void calEfficiency_Hits(FstEvent *fstEvent);
     void writeEfficiency_Hits();
 
     void initEfficiency_Clusters();
-    void calEfficiency_Clusters(std::vector<FstTrack *> trackClusterVec_orig);
+    void calEfficiency_Clusters(FstEvent *fstEvent);
     void writeEfficiency_Clusters();
 
   private:
@@ -112,11 +112,12 @@ class FstTracking : public TObject
     TH1F *h_mTrackPhiRes_Clusters;
 
     // Efficiency based on Hits
-    TH2F *h_mTrackHits_IST; // position on FST from IST projection
-    TH2F *h_mTrackHits_FST; // position on FST from FST measurement
+    // 0: no matching | 1-3 matching within (1-3)*pitchR in r & (1-3)*pitchPhi in phi
+    TH2F *h_mTrackHits_IST[4]; // position on FST from IST projection
+    TH2F *h_mTrackHits_FST[4]; // position on FST from FST measurement
 
-    TH2F *h_mTrackClusters_IST; // position on FST from IST projection
-    TH2F *h_mTrackClusters_FST; // position on FST from FST measurement
+    TH2F *h_mTrackClusters_IST[4]; // position on FST from IST projection
+    TH2F *h_mTrackClusters_FST[4]; // position on FST from FST measurement
 
     // Input TChain for hits and clusters
     TChain *mChainInPut; // input TTree
