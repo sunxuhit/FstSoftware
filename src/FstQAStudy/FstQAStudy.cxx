@@ -60,7 +60,7 @@ int FstQAStudy::Make()
 
   long NumOfEvents = (long)mChainInPut->GetEntries();
   // if(NumOfEvents > 1000) NumOfEvents = 1000;
-  // NumOfEvents = 2000;
+  // NumOfEvents = 1000;
   mChainInPut->GetEntry(0);
 
   int numOfUsedEvent = 0;

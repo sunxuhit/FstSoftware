@@ -12,7 +12,7 @@ int makeFstCluster()
 
   bool isSavePed = true;
   // bool isSavePed = false;
-  std::string hv = "HV140";
+  std::string hv = "HV140V";
   std::string inputlist = "/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/list/FST/FstData_" + hv + ".list";
   cout << "input list set to: " << inputlist.c_str() << endl;
 

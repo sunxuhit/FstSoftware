@@ -261,9 +261,8 @@ int FstClusterMaker::Make()
 		maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][0]; // init with 1st tb
 		maxTB = 0;
 		preADC = maxADC;
-		float nPedsCut = FST::nIstPedsCut; // 3.0 for IST
-		// float nPedsCut = FST::nIstHitsCut; // 6.0 for IST => only save hits for IST
-		if(i_arm == 1 && i_port == 1) nPedsCut = FST::nFstPedsCut; // 3.0 for FST
+		float nPedsCut = FST::nIstThresholdCut; // 3.0 for IST
+		if(i_arm == 1 && i_port == 1) nPedsCut = FST::nFstThresholdCut; // 3.0 for FST
 		for(int i_tb = 1; i_tb < FST::numTBins-1; ++i_tb)
 		{ // only if 3 consequetive timebins of a ch exceed the threshold cut is considered as a hit
 		  if( 
@@ -1289,7 +1288,7 @@ bool FstClusterMaker::isBadAPV(int arm, int port, int apv)
   if(arm == 0 && port==1 && (apv <= 9)) bAPV = true;
   // if(arm == 1 && port==0 && (apv == 0||apv == 1)) bAPV = true;
   if(arm == 1 && port==0 && (apv == 0)) bAPV = true;
-  // if(arm == 1 && port==1 && (apv == 6||apv == 7)) bAPV = true;
+  if(arm == 1 && port==1 && (apv == 6||apv == 7)) bAPV = true;
 
   return bAPV;
 }
