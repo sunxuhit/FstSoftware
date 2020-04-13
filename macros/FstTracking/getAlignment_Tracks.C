@@ -43,7 +43,7 @@ int getAlignment_Tracks(int trackType = 1) // 0: alignment with hits | 1: alignm
   y3_ist.clear();
 
   FstEvent *mFstEvent = new FstEvent();
-  std::string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstClusters_HV140.root";
+  std::string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstClusters_HV140V_woPed.root";
   std::cout << "inputfile = " << inputfile.c_str() << std::endl;
   TFile *mFile_InPut = TFile::Open(inputfile.c_str());
   TTree *mTree_FstEvent = (TTree*)mFile_InPut->Get("mTree_FstEvent");
@@ -63,24 +63,48 @@ int getAlignment_Tracks(int trackType = 1) // 0: alignment with hits | 1: alignm
     if(i_event%1000==0) cout << "processing events:  " << i_event << "/" << NumOfEvents << endl;
     mTree_FstEvent->GetEntry(i_event);
 
-    for(int i_track = 0; i_track < mFstEvent->getNumTracks(); ++i_track)
-    { // get Hits info
-      FstTrack *fstTrack = mFstEvent->getTrack(i_track);
-      if(fstTrack->getTrackType() == trackType && fstTrack->getId(0) > 0)
+    std::vector<FstCluster *> fstClusterVec;
+    fstClusterVec.clear(); // clear the container for clusters
+    for(int i_cluster = 0; i_cluster < mFstEvent->getNumClusters(); ++i_cluster)
+    { // get Clusters info
+      FstCluster *fstCluster = mFstEvent->getCluster(i_cluster);
+      if(fstCluster->getLayer() == 0)
       {
-	x0_fst.push_back(fstTrack->getPosOrig(0).X());
-	y0_fst.push_back(fstTrack->getPosOrig(0).Y());
-	x1_ist.push_back(fstTrack->getPosOrig(1).X());
-	y1_ist.push_back(fstTrack->getPosOrig(1).Y());
-	x3_ist.push_back(fstTrack->getPosOrig(3).X());
-	y3_ist.push_back(fstTrack->getPosOrig(3).Y());
+	fstClusterVec.push_back(fstCluster);
+      }
+    }
+    int numOfFstClusters = mFstEvent->getNumFstClusters();
 
-	// std::cout << "x0_fst: " << x0_fst[numOfTracks] << ", y0_fst: " << y0_fst[numOfTracks] << ", x1_ist: " << x1_ist[numOfTracks] << ", y1_ist: " << y1_ist[numOfTracks] << ", x3_ist: " << x3_ist[numOfTracks] << ", y3_ist: " << y3_ist[numOfTracks] << endl;
-	// std::cout << endl;
-	numOfTracks++;
+    if(numOfFstClusters > 0)
+    {
+      for(int i_cluster = 0; i_cluster < numOfFstClusters; ++i_cluster)
+      {
+	double r_fst = fstClusterVec[i_cluster]->getMeanX(); // r for fst
+	double phi_fst = fstClusterVec[i_cluster]->getMeanY(); // phi for fst
+	double x_fst = r_fst*TMath::Cos(phi_fst);
+	double y_fst = r_fst*TMath::Sin(phi_fst);
+
+	for(int i_track = 0; i_track < mFstEvent->getNumTracks(); ++i_track)
+	{ // get Hits info
+	  FstTrack *fstTrack = mFstEvent->getTrack(i_track);
+	  if(fstTrack->getTrackType() == trackType)
+	  {
+	    x0_fst.push_back(x_fst);
+	    y0_fst.push_back(y_fst);
+	    x1_ist.push_back(fstTrack->getPosOrig(1).X());
+	    y1_ist.push_back(fstTrack->getPosOrig(1).Y());
+	    x3_ist.push_back(fstTrack->getPosOrig(3).X());
+	    y3_ist.push_back(fstTrack->getPosOrig(3).Y());
+
+	    // std::cout << "x0_fst: " << x0_fst[numOfTracks] << ", y0_fst: " << y0_fst[numOfTracks] << ", x1_ist: " << x1_ist[numOfTracks] << ", y1_ist: " << y1_ist[numOfTracks] << ", x3_ist: " << x3_ist[numOfTracks] << ", y3_ist: " << y3_ist[numOfTracks] << endl;
+	    // std::cout << endl;
+	    numOfTracks++;
+	  }
+	}
       }
     }
   }
+
   mFile_InPut->Close();
 
   cout << "Start Minuit Fit for alignment => " << endl;

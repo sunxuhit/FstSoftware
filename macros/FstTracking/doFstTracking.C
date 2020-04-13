@@ -12,7 +12,7 @@ int doFstTracking()
 
   // bool isSavePed = true;
   bool isSavePed = false;
-  std::string hv = "HV140";
+  std::string hv = "HV140V";
   string inputlist;
   if(isSavePed) inputlist  = "/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/list/FST/FstTracking_" + hv + "_withPed.list";
   if(!isSavePed) inputlist  = "/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/list/FST/FstTracking_" + hv + "_woPed.list";

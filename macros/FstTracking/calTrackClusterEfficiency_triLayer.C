@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void calTrackClusterEfficiency()
+void calTrackClusterEfficiency_triLayer()
 {
   const double rMaxFst = FST::rOuter + 4.0*FST::pitchR;
   const double rMinFst = FST::rOuter;
@@ -35,24 +35,24 @@ void calTrackClusterEfficiency()
   for(int i_match = 0; i_match < 4; ++i_match)
   {
     string HistName;
-    HistName = Form("h_mTrackClusters_IST_SF%d",i_match);
+    HistName = Form("h_mTrackClustersTriLayer_IST_SF%d",i_match);
     h_mTrackClusters_IST[i_match] = (TH2F*)File_InPut->Get(HistName.c_str());
-    h_mTrackClusters_IST[i_match]->GetXaxis()->SetRangeUser(rMinFst,rMaxFst);
-    h_mTrackClusters_IST[i_match]->GetYaxis()->SetRangeUser(phiMinFst,phiMaxFst);
+    // h_mTrackClusters_IST[i_match]->GetXaxis()->SetRangeUser(rMinFst,rMaxFst);
+    // h_mTrackClusters_IST[i_match]->GetYaxis()->SetRangeUser(phiMinFst,phiMaxFst);
     h_mTrackClusters_IST[i_match]->Sumw2();
-    HistName = Form("h_mClustersR_IST_SF%d",i_match);
+    HistName = Form("h_mClustersTriLayerR_IST_SF%d",i_match);
     h_mClustersR_IST[i_match] = (TH1F*)h_mTrackClusters_IST[i_match]->ProjectionX(HistName.c_str());
-    HistName = Form("h_mClustersPhi_IST_SF%d",i_match);
+    HistName = Form("h_mClustersTriLayerPhi_IST_SF%d",i_match);
     h_mClustersPhi_IST[i_match] = (TH1F*)h_mTrackClusters_IST[i_match]->ProjectionY(HistName.c_str());
 
-    HistName = Form("h_mTrackClusters_FST_SF%d",i_match);
+    HistName = Form("h_mTrackClustersTriLayer_FST_SF%d",i_match);
     h_mTrackClusters_FST[i_match] = (TH2F*)File_InPut->Get(HistName.c_str());
-    h_mTrackClusters_FST[i_match]->GetXaxis()->SetRangeUser(rMinFst,rMaxFst);
-    h_mTrackClusters_FST[i_match]->GetYaxis()->SetRangeUser(phiMinFst,phiMaxFst);
+    // h_mTrackClusters_FST[i_match]->GetXaxis()->SetRangeUser(rMinFst,rMaxFst);
+    // h_mTrackClusters_FST[i_match]->GetYaxis()->SetRangeUser(phiMinFst,phiMaxFst);
     h_mTrackClusters_FST[i_match]->Sumw2();
-    HistName = Form("h_mClustersR_FST_SF%d",i_match);
+    HistName = Form("h_mClustersTriLayerR_FST_SF%d",i_match);
     h_mClustersR_FST[i_match] = (TH1F*)h_mTrackClusters_FST[i_match]->ProjectionX(HistName.c_str());
-    HistName = Form("h_mClustersPhi_FST_SF%d",i_match);
+    HistName = Form("h_mClustersTriLayerPhi_FST_SF%d",i_match);
     h_mClustersPhi_FST[i_match] = (TH1F*)h_mTrackClusters_FST[i_match]->ProjectionY(HistName.c_str());
   }
 
@@ -82,8 +82,8 @@ void calTrackClusterEfficiency()
   }
 
   string outputname;
-  if(isSavePed) outputname = Form("./figures/Efficiency_TrackCluster_%s_withPed.pdf",hv.c_str());
-  if(!isSavePed) outputname = Form("./figures/Efficiency_TrackCluster_%s_woPed.pdf",hv.c_str());
+  if(isSavePed) outputname = Form("./figures/Efficiency_TrackClusterTriLayer_%s_withPed.pdf",hv.c_str());
+  if(!isSavePed) outputname = Form("./figures/Efficiency_TrackClusterTriLayer_%s_woPed.pdf",hv.c_str());
   TCanvas *c_play = new TCanvas("c_play","c_play",10,10,900,900);
   c_play->Divide(3,3);
   for(int i_pad = 0; i_pad < 9; ++i_pad)
@@ -95,8 +95,8 @@ void calTrackClusterEfficiency()
   }
 
   string output_start;
-  if(isSavePed) output_start = Form("./figures/Efficiency_TrackCluster_%s_withPed.pdf[",hv.c_str());
-  if(!isSavePed) output_start = Form("./figures/Efficiency_TrackCluster_%s_woPed.pdf[",hv.c_str());
+  if(isSavePed) output_start = Form("./figures/Efficiency_TrackClusterTriLayer_%s_withPed.pdf[",hv.c_str());
+  if(!isSavePed) output_start = Form("./figures/Efficiency_TrackClusterTriLayer_%s_woPed.pdf[",hv.c_str());
   c_play->Print(output_start.c_str()); // open pdf file
 
   for(int i_match = 0; i_match < 4; ++i_match)
@@ -179,7 +179,7 @@ void calTrackClusterEfficiency()
   }
 
   string output_stop;
-  if(isSavePed) output_stop = Form("./figures/Efficiency_TrackCluster_%s_withPed.pdf]",hv.c_str());
-  if(!isSavePed) output_stop = Form("./figures/Efficiency_TrackCluster_%s_woPed.pdf]",hv.c_str());
+  if(isSavePed) output_stop = Form("./figures/Efficiency_TrackClusterTriLayer_%s_withPed.pdf]",hv.c_str());
+  if(!isSavePed) output_stop = Form("./figures/Efficiency_TrackClusterTriLayer_%s_woPed.pdf]",hv.c_str());
   c_play->Print(output_stop.c_str()); // open pdf file
 }

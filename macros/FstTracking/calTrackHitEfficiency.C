@@ -14,10 +14,15 @@ void calTrackHitEfficiency()
 {
   // bool isSavePed = true;
   bool isSavePed = false;
-  std::string hv = "HV140";
+  std::string hv = "HV140V";
   std::string inputfile;
   if(isSavePed) inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstTracking_" + hv + "_withPed.root";
   if(!isSavePed) inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstTracking_" + hv + "_woPed.root";
+
+  const double rMaxFst = FST::rOuter + 4.0*FST::pitchR;
+  const double rMinFst = FST::rOuter;
+  const double phiMaxFst = 64.0*FST::pitchPhi;
+  const double phiMinFst = 0.0;
 
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TH2F *h_mTrackHits_IST[4];
@@ -32,6 +37,8 @@ void calTrackHitEfficiency()
     string HistName;
     HistName = Form("h_mTrackHits_IST_SF%d",i_match);
     h_mTrackHits_IST[i_match] = (TH2F*)File_InPut->Get(HistName.c_str());
+    // h_mTrackHits_IST[i_match]->GetXaxis()->SetRangeUser(rMinFst,rMaxFst);
+    // h_mTrackHits_IST[i_match]->GetYaxis()->SetRangeUser(phiMinFst,phiMaxFst);
     h_mTrackHits_IST[i_match]->Sumw2();
     HistName = Form("h_mHitsR_IST_SF%d",i_match);
     h_mHitsR_IST[i_match] = (TH1F*)h_mTrackHits_IST[i_match]->ProjectionX(HistName.c_str());
@@ -40,6 +47,8 @@ void calTrackHitEfficiency()
 
     HistName = Form("h_mTrackHits_FST_SF%d",i_match);
     h_mTrackHits_FST[i_match] = (TH2F*)File_InPut->Get(HistName.c_str());
+    // h_mTrackHits_FST[i_match]->GetXaxis()->SetRangeUser(rMinFst,rMaxFst);
+    // h_mTrackHits_FST[i_match]->GetYaxis()->SetRangeUser(phiMinFst,phiMaxFst);
     h_mTrackHits_FST[i_match]->Sumw2();
     HistName = Form("h_mHitsR_FST_SF%d",i_match);
     h_mHitsR_FST[i_match] = (TH1F*)h_mTrackHits_FST[i_match]->ProjectionX(HistName.c_str());
@@ -71,11 +80,6 @@ void calTrackHitEfficiency()
     h_mEffPhi[i_match]->Reset();
     h_mEffPhi[i_match]->Divide(h_mHitsPhi_FST[i_match],h_mHitsPhi_IST[i_match],1,1,"B");
   }
-
-  const double rMaxFst = FST::rOuter + 4.0*FST::pitchR;
-  const double rMinFst = FST::rOuter;
-  const double phiMaxFst = 64.0*FST::pitchPhi;
-  const double phiMinFst = 0.0;
 
   string outputname;
   if(isSavePed) outputname = Form("./figures/Efficiency_TrackHit_%s_withPed.pdf",hv.c_str());
@@ -146,6 +150,7 @@ void calTrackHitEfficiency()
     PlotLine(phiMaxFst, phiMaxFst, 0.5, h_mHitsPhi_FST[i_match]->GetMaximum(), 1, 2, 2);
 
     c_play->cd(7);
+    h_mEfficiency[i_match]->SetStats(0);
     h_mEfficiency[i_match]->GetXaxis()->SetTitle("r_{proj} (mm)");
     h_mEfficiency[i_match]->GetYaxis()->SetTitle("phi_{proj} (rad)");
     h_mEfficiency[i_match]->Draw("colz");

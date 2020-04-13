@@ -10,16 +10,16 @@ int doFstQAStudy()
 
   FstQAStudy *fst = new FstQAStudy();
 
-  bool isSavePed = true;
-  // bool isSavePed = false;
+  // bool isSavePed = true;
+  bool isSavePed = false;
   std::string hv = "HV140V";
   std::string inputlist;
-  if(isSavePed) inputlist  = "/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/list/FST/FstQAStudy_" + hv + "_withPed_2Sigma.list";
+  if(isSavePed) inputlist  = "/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/list/FST/FstQAStudy_" + hv + "_withPed_3Sigma.list";
   if(!isSavePed) inputlist  = "/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/list/FST/FstQAStudy_" + hv + "_woPed.list";
   cout << "input list set to: " << inputlist.c_str() << endl;
 
   std::string outputfile;
-  if(isSavePed) outputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_" + hv + "_withPed_2Sigma.root";
+  if(isSavePed) outputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_" + hv + "_withPed_3Sigma.root";
   if(!isSavePed) outputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_" + hv + "_woPed.root";
   cout << "output file set to: " << outputfile.c_str() << endl;
 

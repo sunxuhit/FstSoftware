@@ -15,7 +15,7 @@ void plotTrackResidual()
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
   gStyle->SetStatW(0.15); gStyle->SetStatH(0.25);
 
-  string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstTracking_HV140.root";
+  string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstTracking_HV140V_woPed.root";
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TH1F *h_mTrackXRes_Hits = (TH1F*)File_InPut->Get("h_mTrackXRes_Hits");
   TH1F *h_mTrackYRes_Hits = (TH1F*)File_InPut->Get("h_mTrackYRes_Hits");
@@ -27,9 +27,14 @@ void plotTrackResidual()
   TH1F *h_mTrackRRes_Clusters = (TH1F*)File_InPut->Get("h_mTrackRRes_Clusters");
   TH1F *h_mTrackPhiRes_Clusters = (TH1F*)File_InPut->Get("h_mTrackPhiRes_Clusters");
 
-  TCanvas *c_play = new TCanvas("c_play","c_play",10,10,1600,800);
-  c_play->Divide(4,2);
-  for(int i_pad = 0; i_pad < 8; ++i_pad)
+  TH1F *h_mTrackXRes_Clusters_triLayer = (TH1F*)File_InPut->Get("h_mTrackXRes_Clusters_triLayer");
+  TH1F *h_mTrackYRes_Clusters_triLayer = (TH1F*)File_InPut->Get("h_mTrackYRes_Clusters_triLayer");
+  TH1F *h_mTrackRRes_Clusters_triLayer = (TH1F*)File_InPut->Get("h_mTrackRRes_Clusters_triLayer");
+  TH1F *h_mTrackPhiRes_Clusters_triLayer = (TH1F*)File_InPut->Get("h_mTrackPhiRes_Clusters_triLayer");
+
+  TCanvas *c_play = new TCanvas("c_play","c_play",10,10,1600,1200);
+  c_play->Divide(4,3);
+  for(int i_pad = 0; i_pad < 12; ++i_pad)
   {
     c_play->cd(i_pad+1)->SetLeftMargin(0.15);
     c_play->cd(i_pad+1)->SetBottomMargin(0.15);
@@ -111,5 +116,43 @@ void plotTrackResidual()
   h_mTrackPhiRes_Clusters->Draw();
   h_mTrackPhiRes_Clusters->Fit("gaus");
 
-  c_play->SaveAs("TrackResolution_HV140.eps");
+  // track resoluiton with Clusters triLayer
+  c_play->cd(9);
+  h_mTrackXRes_Clusters_triLayer->SetTitle("Clusters with 3 Layer: x-residual");
+  h_mTrackXRes_Clusters_triLayer->GetXaxis()->SetTitle("x-residual (mm)");
+  h_mTrackXRes_Clusters_triLayer->GetXaxis()->SetTitleSize(0.06);
+  h_mTrackXRes_Clusters_triLayer->GetYaxis()->SetTitle("No. Tracks");
+  h_mTrackXRes_Clusters_triLayer->GetYaxis()->SetTitleSize(0.06);
+  h_mTrackXRes_Clusters_triLayer->Draw();
+  h_mTrackXRes_Clusters_triLayer->Fit("gaus");
+
+  c_play->cd(10);
+  h_mTrackYRes_Clusters_triLayer->SetTitle("Clusters with 3 Layer: y-residual");
+  h_mTrackYRes_Clusters_triLayer->GetXaxis()->SetTitle("y-residual (mm)");
+  h_mTrackYRes_Clusters_triLayer->GetXaxis()->SetTitleSize(0.06);
+  h_mTrackYRes_Clusters_triLayer->GetYaxis()->SetTitle("No. Tracks");
+  h_mTrackYRes_Clusters_triLayer->GetYaxis()->SetTitleSize(0.06);
+  h_mTrackYRes_Clusters_triLayer->Draw();
+  h_mTrackYRes_Clusters_triLayer->Fit("gaus");
+
+  c_play->cd(11);
+  h_mTrackRRes_Clusters_triLayer->SetTitle("Clusters with 3 Layer: r-residual");
+  h_mTrackRRes_Clusters_triLayer->GetXaxis()->SetTitle("r-residual (mm)");
+  h_mTrackRRes_Clusters_triLayer->GetXaxis()->SetTitleSize(0.06);
+  h_mTrackRRes_Clusters_triLayer->GetYaxis()->SetTitle("No. Tracks");
+  h_mTrackRRes_Clusters_triLayer->GetYaxis()->SetTitleSize(0.06);
+  h_mTrackRRes_Clusters_triLayer->Draw();
+  h_mTrackRRes_Clusters_triLayer->Fit("gaus");
+
+  c_play->cd(12);
+  h_mTrackPhiRes_Clusters_triLayer->SetTitle("Clusters with 3 Layer: #phi-residual");
+  h_mTrackPhiRes_Clusters_triLayer->GetXaxis()->SetTitle("#phi-residual (rad)");
+  h_mTrackPhiRes_Clusters_triLayer->GetXaxis()->SetTitleSize(0.06);
+  h_mTrackPhiRes_Clusters_triLayer->GetYaxis()->SetTitle("No. Tracks");
+  h_mTrackPhiRes_Clusters_triLayer->GetYaxis()->SetTitleSize(0.06);
+  h_mTrackPhiRes_Clusters_triLayer->Draw();
+  h_mTrackPhiRes_Clusters_triLayer->Fit("gaus");
+
+
+  c_play->SaveAs("./figures/TrackResolution_HV140.eps");
 }

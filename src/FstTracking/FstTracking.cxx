@@ -37,8 +37,10 @@ int FstTracking::Init()
   bool isTracking_Hits = initTrackingQA_Hits(); // initialize tracking with Hits
   initTracking_Hits();
   initTracking_Clusters();
+  initTracking_Clusters_triLayer();
   initEfficiency_Hits();
   initEfficiency_Clusters();
+  initEfficiency_Clusters_triLayer();
 
   if(!isInPut) 
   {
@@ -108,9 +110,10 @@ int FstTracking::Make()
     }
     calResolution_Hits(mFstEvent_InPut);
     calResolution_Clusters(mFstEvent_InPut);
+    calResolution_Clusters_triLayer(mFstEvent_InPut);
     calEfficiency_Hits(mFstEvent_InPut);
     calEfficiency_Clusters(mFstEvent_InPut);
-
+    calEfficiency_Clusters_triLayer(mFstEvent_InPut);
   }
 
   cout << "processed events:  " << NumOfEvents << "/" << NumOfEvents << endl;
@@ -127,8 +130,10 @@ int FstTracking::Finish()
   writeTrackingQA_Hits();
   writeTracking_Hits();
   writeTracking_Clusters();
+  writeTracking_Clusters_triLayer();
   writeEfficiency_Hits();
   writeEfficiency_Clusters();
+  writeEfficiency_Clusters_triLayer();
 
   return 1;
 }
@@ -528,8 +533,111 @@ void FstTracking::writeTracking_Clusters()
   h_mTrackRRes_Clusters->Write();
   h_mTrackPhiRes_Clusters->Write();
 }
-
 //--------------Track Resolution with Clusters---------------------
+
+//--------------Track Resolution with Clusters TriLayer---------------------
+void FstTracking::initTracking_Clusters_triLayer()
+{
+  h_mTrackXRes_Clusters_triLayer   = new TH1F("h_mTrackXRes_Clusters_triLayer","h_mTrackXRes_Clusters_triLayer",100,-80.0,80.0);
+  h_mTrackYRes_Clusters_triLayer   = new TH1F("h_mTrackYRes_Clusters_triLayer","h_mTrackYRes_Clusters_triLayer",100,-16.0,16.0);
+  h_mTrackRRes_Clusters_triLayer   = new TH1F("h_mTrackRRes_Clusters_triLayer","h_mTrackRRes_Clusters_triLayer",100,-80.0,80.0);
+  h_mTrackPhiRes_Clusters_triLayer = new TH1F("h_mTrackPhiRes_Clusters_triLayer","h_mTrackPhiRes_Clusters_triLayer",100,-0.05,0.05);
+  h_mTrackXRes_IST2 = new TH1F("h_mTrackXRes_IST2","h_mTrackXRes_IST2",150,-9.0,9.0);
+  h_mTrackYRes_IST2 = new TH1F("h_mTrackYRes_IST2","h_mTrackYRes_IST2",150,-9.0,9.0);
+}
+
+void FstTracking::calResolution_Clusters_triLayer(FstEvent *fstEvent)
+{
+  std::vector<FstTrack *> trackClusterVec;
+  trackClusterVec.clear(); // clear the container for clusters
+  for(int i_track = 0; i_track < fstEvent->getNumTracks(); ++i_track)
+  { // get Tracks info
+    FstTrack *fstTrack = fstEvent->getTrack(i_track);
+    if(fstTrack->getTrackType() == 1) // track reconstructed with clusters
+    {
+      trackClusterVec.push_back(fstTrack);
+    }
+  }
+
+  int numOfIst2Cluster = 0;
+  std::vector<FstCluster *> fstClusterVec;
+  std::vector<FstCluster *> istClusterVec;
+  fstClusterVec.clear(); // clear the container for clusters
+  istClusterVec.clear(); // clear the container for clusters
+  for(int i_cluster = 0; i_cluster < fstEvent->getNumClusters(); ++i_cluster)
+  { // get Clusters info
+    FstCluster *fstCluster = fstEvent->getCluster(i_cluster);
+    if(fstCluster->getLayer() == 0)
+    {
+      fstClusterVec.push_back(fstCluster);
+    }
+    if(fstCluster->getLayer() == 2)
+    {
+      numOfIst2Cluster++;
+      istClusterVec.push_back(fstCluster);
+    }
+  }
+  int numOfFstClusters = fstEvent->getNumFstClusters();
+
+  if(numOfFstClusters > 0 && numOfIst2Cluster > 0) // at least one cluster from FST & IST2
+  {
+    // fill residual histograms
+    for(int i_track = 0; i_track < trackClusterVec.size(); ++i_track)
+    {
+      TVector3 proj_fst = trackClusterVec[i_track]->getProjection(0);
+      double x0_proj    = proj_fst.X();
+      double y0_proj    = proj_fst.Y();
+      double r_proj     = proj_fst.Perp();
+      double phi_proj   = proj_fst.Phi();
+
+      for(int i_ist2 = 0; i_ist2 < numOfIst2Cluster; ++i_ist2)
+      {
+	TVector3 proj_ist2 = trackClusterVec[i_track]->getProjection(2);
+	double x2_proj = proj_ist2.X();
+	double y2_proj = proj_ist2.Y();
+
+	double x2_ist = istClusterVec[i_ist2]->getMeanX(); // x for ist
+	double y2_ist = istClusterVec[i_ist2]->getMeanY(); // y for ist
+	double x2_corr = x2_ist*TMath::Cos(FST::phi_rot) + y2_ist*TMath::Sin(FST::phi_rot) + FST::x_shift;
+	double y2_corr = y2_ist*TMath::Cos(FST::phi_rot) - x2_ist*TMath::Sin(FST::phi_rot) + FST::y_shift;
+	h_mTrackXRes_IST2->Fill(x2_corr-x2_proj);
+	h_mTrackYRes_IST2->Fill(y2_corr-y2_proj);
+
+	if( abs(x2_corr-x2_proj) < 3.0*FST::pitchColumn && abs(y2_corr-y2_proj) < 3.0*FST::pitchRow)
+	{ // IST2 matching cut
+	  for(int i_cluster = 0; i_cluster < numOfFstClusters; ++i_cluster)
+	  {
+	    double r_fst = fstClusterVec[i_cluster]->getMeanX(); // r for fst
+	    double phi_fst = fstClusterVec[i_cluster]->getMeanY(); // phi for fst
+	    double x0_fst = r_fst*TMath::Cos(phi_fst);
+	    double y0_fst = r_fst*TMath::Sin(phi_fst);
+
+	    double xResidual = x0_fst-x0_proj;
+	    double yResidual = y0_fst-y0_proj;
+	    h_mTrackXRes_Clusters_triLayer->Fill(xResidual);
+	    h_mTrackYRes_Clusters_triLayer->Fill(yResidual);
+
+	    double rResidual = r_fst-r_proj;
+	    double phiResidual = phi_fst-phi_proj;
+	    h_mTrackRRes_Clusters_triLayer->Fill(rResidual);
+	    h_mTrackPhiRes_Clusters_triLayer->Fill(phiResidual);
+	  }
+	}
+      }
+    }
+  }
+}
+
+void FstTracking::writeTracking_Clusters_triLayer()
+{
+  h_mTrackXRes_Clusters_triLayer->Write();
+  h_mTrackYRes_Clusters_triLayer->Write();
+  h_mTrackRRes_Clusters_triLayer->Write();
+  h_mTrackPhiRes_Clusters_triLayer->Write();
+  h_mTrackXRes_IST2->Write();
+  h_mTrackYRes_IST2->Write();
+}
+//--------------Track Resolution with Clusters TriLayer---------------------
 
 //--------------Efficiency with Hits---------------------
 void FstTracking::initEfficiency_Hits()
@@ -721,3 +829,122 @@ void FstTracking::writeEfficiency_Clusters()
   }
 }
 //--------------Efficiency with Clusters---------------------
+
+//--------------Efficiency with Clusters TriLayer---------------------
+void FstTracking::initEfficiency_Clusters_triLayer()
+{
+  const double rMax = FST::rOuter + 5.0*FST::pitchR;
+  const double rMin = FST::rOuter - 1.0*FST::pitchR;
+  const double phiMax = 64.0*FST::pitchPhi;
+  const double phiMin = -64.0*FST::pitchPhi;
+
+  for(int i_match = 0; i_match < 4; ++i_match)
+  {
+    string HistName;
+    HistName = Form("h_mTrackClustersTriLayer_IST_SF%d",i_match);
+    h_mTrackClustersTriLayer_IST[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),40,rMin,rMax,128,phiMin,phiMax);
+    HistName = Form("h_mTrackClustersTriLayer_FST_SF%d",i_match);
+    h_mTrackClustersTriLayer_FST[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),40,rMin,rMax,128,phiMin,phiMax);
+  }
+}
+
+void FstTracking::calEfficiency_Clusters_triLayer(FstEvent *fstEvent)
+{
+  const double rMax = FST::rOuter + 5.0*FST::pitchR;
+  const double rMin = FST::rOuter - 1.0*FST::pitchR;
+  const double phiMax = 64.0*FST::pitchPhi;
+  const double phiMin = -64.0*FST::pitchPhi;
+
+  std::vector<FstTrack *> trackClusterVec;
+  trackClusterVec.clear(); // clear the container for clusters
+  for(int i_track = 0; i_track < fstEvent->getNumTracks(); ++i_track)
+  { // get Tracks info
+    FstTrack *fstTrack = fstEvent->getTrack(i_track);
+    if(fstTrack->getTrackType() == 1) // track reconstructed with clusters
+    {
+      trackClusterVec.push_back(fstTrack);
+    }
+  }
+
+  int numOfIst2Cluster = 0;
+  std::vector<FstCluster *> fstClusterVec;
+  std::vector<FstCluster *> istClusterVec;
+  fstClusterVec.clear(); // clear the container for clusters
+  istClusterVec.clear(); // clear the container for clusters
+  for(int i_cluster = 0; i_cluster < fstEvent->getNumClusters(); ++i_cluster)
+  { // get Clusters info
+    FstCluster *fstCluster = fstEvent->getCluster(i_cluster);
+    if(fstCluster->getLayer() == 0)
+    {
+      fstClusterVec.push_back(fstCluster);
+    }
+    if(fstCluster->getLayer() == 2)
+    {
+      numOfIst2Cluster++;
+      istClusterVec.push_back(fstCluster);
+    }
+  }
+  int numOfFstClusters = fstEvent->getNumFstClusters();
+
+
+  // fill Efficiency Histograms
+  for(int i_track = 0; i_track < trackClusterVec.size(); ++i_track)
+  {
+    TVector3 proj_fst = trackClusterVec[i_track]->getProjection(0);
+    double r_proj = proj_fst.Perp();
+    double phi_proj = proj_fst.Phi();
+
+    if(r_proj >= rMin && r_proj <= rMax && phi_proj >= phiMin && phi_proj <= phiMax && numOfIst2Cluster > 0)
+    { // used for efficiency only if the projected position is within FST acceptance
+      for(int i_ist2 = 0; i_ist2 < numOfIst2Cluster; ++i_ist2)
+      {
+	TVector3 proj_ist2 = trackClusterVec[i_track]->getProjection(2);
+	double x2_proj = proj_ist2.X();
+	double y2_proj = proj_ist2.Y();
+
+	double x2_ist = istClusterVec[i_ist2]->getMeanX(); // x for ist
+	double y2_ist = istClusterVec[i_ist2]->getMeanY(); // y for ist
+	double x2_corr = x2_ist*TMath::Cos(FST::phi_rot) + y2_ist*TMath::Sin(FST::phi_rot) + FST::x_shift;
+	double y2_corr = y2_ist*TMath::Cos(FST::phi_rot) - x2_ist*TMath::Sin(FST::phi_rot) + FST::y_shift;
+
+	if( abs(x2_corr-x2_proj) < 3.0*FST::pitchColumn && abs(y2_corr-y2_proj) < 3.0*FST::pitchRow)
+	{ // IST2 matching cut
+	  for(int i_match = 0; i_match < 4; ++i_match)
+	  {
+	    if(numOfFstClusters > 0)
+	    {
+	      for(int i_cluster = 0; i_cluster < numOfFstClusters; ++i_cluster)
+	      { // loop over all possible hits
+		double r_fst = fstClusterVec[i_cluster]->getMeanX();
+		double phi_fst = fstClusterVec[i_cluster]->getMeanY();
+		if(i_match == 0)
+		{
+		  h_mTrackClustersTriLayer_FST[i_match]->Fill(r_proj,phi_proj);
+		}
+		if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= (i_match*10+0.5)*FST::pitchPhi)
+		{
+		  h_mTrackClustersTriLayer_FST[i_match]->Fill(r_proj,phi_proj);
+		}
+		h_mTrackClustersTriLayer_IST[i_match]->Fill(r_proj,phi_proj);
+	      }
+	    }
+	    else
+	    {
+	      h_mTrackClustersTriLayer_IST[i_match]->Fill(r_proj,phi_proj);
+	    }
+	  }
+	}
+      }
+    }
+  }
+}
+
+void FstTracking::writeEfficiency_Clusters_triLayer()
+{
+  for(int i_match = 0; i_match < 4; ++i_match)
+  {
+    h_mTrackClustersTriLayer_IST[i_match]->Write();
+    h_mTrackClustersTriLayer_FST[i_match]->Write();
+  }
+}
+//--------------Efficiency with Clusters TriLayer---------------------

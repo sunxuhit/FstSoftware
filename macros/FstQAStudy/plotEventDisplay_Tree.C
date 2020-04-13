@@ -19,6 +19,7 @@ void plotEventDisplay_Tree()
 {
   // gStyle->SetPalette(kRainBow);
   gStyle->SetPalette(kBlackBody);
+  gStyle->SetPaintTextFormat("1.1f");
 
   const double rMax = FST::rOuter + 5.0*FST::pitchR;
   const double rMin = FST::rOuter - 1.0*FST::pitchR;
@@ -40,6 +41,8 @@ void plotEventDisplay_Tree()
   int mNumOfHitTracks;
   int mNumOfClusterTracks;
   TH2F *h_mFstRawHitsDisplay = new TH2F("h_mFstRawHitsDisplay","h_mFstRawHitsDisplay",6,rMin,rMax,FST::numPhiSeg*2,phiMin,phiMax);
+  TH2F *h_mFstRawPedsDisplay = new TH2F("h_mFstRawPedsDisplay","h_mFstRawPedsDisplay",6,rMin,rMax,FST::numPhiSeg*2,phiMin,phiMax);
+  TH2F *h_mFstMaxTbDisplay = new TH2F("h_mFstMaxTbDisplay","h_mFstMaxTbDisplay",6,rMin,rMax,FST::numPhiSeg*2,phiMin,phiMax);
   TH2F *h_mFstClustersDisplay = new TH2F("h_mFstClustersDisplay","h_mFstClustersDisplay",60,rMin,rMax,FST::numPhiSeg*4,phiMin,phiMax);
   TH2F *h_mHitTracksDisplay = new TH2F("h_mHitTracksDisplay","h_mHitTracksDisplay",60,rMin,rMax,FST::numPhiSeg*4,phiMin,phiMax);
   TH2F *h_mClusterTracksDisplay = new TH2F("h_mClusterTracksDisplay","h_mClusterTracksDisplay",60,rMin,rMax,FST::numPhiSeg*4,phiMin,phiMax);
@@ -48,8 +51,9 @@ void plotEventDisplay_Tree()
   TGraph *g_mClusterTracksDisplay = new TGraph();
 
 
-  string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140_withPed.root";
-  // string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140_woPed.root";
+  // string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140V_withPed_3Sigma.root";
+  // string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140V_withPed_2Sigma.root";
+  string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140V_woPed.root";
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TTree *mTree_EventDisplay = (TTree*)File_InPut->Get("mTree_EventDisplay");
   mTree_EventDisplay->SetBranchAddress("mEventId",&mEventId);
@@ -58,6 +62,8 @@ void plotEventDisplay_Tree()
   mTree_EventDisplay->SetBranchAddress("mNumOfIst2RawHits",&mNumOfIst2RawHits);
   mTree_EventDisplay->SetBranchAddress("mNumOfIst3RawHits",&mNumOfIst3RawHits);
   mTree_EventDisplay->SetBranchAddress("h_mFstRawHitsDisplay",&h_mFstRawHitsDisplay);
+  mTree_EventDisplay->SetBranchAddress("h_mFstRawPedsDisplay",&h_mFstRawPedsDisplay);
+  mTree_EventDisplay->SetBranchAddress("h_mFstMaxTbDisplay",&h_mFstMaxTbDisplay);
 
   mTree_EventDisplay->SetBranchAddress("mNumOfFstClusters",&mNumOfFstClusters);
   mTree_EventDisplay->SetBranchAddress("mNumOfIst1Clusters",&mNumOfIst1Clusters);
@@ -77,7 +83,7 @@ void plotEventDisplay_Tree()
   long NumOfEvents = (long)mTree_EventDisplay->GetEntries();
   cout << "total number of events: " << NumOfEvents << endl;
   // if(NumOfEvents > 1000) NumOfEvents = 1000;
-  // NumOfEvents = 500;
+  NumOfEvents = 1000;
   mTree_EventDisplay->GetEntry(0);
 
   const double rMaxFst = FST::rOuter + 4.0*FST::pitchR;
@@ -101,8 +107,7 @@ void plotEventDisplay_Tree()
   string output_start = "./figures/EventDisplay_QA.pdf[";
   c_EventDisplay->Print(output_start.c_str()); // open pdf file
 
-  // for(int i_event = 0; i_event < NumOfEvents; ++i_event)
-  for(int i_event = 0; i_event < 1000; ++i_event)
+  for(int i_event = 0; i_event < NumOfEvents; ++i_event)
   {
     if(i_event%1000==0) cout << "processing events:  " << i_event << "/" << NumOfEvents << endl;
     mTree_EventDisplay->GetEntry(i_event);
@@ -135,6 +140,14 @@ void plotEventDisplay_Tree()
       h_mFstRawHitsDisplay->Draw("colz");
       h_mFstRawHitsDisplay->SetBarOffset(1.5);
       h_mFstRawHitsDisplay->Draw("TEXT Same");
+
+      h_mFstRawPedsDisplay->SetMarkerColor(2);
+      h_mFstRawPedsDisplay->SetBarOffset(-1.5);
+      h_mFstRawPedsDisplay->Draw("TEXT Same");
+
+      h_mFstMaxTbDisplay->SetMarkerColor(4);
+      h_mFstMaxTbDisplay->SetBarOffset(-1.5);
+      h_mFstMaxTbDisplay->Draw("TEXT Same");
       // h_mHitTracksDisplay->SetMarkerStyle(5);
       // h_mHitTracksDisplay->SetMarkerColor(1);
       // h_mHitTracksDisplay->SetMarkerSize(1.0);

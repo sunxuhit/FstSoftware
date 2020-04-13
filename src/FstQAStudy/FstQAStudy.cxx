@@ -549,6 +549,8 @@ void FstQAStudy::initEventDisplay_TrackClusters()
   const double phiMin = -128.0*FST::pitchPhi;
 
   h_mFstRawHitsDisplay = new TH2F("h_mFstRawHitsDisplay","h_mFstRawHitsDisplay",6,rMin,rMax,FST::numPhiSeg*2,phiMin,phiMax);
+  h_mFstRawPedsDisplay = new TH2F("h_mFstRawPedsDisplay","h_mFstRawPedsDisplay",6,rMin,rMax,FST::numPhiSeg*2,phiMin,phiMax);
+  h_mFstMaxTbDisplay   = new TH2F("h_mFstMaxTbDisplay","h_mFstMaxTbDisplay",6,rMin,rMax,FST::numPhiSeg*2,phiMin,phiMax);
   h_mFstClustersDisplay = new TH2F("h_mFstClustersDisplay","h_mFstClustersDisplay",60,rMin,rMax,FST::numPhiSeg*4,phiMin,phiMax);
   h_mHitTracksDisplay = new TH2F("h_mHitTracksDisplay","h_mHitTracksDisplay",60,rMin,rMax,FST::numPhiSeg*4,phiMin,phiMax);
   h_mClusterTracksDisplay = new TH2F("h_mClusterTracksDisplay","h_mClusterTracksDisplay",60,rMin,rMax,FST::numPhiSeg*4,phiMin,phiMax);
@@ -567,6 +569,8 @@ void FstQAStudy::initEventDisplay_TrackClusters()
   mTree_EventDisplay->Branch("mNumOfIst2RawHits",&mNumOfIst2RawHits,"mNumOfIst2RawHits/I");
   mTree_EventDisplay->Branch("mNumOfIst3RawHits",&mNumOfIst3RawHits,"mNumOfIst3RawHits/I");
   mTree_EventDisplay->Branch("h_mFstRawHitsDisplay","TH2F",&h_mFstRawHitsDisplay);
+  mTree_EventDisplay->Branch("h_mFstRawPedsDisplay","TH2F",&h_mFstRawPedsDisplay);
+  mTree_EventDisplay->Branch("h_mFstMaxTbDisplay","TH2F",&h_mFstMaxTbDisplay);
 
   mTree_EventDisplay->Branch("mNumOfFstClusters",&mNumOfFstClusters,"mNumOfFstClusters/I");
   mTree_EventDisplay->Branch("mNumOfIst1Clusters",&mNumOfIst1Clusters,"mNumOfIst1Clusters/I");
@@ -603,6 +607,8 @@ void FstQAStudy::clearEventDisplay_TrackClusters()
   mNumOfClusterTracks = 0;
 
   h_mFstRawHitsDisplay->Reset();
+  h_mFstRawPedsDisplay->Reset();
+  h_mFstMaxTbDisplay->Reset();
   h_mFstClustersDisplay->Reset();
   h_mHitTracksDisplay->Reset();
   h_mClusterTracksDisplay->Reset();
@@ -628,8 +634,11 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
       double r_fst = fstRawHit->getPosX(); // r for fst
       double phi_fst = fstRawHit->getPosY(); // phi for fst
       int maxTb = fstRawHit->getMaxTb();
-      double adc = fstRawHit->getCharge(maxTb);
+      double adc = fstRawHit->getCharge(maxTb); // adc - pedMean
+      double ped = fstRawHit->getPedStdDev(maxTb); // pedStdDev
       h_mFstRawHitsDisplay->Fill(r_fst,phi_fst,adc);
+      h_mFstRawPedsDisplay->Fill(r_fst,phi_fst,ped);
+      h_mFstMaxTbDisplay->Fill(r_fst,phi_fst,maxTb);
     }
     if(fstRawHit->getLayer() == 1) mNumOfIst1RawHits++;
     if(fstRawHit->getLayer() == 2) mNumOfIst2RawHits++;
