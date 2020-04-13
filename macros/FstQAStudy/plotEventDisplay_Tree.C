@@ -52,8 +52,8 @@ void plotEventDisplay_Tree()
 
 
   // string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140V_withPed_3Sigma.root";
-  // string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140V_withPed_2Sigma.root";
-  string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140V_woPed.root";
+  string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140V_withPed_2Sigma.root";
+  // string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140V_woPed.root";
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TTree *mTree_EventDisplay = (TTree*)File_InPut->Get("mTree_EventDisplay");
   mTree_EventDisplay->SetBranchAddress("mEventId",&mEventId);
@@ -83,7 +83,7 @@ void plotEventDisplay_Tree()
   long NumOfEvents = (long)mTree_EventDisplay->GetEntries();
   cout << "total number of events: " << NumOfEvents << endl;
   // if(NumOfEvents > 1000) NumOfEvents = 1000;
-  NumOfEvents = 1000;
+  // NumOfEvents = 1000;
   mTree_EventDisplay->GetEntry(0);
 
   const double rMaxFst = FST::rOuter + 4.0*FST::pitchR;
@@ -139,6 +139,7 @@ void plotEventDisplay_Tree()
       h_mFstRawHitsDisplay->GetZaxis()->SetRangeUser(1.0,2000.0);
       h_mFstRawHitsDisplay->Draw("colz");
       h_mFstRawHitsDisplay->SetBarOffset(1.5);
+      h_mFstRawHitsDisplay->SetMarkerColor(1);
       h_mFstRawHitsDisplay->Draw("TEXT Same");
 
       h_mFstRawPedsDisplay->SetMarkerColor(2);
@@ -146,7 +147,7 @@ void plotEventDisplay_Tree()
       h_mFstRawPedsDisplay->Draw("TEXT Same");
 
       h_mFstMaxTbDisplay->SetMarkerColor(4);
-      h_mFstMaxTbDisplay->SetBarOffset(-1.5);
+      h_mFstMaxTbDisplay->SetBarOffset(-3.5);
       h_mFstMaxTbDisplay->Draw("TEXT Same");
       // h_mHitTracksDisplay->SetMarkerStyle(5);
       // h_mHitTracksDisplay->SetMarkerColor(1);

@@ -26,8 +26,8 @@ namespace FST
   // const double x_shift = 145.85319; // mm from Zhenyu 137.85319 + 8
   // const double y_shift = -19.153708; // mm from Zhenyu 
   const double phi_rot = 0.0443783; 
-  // const double x_shift = 135.661; // +8
-  const double x_shift = 143.661; // +8
+  // const double x_shift = 135.661;
+  const double x_shift = 141.661; // +6
   const double y_shift = -19.5315;
   // const double phi_rot_ist1 = 0.0487786; // rad
   // const double phi_rot_ist3 = 0.0473428; // rad
