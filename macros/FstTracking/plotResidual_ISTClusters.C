@@ -23,6 +23,16 @@ int plotResidual_ISTClusters()
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
   gStyle->SetStatW(0.15); gStyle->SetStatH(0.25);
 
+  const double phi_rot_ist1 = -0.00113551;
+  const double x1_shift = 0.530444;
+  const double y1_shift = 1.17133;
+  const double phi_rot_ist3 = -0.00379431;
+  const double x3_shift = 0.45811;
+  const double y3_shift = 1.0116;
+
+  const double xMax = 24.0*FST::pitchColumn; // center of 23 column + 0.5*pitchColumn
+  const double xMin = 20.0*FST::pitchColumn; // center of 20 column - 0.5*pitchColumn
+
   std::string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstClusters_HV140V_woPed.root";
   std::cout << "inputfile = " << inputfile.c_str() << std::endl;
 
@@ -35,16 +45,6 @@ int plotResidual_ISTClusters()
   TH1F *h_mYResidual_Clusters_Before = new TH1F("h_mYResidual_Clusters_Before","h_mYResidual_Clusters_Before",100,-5.0,5.0);
   TH1F *h_mXResidual_Clusters = new TH1F("h_mXResidual_Clusters","h_mXResidual_Clusters",15,-20.0,20.0);
   TH1F *h_mYResidual_Clusters = new TH1F("h_mYResidual_Clusters","h_mYResidual_Clusters",100,-5.0,5.0);
-
-  const double phi_rot_ist1 = -0.00113551;
-  const double x1_shift = 0.530444;
-  const double y1_shift = 1.17133;
-  const double phi_rot_ist3 = -0.00379431;
-  const double x3_shift = 0.45811;
-  const double y3_shift = 1.0116;
-
-  const double xMax = 24.0*FST::pitchColumn; // center of 23 column + 0.5*pitchColumn
-  const double xMin = 20.0*FST::pitchColumn; // center of 20 column - 0.5*pitchColumn
 
   long NumOfEvents = (long)mTree_FstEvent->GetEntries();
   cout << "total number of events: " << NumOfEvents << endl;
