@@ -23,7 +23,7 @@ int plotResidual_ISTClusters()
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
   gStyle->SetStatW(0.15); gStyle->SetStatH(0.25);
 
-  std::string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstClusters_HV140V_woPed.root";
+  std::string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstClusters_HV140V_woPed.root";
   std::cout << "inputfile = " << inputfile.c_str() << std::endl;
 
   TFile *mFile_InPut = TFile::Open(inputfile.c_str());
@@ -31,10 +31,20 @@ int plotResidual_ISTClusters()
   FstEvent *mFstEvent = new FstEvent();
   mTree_FstEvent->SetBranchAddress("FstEvent",&mFstEvent);
 
-  TH1F *h_mXResidual_Clusters_Before = new TH1F("h_mXResidual_Clusters_Before","h_mXResidual_Clusters_Before",100,-9.0,9.0);
-  TH1F *h_mYResidual_Clusters_Before = new TH1F("h_mYResidual_Clusters_Before","h_mYResidual_Clusters_Before",100,-9.0,9.0);
-  TH1F *h_mXResidual_Clusters = new TH1F("h_mXResidual_Clusters","h_mXResidual_Clusters",100,-9.0,9.0);
+  TH1F *h_mXResidual_Clusters_Before = new TH1F("h_mXResidual_Clusters_Before","h_mXResidual_Clusters_Before",15,-20.0,20.0);
+  TH1F *h_mYResidual_Clusters_Before = new TH1F("h_mYResidual_Clusters_Before","h_mYResidual_Clusters_Before",100,-5.0,5.0);
+  TH1F *h_mXResidual_Clusters = new TH1F("h_mXResidual_Clusters","h_mXResidual_Clusters",15,-20.0,20.0);
   TH1F *h_mYResidual_Clusters = new TH1F("h_mYResidual_Clusters","h_mYResidual_Clusters",100,-5.0,5.0);
+
+  const double phi_rot_ist1 = -0.00113551;
+  const double x1_shift = 0.530444;
+  const double y1_shift = 1.17133;
+  const double phi_rot_ist3 = -0.00379431;
+  const double x3_shift = 0.45811;
+  const double y3_shift = 1.0116;
+
+  const double xMax = 24.0*FST::pitchColumn; // center of 23 column + 0.5*pitchColumn
+  const double xMin = 20.0*FST::pitchColumn; // center of 20 column - 0.5*pitchColumn
 
   long NumOfEvents = (long)mTree_FstEvent->GetEntries();
   cout << "total number of events: " << NumOfEvents << endl;
@@ -71,20 +81,6 @@ int plotResidual_ISTClusters()
       }
     }
 
-    // const double phi_rot_ist1 = -0.00180105; 
-    // const double phi_rot_ist3 = -0.00895752; 
-    // const double x_shift = 0.774845; 
-    // const double y_shift = 0.666455;
-    // const double phi_rot_ist1 = -0.00129711;
-    // const double phi_rot_ist3 = -0.00948215;
-    // const double x_shift = 0.768709;
-    // const double y_shift = 0.660627;
-    const double phi_rot_ist1 = 0.00100579;
-    const double phi_rot_ist3 = -0.00844301;
-    const double x_shift = 0.764125;
-    const double y_shift = 0.872195;
-    const double xMax         = 23.0*FST::pitchColumn + 0.5*FST::pitchColumn;
-    const double xMin         = 20.0*FST::pitchColumn + 0.5*FST::pitchColumn;
     if(clusterVec_ist2.size() > 0) // IST2 has at least one hit
     {
       for(int i_ist1 = 0; i_ist1 < clusterVec_ist1.size(); ++i_ist1)
@@ -92,20 +88,24 @@ int plotResidual_ISTClusters()
 	double x1_ist = clusterVec_ist1[i_ist1]->getMeanX();
 	double y1_ist = clusterVec_ist1[i_ist1]->getMeanY();
 	const double z1_ist = FST::pitchLayer12 + FST::pitchLayer23;
+	double col1 = clusterVec_ist1[i_ist1]->getMeanColumn();
+	double row1 = clusterVec_ist1[i_ist1]->getMeanRow();
 
 	// double x1_corr = x1_ist*TMath::Cos(phi_rot) + y1_ist*TMath::Sin(phi_rot) + x_shift;
 	// double y1_corr = y1_ist*TMath::Cos(phi_rot) - x1_ist*TMath::Sin(phi_rot) + y_shift;
-	double x1_corr = x1_ist*TMath::Cos(phi_rot_ist1) + y1_ist*TMath::Sin(phi_rot_ist1) + x_shift;
-	double y1_corr = y1_ist*TMath::Cos(phi_rot_ist1) - x1_ist*TMath::Sin(phi_rot_ist1) + y_shift;
+	double x1_corr = x1_ist*TMath::Cos(phi_rot_ist1) + y1_ist*TMath::Sin(phi_rot_ist1) + x1_shift;
+	double y1_corr = y1_ist*TMath::Cos(phi_rot_ist1) - x1_ist*TMath::Sin(phi_rot_ist1) + y1_shift;
 
 	for(int i_ist3 = 0; i_ist3 < clusterVec_ist3.size(); ++i_ist3)
 	{
 	  double x3_ist = clusterVec_ist3[i_ist3]->getMeanX();
 	  double y3_ist = clusterVec_ist3[i_ist3]->getMeanY();
 	  const double z3_ist = 0.0;
+	  double col3 = clusterVec_ist3[i_ist3]->getMeanColumn();
+	  double row3 = clusterVec_ist3[i_ist3]->getMeanRow();
 
-	  double x3_corr = x3_ist*TMath::Cos(phi_rot_ist3) + y3_ist*TMath::Sin(phi_rot_ist3) + x_shift;
-	  double y3_corr = y3_ist*TMath::Cos(phi_rot_ist3) - x3_ist*TMath::Sin(phi_rot_ist3) + y_shift;
+	  double x3_corr = x3_ist*TMath::Cos(phi_rot_ist3) + y3_ist*TMath::Sin(phi_rot_ist3) + x3_shift;
+	  double y3_corr = y3_ist*TMath::Cos(phi_rot_ist3) - x3_ist*TMath::Sin(phi_rot_ist3) + y3_shift;
 
 	  for(int i_ist2 = 0; i_ist2 < clusterVec_ist2.size(); ++i_ist2)
 	  {
@@ -118,12 +118,16 @@ int plotResidual_ISTClusters()
 
 	    double x2_corr = x3_corr + (x1_corr-x3_corr)*z2_ist/z1_ist;
 	    double y2_corr = y3_corr + (y1_corr-y3_corr)*z2_ist/z1_ist;
-	    if(x2_corr >= xMin && x2_corr <= xMax)
+
+	    if( abs(row3-row1) < 17 && x2_proj >= xMin && x2_proj <= xMax)
 	    {
-	      h_mXResidual_Clusters_Before->Fill(x2_ist-x2_proj);
-	      h_mYResidual_Clusters_Before->Fill(y2_ist-y2_proj);
-	      h_mXResidual_Clusters->Fill(x2_ist-x2_corr);
-	      h_mYResidual_Clusters->Fill(y2_ist-y2_corr);
+	      if( abs(x2_corr - x2_ist) < 6.0 && abs(y2_corr-y2_ist) < 0.6)
+	      {
+		h_mXResidual_Clusters_Before->Fill(x2_ist-x2_proj);
+		h_mYResidual_Clusters_Before->Fill(y2_ist-y2_proj);
+		h_mXResidual_Clusters->Fill(x2_ist-x2_corr);
+		h_mYResidual_Clusters->Fill(y2_ist-y2_corr);
+	      }
 	    }
 	  }
 	}
@@ -177,6 +181,8 @@ int plotResidual_ISTClusters()
   h_mYResidual_Clusters->GetYaxis()->SetTitleSize(0.06);
   h_mYResidual_Clusters->Draw();
   h_mYResidual_Clusters->Fit("gaus");
+
+  c_play->SaveAs("./figures/Residual_ISTClusters.eps");
 
   return 1;
 }
