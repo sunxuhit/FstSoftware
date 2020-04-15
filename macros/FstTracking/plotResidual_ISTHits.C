@@ -23,7 +23,7 @@ int plotResidual_ISTHits()
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
   gStyle->SetStatW(0.15); gStyle->SetStatH(0.25);
 
-  std::string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstClusters_HV140V_woPed.root";
+  std::string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstClusters_HV140V_woPed.root";
   std::cout << "inputfile = " << inputfile.c_str() << std::endl;
 
   TFile *mFile_InPut = TFile::Open(inputfile.c_str());
@@ -31,10 +31,27 @@ int plotResidual_ISTHits()
   FstEvent *mFstEvent = new FstEvent();
   mTree_FstEvent->SetBranchAddress("FstEvent",&mFstEvent);
 
-  TH1F *h_mXResidual_Hits_Before = new TH1F("h_mXResidual_Hits_Before","h_mXResidual_Hits_Before",100,-9.0,9.0);
-  TH1F *h_mYResidual_Hits_Before = new TH1F("h_mYResidual_Hits_Before","h_mYResidual_Hits_Before",100,-9.0,9.0);
-  TH1F *h_mXResidual_Hits = new TH1F("h_mXResidual_Hits","h_mXResidual_Hits",100,-9.0,9.0);
+  TH1F *h_mXResidual_Hits_Before = new TH1F("h_mXResidual_Hits_Before","h_mXResidual_Hits_Before",15,-20.0,20.0);
+  TH1F *h_mYResidual_Hits_Before = new TH1F("h_mYResidual_Hits_Before","h_mYResidual_Hits_Before",100,-5.0,5.0);
+  TH1F *h_mXResidual_Hits = new TH1F("h_mXResidual_Hits","h_mXResidual_Hits",15,-20.0,20.0);
   TH1F *h_mYResidual_Hits = new TH1F("h_mYResidual_Hits","h_mYResidual_Hits",100,-5.0,5.0);
+
+  // const double phi_rot_ist1 = -0.000679454;
+  // const double x1_shift = 0.531375;
+  // const double y1_shift = 1.37124;
+  // const double phi_rot_ist3 = -0.00171783;
+  // const double x3_shift = 0.458915;
+  // const double y3_shift = 1.18426;
+
+  const double phi_rot_ist1 = -0.000548312;
+  const double x1_shift = 0.497788;
+  const double y1_shift = 1.28116;
+  const double phi_rot_ist3 = -0.00290414;
+  const double x3_shift = 0.429908;
+  const double y3_shift = 1.10646;
+
+  const double xMax = 24.0*FST::pitchColumn; // center of 23 column + 0.5*pitchColumn
+  const double xMin = 20.0*FST::pitchColumn; // center of 20 column - 0.5*pitchColumn
 
   long NumOfEvents = (long)mTree_FstEvent->GetEntries();
   cout << "total number of events: " << NumOfEvents << endl;
@@ -71,19 +88,6 @@ int plotResidual_ISTHits()
       }
     }
 
-    // double phi_rot = -0.00453642;
-    // double x_shift = 0.770364;
-    // double y_shift = 0.818041;
-    // const double phi_rot_ist1 = -0.000857538;
-    // const double phi_rot_ist3 = -0.0100353;
-    // const double x_shift      = 0.787765;
-    // const double y_shift      = 0.638893;
-    const double phi_rot_ist1 = 0.000641529;
-    const double phi_rot_ist3 = -0.0073076;
-    const double x_shift = 0.745125;
-    const double y_shift = 0.930825;
-    // const double xMax         = 23.0*FST::pitchColumn + 0.5*FST::pitchColumn;
-    // const double xMin         = 20.0*FST::pitchColumn + 0.5*FST::pitchColumn;
     if(hitVec_ist2.size() > 0) // IST2 has at least one hit
     {
       for(int i_ist1 = 0; i_ist1 < hitVec_ist1.size(); ++i_ist1)
@@ -91,20 +95,24 @@ int plotResidual_ISTHits()
 	double x1_ist = hitVec_ist1[i_ist1]->getPosX();
 	double y1_ist = hitVec_ist1[i_ist1]->getPosY();
 	const double z1_ist = FST::pitchLayer12 + FST::pitchLayer23;
+	int col1 = hitVec_ist1[i_ist1]->getColumn();
+	int row1 = hitVec_ist1[i_ist1]->getRow();
 
 	// double x1_corr = x1_ist*TMath::Cos(phi_rot) + y1_ist*TMath::Sin(phi_rot) + x_shift;
 	// double y1_corr = y1_ist*TMath::Cos(phi_rot) - x1_ist*TMath::Sin(phi_rot) + y_shift;
-	double x1_corr = x1_ist*TMath::Cos(phi_rot_ist1) + y1_ist*TMath::Sin(phi_rot_ist1) + x_shift;
-	double y1_corr = y1_ist*TMath::Cos(phi_rot_ist1) - x1_ist*TMath::Sin(phi_rot_ist1) + y_shift;
+	double x1_corr = x1_ist*TMath::Cos(phi_rot_ist1) + y1_ist*TMath::Sin(phi_rot_ist1) + x1_shift;
+	double y1_corr = y1_ist*TMath::Cos(phi_rot_ist1) - x1_ist*TMath::Sin(phi_rot_ist1) + y1_shift;
 
 	for(int i_ist3 = 0; i_ist3 < hitVec_ist3.size(); ++i_ist3)
 	{
 	  double x3_ist = hitVec_ist3[i_ist3]->getPosX();
 	  double y3_ist = hitVec_ist3[i_ist3]->getPosY();
 	  const double z3_ist = 0.0;
+	  int col3 = hitVec_ist3[i_ist3]->getColumn();
+	  int row3 = hitVec_ist3[i_ist3]->getRow();
 
-	  double x3_corr = x3_ist*TMath::Cos(phi_rot_ist3) + y3_ist*TMath::Sin(phi_rot_ist3) + x_shift;
-	  double y3_corr = y3_ist*TMath::Cos(phi_rot_ist3) - x3_ist*TMath::Sin(phi_rot_ist3) + y_shift;
+	  double x3_corr = x3_ist*TMath::Cos(phi_rot_ist3) + y3_ist*TMath::Sin(phi_rot_ist3) + x3_shift;
+	  double y3_corr = y3_ist*TMath::Cos(phi_rot_ist3) - x3_ist*TMath::Sin(phi_rot_ist3) + y3_shift;
 
 	  for(int i_ist2 = 0; i_ist2 < hitVec_ist2.size(); ++i_ist2)
 	  {
@@ -114,13 +122,20 @@ int plotResidual_ISTHits()
 
 	    double x2_proj = x3_ist + (x1_ist-x3_ist)*z2_ist/z1_ist;
 	    double y2_proj = y3_ist + (y1_ist-y3_ist)*z2_ist/z1_ist;
-	    h_mXResidual_Hits_Before->Fill(x2_ist-x2_proj);
-	    h_mYResidual_Hits_Before->Fill(y2_ist-y2_proj);
 
 	    double x2_corr = x3_corr + (x1_corr-x3_corr)*z2_ist/z1_ist;
 	    double y2_corr = y3_corr + (y1_corr-y3_corr)*z2_ist/z1_ist;
-	    h_mXResidual_Hits->Fill(x2_ist-x2_corr);
-	    h_mYResidual_Hits->Fill(y2_ist-y2_corr);
+
+	    if( abs(row3-row1) < 17 && x2_proj >= xMin && x2_proj <= xMax)
+	    {
+	      if( abs(x2_corr - x2_ist) < 6.0 && abs(y2_corr-y2_ist) < 0.6)
+	      {
+		h_mXResidual_Hits_Before->Fill(x2_ist-x2_proj);
+		h_mYResidual_Hits_Before->Fill(y2_ist-y2_proj);
+		h_mXResidual_Hits->Fill(x2_ist-x2_corr);
+		h_mYResidual_Hits->Fill(y2_ist-y2_corr);
+	      }
+	    }
 	  }
 	}
       }
@@ -174,7 +189,7 @@ int plotResidual_ISTHits()
   h_mYResidual_Hits->Draw();
   h_mYResidual_Hits->Fit("gaus");
 
-  c_play->SaveAs("Residual_ISTHits.eps");
+  c_play->SaveAs("./figures/Residual_ISTHits.eps");
 
   return 1;
 }
