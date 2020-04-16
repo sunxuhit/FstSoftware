@@ -42,15 +42,12 @@ int getAlignment_FSTClusters()
   x3_ist.clear();
   y3_ist.clear();
 
-  const double phi_rot_ist1 = -0.00113551;
+  const double phi_rot_ist1 = -0.00113551; // aligned IST1 & IST3 to IST2
   const double x1_shift = 0.530444;
   const double y1_shift = 1.17133;
   const double phi_rot_ist3 = -0.00379431;
   const double x3_shift = 0.45811;
   const double y3_shift = 1.0116;
-
-  const double xMax = 24.0*FST::pitchColumn; // center of 23 column + 0.5*pitchColumn
-  const double xMin = 20.0*FST::pitchColumn; // center of 20 column - 0.5*pitchColumn
 
   FstEvent *mFstEvent = new FstEvent();
   std::string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstClusters_HV140V_woPed.root";
@@ -100,7 +97,7 @@ int getAlignment_FSTClusters()
       }
     }
 
-    if(clusterVec_ist2.size() > 0 && clusterVec_fst.size() > 0) // IST2 & FST has at least one hit
+    if(clusterVec_fst.size() > 0) // FST has at least one hit
     {
       for(int i_ist1 = 0; i_ist1 < clusterVec_ist1.size(); ++i_ist1)
       {
@@ -124,36 +121,20 @@ int getAlignment_FSTClusters()
 	  double x3_corr = x3*TMath::Cos(phi_rot_ist3) + y3*TMath::Sin(phi_rot_ist3) + x3_shift;
 	  double y3_corr = y3*TMath::Cos(phi_rot_ist3) - x3*TMath::Sin(phi_rot_ist3) + y3_shift;
 
-	  for(int i_ist2 = 0; i_ist2 < clusterVec_ist2.size(); ++i_ist2)
+	  if( abs(row3-row1) < 17)
 	  {
-	    double x2 = clusterVec_ist2[i_ist2]->getMeanX();
-	    double y2 = clusterVec_ist2[i_ist2]->getMeanY();
-	    const double z2_ist = FST::pitchLayer23;
-
-	    double x2_proj = x3 + (x1-x3)*z2_ist/z1_ist;
-	    double y2_proj = y3 + (y1-y3)*z2_ist/z1_ist;
-
-	    double x2_corr = x3_corr + (x1_corr-x3_corr)*z2_ist/z1_ist;
-	    double y2_corr = y3_corr + (y1_corr-y3_corr)*z2_ist/z1_ist;
-
-	    if( abs(row3-row1) < 17 && x2_proj >= xMin && x2_proj <= xMax)
+	    for(int i_fst = 0; i_fst < clusterVec_fst.size(); ++i_fst)
 	    {
-	      if( abs(x2_corr - x2) < 6.0 && abs(y2_corr-y2) < 0.6)
-	      { // IST2 matching cut
-		for(int i_fst = 0; i_fst < clusterVec_fst.size(); ++i_fst)
-		{
-		  double r0 = clusterVec_fst[i_fst]->getMeanX();
-		  double phi0 = clusterVec_fst[i_fst]->getMeanY();
-		  double x0 = r0*TMath::Cos(phi0);
-		  double y0 = r0*TMath::Sin(phi0);
-		  x0_fst.push_back(x0);
-		  y0_fst.push_back(y0);
-		  x1_ist.push_back(x1_corr); // aligned w.r.t. IST2
-		  y1_ist.push_back(y1_corr);
-		  x3_ist.push_back(x3_corr);
-		  y3_ist.push_back(y3_corr);
-		}
-	      }
+	      double r0 = clusterVec_fst[i_fst]->getMeanX();
+	      double phi0 = clusterVec_fst[i_fst]->getMeanY();
+	      double x0 = r0*TMath::Cos(phi0);
+	      double y0 = r0*TMath::Sin(phi0);
+	      x0_fst.push_back(x0);
+	      y0_fst.push_back(y0);
+	      x1_ist.push_back(x1_corr); // aligned w.r.t. IST2
+	      y1_ist.push_back(y1_corr);
+	      x3_ist.push_back(x3_corr);
+	      y3_ist.push_back(y3_corr);
 	    }
 	  }
 	}
@@ -287,7 +268,7 @@ tPars minuitAlignment(dVec x0_orig, dVec y0_orig, dVec x1_orig, dVec y1_orig, dV
     double y2_shift     = par[2];
 
     const double x_weight = 1.0;
-    const double y_weight = 250.0;
+    const double y_weight = 25.0;
     double f = 0;
     for (int i_cluster = 0; i_cluster < numOfUsedHits; i_cluster++)
     {
