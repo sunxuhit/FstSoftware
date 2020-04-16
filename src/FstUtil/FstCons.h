@@ -22,17 +22,6 @@ namespace FST
   const double pitchR  = 28.75; // mm | (280-165)/4.0
   const double pitchPhi = TMath::Pi()*30.0/180.0/numPhiSeg; // rad | 30 degree with 128 segmentations
   const double pitchLayer03 = 134.9375; // mm
-  // const double phi_rot = 0.044779502; // rad from Zhenyu
-  // const double x_shift = 145.85319; // mm from Zhenyu 137.85319 + 8
-  // const double y_shift = -19.153708; // mm from Zhenyu 
-  const double phi_rot = 0.0443783; 
-  // const double x_shift = 135.661;
-  const double x_shift = 141.661; // +6
-  const double y_shift = -19.5315;
-  // const double phi_rot_ist1 = 0.0487786; // rad
-  // const double phi_rot_ist3 = 0.0473428; // rad
-  // const double x_shift = 133.236; // mm
-  // const double y_shift = -18.7917; // mm
 
   // IST Cosmic Test Stand Geometry
   const int noRows    = 64; // for one group of sensors
@@ -41,6 +30,17 @@ namespace FST
   const double pitchColumn = 6.275; //mm
   const double pitchLayer12  = 34.925; //mm, distances between the 1st & 2nd Layer => Added by Xu Sun @ 02/13/2020
   const double pitchLayer23  = 30.1625; //mm, distances between the 2nd & 3rd Layer
+
+  // Alignment Parameters
+  const double phi_rot_ist1 = -0.00113551; // aligned IST1 & IST3 to IST2
+  const double x1_shift = 0.530444;
+  const double y1_shift = 1.17133;
+  const double phi_rot_ist3 = -0.00379431;
+  const double x3_shift = 0.45811;
+  const double y3_shift = 1.0116;
+  const double phi_rot_ist2 = 0.0438495; // aligned IST2 to FST with 2-layer tracking
+  const double x2_shift = 134.99;
+  const double y2_shift = -20.7848;
 
   // const int nPedCuts = 3;
   // const int nHitCuts = 5;

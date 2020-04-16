@@ -33,7 +33,7 @@ int plotResidual_FSTClusters_2Layer()
   // const double phi_rot_ist2 = 0.0392119; // aligned to FST with 3-layer tracking
   // const double x2_shift = 127.899;
   // const double y2_shift = -21.3293;
-  const double phi_rot_ist2 = 0.0438495; // aligned to FST with 3-layer tracking
+  const double phi_rot_ist2 = 0.0438495; // aligned IST2 to FST with 2-layer tracking
   const double x2_shift = 134.99;
   const double y2_shift = -20.7848;
 

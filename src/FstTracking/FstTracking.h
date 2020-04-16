@@ -62,10 +62,6 @@ class FstTracking : public TObject
     void calResolution_Clusters(FstEvent *fstEvent);
     void writeTracking_Clusters();
 
-    void initTracking_Clusters_triLayer();
-    void calResolution_Clusters_triLayer(FstEvent *fstEvent);
-    void writeTracking_Clusters_triLayer();
-
     // efficiency
     void initEfficiency_Hits();
     void calEfficiency_Hits(FstEvent *fstEvent);
@@ -114,17 +110,19 @@ class FstTracking : public TObject
     TH1F *h_mTrackRRes_Hits;
     TH1F *h_mTrackPhiRes_Hits;
 
-    TH1F *h_mTrackXRes_Clusters;
-    TH1F *h_mTrackYRes_Clusters;
-    TH1F *h_mTrackRRes_Clusters;
-    TH1F *h_mTrackPhiRes_Clusters;
+    TH1F *h_mTrackXRes_Clusters_2Layer;
+    TH1F *h_mTrackYRes_Clusters_2Layer;
+    TH1F *h_mTrackRRes_Clusters_2Layer;
+    TH1F *h_mTrackPhiRes_Clusters_2Layer;
+    TH1F *h_mTrackXResIST_2Layer;
+    TH1F *h_mTrackYResIST_2Layer;
 
-    TH1F *h_mTrackXRes_Clusters_triLayer;
-    TH1F *h_mTrackYRes_Clusters_triLayer;
-    TH1F *h_mTrackRRes_Clusters_triLayer;
-    TH1F *h_mTrackPhiRes_Clusters_triLayer;
-    TH1F *h_mTrackXRes_IST2;
-    TH1F *h_mTrackYRes_IST2;
+    TH1F *h_mTrackXRes_Clusters_3Layer;
+    TH1F *h_mTrackYRes_Clusters_3Layer;
+    TH1F *h_mTrackRRes_Clusters_3Layer;
+    TH1F *h_mTrackPhiRes_Clusters_3Layer;
+    TH1F *h_mTrackXResIST_3Layer;
+    TH1F *h_mTrackYResIST_3Layer;
 
     // Efficiency based on Hits
     // 0: no matching | 1-3 matching within (1-3)*pitchR in r & (1-3)*pitchPhi in phi

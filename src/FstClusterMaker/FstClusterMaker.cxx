@@ -372,6 +372,8 @@ int FstClusterMaker::Make()
       int numOfFstClusters = 0;
       for(int i_cluster = 0; i_cluster < nClusters; ++i_cluster)
       {
+	cluster_simple[i_cluster]->setMeanX(getMeanX(cluster_simple[i_cluster]->getLayer(),cluster_simple[i_cluster]->getMeanColumn()));
+	cluster_simple[i_cluster]->setMeanY(getMeanY(cluster_simple[i_cluster]->getLayer(),cluster_simple[i_cluster]->getMeanRow()));
 	cluster_simple[i_cluster]->setClusterId(i_cluster);
 
 	mFstCluster = mFstEvent->createCluster();
@@ -379,8 +381,8 @@ int FstClusterMaker::Make()
 	mFstCluster->setSensor(cluster_simple[i_cluster]->getSensor());
 	mFstCluster->setMeanColumn(cluster_simple[i_cluster]->getMeanColumn());
 	mFstCluster->setMeanRow(cluster_simple[i_cluster]->getMeanRow());
-	mFstCluster->setMeanX(getMeanX(cluster_simple[i_cluster]->getLayer(),cluster_simple[i_cluster]->getMeanColumn()));
-	mFstCluster->setMeanY(getMeanY(cluster_simple[i_cluster]->getLayer(),cluster_simple[i_cluster]->getMeanRow()));
+	mFstCluster->setMeanX(cluster_simple[i_cluster]->getMeanX());
+	mFstCluster->setMeanY(cluster_simple[i_cluster]->getMeanY());
 	mFstCluster->setTotCharge(cluster_simple[i_cluster]->getTotCharge());
 	mFstCluster->setMaxTb(cluster_simple[i_cluster]->getMaxTb());
 	mFstCluster->setClusterType(cluster_simple[i_cluster]->getClusterType());
@@ -956,29 +958,39 @@ std::vector<FstTrack *> FstClusterMaker::findTrack_Hits(std::vector<FstRawHit *>
     {
       for(int i_ist3 = 0; i_ist3 < numOfHits[3]; ++i_ist3)
       {
-	double x1_ist = rawHitVec[1][i_ist1]->getColumn()*FST::pitchColumn + 0.5*FST::pitchColumn;
-	double y1_ist = (63-rawHitVec[1][i_ist1]->getRow())*FST::pitchRow + 0.5*FST::pitchRow;
+	double x1_ist = rawHitVec[1][i_ist1]->getPosX();
+	double y1_ist = rawHitVec[1][i_ist1]->getPosY();
 	pos_ist1_orig.SetXYZ(x1_ist,y1_ist,z1_ist); // set original pos of hits on ist1
+	// aligned to IST2
+	double x1_corr_IST = x1_ist*TMath::Cos(FST::phi_rot_ist1) + y1_ist*TMath::Sin(FST::phi_rot_ist1) + FST::x1_shift;
+	double y1_corr_IST = y1_ist*TMath::Cos(FST::phi_rot_ist1) - x1_ist*TMath::Sin(FST::phi_rot_ist1) + FST::y1_shift;
+	// aligned to FST
+	double x1_corr_FST = x1_corr_IST*TMath::Cos(FST::phi_rot_ist2) + y1_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::x2_shift;
+	double y1_corr_FST = y1_corr_IST*TMath::Cos(FST::phi_rot_ist2) - x1_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::y2_shift;
+	pos_ist1.SetXYZ(x1_corr_FST,y1_corr_FST,z1_ist); // set aligned pos of hits on ist1
 
-	double x1_corr = x1_ist*TMath::Cos(FST::phi_rot) + y1_ist*TMath::Sin(FST::phi_rot) + FST::x_shift;
-	double y1_corr = y1_ist*TMath::Cos(FST::phi_rot) - x1_ist*TMath::Sin(FST::phi_rot) + FST::y_shift;
-	pos_ist1.SetXYZ(x1_corr,y1_corr,z1_ist); // set aligned pos of hits on ist1
-
-	double x3_ist = rawHitVec[3][i_ist3]->getColumn()*FST::pitchColumn + 0.5*FST::pitchColumn;
-	double y3_ist = (63-rawHitVec[3][i_ist3]->getRow())*FST::pitchRow + 0.5*FST::pitchRow;
+	double x3_ist = rawHitVec[3][i_ist3]->getPosX();
+	double y3_ist = rawHitVec[3][i_ist3]->getPosY();
 	pos_ist3_orig.SetXYZ(x3_ist,y3_ist,z3_ist); // set original pos of hits on ist3
+	// aligned to IST2
+	double x3_corr_IST = x3_ist*TMath::Cos(FST::phi_rot_ist3) + y3_ist*TMath::Sin(FST::phi_rot_ist3) + FST::x3_shift;
+	double y3_corr_IST = y3_ist*TMath::Cos(FST::phi_rot_ist3) - x3_ist*TMath::Sin(FST::phi_rot_ist3) + FST::y3_shift;
+	// aligned to FST
+	double x3_corr_FST = x3_corr_IST*TMath::Cos(FST::phi_rot_ist2) + y3_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::x2_shift;
+	double y3_corr_FST = y3_corr_IST*TMath::Cos(FST::phi_rot_ist2) - x3_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::y2_shift;
+	pos_ist3.SetXYZ(x3_corr_FST,y3_corr_FST,z3_ist); // set aligned pos of hits on ist3
 
-	double x3_corr = x3_ist*TMath::Cos(FST::phi_rot) + y3_ist*TMath::Sin(FST::phi_rot) + FST::x_shift;
-	double y3_corr = y3_ist*TMath::Cos(FST::phi_rot) - x3_ist*TMath::Sin(FST::phi_rot) + FST::y_shift;
-	pos_ist3.SetXYZ(x3_corr,y3_corr,z3_ist); // set aligned pos of hits on ist3
+	double x0_proj = x3_corr_FST + (x1_corr_FST-x3_corr_FST)*z0_fst/z1_ist;
+	double y0_proj = y3_corr_FST + (y1_corr_FST-y3_corr_FST)*z0_fst/z1_ist;
+	double r0_proj = TMath::Sqrt(x0_proj*x0_proj+y0_proj*y0_proj);
+	double phi0_proj = TMath::ATan2(y0_proj,x0_proj);
+	proj_fst.SetXYZ(r0_proj,phi0_proj,z0_fst); // r & phi for FST
 
-	double x0_proj = x3_corr + (x1_corr-x3_corr)*z0_fst/z1_ist;
-	double y0_proj = y3_corr + (y1_corr-y3_corr)*z0_fst/z1_ist;
-	proj_fst.SetXYZ(x0_proj,y0_proj,z0_fst);
-
-	double x2_proj = x3_corr + (x1_corr-x3_corr)*z2_ist/z1_ist;
-	double y2_proj = y3_corr + (y1_corr-y3_corr)*z2_ist/z1_ist;
-	proj_ist2.SetXYZ(x2_proj,y2_proj,z2_ist);
+	// double x2_proj = x3_corr_FST + (x1_corr_FST-x3_corr_FST)*z2_ist/z1_ist;
+	// double y2_proj = y3_corr_FST + (y1_corr_FST-y3_corr_FST)*z2_ist/z1_ist;
+	double x2_proj = x3_corr_IST + (x1_corr_IST-x3_corr_IST)*z2_ist/z1_ist;
+	double y2_proj = y3_corr_IST + (y1_corr_IST-y3_corr_IST)*z2_ist/z1_ist;
+	proj_ist2.SetXYZ(x2_proj,y2_proj,z2_ist); // x & y before aligned to FST
 
 	FstTrack *fstTrack = new FstTrack(); // generate a FstTrack when both ist1 and ist3 have a hit
 	fstTrack->Clear();
@@ -1048,29 +1060,39 @@ std::vector<FstTrack *> FstClusterMaker::findTrack_Clusters(std::vector<FstClust
     {
       for(int i_ist3 = 0; i_ist3 < numOfClusters[3]; ++i_ist3)
       {
-	double x1_ist = clusterVec[1][i_ist1]->getMeanColumn()*FST::pitchColumn + 0.5*FST::pitchColumn;
-	double y1_ist = (63-clusterVec[1][i_ist1]->getMeanRow())*FST::pitchRow + 0.5*FST::pitchRow;
+	double x1_ist = clusterVec[1][i_ist1]->getMeanX();
+	double y1_ist = clusterVec[1][i_ist1]->getMeanY();
 	pos_ist1_orig.SetXYZ(x1_ist,y1_ist,z1_ist); // set original pos of hits on ist1
+	// aligned to IST2
+	double x1_corr_IST = x1_ist*TMath::Cos(FST::phi_rot_ist1) + y1_ist*TMath::Sin(FST::phi_rot_ist1) + FST::x1_shift;
+	double y1_corr_IST = y1_ist*TMath::Cos(FST::phi_rot_ist1) - x1_ist*TMath::Sin(FST::phi_rot_ist1) + FST::y1_shift;
+	// aligned to FST 
+	double x1_corr_FST = x1_corr_IST*TMath::Cos(FST::phi_rot_ist2) + y1_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::x2_shift;
+	double y1_corr_FST = y1_corr_IST*TMath::Cos(FST::phi_rot_ist2) - x1_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::y2_shift;
+	pos_ist1.SetXYZ(x1_corr_FST,y1_corr_FST,z1_ist); // set aligned pos of hits on ist1
 
-	double x1_corr = x1_ist*TMath::Cos(FST::phi_rot) + y1_ist*TMath::Sin(FST::phi_rot) + FST::x_shift;
-	double y1_corr = y1_ist*TMath::Cos(FST::phi_rot) - x1_ist*TMath::Sin(FST::phi_rot) + FST::y_shift;
-	pos_ist1.SetXYZ(x1_corr,y1_corr,z1_ist); // set aligned pos of hits on ist1
-
-	double x3_ist = clusterVec[3][i_ist3]->getMeanColumn()*FST::pitchColumn + 0.5*FST::pitchColumn;
-	double y3_ist = (63-clusterVec[3][i_ist3]->getMeanRow())*FST::pitchRow + 0.5*FST::pitchRow;
+	double x3_ist = clusterVec[3][i_ist3]->getMeanX();
+	double y3_ist = clusterVec[3][i_ist3]->getMeanY();
 	pos_ist3_orig.SetXYZ(x3_ist,y3_ist,z3_ist); // set original pos of hits on ist3
+	// aligned to IST2
+	double x3_corr_IST = x3_ist*TMath::Cos(FST::phi_rot_ist3) + y3_ist*TMath::Sin(FST::phi_rot_ist3) + FST::x3_shift;
+	double y3_corr_IST = y3_ist*TMath::Cos(FST::phi_rot_ist3) - x3_ist*TMath::Sin(FST::phi_rot_ist3) + FST::y3_shift;
+	// aligned to FST
+	double x3_corr_FST = x3_corr_IST*TMath::Cos(FST::phi_rot_ist2) + y3_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::x2_shift;
+	double y3_corr_FST = y3_corr_IST*TMath::Cos(FST::phi_rot_ist2) - x3_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::y2_shift;
+	pos_ist3.SetXYZ(x3_corr_FST,y3_corr_FST,z3_ist); // set aligned pos of hits on ist3
 
-	double x3_corr = x3_ist*TMath::Cos(FST::phi_rot) + y3_ist*TMath::Sin(FST::phi_rot) + FST::x_shift;
-	double y3_corr = y3_ist*TMath::Cos(FST::phi_rot) - x3_ist*TMath::Sin(FST::phi_rot) + FST::y_shift;
-	pos_ist3.SetXYZ(x3_corr,y3_corr,z3_ist); // set aligned pos of hits on ist3
+	double x0_proj = x3_corr_FST + (x1_corr_FST-x3_corr_FST)*z0_fst/z1_ist;
+	double y0_proj = y3_corr_FST + (y1_corr_FST-y3_corr_FST)*z0_fst/z1_ist;
+	double r0_proj = TMath::Sqrt(x0_proj*x0_proj+y0_proj*y0_proj);
+	double phi0_proj = TMath::ATan2(y0_proj,x0_proj);
+	proj_fst.SetXYZ(r0_proj,phi0_proj,z0_fst); // r & phi for FST
 
-	double x0_proj = x3_corr + (x1_corr-x3_corr)*z0_fst/z1_ist;
-	double y0_proj = y3_corr + (y1_corr-y3_corr)*z0_fst/z1_ist;
-	proj_fst.SetXYZ(x0_proj,y0_proj,z0_fst);
-
-	double x2_proj = x3_corr + (x1_corr-x3_corr)*z2_ist/z1_ist;
-	double y2_proj = y3_corr + (y1_corr-y3_corr)*z2_ist/z1_ist;
-	proj_ist2.SetXYZ(x2_proj,y2_proj,z2_ist);
+	// double x2_proj = x3_corr_FST + (x1_corr_FST-x3_corr_FST)*z2_ist/z1_ist;
+	// double y2_proj = y3_corr_FST + (y1_corr_FST-y3_corr_FST)*z2_ist/z1_ist;
+	double x2_proj = x3_corr_IST + (x1_corr_IST-x3_corr_IST)*z2_ist/z1_ist;
+	double y2_proj = y3_corr_IST + (y1_corr_IST-y3_corr_IST)*z2_ist/z1_ist;
+	proj_ist2.SetXYZ(x2_proj,y2_proj,z2_ist); // x & y before aligned to FST
 
 	FstTrack *fstTrack = new FstTrack(); // generate a FstTrack when both ist1 and ist3 have a hit
 	fstTrack->Clear();

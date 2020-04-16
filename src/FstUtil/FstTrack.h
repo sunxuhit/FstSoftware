@@ -30,7 +30,7 @@ class FstTrack : public TObject
     int getTrackType() const;
     int getId(int layer) const;
     TVector3 getPosition(int layer) const;
-    TVector3 getProjection(int layer) const;
+    TVector3 getProjection(int layer) const; // r&phi for FST, x&y before aligned to FST for IST2
     TVector3 getPosOrig(int layer) const;
 
     void Print() const;

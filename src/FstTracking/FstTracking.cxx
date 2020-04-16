@@ -37,10 +37,9 @@ int FstTracking::Init()
   bool isTracking_Hits = initTrackingQA_Hits(); // initialize tracking with Hits
   initTracking_Hits();
   initTracking_Clusters();
-  initTracking_Clusters_triLayer();
-  initEfficiency_Hits();
-  initEfficiency_Clusters();
-  initEfficiency_Clusters_triLayer();
+  // initEfficiency_Hits();
+  // initEfficiency_Clusters();
+  // initEfficiency_Clusters_triLayer();
 
   if(!isInPut) 
   {
@@ -65,7 +64,7 @@ int FstTracking::Make()
 
   long NumOfEvents = (long)mChainInPut->GetEntries();
   // if(NumOfEvents > 1000) NumOfEvents = 1000;
-  // NumOfEvents = 5000;
+  // NumOfEvents = 1000;
   mChainInPut->GetEntry(0);
 
   std::vector<FstRawHit *> rawHitVec;
@@ -110,10 +109,9 @@ int FstTracking::Make()
     }
     calResolution_Hits(mFstEvent_InPut);
     calResolution_Clusters(mFstEvent_InPut);
-    calResolution_Clusters_triLayer(mFstEvent_InPut);
-    calEfficiency_Hits(mFstEvent_InPut);
-    calEfficiency_Clusters(mFstEvent_InPut);
-    calEfficiency_Clusters_triLayer(mFstEvent_InPut);
+    // calEfficiency_Hits(mFstEvent_InPut);
+    // calEfficiency_Clusters(mFstEvent_InPut);
+    // calEfficiency_Clusters_triLayer(mFstEvent_InPut);
   }
 
   cout << "processed events:  " << NumOfEvents << "/" << NumOfEvents << endl;
@@ -130,10 +128,9 @@ int FstTracking::Finish()
   writeTrackingQA_Hits();
   writeTracking_Hits();
   writeTracking_Clusters();
-  writeTracking_Clusters_triLayer();
-  writeEfficiency_Hits();
-  writeEfficiency_Clusters();
-  writeEfficiency_Clusters_triLayer();
+  // writeEfficiency_Hits();
+  // writeEfficiency_Clusters();
+  // writeEfficiency_Clusters_triLayer();
 
   return 1;
 }
@@ -319,35 +316,33 @@ void FstTracking::fillTrackingQA_Hits(std::vector<FstRawHit *> rawHitVec_orig)
     h_mHitsCorrYPhi[2]->Fill(rawHitVec[3][0]->getRow(),rawHitVec[0][0]->getRow());
     h_mHitsCorrYPhi[3]->Fill(5.25/2*rawHitVec[1][0]->getRow()-3.25/2*rawHitVec[3][0]->getRow()+20,rawHitVec[0][0]->getRow());
 
-    double r_fst = FST::rOuter + (rawHitVec[0][0]->getColumn()-4)*FST::pitchR + 0.5*FST::pitchR;
-    double phi_fst = (63-rawHitVec[0][0]->getRow())*FST::pitchPhi + 0.5*FST::pitchPhi;
-    double x0_fst = r_fst*TMath::Cos(phi_fst); // x = r*cos(phi)
-    double y0_fst = r_fst*TMath::Sin(phi_fst); // y = r*sin(phi)
-    double z0_fst = FST::pitchLayer03;
+    double r_fst   = rawHitVec[0][0]->getPosX();
+    double phi_fst = rawHitVec[0][0]->getPosY();
+    double x0_fst  = r_fst*TMath::Cos(phi_fst); // x = r*cos(phi)
+    double y0_fst  = r_fst*TMath::Sin(phi_fst); // y = r*sin(phi)
+    double z0_fst  = FST::pitchLayer03;
 
-    double x1_ist = rawHitVec[1][0]->getColumn()*FST::pitchColumn + 0.5*FST::pitchColumn;
-    double y1_ist = (63-rawHitVec[1][0]->getRow())*FST::pitchRow + 0.5*FST::pitchRow;
+    double x1_ist = rawHitVec[1][0]->getPosX();
+    double y1_ist = rawHitVec[1][0]->getPosY();
     double z1_ist = FST::pitchLayer12 + FST::pitchLayer23;
+    double x1_corr_IST = x1_ist*TMath::Cos(FST::phi_rot_ist1) + y1_ist*TMath::Sin(FST::phi_rot_ist1) + FST::x1_shift; // aligned to IST2
+    double y1_corr_IST = y1_ist*TMath::Cos(FST::phi_rot_ist1) - x1_ist*TMath::Sin(FST::phi_rot_ist1) + FST::y1_shift;
+    double x1_corr_FST = x1_corr_IST*TMath::Cos(FST::phi_rot_ist2) + y1_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::x2_shift; // aligned to FST
+    double y1_corr_FST = y1_corr_IST*TMath::Cos(FST::phi_rot_ist2) - x1_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::y2_shift;
 
-    double x3_ist = rawHitVec[3][0]->getColumn()*FST::pitchColumn + 0.5*FST::pitchColumn;
-    double y3_ist = (63-rawHitVec[3][0]->getRow())*FST::pitchRow + 0.5*FST::pitchRow;
+    double x3_ist = rawHitVec[3][0]->getPosX();
+    double y3_ist = rawHitVec[3][0]->getPosY();
     double z3_ist = 0.0;
+    double x3_corr_IST = x3_ist*TMath::Cos(FST::phi_rot_ist3) + y3_ist*TMath::Sin(FST::phi_rot_ist3) + FST::x3_shift; // aligned to IST2
+    double y3_corr_IST = y3_ist*TMath::Cos(FST::phi_rot_ist3) - x3_ist*TMath::Sin(FST::phi_rot_ist3) + FST::y3_shift;
+    double x3_corr_FST = x3_corr_IST*TMath::Cos(FST::phi_rot_ist2) + y3_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::x2_shift; // aligned to FST
+    double y3_corr_FST = y3_corr_IST*TMath::Cos(FST::phi_rot_ist2) - x3_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::y2_shift;
 
-    double x0_proj = x3_ist + (x1_ist-x3_ist)*z0_fst/z1_ist;
-    double y0_proj = y3_ist + (y1_ist-y3_ist)*z0_fst/z1_ist;
+    double x0_proj = x3_corr_IST + (x1_corr_IST-x3_corr_IST)*z0_fst/z1_ist; // before aligned to FST
+    double y0_proj = y3_corr_IST + (y1_corr_IST-y3_corr_IST)*z0_fst/z1_ist;
 
-    double x0_corr = x0_proj*TMath::Cos(FST::phi_rot) + y0_proj*TMath::Sin(FST::phi_rot) + FST::x_shift;
-    double y0_corr = y0_proj*TMath::Cos(FST::phi_rot) - x0_proj*TMath::Sin(FST::phi_rot) + FST::y_shift;
-    /*
-    double x1_corr = x1_ist*TMath::Cos(FST::phi_rot_ist1) + y1_ist*TMath::Sin(FST::phi_rot_ist1) + FST::x_shift;
-    double y1_corr = y1_ist*TMath::Cos(FST::phi_rot_ist1) - x1_ist*TMath::Sin(FST::phi_rot_ist1) + FST::y_shift;
-
-    double x3_corr = x3_ist*TMath::Cos(FST::phi_rot_ist3) + y3_ist*TMath::Sin(FST::phi_rot_ist3) + FST::x_shift;
-    double y3_corr = y3_ist*TMath::Cos(FST::phi_rot_ist3) - x3_ist*TMath::Sin(FST::phi_rot_ist3) + FST::y_shift;
-
-    double x0_corr = x3_corr + (x1_corr-x3_corr)*z0_fst/z1_ist;
-    double y0_corr = y3_corr + (y1_corr-y3_corr)*z0_fst/z1_ist;
-    */
+    double x0_corr = x3_corr_FST + (x1_corr_FST-x3_corr_FST)*z0_fst/z1_ist; // after aligned to FST
+    double y0_corr = y3_corr_FST + (y1_corr_FST-y3_corr_FST)*z0_fst/z1_ist;
 
     if(abs(rawHitVec[1][0]->getRow()-rawHitVec[3][0]->getRow()) < 17)
     {
@@ -432,10 +427,10 @@ void FstTracking::calResolution_Hits(FstEvent *fstEvent)
       for(int i_track = 0; i_track < trackHitVec.size(); ++i_track)
       {
 	TVector3 proj_fst = trackHitVec[i_track]->getProjection(0);
-	double x0_proj    = proj_fst.X();
-	double y0_proj    = proj_fst.Y();
-	double r_proj     = proj_fst.Perp();
-	double phi_proj   = proj_fst.Phi();
+	double r_proj     = proj_fst.X();
+	double phi_proj   = proj_fst.Y();
+	double x0_proj    = r_proj*TMath::Cos(phi_proj);
+	double y0_proj    = r_proj*TMath::Sin(phi_proj);;
 
 	double xResidual = x0_fst-x0_proj;
 	double yResidual = y0_fst-y0_proj;
@@ -463,10 +458,19 @@ void FstTracking::writeTracking_Hits()
 //--------------Track Resolution with Clusters---------------------
 void FstTracking::initTracking_Clusters()
 {
-  h_mTrackXRes_Clusters   = new TH1F("h_mTrackXRes_Clusters","h_mTrackXRes_Clusters",100,-80.0,80.0);
-  h_mTrackYRes_Clusters   = new TH1F("h_mTrackYRes_Clusters","h_mTrackYRes_Clusters",100,-16.0,16.0);
-  h_mTrackRRes_Clusters   = new TH1F("h_mTrackRRes_Clusters","h_mTrackRRes_Clusters",100,-80.0,80.0);
-  h_mTrackPhiRes_Clusters = new TH1F("h_mTrackPhiRes_Clusters","h_mTrackPhiRes_Clusters",100,-0.05,0.05);
+  h_mTrackXRes_Clusters_2Layer   = new TH1F("h_mTrackXRes_Clusters_2Layer","h_mTrackXRes_Clusters_2Layer",25,-80.0,80.0);
+  h_mTrackYRes_Clusters_2Layer   = new TH1F("h_mTrackYRes_Clusters_2Layer","h_mTrackYRes_Clusters_2Layer",100,-16.0,16.0);
+  h_mTrackRRes_Clusters_2Layer   = new TH1F("h_mTrackRRes_Clusters_2Layer","h_mTrackRRes_Clusters_2Layer",25,-80.0,80.0);
+  h_mTrackPhiRes_Clusters_2Layer = new TH1F("h_mTrackPhiRes_Clusters_2Layer","h_mTrackPhiRes_Clusters_2Layer",100,-0.05,0.05);
+  h_mTrackXResIST_2Layer         = new TH1F("h_mTrackXResIST_2Layer","h_mTrackXResIST_2Layer",15,-20.0,20.0);
+  h_mTrackYResIST_2Layer         = new TH1F("h_mTrackYResIST_2Layer","h_mTrackYResIST_2Layer",100,-5.0,5.0);
+
+  h_mTrackXRes_Clusters_3Layer   = new TH1F("h_mTrackXRes_Clusters_3Layer","h_mTrackXRes_Clusters_3Layer",25,-80.0,80.0);
+  h_mTrackYRes_Clusters_3Layer   = new TH1F("h_mTrackYRes_Clusters_3Layer","h_mTrackYRes_Clusters_3Layer",100,-16.0,16.0);
+  h_mTrackRRes_Clusters_3Layer   = new TH1F("h_mTrackRRes_Clusters_3Layer","h_mTrackRRes_Clusters_3Layer",25,-80.0,80.0);
+  h_mTrackPhiRes_Clusters_3Layer = new TH1F("h_mTrackPhiRes_Clusters_3Layer","h_mTrackPhiRes_Clusters_3Layer",100,-0.05,0.05);
+  h_mTrackXResIST_3Layer         = new TH1F("h_mTrackXResIST_3Layer","h_mTrackXResIST_3Layer",15,-20.0,20.0);
+  h_mTrackYResIST_3Layer         = new TH1F("h_mTrackYResIST_3Layer","h_mTrackYResIST_3Layer",100,-5.0,5.0);
 }
 
 void FstTracking::calResolution_Clusters(FstEvent *fstEvent)
@@ -482,145 +486,119 @@ void FstTracking::calResolution_Clusters(FstEvent *fstEvent)
     }
   }
 
-  std::vector<FstCluster *> fstClusterVec;
-  fstClusterVec.clear(); // clear the container for clusters
+  std::vector<FstCluster *> clusterVec_fst;
+  std::vector<FstCluster *> clusterVec_ist2;
+  clusterVec_fst.clear();
+  clusterVec_ist2.clear();
+
   for(int i_cluster = 0; i_cluster < fstEvent->getNumClusters(); ++i_cluster)
-  { // get Clusters info
+  { // get Clusters info for IST1 IST2 and IST3
     FstCluster *fstCluster = fstEvent->getCluster(i_cluster);
     if(fstCluster->getLayer() == 0)
     {
-      fstClusterVec.push_back(fstCluster);
-    }
-  }
-  int numOfFstClusters = fstEvent->getNumFstClusters();
-
-  if(numOfFstClusters > 0)
-  {
-    for(int i_cluster = 0; i_cluster < numOfFstClusters; ++i_cluster)
-    {
-      double r_fst = fstClusterVec[i_cluster]->getMeanX(); // r for fst
-      double phi_fst = fstClusterVec[i_cluster]->getMeanY(); // phi for fst
-      double x0_fst = r_fst*TMath::Cos(phi_fst);
-      double y0_fst = r_fst*TMath::Sin(phi_fst);
-
-      // fill residual histograms
-      for(int i_track = 0; i_track < trackClusterVec.size(); ++i_track)
-      {
-	TVector3 proj_fst = trackClusterVec[i_track]->getProjection(0);
-	double x0_proj    = proj_fst.X();
-	double y0_proj    = proj_fst.Y();
-	double r_proj     = proj_fst.Perp();
-	double phi_proj   = proj_fst.Phi();
-
-	double xResidual = x0_fst-x0_proj;
-	double yResidual = y0_fst-y0_proj;
-	h_mTrackXRes_Clusters->Fill(xResidual);
-	h_mTrackYRes_Clusters->Fill(yResidual);
-
-	double rResidual = r_fst-r_proj;
-	double phiResidual = phi_fst-phi_proj;
-	h_mTrackRRes_Clusters->Fill(rResidual);
-	h_mTrackPhiRes_Clusters->Fill(phiResidual);
-      }
-    }
-  }
-}
-
-void FstTracking::writeTracking_Clusters()
-{
-  h_mTrackXRes_Clusters->Write();
-  h_mTrackYRes_Clusters->Write();
-  h_mTrackRRes_Clusters->Write();
-  h_mTrackPhiRes_Clusters->Write();
-}
-//--------------Track Resolution with Clusters---------------------
-
-//--------------Track Resolution with Clusters TriLayer---------------------
-void FstTracking::initTracking_Clusters_triLayer()
-{
-  h_mTrackXRes_Clusters_triLayer   = new TH1F("h_mTrackXRes_Clusters_triLayer","h_mTrackXRes_Clusters_triLayer",100,-80.0,80.0);
-  h_mTrackYRes_Clusters_triLayer   = new TH1F("h_mTrackYRes_Clusters_triLayer","h_mTrackYRes_Clusters_triLayer",100,-16.0,16.0);
-  h_mTrackRRes_Clusters_triLayer   = new TH1F("h_mTrackRRes_Clusters_triLayer","h_mTrackRRes_Clusters_triLayer",100,-80.0,80.0);
-  h_mTrackPhiRes_Clusters_triLayer = new TH1F("h_mTrackPhiRes_Clusters_triLayer","h_mTrackPhiRes_Clusters_triLayer",100,-0.05,0.05);
-  h_mTrackXRes_IST2 = new TH1F("h_mTrackXRes_IST2","h_mTrackXRes_IST2",150,-9.0,9.0);
-  h_mTrackYRes_IST2 = new TH1F("h_mTrackYRes_IST2","h_mTrackYRes_IST2",150,-9.0,9.0);
-}
-
-void FstTracking::calResolution_Clusters_triLayer(FstEvent *fstEvent)
-{
-  std::vector<FstTrack *> trackClusterVec;
-  trackClusterVec.clear(); // clear the container for clusters
-  for(int i_track = 0; i_track < fstEvent->getNumTracks(); ++i_track)
-  { // get Tracks info
-    FstTrack *fstTrack = fstEvent->getTrack(i_track);
-    if(fstTrack->getTrackType() == 1) // track reconstructed with clusters
-    {
-      trackClusterVec.push_back(fstTrack);
-    }
-  }
-
-  int numOfIst2Cluster = 0;
-  std::vector<FstCluster *> fstClusterVec;
-  std::vector<FstCluster *> istClusterVec;
-  fstClusterVec.clear(); // clear the container for clusters
-  istClusterVec.clear(); // clear the container for clusters
-  for(int i_cluster = 0; i_cluster < fstEvent->getNumClusters(); ++i_cluster)
-  { // get Clusters info
-    FstCluster *fstCluster = fstEvent->getCluster(i_cluster);
-    if(fstCluster->getLayer() == 0)
-    {
-      fstClusterVec.push_back(fstCluster);
+      clusterVec_fst.push_back(fstCluster);
     }
     if(fstCluster->getLayer() == 2)
     {
-      numOfIst2Cluster++;
-      istClusterVec.push_back(fstCluster);
+      clusterVec_ist2.push_back(fstCluster);
     }
   }
-  int numOfFstClusters = fstEvent->getNumFstClusters();
 
-  if(numOfFstClusters > 0 && numOfIst2Cluster > 0) // at least one cluster from FST & IST2
+  // 2-Layer Tracking
+  for(int i_track = 0; i_track < trackClusterVec.size(); ++i_track)
   {
-    // fill residual histograms
-    for(int i_track = 0; i_track < trackClusterVec.size(); ++i_track)
+    TVector3 pos_ist1 = trackClusterVec[i_track]->getPosition(1);
+    double y1_ist = pos_ist1.Y();
+    TVector3 pos_ist3 = trackClusterVec[i_track]->getPosition(3);
+    double y3_ist = pos_ist3.Y();
+
+    TVector3 proj_fst = trackClusterVec[i_track]->getProjection(0);
+    double r_proj   = proj_fst.X(); // get aligned projected position
+    double phi_proj = proj_fst.Y(); // r & phi for fst
+    double x0_proj  = r_proj*TMath::Cos(phi_proj);
+    double y0_proj  = r_proj*TMath::Sin(phi_proj);
+
+    TVector3 proj_ist2 = trackClusterVec[i_track]->getProjection(2);
+    double x2_proj = proj_ist2.X(); // get aligned projected position
+    double y2_proj = proj_ist2.Y(); // x & y for ist2
+
+    if( abs(y1_ist-y3_ist) < 17.0*FST::pitchRow )
     {
-      TVector3 proj_fst = trackClusterVec[i_track]->getProjection(0);
-      double x0_proj    = proj_fst.X();
-      double y0_proj    = proj_fst.Y();
-      double r_proj     = proj_fst.Perp();
-      double phi_proj   = proj_fst.Phi();
-
-      for(int i_ist2 = 0; i_ist2 < numOfIst2Cluster; ++i_ist2)
+      if(clusterVec_fst.size() > 0)
       {
-	TVector3 proj_ist2 = trackClusterVec[i_track]->getProjection(2);
-	double x2_proj = proj_ist2.X();
-	double y2_proj = proj_ist2.Y();
+	for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
+	{ // fill residual histograms
+	  double r_fst   = clusterVec_fst[i_cluster]->getMeanX(); // r for fst
+	  double phi_fst = clusterVec_fst[i_cluster]->getMeanY(); // phi for fst
+	  double x0_fst  = r_fst*TMath::Cos(phi_fst);
+	  double y0_fst  = r_fst*TMath::Sin(phi_fst);
 
-	double x2_ist = istClusterVec[i_ist2]->getMeanX(); // x for ist
-	double y2_ist = istClusterVec[i_ist2]->getMeanY(); // y for ist
-	double x2_corr = x2_ist*TMath::Cos(FST::phi_rot) + y2_ist*TMath::Sin(FST::phi_rot) + FST::x_shift;
-	double y2_corr = y2_ist*TMath::Cos(FST::phi_rot) - x2_ist*TMath::Sin(FST::phi_rot) + FST::y_shift;
-	h_mTrackXRes_IST2->Fill(x2_corr-x2_proj);
-	h_mTrackYRes_IST2->Fill(y2_corr-y2_proj);
+	  h_mTrackXRes_Clusters_2Layer->Fill(x0_fst-x0_proj);
+	  h_mTrackYRes_Clusters_2Layer->Fill(y0_fst-y0_proj);
+	  h_mTrackRRes_Clusters_2Layer->Fill(r_fst-r_proj);
+	  h_mTrackPhiRes_Clusters_2Layer->Fill(phi_fst-phi_proj);
+	}
+      }
+      if(clusterVec_ist2.size() > 0)
+      {
+	for(int i_cluster = 0; i_cluster < clusterVec_ist2.size(); ++i_cluster)
+	{ // fill residual histograms
+	  double x2_ist = clusterVec_ist2[i_cluster]->getMeanX(); // x for ist2
+	  double y2_ist = clusterVec_ist2[i_cluster]->getMeanY(); // y for ist2
 
-	if( abs(x2_corr-x2_proj) < 3.0*FST::pitchColumn && abs(y2_corr-y2_proj) < 3.0*FST::pitchRow)
-	{ // IST2 matching cut
-	  for(int i_cluster = 0; i_cluster < numOfFstClusters; ++i_cluster)
-	  {
-	    double r_fst = fstClusterVec[i_cluster]->getMeanX(); // r for fst
-	    double phi_fst = fstClusterVec[i_cluster]->getMeanY(); // phi for fst
-	    double x0_fst = r_fst*TMath::Cos(phi_fst);
-	    double y0_fst = r_fst*TMath::Sin(phi_fst);
+	  h_mTrackXResIST_2Layer->Fill(x2_ist-x2_proj);
+	  h_mTrackYResIST_2Layer->Fill(y2_ist-y2_proj);
+	}
+      }
+    }
+  }
 
-	    double xResidual = x0_fst-x0_proj;
-	    double yResidual = y0_fst-y0_proj;
-	    h_mTrackXRes_Clusters_triLayer->Fill(xResidual);
-	    h_mTrackYRes_Clusters_triLayer->Fill(yResidual);
+  // 3-Layer Tracking
+  for(int i_track = 0; i_track < trackClusterVec.size(); ++i_track)
+  {
+    TVector3 pos_ist1 = trackClusterVec[i_track]->getPosition(1);
+    double y1_ist = pos_ist1.Y();
+    TVector3 pos_ist3 = trackClusterVec[i_track]->getPosition(3);
+    double y3_ist = pos_ist3.Y();
 
-	    double rResidual = r_fst-r_proj;
-	    double phiResidual = phi_fst-phi_proj;
-	    h_mTrackRRes_Clusters_triLayer->Fill(rResidual);
-	    h_mTrackPhiRes_Clusters_triLayer->Fill(phiResidual);
+    TVector3 proj_fst = trackClusterVec[i_track]->getProjection(0);
+    double r_proj   = proj_fst.X(); // get aligned projected position
+    double phi_proj = proj_fst.Y(); // r & phi for fst
+    double x0_proj  = r_proj*TMath::Cos(phi_proj);
+    double y0_proj  = r_proj*TMath::Sin(phi_proj);
+
+    TVector3 proj_ist2 = trackClusterVec[i_track]->getProjection(2);
+    double x2_proj = proj_ist2.X(); // get aligned projected position
+    double y2_proj = proj_ist2.Y(); // x & y for ist2
+
+    if( abs(y1_ist-y3_ist) < 17.0*FST::pitchRow && x2_proj >= 20.0*FST::pitchColumn && x2_proj <= 24.0*FST::pitchColumn )
+    {
+      if(clusterVec_ist2.size() > 0)
+      {
+	for(int i_ist2 = 0; i_ist2 < clusterVec_ist2.size(); ++i_ist2)
+	{ // fill residual histograms
+	  double x2_ist = clusterVec_ist2[i_ist2]->getMeanX(); // x for ist2
+	  double y2_ist = clusterVec_ist2[i_ist2]->getMeanY(); // y for ist2
+
+	  if( abs(x2_ist-x2_proj) < 6.0 && abs(y2_ist-y2_proj) < 0.6 )
+	  { // IST2 matching cut
+	    if(clusterVec_fst.size() > 0)
+	    {
+	      for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
+	      { // fill residual histograms
+		double r_fst   = clusterVec_fst[i_cluster]->getMeanX(); // r for fst
+		double phi_fst = clusterVec_fst[i_cluster]->getMeanY(); // phi for fst
+		double x0_fst  = r_fst*TMath::Cos(phi_fst);
+		double y0_fst  = r_fst*TMath::Sin(phi_fst);
+
+		h_mTrackXRes_Clusters_3Layer->Fill(x0_fst-x0_proj);
+		h_mTrackYRes_Clusters_3Layer->Fill(y0_fst-y0_proj);
+		h_mTrackRRes_Clusters_3Layer->Fill(r_fst-r_proj);
+		h_mTrackPhiRes_Clusters_3Layer->Fill(phi_fst-phi_proj);
+	      }
+	    }
+	    h_mTrackXResIST_3Layer->Fill(x2_ist-x2_proj);
+	    h_mTrackYResIST_3Layer->Fill(y2_ist-y2_proj);
 	  }
 	}
       }
@@ -628,17 +606,25 @@ void FstTracking::calResolution_Clusters_triLayer(FstEvent *fstEvent)
   }
 }
 
-void FstTracking::writeTracking_Clusters_triLayer()
+void FstTracking::writeTracking_Clusters()
 {
-  h_mTrackXRes_Clusters_triLayer->Write();
-  h_mTrackYRes_Clusters_triLayer->Write();
-  h_mTrackRRes_Clusters_triLayer->Write();
-  h_mTrackPhiRes_Clusters_triLayer->Write();
-  h_mTrackXRes_IST2->Write();
-  h_mTrackYRes_IST2->Write();
-}
-//--------------Track Resolution with Clusters TriLayer---------------------
+  h_mTrackXRes_Clusters_2Layer->Write();
+  h_mTrackYRes_Clusters_2Layer->Write();
+  h_mTrackRRes_Clusters_2Layer->Write();
+  h_mTrackPhiRes_Clusters_2Layer->Write();
+  h_mTrackXResIST_2Layer->Write();
+  h_mTrackYResIST_2Layer->Write();
 
+  h_mTrackXRes_Clusters_3Layer->Write();
+  h_mTrackYRes_Clusters_3Layer->Write();
+  h_mTrackRRes_Clusters_3Layer->Write();
+  h_mTrackPhiRes_Clusters_3Layer->Write();
+  h_mTrackXResIST_3Layer->Write();
+  h_mTrackYResIST_3Layer->Write();
+}
+//--------------Track Resolution with Clusters---------------------
+
+#if 0
 //--------------Efficiency with Hits---------------------
 void FstTracking::initEfficiency_Hits()
 {
@@ -948,3 +934,4 @@ void FstTracking::writeEfficiency_Clusters_triLayer()
   }
 }
 //--------------Efficiency with Clusters TriLayer---------------------
+#endif
