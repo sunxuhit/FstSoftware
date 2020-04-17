@@ -441,22 +441,17 @@ void FstQAStudy::writeClusterSize()
 //--------------Cluster Size with Track---------------------
 void FstQAStudy::initClusterSize_TrackClusters()
 {
-  const double rMax = FST::rOuter + 5.0*FST::pitchR;
-  const double rMin = FST::rOuter - 1.0*FST::pitchR;
-  const double phiMax = 128.0*FST::pitchPhi;
-  const double phiMin = -128.0*FST::pitchPhi;
-
   for(int i_match = 0; i_match < 4; ++i_match)
   {
     string ProName;
     ProName = Form("p_mNHitsR_rP_SF%d",i_match*10);
-    p_mNHitsR_rP[i_match] = new TProfile(ProName.c_str(),ProName.c_str(),24,rMin,rMax);
+    p_mNHitsR_rP[i_match] = new TProfile(ProName.c_str(),ProName.c_str(),24,FST::rMin,FST::rMax);
     ProName = Form("p_mNHitsR_phiP_SF%d",i_match*10);
-    p_mNHitsR_phiP[i_match] = new TProfile(ProName.c_str(),ProName.c_str(),FST::numPhiSeg*2,phiMin,phiMax);
+    p_mNHitsR_phiP[i_match] = new TProfile(ProName.c_str(),ProName.c_str(),FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
     ProName = Form("p_mNHitsPhi_rP_SF%d",i_match*10);
-    p_mNHitsPhi_rP[i_match] = new TProfile(ProName.c_str(),ProName.c_str(),24,rMin,rMax);
+    p_mNHitsPhi_rP[i_match] = new TProfile(ProName.c_str(),ProName.c_str(),24,FST::rMin,FST::rMax);
     ProName = Form("p_mNHitsPhi_phiP_SF%d",i_match*10);
-    p_mNHitsPhi_phiP[i_match] = new TProfile(ProName.c_str(),ProName.c_str(),FST::numPhiSeg*2,phiMin,phiMax);
+    p_mNHitsPhi_phiP[i_match] = new TProfile(ProName.c_str(),ProName.c_str(),FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
   }
 }
 
@@ -543,17 +538,12 @@ void FstQAStudy::writeClusterSize_TrackClusters()
 //--------------Event Display---------------------
 void FstQAStudy::initEventDisplay_TrackClusters()
 {
-  const double rMax = FST::rOuter + 5.0*FST::pitchR;
-  const double rMin = FST::rOuter - 1.0*FST::pitchR;
-  const double phiMax = 128.0*FST::pitchPhi;
-  const double phiMin = -128.0*FST::pitchPhi;
-
-  h_mFstRawHitsDisplay = new TH2F("h_mFstRawHitsDisplay","h_mFstRawHitsDisplay",6,rMin,rMax,FST::numPhiSeg*2,phiMin,phiMax);
-  h_mFstRawPedsDisplay = new TH2F("h_mFstRawPedsDisplay","h_mFstRawPedsDisplay",6,rMin,rMax,FST::numPhiSeg*2,phiMin,phiMax);
-  h_mFstMaxTbDisplay   = new TH2F("h_mFstMaxTbDisplay","h_mFstMaxTbDisplay",6,rMin,rMax,FST::numPhiSeg*2,phiMin,phiMax);
-  h_mFstClustersDisplay = new TH2F("h_mFstClustersDisplay","h_mFstClustersDisplay",60,rMin,rMax,FST::numPhiSeg*4,phiMin,phiMax);
-  h_mHitTracksDisplay = new TH2F("h_mHitTracksDisplay","h_mHitTracksDisplay",60,rMin,rMax,FST::numPhiSeg*4,phiMin,phiMax);
-  h_mClusterTracksDisplay = new TH2F("h_mClusterTracksDisplay","h_mClusterTracksDisplay",60,rMin,rMax,FST::numPhiSeg*4,phiMin,phiMax);
+  h_mFstRawHitsDisplay    = new TH2F("h_mFstRawHitsDisplay","h_mFstRawHitsDisplay",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstRawPedsDisplay    = new TH2F("h_mFstRawPedsDisplay","h_mFstRawPedsDisplay",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstMaxTbDisplay      = new TH2F("h_mFstMaxTbDisplay","h_mFstMaxTbDisplay",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstClustersDisplay   = new TH2F("h_mFstClustersDisplay","h_mFstClustersDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mHitTracksDisplay     = new TH2F("h_mHitTracksDisplay","h_mHitTracksDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mClusterTracksDisplay = new TH2F("h_mClusterTracksDisplay","h_mClusterTracksDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
 
   g_mFstClustersDisplay = new TGraph();
   g_mFstClustersDisplay->SetName("g_mFstClustersDisplay");
@@ -669,11 +659,6 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
   }
   // cout << "mNumOfFstClusters = " << mNumOfFstClusters << ", fstEvent->getNumClusters = " << fstEvent->getNumFstClusters() << endl;
 
-  const double rMax = FST::rOuter + 5.0*FST::pitchR;
-  const double rMin = FST::rOuter - 1.0*FST::pitchR;
-  const double phiMax = 64.0*FST::pitchPhi;
-  const double phiMin = -64.0*FST::pitchPhi;
-
   for(int i_track = 0; i_track < mFstEvent_InPut->getNumTracks(); ++i_track)
   { // fill Tracks Display
     FstTrack *fstTrack = mFstEvent_InPut->getTrack(i_track);
@@ -705,7 +690,7 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
 
       if( abs(y1_ist-y3_ist) < 17.0*FST::pitchRow )
       {
-	if(r_proj >= rMin && r_proj <= rMax && phi_proj >= phiMin && phi_proj <= phiMax)
+	if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
 	{ // save only when in the area of interest
 	  mNumOfClusterTracks_2Layer++; // satisfied 2-Layer tracking
 

@@ -23,6 +23,11 @@ namespace FST
   const double pitchPhi = TMath::Pi()*30.0/180.0/numPhiSeg; // rad | 30 degree with 128 segmentations
   const double pitchLayer03 = 134.9375; // mm
 
+  const double rMax = rOuter + 5.0*pitchR; // 308.75 mm
+  const double rMin = rOuter - 1.0*pitchR; // 136.25 mm
+  const double phiMax = TMath::Pi()*15.0/180.0; // 64.0*FST::pitchPhi;
+  const double phiMin = 4.0*pitchPhi;
+
   // IST Cosmic Test Stand Geometry
   const int noRows    = 64; // for one group of sensors
   const int noColumns = 24;
