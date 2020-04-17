@@ -126,6 +126,11 @@ class FstQAStudy : public TObject
     TH2F *h_mFstRawHitsDisplay; // save event display histogram into a TTree
     TH2F *h_mFstRawPedsDisplay;
     TH2F *h_mFstMaxTbDisplay;
+
+    TH2F *h_mFstRawHitsDisplay_bTh; // save event display histogram into a TTree
+    TH2F *h_mFstRawPedsDisplay_bTh;
+    TH2F *h_mFstMaxTbDisplay_bTh;
+
     TH2F *h_mFstClustersDisplay;
     TH2F *h_mHitTracksDisplay;
     TH2F *h_mClusterTracksDisplay;

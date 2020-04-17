@@ -56,8 +56,8 @@ namespace FST
   const float nIstHitsCut = 6.0;
   const float nFstThresholdCut = 2.0; // used for threshold & cluster study
   const float nIstThresholdCut = 3.0;
-  const int maxNHits = 25; // max number of hits array
-  const int maxNHitsPerEvent = 20; // max number of hits per event => bail the event if found more than this number
+  const int maxNHits = 55; // max number of hits array
+  const int maxNHitsPerEvent = 40; // max number of hits per event => bail the event if found more than this number
   const double MinNoise = 10.0;
   const double maxAngle = 100.0;
   const double rad2deg = 180.0/3.141593;

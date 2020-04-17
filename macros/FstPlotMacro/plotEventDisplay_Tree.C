@@ -19,12 +19,7 @@ void plotEventDisplay_Tree()
 {
   // gStyle->SetPalette(kRainBow);
   gStyle->SetPalette(kBlackBody);
-  gStyle->SetPaintTextFormat("1.1f");
-
-  const double rMax = FST::rOuter + 5.0*FST::pitchR;
-  const double rMin = FST::rOuter - 1.0*FST::pitchR;
-  const double phiMax = 128.0*FST::pitchPhi;
-  const double phiMin = -128.0*FST::pitchPhi;
+  gStyle->SetPaintTextFormat("1.0f");
 
   int mEventId;
 
@@ -40,20 +35,27 @@ void plotEventDisplay_Tree()
 
   int mNumOfHitTracks;
   int mNumOfClusterTracks;
-  TH2F *h_mFstRawHitsDisplay = new TH2F("h_mFstRawHitsDisplay","h_mFstRawHitsDisplay",6,rMin,rMax,FST::numPhiSeg*2,phiMin,phiMax);
-  TH2F *h_mFstRawPedsDisplay = new TH2F("h_mFstRawPedsDisplay","h_mFstRawPedsDisplay",6,rMin,rMax,FST::numPhiSeg*2,phiMin,phiMax);
-  TH2F *h_mFstMaxTbDisplay = new TH2F("h_mFstMaxTbDisplay","h_mFstMaxTbDisplay",6,rMin,rMax,FST::numPhiSeg*2,phiMin,phiMax);
-  TH2F *h_mFstClustersDisplay = new TH2F("h_mFstClustersDisplay","h_mFstClustersDisplay",60,rMin,rMax,FST::numPhiSeg*4,phiMin,phiMax);
-  TH2F *h_mHitTracksDisplay = new TH2F("h_mHitTracksDisplay","h_mHitTracksDisplay",60,rMin,rMax,FST::numPhiSeg*4,phiMin,phiMax);
-  TH2F *h_mClusterTracksDisplay = new TH2F("h_mClusterTracksDisplay","h_mClusterTracksDisplay",60,rMin,rMax,FST::numPhiSeg*4,phiMin,phiMax);
-  TGraph *g_mFstClustersDisplay = new TGraph();
-  TGraph *g_mHitTracksDisplay = new TGraph();
+  int mNumOfClusterTracks_2Layer;
+  int mNumOfClusterTracks_3Layer;
+
+  TH2F *h_mFstRawHitsDisplay      = new TH2F("h_mFstRawHitsDisplay","h_mFstRawHitsDisplay",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstRawPedsDisplay      = new TH2F("h_mFstRawPedsDisplay","h_mFstRawPedsDisplay",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstMaxTbDisplay        = new TH2F("h_mFstMaxTbDisplay","h_mFstMaxTbDisplay",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstRawHitsDisplay_bTh  = new TH2F("h_mFstRawHitsDisplay_bTh","h_mFstRawHitsDisplay_bTh",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstRawPedsDisplay_bTh  = new TH2F("h_mFstRawPedsDisplay_bTh","h_mFstRawPedsDisplay_bTh",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstMaxTbDisplay_bTh    = new TH2F("h_mFstMaxTbDisplay_bTh","h_mFstMaxTbDisplay_bTh",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+
+  TH2F *h_mFstClustersDisplay     = new TH2F("h_mFstClustersDisplay","h_mFstClustersDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mHitTracksDisplay       = new TH2F("h_mHitTracksDisplay","h_mHitTracksDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mClusterTracksDisplay   = new TH2F("h_mClusterTracksDisplay","h_mClusterTracksDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TGraph *g_mFstClustersDisplay   = new TGraph();
+  TGraph *g_mHitTracksDisplay     = new TGraph();
   TGraph *g_mClusterTracksDisplay = new TGraph();
 
 
-  // string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140V_withPed_3Sigma.root";
-  string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140V_withPed_2Sigma.root";
-  // string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140V_woPed.root";
+  string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstQAStudy_HV140V_withPed.root";
+  // string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140V_withPed_2Sigma.root";
+  // string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstQAStudy_HV140V_woPed.root";
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TTree *mTree_EventDisplay = (TTree*)File_InPut->Get("mTree_EventDisplay");
   mTree_EventDisplay->SetBranchAddress("mEventId",&mEventId);
@@ -64,6 +66,9 @@ void plotEventDisplay_Tree()
   mTree_EventDisplay->SetBranchAddress("h_mFstRawHitsDisplay",&h_mFstRawHitsDisplay);
   mTree_EventDisplay->SetBranchAddress("h_mFstRawPedsDisplay",&h_mFstRawPedsDisplay);
   mTree_EventDisplay->SetBranchAddress("h_mFstMaxTbDisplay",&h_mFstMaxTbDisplay);
+  mTree_EventDisplay->SetBranchAddress("h_mFstRawHitsDisplay_bTh",&h_mFstRawHitsDisplay_bTh);
+  mTree_EventDisplay->SetBranchAddress("h_mFstRawPedsDisplay_bTh",&h_mFstRawPedsDisplay_bTh);
+  mTree_EventDisplay->SetBranchAddress("h_mFstMaxTbDisplay_bTh",&h_mFstMaxTbDisplay_bTh);
 
   mTree_EventDisplay->SetBranchAddress("mNumOfFstClusters",&mNumOfFstClusters);
   mTree_EventDisplay->SetBranchAddress("mNumOfIst1Clusters",&mNumOfIst1Clusters);
@@ -74,6 +79,8 @@ void plotEventDisplay_Tree()
   mTree_EventDisplay->SetBranchAddress("mNumOfHitTracks",&mNumOfHitTracks);
   mTree_EventDisplay->SetBranchAddress("h_mHitTracksDisplay",&h_mHitTracksDisplay);
   mTree_EventDisplay->SetBranchAddress("mNumOfClusterTracks",&mNumOfClusterTracks);
+  mTree_EventDisplay->SetBranchAddress("mNumOfClusterTracks_2Layer",&mNumOfClusterTracks_2Layer);
+  mTree_EventDisplay->SetBranchAddress("mNumOfClusterTracks_3Layer",&mNumOfClusterTracks_3Layer);
   mTree_EventDisplay->SetBranchAddress("h_mClusterTracksDisplay",&h_mClusterTracksDisplay);
 
   mTree_EventDisplay->SetBranchAddress("g_mFstClustersDisplay",&g_mFstClustersDisplay);
@@ -92,13 +99,17 @@ void plotEventDisplay_Tree()
   const double phiMinFst = 0.0;
 
   string outputname = "./figures/EventDisplay_QA.pdf";
-  TCanvas *c_EventDisplay = new TCanvas("c_EventDisplay","c_EventDisplay",10,10,900,900);
-  c_EventDisplay->cd()->SetLeftMargin(0.15);
-  c_EventDisplay->cd()->SetRightMargin(0.15);
-  c_EventDisplay->cd()->SetBottomMargin(0.15);
-  c_EventDisplay->cd()->SetTicks(1,1);
-  c_EventDisplay->cd()->SetGrid(0,0);
-  c_EventDisplay->cd()->SetLogz();
+  TCanvas *c_EventDisplay = new TCanvas("c_EventDisplay","c_EventDisplay",10,10,800,400);
+  c_EventDisplay->Divide(2,1);
+  for(int i_pad = 0; i_pad < 2; ++i_pad)
+  {
+    c_EventDisplay->cd(i_pad+1)->SetLeftMargin(0.15);
+    c_EventDisplay->cd(i_pad+1)->SetRightMargin(0.15);
+    c_EventDisplay->cd(i_pad+1)->SetBottomMargin(0.15);
+    c_EventDisplay->cd(i_pad+1)->SetTicks(1,1);
+    c_EventDisplay->cd(i_pad+1)->SetGrid(0,0);
+    c_EventDisplay->cd(i_pad+1)->SetLogz();
+  }
   // TLegend *leg = new TLegend(0.4,0.6,0.85,0.8);
   // leg->SetBorderSize(0);
   // leg->SetFillColor(10);
@@ -117,24 +128,18 @@ void plotEventDisplay_Tree()
     // cout << "mNumOfHitTracks = " << mNumOfHitTracks << ", h_mHitTracksDisplay->GetEntries() = " << h_mHitTracksDisplay->GetEntries() << endl;
     // cout << "mNumOfClusterTracks = " << mNumOfClusterTracks << ", h_mClusterTracksDisplay->GetEntries() = " << h_mClusterTracksDisplay->GetEntries() << endl;
 
-    // if(mNumOfFstClusters > 1 && mNumOfHitTracks > 0)
-    // if(mNumOfFstRawHits > 0 && mNumOfHitTracks > 0)
-    // if(mNumOfFstRawHits > 0 && mNumOfHitTracks == 1)
-    // if(mNumOfFstRawHits > 0)
-    // if(mNumOfHitTracks == 1)
-    // if(mNumOfIst1RawHits == 1 && mNumOfIst2RawHits == 1 && mNumOfIst3RawHits == 1)
-    if(mNumOfIst1Clusters == 1 && mNumOfIst2Clusters == 1 && mNumOfIst3Clusters == 1)
+    if(mNumOfClusterTracks == 1 && mNumOfClusterTracks_2Layer == 1) // 2-Layer Tracking
+    // if(mNumOfClusterTracks == 1 && mNumOfClusterTracks_2Layer == 1 && mNumOfClusterTracks_3Layer == 1) // 3-Layer Tracking
     {
-      // string Title = Form("Event %d", i_event);
-      string Title = Form("Event %d", mEventId);
+      c_EventDisplay->cd(1);
+      string Title = Form("Event %d (Threshold 4.5)", mEventId);
       h_mFstRawHitsDisplay->SetTitle(Title.c_str());
       h_mFstRawHitsDisplay->SetStats(0);
       h_mFstRawHitsDisplay->GetXaxis()->SetTitle("R");
       h_mFstRawHitsDisplay->GetXaxis()->SetTitleSize(0.06);
-      h_mFstRawHitsDisplay->GetXaxis()->SetRangeUser(rMin,rMax);
+      h_mFstRawHitsDisplay->GetXaxis()->SetRangeUser(FST::rMin,FST::rMax);
       h_mFstRawHitsDisplay->GetYaxis()->SetTitle("#phi");
-      // h_mFstRawHitsDisplay->GetYaxis()->SetRangeUser(phiMin/2.0,phiMax/2.0);
-      h_mFstRawHitsDisplay->GetYaxis()->SetRangeUser(phiMinFst-10.0*FST::pitchPhi,phiMax/2.0+10.0*FST::pitchPhi);
+      h_mFstRawHitsDisplay->GetYaxis()->SetRangeUser(phiMinFst-10.0*FST::pitchPhi,FST::phiMax+10.0*FST::pitchPhi);
       h_mFstRawHitsDisplay->GetYaxis()->SetTitleSize(0.06);
       h_mFstRawHitsDisplay->GetZaxis()->SetRangeUser(1.0,2000.0);
       h_mFstRawHitsDisplay->Draw("colz");
@@ -149,20 +154,8 @@ void plotEventDisplay_Tree()
       h_mFstMaxTbDisplay->SetMarkerColor(4);
       h_mFstMaxTbDisplay->SetBarOffset(-3.5);
       h_mFstMaxTbDisplay->Draw("TEXT Same");
-      // h_mHitTracksDisplay->SetMarkerStyle(5);
-      // h_mHitTracksDisplay->SetMarkerColor(1);
-      // h_mHitTracksDisplay->SetMarkerSize(1.0);
-      // h_mHitTracksDisplay->Draw("p Same");
 
-      // h_mFstClustersDisplay->Draw("col Same");
-      // h_mFstClustersDisplay->SetMarkerStyle(25);
-      // h_mFstClustersDisplay->SetMarkerColor(2);
-      // h_mFstClustersDisplay->SetMarkerSize(1.0);
-      // h_mFstClustersDisplay->Draw("p Same");
-      // h_mClusterTracksDisplay->SetMarkerStyle(5);
-      // h_mClusterTracksDisplay->SetMarkerColor(2);
-      // h_mClusterTracksDisplay->SetMarkerSize(1.0);
-      // h_mClusterTracksDisplay->Draw("col Same");
+      // plot track
       if(g_mFstClustersDisplay->GetN() > 0)
       {
 	g_mFstClustersDisplay->SetMarkerStyle(25);
@@ -174,15 +167,55 @@ void plotEventDisplay_Tree()
       g_mClusterTracksDisplay->SetMarkerColor(1);
       g_mClusterTracksDisplay->SetMarkerSize(1.0);
       g_mClusterTracksDisplay->Draw("p Same");
+
+      // plot FST acceptance
       PlotLine(rMinFst, rMaxFst, phiMinFst, phiMinFst, 1, 2, 2);
       PlotLine(rMinFst, rMaxFst, phiMaxFst, phiMaxFst, 1, 2, 2);
       PlotLine(rMinFst, rMinFst, phiMinFst, phiMaxFst, 1, 2, 2);
       PlotLine(rMaxFst, rMaxFst, phiMinFst, phiMaxFst, 1, 2, 2);
-      // leg->Clear();
-      // leg->AddEntry(h_mFstRawHitsDisplay,"Hit","F");
-      // leg->AddEntry(h_mFstClustersDisplay,"Cluster","P");
-      // leg->AddEntry(h_mHitTracksDisplay,"Projected Track from Hits","P");
-      // leg->Draw("same");
+
+      c_EventDisplay->cd(2);
+      Title = Form("Event %d (Threshold: 2.0)", mEventId);
+      h_mFstRawHitsDisplay_bTh->SetTitle(Title.c_str());
+      h_mFstRawHitsDisplay_bTh->SetStats(0);
+      h_mFstRawHitsDisplay_bTh->GetXaxis()->SetTitle("R");
+      h_mFstRawHitsDisplay_bTh->GetXaxis()->SetTitleSize(0.06);
+      h_mFstRawHitsDisplay_bTh->GetXaxis()->SetRangeUser(FST::rMin,FST::rMax);
+      h_mFstRawHitsDisplay_bTh->GetYaxis()->SetTitle("#phi");
+      h_mFstRawHitsDisplay_bTh->GetYaxis()->SetRangeUser(phiMinFst-10.0*FST::pitchPhi,FST::phiMax+10.0*FST::pitchPhi);
+      h_mFstRawHitsDisplay_bTh->GetYaxis()->SetTitleSize(0.06);
+      h_mFstRawHitsDisplay_bTh->GetZaxis()->SetRangeUser(1.0,2000.0);
+      h_mFstRawHitsDisplay_bTh->Draw("colz");
+      h_mFstRawHitsDisplay_bTh->SetBarOffset(1.5);
+      h_mFstRawHitsDisplay_bTh->SetMarkerColor(1);
+      h_mFstRawHitsDisplay_bTh->Draw("TEXT Same");
+
+      h_mFstRawPedsDisplay_bTh->SetMarkerColor(2);
+      h_mFstRawPedsDisplay_bTh->SetBarOffset(-1.5);
+      h_mFstRawPedsDisplay_bTh->Draw("TEXT Same");
+
+      h_mFstMaxTbDisplay_bTh->SetMarkerColor(4);
+      h_mFstMaxTbDisplay_bTh->SetBarOffset(-3.5);
+      h_mFstMaxTbDisplay_bTh->Draw("TEXT Same");
+
+      // plot track
+      if(g_mFstClustersDisplay->GetN() > 0)
+      {
+	g_mFstClustersDisplay->SetMarkerStyle(25);
+	g_mFstClustersDisplay->SetMarkerColor(1);
+	g_mFstClustersDisplay->SetMarkerSize(1.0);
+	g_mFstClustersDisplay->Draw("p Same");
+      }
+      g_mClusterTracksDisplay->SetMarkerStyle(5);
+      g_mClusterTracksDisplay->SetMarkerColor(1);
+      g_mClusterTracksDisplay->SetMarkerSize(1.0);
+      g_mClusterTracksDisplay->Draw("p Same");
+
+      // plot FST acceptance
+      PlotLine(rMinFst, rMaxFst, phiMinFst, phiMinFst, 1, 2, 2);
+      PlotLine(rMinFst, rMaxFst, phiMaxFst, phiMaxFst, 1, 2, 2);
+      PlotLine(rMinFst, rMinFst, phiMinFst, phiMaxFst, 1, 2, 2);
+      PlotLine(rMaxFst, rMaxFst, phiMinFst, phiMaxFst, 1, 2, 2);
 
       c_EventDisplay->Update();
       c_EventDisplay->Print(outputname.c_str()); // print integrated efficiency

@@ -82,9 +82,9 @@ FstCluster* FstEvent::createCluster()
 {
   if(mNumOfClusters == mClusters->GetSize())
     mClusters->Expand( mNumOfClusters + 10 );
-  if(mNumOfClusters >= 25)
+  if(mNumOfClusters >= 1000)
   {
-    Fatal( "FstEvent::createCluster()", "ERROR: Too many clusters (>25)!" );
+    Fatal( "FstEvent::createCluster()", "ERROR: Too many clusters (>1000)!" );
     exit( 2 );
   }
 
