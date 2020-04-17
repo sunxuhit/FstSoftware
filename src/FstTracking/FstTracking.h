@@ -71,10 +71,6 @@ class FstTracking : public TObject
     void calEfficiency_Clusters(FstEvent *fstEvent);
     void writeEfficiency_Clusters();
 
-    void initEfficiency_Clusters_triLayer();
-    void calEfficiency_Clusters_triLayer(FstEvent *fstEvent);
-    void writeEfficiency_Clusters_triLayer();
-
   private:
     std::string mHome, mList;
     std::string mOutPutFile;
@@ -129,11 +125,11 @@ class FstTracking : public TObject
     TH2F *h_mTrackHits_IST[4]; // position on FST from IST projection
     TH2F *h_mTrackHits_FST[4]; // position on FST from FST measurement
 
-    TH2F *h_mTrackClusters_IST[4]; // position on FST from IST projection
-    TH2F *h_mTrackClusters_FST[4]; // position on FST from FST measurement
+    TH2F *h_mTrackClusters_IST_2Layer[4]; // position on FST from IST projection
+    TH2F *h_mTrackClusters_FST_2Layer[4]; // position on FST from FST measurement
 
-    TH2F *h_mTrackClustersTriLayer_IST[4]; // position on FST from IST projection
-    TH2F *h_mTrackClustersTriLayer_FST[4]; // position on FST from FST measurement
+    TH2F *h_mTrackClusters_IST_3Layer[4]; // position on FST from IST projection
+    TH2F *h_mTrackClusters_FST_3Layer[4]; // position on FST from FST measurement
 
     // Input TChain for hits and clusters
     TChain *mChainInPut; // input TTree

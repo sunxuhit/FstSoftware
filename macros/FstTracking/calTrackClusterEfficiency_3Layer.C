@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void calTrackClusterEfficiency_triLayer()
+void calTrackClusterEfficiency_3Layer()
 {
   const double rMaxFst = FST::rOuter + 4.0*FST::pitchR;
   const double rMinFst = FST::rOuter;
@@ -21,8 +21,8 @@ void calTrackClusterEfficiency_triLayer()
   bool isSavePed = false;
   std::string hv = "HV140V";
   std::string inputfile;
-  if(isSavePed) inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstTracking_" + hv + "_withPed.root";
-  if(!isSavePed) inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstTracking_" + hv + "_woPed.root";
+  if(isSavePed) inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstTracking_" + hv + "_withPed.root";
+  if(!isSavePed) inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstTracking_" + hv + "_woPed.root";
 
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TH2F *h_mTrackClusters_IST[4];
@@ -35,24 +35,24 @@ void calTrackClusterEfficiency_triLayer()
   for(int i_match = 0; i_match < 4; ++i_match)
   {
     string HistName;
-    HistName = Form("h_mTrackClustersTriLayer_IST_SF%d",i_match);
+    HistName = Form("h_mTrackClusters_IST_3Layer_SF%d",i_match);
     h_mTrackClusters_IST[i_match] = (TH2F*)File_InPut->Get(HistName.c_str());
     // h_mTrackClusters_IST[i_match]->GetXaxis()->SetRangeUser(rMinFst,rMaxFst);
     // h_mTrackClusters_IST[i_match]->GetYaxis()->SetRangeUser(phiMinFst,phiMaxFst);
     h_mTrackClusters_IST[i_match]->Sumw2();
-    HistName = Form("h_mClustersTriLayerR_IST_SF%d",i_match);
+    HistName = Form("h_mClustersR_IST_3Layer_SF%d",i_match);
     h_mClustersR_IST[i_match] = (TH1F*)h_mTrackClusters_IST[i_match]->ProjectionX(HistName.c_str());
-    HistName = Form("h_mClustersTriLayerPhi_IST_SF%d",i_match);
+    HistName = Form("h_mClustersPhi_IST_3Layer_SF%d",i_match);
     h_mClustersPhi_IST[i_match] = (TH1F*)h_mTrackClusters_IST[i_match]->ProjectionY(HistName.c_str());
 
-    HistName = Form("h_mTrackClustersTriLayer_FST_SF%d",i_match);
+    HistName = Form("h_mTrackClusters_FST_3Layer_SF%d",i_match);
     h_mTrackClusters_FST[i_match] = (TH2F*)File_InPut->Get(HistName.c_str());
     // h_mTrackClusters_FST[i_match]->GetXaxis()->SetRangeUser(rMinFst,rMaxFst);
     // h_mTrackClusters_FST[i_match]->GetYaxis()->SetRangeUser(phiMinFst,phiMaxFst);
     h_mTrackClusters_FST[i_match]->Sumw2();
-    HistName = Form("h_mClustersTriLayerR_FST_SF%d",i_match);
+    HistName = Form("h_mClustersR_FST_3Layer_SF%d",i_match);
     h_mClustersR_FST[i_match] = (TH1F*)h_mTrackClusters_FST[i_match]->ProjectionX(HistName.c_str());
-    HistName = Form("h_mClustersTriLayerPhi_FST_SF%d",i_match);
+    HistName = Form("h_mClustersPhi_FST_3Layer_SF%d",i_match);
     h_mClustersPhi_FST[i_match] = (TH1F*)h_mTrackClusters_FST[i_match]->ProjectionY(HistName.c_str());
   }
 
@@ -62,19 +62,19 @@ void calTrackClusterEfficiency_triLayer()
   for(int i_match = 0; i_match < 4; ++i_match)
   {
     string HistName;
-    HistName = Form("h_mEfficiency_SF%d",i_match);
+    HistName = Form("h_mEfficiency_3Layer_SF%d",i_match);
     h_mEfficiency[i_match] = (TH2F*)h_mTrackClusters_IST[i_match]->Clone(HistName.c_str());
     h_mEfficiency[i_match]->SetTitle(HistName.c_str());
     h_mEfficiency[i_match]->Reset();
     h_mEfficiency[i_match]->Divide(h_mTrackClusters_FST[i_match],h_mTrackClusters_IST[i_match],1,1,"B");
 
-    HistName = Form("h_mEffR_SF%d",i_match);
+    HistName = Form("h_mEffR_3Layer_SF%d",i_match);
     h_mEffR[i_match] = (TH1F*)h_mClustersR_IST[i_match]->Clone(HistName.c_str());
     h_mEffR[i_match]->SetTitle(HistName.c_str());
     h_mEffR[i_match]->Reset();
     h_mEffR[i_match]->Divide(h_mClustersR_FST[i_match],h_mClustersR_IST[i_match],1,1,"B");
 
-    HistName = Form("h_mEffPhi_SF%d",i_match);
+    HistName = Form("h_mEffPhi_3Layer_SF%d",i_match);
     h_mEffPhi[i_match] = (TH1F*)h_mClustersPhi_IST[i_match]->Clone(HistName.c_str());
     h_mEffPhi[i_match]->SetTitle(HistName.c_str());
     h_mEffPhi[i_match]->Reset();
@@ -82,8 +82,8 @@ void calTrackClusterEfficiency_triLayer()
   }
 
   string outputname;
-  if(isSavePed) outputname = Form("./figures/Efficiency_TrackClusterTriLayer_%s_withPed.pdf",hv.c_str());
-  if(!isSavePed) outputname = Form("./figures/Efficiency_TrackClusterTriLayer_%s_woPed.pdf",hv.c_str());
+  if(isSavePed) outputname = Form("./figures/Efficiency_TrackCluster_3Layer_%s_withPed.pdf",hv.c_str());
+  if(!isSavePed) outputname = Form("./figures/Efficiency_TrackCluster_3Layer_%s_woPed.pdf",hv.c_str());
   TCanvas *c_play = new TCanvas("c_play","c_play",10,10,900,900);
   c_play->Divide(3,3);
   for(int i_pad = 0; i_pad < 9; ++i_pad)
@@ -95,8 +95,8 @@ void calTrackClusterEfficiency_triLayer()
   }
 
   string output_start;
-  if(isSavePed) output_start = Form("./figures/Efficiency_TrackClusterTriLayer_%s_withPed.pdf[",hv.c_str());
-  if(!isSavePed) output_start = Form("./figures/Efficiency_TrackClusterTriLayer_%s_woPed.pdf[",hv.c_str());
+  if(isSavePed) output_start = Form("./figures/Efficiency_TrackCluster_3Layer_%s_withPed.pdf[",hv.c_str());
+  if(!isSavePed) output_start = Form("./figures/Efficiency_TrackCluster_3Layer_%s_woPed.pdf[",hv.c_str());
   c_play->Print(output_start.c_str()); // open pdf file
 
   for(int i_match = 0; i_match < 4; ++i_match)
@@ -179,7 +179,7 @@ void calTrackClusterEfficiency_triLayer()
   }
 
   string output_stop;
-  if(isSavePed) output_stop = Form("./figures/Efficiency_TrackClusterTriLayer_%s_withPed.pdf]",hv.c_str());
-  if(!isSavePed) output_stop = Form("./figures/Efficiency_TrackClusterTriLayer_%s_woPed.pdf]",hv.c_str());
+  if(isSavePed) output_stop = Form("./figures/Efficiency_TrackCluster_3Layer_%s_withPed.pdf]",hv.c_str());
+  if(!isSavePed) output_stop = Form("./figures/Efficiency_TrackCluster_3Layer_%s_woPed.pdf]",hv.c_str());
   c_play->Print(output_stop.c_str()); // open pdf file
 }

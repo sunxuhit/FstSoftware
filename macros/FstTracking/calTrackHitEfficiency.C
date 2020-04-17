@@ -16,8 +16,8 @@ void calTrackHitEfficiency()
   bool isSavePed = false;
   std::string hv = "HV140V";
   std::string inputfile;
-  if(isSavePed) inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstTracking_" + hv + "_withPed.root";
-  if(!isSavePed) inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstTracking_" + hv + "_woPed.root";
+  if(isSavePed) inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstTracking_" + hv + "_withPed.root";
+  if(!isSavePed) inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstTracking_" + hv + "_woPed.root";
 
   const double rMaxFst = FST::rOuter + 4.0*FST::pitchR;
   const double rMinFst = FST::rOuter;

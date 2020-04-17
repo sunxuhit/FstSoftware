@@ -581,6 +581,8 @@ void FstQAStudy::initEventDisplay_TrackClusters()
   mTree_EventDisplay->Branch("mNumOfHitTracks",&mNumOfHitTracks,"mNumOfHitTracks/I");
   mTree_EventDisplay->Branch("h_mHitTracksDisplay","TH2F",&h_mHitTracksDisplay);
   mTree_EventDisplay->Branch("mNumOfClusterTracks",&mNumOfClusterTracks,"mNumOfClusterTracks/I");
+  mTree_EventDisplay->Branch("mNumOfClusterTracks_2Layer",&mNumOfClusterTracks_2Layer,"mNumOfClusterTracks_2Layer/I");
+  mTree_EventDisplay->Branch("mNumOfClusterTracks_3Layer",&mNumOfClusterTracks_3Layer,"mNumOfClusterTracks_3Layer/I");
   mTree_EventDisplay->Branch("h_mClusterTracksDisplay","TH2F",&h_mClusterTracksDisplay);
 
   mTree_EventDisplay->Branch("g_mFstClustersDisplay","TGraph",&g_mFstClustersDisplay);
@@ -605,6 +607,8 @@ void FstQAStudy::clearEventDisplay_TrackClusters()
 
   mNumOfHitTracks = 0;
   mNumOfClusterTracks = 0;
+  mNumOfClusterTracks_2Layer = 0;
+  mNumOfClusterTracks_3Layer = 0;
 
   h_mFstRawHitsDisplay->Reset();
   h_mFstRawPedsDisplay->Reset();
@@ -665,12 +669,27 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
   }
   // cout << "mNumOfFstClusters = " << mNumOfFstClusters << ", fstEvent->getNumClusters = " << fstEvent->getNumFstClusters() << endl;
 
+  const double rMax = FST::rOuter + 5.0*FST::pitchR;
+  const double rMin = FST::rOuter - 1.0*FST::pitchR;
+  const double phiMax = 64.0*FST::pitchPhi;
+  const double phiMin = -64.0*FST::pitchPhi;
+
   for(int i_track = 0; i_track < mFstEvent_InPut->getNumTracks(); ++i_track)
   { // fill Tracks Display
     FstTrack *fstTrack = mFstEvent_InPut->getTrack(i_track);
+
+    TVector3 pos_ist1 = fstTrack->getPosOrig(1);
+    double y1_ist = pos_ist1.Y(); // original hit postion on IST1
+    TVector3 pos_ist3 = fstTrack->getPosOrig(3);
+    double y3_ist = pos_ist3.Y(); // original hit postion on IST3
+
     TVector3 proj_fst = fstTrack->getProjection(0);
-    double r_proj = proj_fst.Perp();
-    double phi_proj = proj_fst.Phi();
+    double r_proj = proj_fst.X();
+    double phi_proj = proj_fst.Y();
+
+    TVector3 proj_ist2 = fstTrack->getProjection(2);
+    double x2_proj = proj_ist2.X(); // get aligned projected position w.r.t. IST2
+    double y2_proj = proj_ist2.Y(); // x & y for ist2
 
     if(fstTrack->getTrackType() == 0) // track reconstructed with hits
     {
@@ -683,6 +702,31 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
       mNumOfClusterTracks++;
       h_mClusterTracksDisplay->Fill(r_proj,phi_proj);
       g_mClusterTracksDisplay->SetPoint(mNumOfClusterTracks-1,r_proj,phi_proj);
+
+      if( abs(y1_ist-y3_ist) < 17.0*FST::pitchRow )
+      {
+	if(r_proj >= rMin && r_proj <= rMax && phi_proj >= phiMin && phi_proj <= phiMax)
+	{ // save only when in the area of interest
+	  mNumOfClusterTracks_2Layer++; // satisfied 2-Layer tracking
+
+	  for(int i_cluster = 0; i_cluster < fstEvent->getNumClusters(); ++i_cluster)
+	  { // find IST2 matching
+	    FstCluster *fstCluster = fstEvent->getCluster(i_cluster);
+	    if(fstCluster->getLayer() == 2) // IST2
+	    {
+	      double x2_ist = fstCluster->getMeanX(); // x for ist2
+	      double y2_ist = fstCluster->getMeanY(); // y for ist2
+	      if( x2_proj >= 20.0*FST::pitchColumn && x2_proj <= 24.0*FST::pitchColumn )
+	      {
+		if( abs(x2_ist-x2_proj) < 6.0 && abs(y2_ist-y2_proj) < 0.6 )
+		{ // IST2 matching cut
+		  mNumOfClusterTracks_3Layer++;
+		}
+	      }
+	    }
+	  }
+	}
+      }
     }
   }
   mTree_EventDisplay->Fill();

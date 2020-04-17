@@ -28,7 +28,7 @@ namespace FST
   const int noColumns = 24;
   const double pitchRow    = 0.596; //mm
   const double pitchColumn = 6.275; //mm
-  const double pitchLayer12  = 34.925; //mm, distances between the 1st & 2nd Layer => Added by Xu Sun @ 02/13/2020
+  const double pitchLayer12  = 34.925; //mm, distances between the 1st & 2nd Layer
   const double pitchLayer23  = 30.1625; //mm, distances between the 2nd & 3rd Layer
 
   // Alignment Parameters
@@ -39,7 +39,8 @@ namespace FST
   const double x3_shift = 0.45811;
   const double y3_shift = 1.0116;
   const double phi_rot_ist2 = 0.0438495; // aligned IST2 to FST with 2-layer tracking
-  const double x2_shift = 134.99;
+  // const double x2_shift = 134.99;
+  const double x2_shift = 140.99; // x2_shift + 6.0
   const double y2_shift = -20.7848;
 
   // const int nPedCuts = 3;

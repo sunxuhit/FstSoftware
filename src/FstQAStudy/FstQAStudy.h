@@ -118,7 +118,9 @@ class FstQAStudy : public TObject
     int mNumOfIst2Clusters;
     int mNumOfIst3Clusters;
     int mNumOfHitTracks;
-    int mNumOfClusterTracks;
+    int mNumOfClusterTracks; // all tracks with 2-Layer tracking
+    int mNumOfClusterTracks_2Layer; // 2-Layer tracking within area of interest
+    int mNumOfClusterTracks_3Layer; // 3-Layer tracking within area of interest
 
     // Event Display
     TH2F *h_mFstRawHitsDisplay; // save event display histogram into a TTree
