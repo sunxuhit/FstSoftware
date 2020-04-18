@@ -29,6 +29,7 @@
 - group raw hits into clusters
 - find tracking based on hits and clusters in IST1 & IST3
 - save all information to FstEvent
+- `FstClusterMaker.cxx` line 216 -- line 593 to change used time bin from 3 to 1
 
 ##### FstTracking
 - read in FstEvent
@@ -84,7 +85,7 @@
   - output file canbe sepcified in the macro
 5. rename the output with configuration
   - default output file name is *FstClusters\_HV140V\_withPed.root*
-  - rename it with configurations: **FstClusters]_HV140V\_withPed\_Th4o5Tb3.root**
+  - rename it with configurations: **FstClusters\_HV140V\_withPed\_Th4o5Tb3.root**
     - Th4o5Tb3 stands for 4.5 threshold and 3 used time bins
 6. `FstPlotMacro`: . ./plotQA.sh
   - change **hv** and **config** in `plotQA.sh` for different HV and configuration
