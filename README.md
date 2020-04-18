@@ -1,8 +1,10 @@
 ### this is a code package for 2020 FST Cosmic Test Stand @ UIC
 
 #### macro
-- extract IST position dependent tracking resolution and efficiency
-- use IST as a scope to extract FST position dependent tracking resolution and efficiency
+- `IstTracking` extract IST position dependent tracking resolution and efficiency.
+- `FstUtil` test FstRawHit, FstCluster, FstTrack and FstEvent classes.
+- `FstClusterMaker` analyze raw data and produce RawHits, Clusters and Tracks.
+  - root -l -b -q makeFstCluster.C
 
 ---------------
 
