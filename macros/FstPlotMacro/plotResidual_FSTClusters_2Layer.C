@@ -37,7 +37,8 @@ int plotResidual_FSTClusters_2Layer()
   const double x2_shift = 134.99;
   const double y2_shift = -20.7848;
 
-  std::string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstClusters_HV140V_woPed.root";
+  // std::string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstClusters_HV140V_woPed.root";
+  std::string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstClusters_HV140V_withPed.root";
   std::cout << "inputfile = " << inputfile.c_str() << std::endl;
 
   TFile *mFile_InPut = TFile::Open(inputfile.c_str());
@@ -48,11 +49,11 @@ int plotResidual_FSTClusters_2Layer()
   TH1F *h_mXResidual_Clusters_Before   = new TH1F("h_mXResidual_Clusters_Before","h_mXResidual_Clusters_Before",100,0.0,320.0);
   TH1F *h_mYResidual_Clusters_Before   = new TH1F("h_mYResidual_Clusters_Before","h_mYResidual_Clusters_Before",100,-50.0,10.0);
   TH1F *h_mRResidual_Clusters_Before   = new TH1F("h_mRResidual_Clusters_Before","h_mRResidual_Clusters_Before",100,0.0,320.0);
-  TH1F *h_mPhiResidual_Clusters_Before = new TH1F("h_mPhiResidual_Clusters_Before","h_mPhiResidual_Clusters_Before",100,-0.5,0.5);
+  TH1F *h_mPhiResidual_Clusters_Before = new TH1F("h_mPhiResidual_Clusters_Before","h_mPhiResidual_Clusters_Before",100,-1.5,1.5);
 
-  TH1F *h_mXResidual_Clusters          = new TH1F("h_mXResidual_Clusters","h_mXResidual_Clusters",25,-80,80.0);
+  TH1F *h_mXResidual_Clusters          = new TH1F("h_mXResidual_Clusters","h_mXResidual_Clusters",50,-160,160.0);
   TH1F *h_mYResidual_Clusters          = new TH1F("h_mYResidual_Clusters","h_mYResidual_Clusters",100,-16.0,16.0);
-  TH1F *h_mRResidual_Clusters          = new TH1F("h_mRResidual_Clusters","h_mRResidual_Clusters",25,-80.0,80.0);
+  TH1F *h_mRResidual_Clusters          = new TH1F("h_mRResidual_Clusters","h_mRResidual_Clusters",50,-160.0,160.0);
   TH1F *h_mPhiResidual_Clusters        = new TH1F("h_mPhiResidual_Clusters","h_mPhiResidual_Clusters",100,-0.05,0.05);
 
   long NumOfEvents = (long)mTree_FstEvent->GetEntries();
@@ -228,7 +229,7 @@ int plotResidual_FSTClusters_2Layer()
   h_mRResidual_Clusters->GetYaxis()->SetTitleSize(0.06);
   h_mRResidual_Clusters->DrawCopy();
   h_mRResidual_Clusters->Fit("gaus");
-  h_mRResidual_Clusters->GetXaxis()->SetRangeUser(-80.0,80.0);
+  h_mRResidual_Clusters->GetXaxis()->SetRangeUser(-160.0,160.0);
   h_mRResidual_Clusters->DrawCopy("same");
 
   c_play->cd(8);
@@ -240,7 +241,8 @@ int plotResidual_FSTClusters_2Layer()
   h_mPhiResidual_Clusters->Draw();
   h_mPhiResidual_Clusters->Fit("gaus");
 
-  c_play->SaveAs("./figures/Residual_FSTClusters_2Layer.eps");
+  // c_play->SaveAs("./figures/Residual_FSTClusters_2Layer.eps");
+  c_play->SaveAs("./figures/Residual_FSTClusters_2Layer.pdf");
 
   return 1;
 }

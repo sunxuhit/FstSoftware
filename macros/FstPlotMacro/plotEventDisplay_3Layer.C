@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotEventDisplay_Tree()
+void plotEventDisplay_3Layer()
 {
   // gStyle->SetPalette(kRainBow);
   gStyle->SetPalette(kBlackBody);
@@ -98,7 +98,7 @@ void plotEventDisplay_Tree()
   const double phiMaxFst = 64.0*FST::pitchPhi;
   const double phiMinFst = 0.0;
 
-  string outputname = "./figures/EventDisplay_QA.pdf";
+  string outputname = "./figures/EventDisplay_3Layer.pdf";
   TCanvas *c_EventDisplay = new TCanvas("c_EventDisplay","c_EventDisplay",10,10,800,400);
   c_EventDisplay->Divide(2,1);
   for(int i_pad = 0; i_pad < 2; ++i_pad)
@@ -115,7 +115,7 @@ void plotEventDisplay_Tree()
   // leg->SetFillColor(10);
 
   int numOfUsedEvent = 0;
-  string output_start = "./figures/EventDisplay_QA.pdf[";
+  string output_start = "./figures/EventDisplay_3Layer.pdf[";
   c_EventDisplay->Print(output_start.c_str()); // open pdf file
 
   for(int i_event = 0; i_event < NumOfEvents; ++i_event)
@@ -128,8 +128,8 @@ void plotEventDisplay_Tree()
     // cout << "mNumOfHitTracks = " << mNumOfHitTracks << ", h_mHitTracksDisplay->GetEntries() = " << h_mHitTracksDisplay->GetEntries() << endl;
     // cout << "mNumOfClusterTracks = " << mNumOfClusterTracks << ", h_mClusterTracksDisplay->GetEntries() = " << h_mClusterTracksDisplay->GetEntries() << endl;
 
-    if(mNumOfClusterTracks == 1 && mNumOfClusterTracks_2Layer == 1) // 2-Layer Tracking
-    // if(mNumOfClusterTracks == 1 && mNumOfClusterTracks_2Layer == 1 && mNumOfClusterTracks_3Layer == 1) // 3-Layer Tracking
+    // if(mNumOfClusterTracks == 1 && mNumOfClusterTracks_2Layer == 1) // 2-Layer Tracking
+    if(mNumOfClusterTracks == 1 && mNumOfClusterTracks_2Layer == 1 && mNumOfClusterTracks_3Layer == 1) // 3-Layer Tracking
     {
       c_EventDisplay->cd(1);
       string Title = Form("Event %d (Threshold 4.5)", mEventId);
@@ -226,7 +226,7 @@ void plotEventDisplay_Tree()
 
   cout << "numOfUsedEvent = " << numOfUsedEvent << endl;
 
-  string output_stop =  "./figures/EventDisplay_QA.pdf]";
+  string output_stop =  "./figures/EventDisplay_3Layer.pdf]";
   c_EventDisplay->Print(output_stop.c_str()); // close pdf file
 }
 

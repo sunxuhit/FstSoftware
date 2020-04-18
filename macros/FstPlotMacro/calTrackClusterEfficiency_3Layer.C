@@ -17,8 +17,8 @@ void calTrackClusterEfficiency_3Layer()
   const double phiMaxFst = 64.0*FST::pitchPhi;
   const double phiMinFst = 0.0;
 
-  // bool isSavePed = true;
-  bool isSavePed = false;
+  bool isSavePed = true;
+  // bool isSavePed = false;
   std::string hv = "HV140V";
   std::string inputfile;
   if(isSavePed) inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstTracking_" + hv + "_withPed.root";

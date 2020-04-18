@@ -586,6 +586,9 @@ void FstQAStudy::initEventDisplay_TrackClusters()
   mTree_EventDisplay->Branch("g_mClusterTracksDisplay","TGraph",&g_mClusterTracksDisplay);
 
   mTree_EventDisplay->SetAutoSave(50000000);
+
+  h_mNumFstRawHitsDisplay = new TH1F("h_mNumFstRawHitsDisplay","h_mNumFstRawHitsDisplay",100,-0.5,99.5);
+  h_mNumFstClustersDisplay = new TH1F("h_mNumFstClustersDisplay","h_mNumFstClustersDisplay",100,-0.5,99.5);
 }
 
 void FstQAStudy::clearEventDisplay_TrackClusters()
@@ -655,6 +658,7 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
     if(fstRawHit->getLayer() == 3) mNumOfIst3RawHits++;
   }
   // cout << "mNumOfFstRawHits = " << mNumOfFstRawHits << ", fstEvent->getNumRawHits = " << fstEvent->getNumFstClusters() << endl;
+  h_mNumFstRawHitsDisplay->Fill(mNumOfFstRawHits);
 
   for(int i_cluster = 0; i_cluster < fstEvent->getNumClusters(); ++i_cluster)
   { // fill Clusters Display
@@ -674,6 +678,7 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
     if(fstCluster->getLayer() == 3) mNumOfIst3Clusters++;
   }
   // cout << "mNumOfFstClusters = " << mNumOfFstClusters << ", fstEvent->getNumClusters = " << fstEvent->getNumFstClusters() << endl;
+  h_mNumFstClustersDisplay->Fill(mNumOfFstClusters);
 
   for(int i_track = 0; i_track < mFstEvent_InPut->getNumTracks(); ++i_track)
   { // fill Tracks Display
@@ -736,5 +741,7 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
 void FstQAStudy::writeEventDisplay_TrackClusters()
 {
   mTree_EventDisplay->Write();
+  h_mNumFstRawHitsDisplay->Write();
+  h_mNumFstClustersDisplay->Write();
 }
 //--------------Event Display---------------------
