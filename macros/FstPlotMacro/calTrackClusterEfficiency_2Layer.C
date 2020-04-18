@@ -10,19 +10,14 @@
 
 using namespace std;
 
-void calTrackClusterEfficiency_2Layer()
+void calTrackClusterEfficiency_2Layer(string hv = "HV140V", string config = "Th4o5Tb3")
 {
   const double rMaxFst = FST::rOuter + 4.0*FST::pitchR;
   const double rMinFst = FST::rOuter;
   const double phiMaxFst = 64.0*FST::pitchPhi;
   const double phiMinFst = 0.0;
 
-  bool isSavePed = true;
-  // bool isSavePed = false;
-  std::string hv = "HV140V";
-  std::string inputfile;
-  if(isSavePed) inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstTracking_" + hv + "_withPed.root";
-  if(!isSavePed) inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstTracking_" + hv + "_woPed.root";
+  string inputfile = Form("/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstTracking_%s_withPed_%s.root",hv.c_str(),config.c_str());
 
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TH2F *h_mTrackClusters_IST[4];
@@ -81,9 +76,7 @@ void calTrackClusterEfficiency_2Layer()
     h_mEffPhi[i_match]->Divide(h_mClustersPhi_FST[i_match],h_mClustersPhi_IST[i_match],1,1,"B");
   }
 
-  string outputname;
-  if(isSavePed) outputname = Form("./figures/Efficiency_TrackCluster_2Layer_%s_withPed.pdf",hv.c_str());
-  if(!isSavePed) outputname = Form("./figures/Efficiency_TrackCluster_2Layer_%s_woPed.pdf",hv.c_str());
+  string outputname = "./figures/Efficiency_TrackCluster_2Layer.pdf";
   TCanvas *c_play = new TCanvas("c_play","c_play",10,10,900,900);
   c_play->Divide(3,3);
   for(int i_pad = 0; i_pad < 9; ++i_pad)
@@ -94,9 +87,7 @@ void calTrackClusterEfficiency_2Layer()
     c_play->cd(i_pad+1)->SetGrid(0,0);
   }
 
-  string output_start;
-  if(isSavePed) output_start = Form("./figures/Efficiency_TrackCluster_2Layer_%s_withPed.pdf[",hv.c_str());
-  if(!isSavePed) output_start = Form("./figures/Efficiency_TrackCluster_2Layer_%s_woPed.pdf[",hv.c_str());
+  string output_start = "./figures/Efficiency_TrackCluster_2Layer.pdf[";
   c_play->Print(output_start.c_str()); // open pdf file
 
   for(int i_match = 0; i_match < 4; ++i_match)
@@ -178,8 +169,6 @@ void calTrackClusterEfficiency_2Layer()
     c_play->Print(outputname.c_str());
   }
 
-  string output_stop;
-  if(isSavePed) output_stop = Form("./figures/Efficiency_TrackCluster_2Layer_%s_withPed.pdf]",hv.c_str());
-  if(!isSavePed) output_stop = Form("./figures/Efficiency_TrackCluster_2Layer_%s_woPed.pdf]",hv.c_str());
+  string output_stop = "./figures/Efficiency_TrackCluster_2Layer.pdf]";
   c_play->Print(output_stop.c_str()); // open pdf file
 }

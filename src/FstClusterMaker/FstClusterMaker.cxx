@@ -264,7 +264,7 @@ int FstClusterMaker::Make()
 		maxTB = 0;
 		preADC = maxADC;
 		float nPedsCut = FST::nIstThresholdCut; // 3.0 for IST
-		if(i_arm == 1 && i_port == 1) nPedsCut = FST::nFstThresholdCut; // 3.0 for FST
+		if(i_arm == 1 && i_port == 1) nPedsCut = FST::nFstThresholdCut; // 2.0 for FST
 		for(int i_tb = 1; i_tb < FST::numTBins-1; ++i_tb)
 		{ // only if 3 consequetive timebins of a ch exceed the threshold cut is considered as a hit
 		  if( 
@@ -380,7 +380,7 @@ int FstClusterMaker::Make()
 		{ // only if 2 consequetive timebins of a ch exceed the threshold cut is considered as a hit
 		  if( 
 		      ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
-		      ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]) &&
+		      ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb])
 		    ) 
 		  {
 		    isPed = true; // set isPed to true if 2 consequetive time bins exceed the threshold

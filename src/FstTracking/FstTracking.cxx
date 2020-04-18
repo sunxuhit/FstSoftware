@@ -455,16 +455,16 @@ void FstTracking::writeTracking_Hits()
 //--------------Track Resolution with Clusters---------------------
 void FstTracking::initTracking_Clusters()
 {
-  h_mTrackXRes_Clusters_2Layer   = new TH1F("h_mTrackXRes_Clusters_2Layer","h_mTrackXRes_Clusters_2Layer",25,-80.0,80.0);
+  h_mTrackXRes_Clusters_2Layer   = new TH1F("h_mTrackXRes_Clusters_2Layer","h_mTrackXRes_Clusters_2Layer",50,-160.0,160.0);
   h_mTrackYRes_Clusters_2Layer   = new TH1F("h_mTrackYRes_Clusters_2Layer","h_mTrackYRes_Clusters_2Layer",100,-16.0,16.0);
-  h_mTrackRRes_Clusters_2Layer   = new TH1F("h_mTrackRRes_Clusters_2Layer","h_mTrackRRes_Clusters_2Layer",25,-80.0,80.0);
+  h_mTrackRRes_Clusters_2Layer   = new TH1F("h_mTrackRRes_Clusters_2Layer","h_mTrackRRes_Clusters_2Layer",50,-160.0,160.0);
   h_mTrackPhiRes_Clusters_2Layer = new TH1F("h_mTrackPhiRes_Clusters_2Layer","h_mTrackPhiRes_Clusters_2Layer",100,-0.05,0.05);
   h_mTrackXResIST_2Layer         = new TH1F("h_mTrackXResIST_2Layer","h_mTrackXResIST_2Layer",15,-20.0,20.0);
   h_mTrackYResIST_2Layer         = new TH1F("h_mTrackYResIST_2Layer","h_mTrackYResIST_2Layer",100,-5.0,5.0);
 
-  h_mTrackXRes_Clusters_3Layer   = new TH1F("h_mTrackXRes_Clusters_3Layer","h_mTrackXRes_Clusters_3Layer",25,-80.0,80.0);
+  h_mTrackXRes_Clusters_3Layer   = new TH1F("h_mTrackXRes_Clusters_3Layer","h_mTrackXRes_Clusters_3Layer",50,-160.0,160.0);
   h_mTrackYRes_Clusters_3Layer   = new TH1F("h_mTrackYRes_Clusters_3Layer","h_mTrackYRes_Clusters_3Layer",100,-16.0,16.0);
-  h_mTrackRRes_Clusters_3Layer   = new TH1F("h_mTrackRRes_Clusters_3Layer","h_mTrackRRes_Clusters_3Layer",25,-80.0,80.0);
+  h_mTrackRRes_Clusters_3Layer   = new TH1F("h_mTrackRRes_Clusters_3Layer","h_mTrackRRes_Clusters_3Layer",50,-160.0,160.0);
   h_mTrackPhiRes_Clusters_3Layer = new TH1F("h_mTrackPhiRes_Clusters_3Layer","h_mTrackPhiRes_Clusters_3Layer",100,-0.05,0.05);
   h_mTrackXResIST_3Layer         = new TH1F("h_mTrackXResIST_3Layer","h_mTrackXResIST_3Layer",15,-20.0,20.0);
   h_mTrackYResIST_3Layer         = new TH1F("h_mTrackYResIST_3Layer","h_mTrackYResIST_3Layer",100,-5.0,5.0);

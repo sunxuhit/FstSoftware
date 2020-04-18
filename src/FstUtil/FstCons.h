@@ -53,6 +53,7 @@ namespace FST
   const float nFstPedsCut = 3.0; // used for ped 
   const float nIstPedsCut = 3.0;
   const float nFstHitsCut = 4.5; // used for hits
+  // const float nFstHitsCut = 3.0; // used for hits
   const float nIstHitsCut = 6.0;
   const float nFstThresholdCut = 2.0; // used for threshold & cluster study
   const float nIstThresholdCut = 3.0;

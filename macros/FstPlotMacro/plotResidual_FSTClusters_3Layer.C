@@ -16,7 +16,7 @@
 
 R__LOAD_LIBRARY(/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/lib/libFstEvent.dylib)
 
-int plotResidual_FSTClusters_3Layer()
+int plotResidual_FSTClusters_3Layer(string hv = "HV140V", string config = "Th4o5Tb3")
 {
   gStyle->SetOptStat(11111);
   gStyle->SetOptFit(1001);
@@ -40,8 +40,7 @@ int plotResidual_FSTClusters_3Layer()
   const double xMax = 24.0*FST::pitchColumn; // center of 23 column + 0.5*pitchColumn
   const double xMin = 20.0*FST::pitchColumn; // center of 20 column - 0.5*pitchColumn
 
-  // std::string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstClusters_HV140V_woPed.root";
-  std::string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstClusters_HV140V_withPed.root";
+  std::string inputfile = Form("/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstClusters_%s_withPed_%s.root",hv.c_str(),config.c_str());
   std::cout << "inputfile = " << inputfile.c_str() << std::endl;
 
   TFile *mFile_InPut = TFile::Open(inputfile.c_str());
