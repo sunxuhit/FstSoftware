@@ -57,6 +57,7 @@ namespace FST
   const float nIstHitsCut = 6.0;
   const float nFstThresholdCut = 2.0; // used for threshold & cluster study
   const float nIstThresholdCut = 3.0;
+  const int numOfUsedTimeBins = 3; // number of time bins used for FST Hits reconstruction
   const int maxNHits = 25; // max number of hits array
   const int maxNHitsPerEvent = 20; // max number of hits per event => bail the event if found more than this number
   const double MinNoise = 10.0;
