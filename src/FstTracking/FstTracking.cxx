@@ -411,33 +411,47 @@ void FstTracking::calResolution_Hits(FstEvent *fstEvent)
   }
   int numOfFstHits = fstRawHitVec.size();
 
-  if(numOfFstHits > 0)
+  for(int i_track = 0; i_track < trackHitVec.size(); ++i_track)
   {
-    for(int i_hit = 0; i_hit < numOfFstHits; ++i_hit)
+    TVector3 proj_fst = trackHitVec[i_track]->getProjection(0);
+    double r_proj     = proj_fst.X();
+    double phi_proj   = proj_fst.Y();
+    double x0_proj    = r_proj*TMath::Cos(phi_proj);
+    double y0_proj    = r_proj*TMath::Sin(phi_proj);;
+
+    if(numOfFstHits > 0)
     {
-      double r_fst = fstRawHitVec[i_hit]->getPosX(); // r for fst
-      double phi_fst = fstRawHitVec[i_hit]->getPosY(); // phi for fst
-      double x0_fst = r_fst*TMath::Cos(phi_fst);
-      double y0_fst = r_fst*TMath::Sin(phi_fst);
+      double minDistance_FST = 1000.0;
+      int minHitId_FST = -1;
+      double preDistance_FST = minDistance_FST;
 
-      // fill residual histograms
-      for(int i_track = 0; i_track < trackHitVec.size(); ++i_track)
+      for(int i_hit = 0; i_hit < numOfFstHits; ++i_hit)
+      { // fill residual histograms with the hit of minimum distance
+	double r_fst = fstRawHitVec[i_hit]->getPosX(); // r for fst
+	double phi_fst = fstRawHitVec[i_hit]->getPosY(); // phi for fst
+	double x0_fst = r_fst*TMath::Cos(phi_fst);
+	double y0_fst = r_fst*TMath::Sin(phi_fst);
+
+	double distance_FST = abs(r_fst-r_proj)/FST::pitchR + abs(phi_fst-phi_proj)/FST::pitchPhi;
+	if(distance_FST < preDistance_FST)
+	{ 
+	  minDistance_FST = distance_FST;
+	  minHitId_FST = i_hit;
+	  preDistance_FST = minDistance_FST;
+	}
+      }
+
+      if(minHitId_FST > -0.5)
       {
-	TVector3 proj_fst = trackHitVec[i_track]->getProjection(0);
-	double r_proj     = proj_fst.X();
-	double phi_proj   = proj_fst.Y();
-	double x0_proj    = r_proj*TMath::Cos(phi_proj);
-	double y0_proj    = r_proj*TMath::Sin(phi_proj);;
+	double r_fst = fstRawHitVec[minHitId_FST]->getPosX(); // r for fst
+	double phi_fst = fstRawHitVec[minHitId_FST]->getPosY(); // phi for fst
+	double x0_fst = r_fst*TMath::Cos(phi_fst);
+	double y0_fst = r_fst*TMath::Sin(phi_fst);
 
-	double xResidual = x0_fst-x0_proj;
-	double yResidual = y0_fst-y0_proj;
-	h_mTrackXRes_Hits->Fill(xResidual);
-	h_mTrackYRes_Hits->Fill(yResidual);
-
-	double rResidual = r_fst-r_proj;
-	double phiResidual = phi_fst-phi_proj;
-	h_mTrackRRes_Hits->Fill(rResidual);
-	h_mTrackPhiRes_Hits->Fill(phiResidual);
+	h_mTrackXRes_Hits->Fill(x0_fst-x0_proj);
+	h_mTrackYRes_Hits->Fill(y0_fst-y0_proj);
+	h_mTrackRRes_Hits->Fill(r_fst-r_proj);
+	h_mTrackPhiRes_Hits->Fill(phi_fst-phi_proj);
       }
     }
   }
@@ -523,10 +537,29 @@ void FstTracking::calResolution_Clusters(FstEvent *fstEvent)
     {
       if(clusterVec_fst.size() > 0)
       {
+	double minDistance_FST = 1000.0;
+	int minClusterId_FST = -1;
+	double preDistance_FST = minDistance_FST;
 	for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
-	{ // fill residual histograms
+	{ // fill residual histograms with the cluster of minimum distance
 	  double r_fst   = clusterVec_fst[i_cluster]->getMeanX(); // r for fst
 	  double phi_fst = clusterVec_fst[i_cluster]->getMeanY(); // phi for fst
+	  double x0_fst  = r_fst*TMath::Cos(phi_fst);
+	  double y0_fst  = r_fst*TMath::Sin(phi_fst);
+
+	  double distance_FST = abs(r_fst-r_proj)/FST::pitchR + abs(phi_fst-phi_proj)/FST::pitchPhi;
+	  if(distance_FST < preDistance_FST)
+	  { 
+	    minDistance_FST = distance_FST;
+	    minClusterId_FST = i_cluster;
+	    preDistance_FST = minDistance_FST;
+	  }
+	}
+
+	if(minClusterId_FST > -0.5)
+	{
+	  double r_fst   = clusterVec_fst[minClusterId_FST]->getMeanX(); // r for fst
+	  double phi_fst = clusterVec_fst[minClusterId_FST]->getMeanY(); // phi for fst
 	  double x0_fst  = r_fst*TMath::Cos(phi_fst);
 	  double y0_fst  = r_fst*TMath::Sin(phi_fst);
 
@@ -538,10 +571,27 @@ void FstTracking::calResolution_Clusters(FstEvent *fstEvent)
       }
       if(clusterVec_ist2.size() > 0)
       {
+	double minDistance_IST = 1000.0;
+	int minClusterId_IST = -1;
+	double preDistance_IST = minDistance_IST;
 	for(int i_cluster = 0; i_cluster < clusterVec_ist2.size(); ++i_cluster)
-	{ // fill residual histograms
+	{ // fill residual histograms with the cluster of minimum distance
 	  double x2_ist = clusterVec_ist2[i_cluster]->getMeanX(); // x for ist2
 	  double y2_ist = clusterVec_ist2[i_cluster]->getMeanY(); // y for ist2
+
+	  double distance_IST = abs(x2_ist-x2_proj)/FST::pitchColumn + abs(y2_ist-y2_proj)/FST::pitchRow;
+	  if(distance_IST < preDistance_IST)
+	  { 
+	    minDistance_IST = distance_IST;
+	    minClusterId_IST = i_cluster;
+	    preDistance_IST = minDistance_IST;
+	  }
+	}
+
+	if(minClusterId_IST > -0.5)
+	{
+	  double x2_ist = clusterVec_ist2[minClusterId_IST]->getMeanX(); // x for ist2
+	  double y2_ist = clusterVec_ist2[minClusterId_IST]->getMeanY(); // y for ist2
 
 	  h_mTrackXResIST_2Layer->Fill(x2_ist-x2_proj);
 	  h_mTrackYResIST_2Layer->Fill(y2_ist-y2_proj);
@@ -572,8 +622,16 @@ void FstTracking::calResolution_Clusters(FstEvent *fstEvent)
     {
       if(clusterVec_ist2.size() > 0)
       {
+	double minDistance_FST = 1000.0;
+	int minClusterId_FST = -1;
+	double preDistance_FST = minDistance_FST;
+
+	double minDistance_IST = 1000.0;
+	int minClusterId_IST = -1;
+	double preDistance_IST = minDistance_IST;
+
 	for(int i_ist2 = 0; i_ist2 < clusterVec_ist2.size(); ++i_ist2)
-	{ // fill residual histograms
+	{ // fill residual histograms with the clusters of minimum distance
 	  double x2_ist = clusterVec_ist2[i_ist2]->getMeanX(); // x for ist2
 	  double y2_ist = clusterVec_ist2[i_ist2]->getMeanY(); // y for ist2
 
@@ -588,15 +646,46 @@ void FstTracking::calResolution_Clusters(FstEvent *fstEvent)
 		double x0_fst  = r_fst*TMath::Cos(phi_fst);
 		double y0_fst  = r_fst*TMath::Sin(phi_fst);
 
-		h_mTrackXRes_Clusters_3Layer->Fill(x0_fst-x0_proj);
-		h_mTrackYRes_Clusters_3Layer->Fill(y0_fst-y0_proj);
-		h_mTrackRRes_Clusters_3Layer->Fill(r_fst-r_proj);
-		h_mTrackPhiRes_Clusters_3Layer->Fill(phi_fst-phi_proj);
+		double distance_FST = abs(r_fst-r_proj)/FST::pitchR + abs(phi_fst-phi_proj)/FST::pitchPhi;
+		if(distance_FST < preDistance_FST)
+		{ 
+		  minDistance_FST = distance_FST;
+		  minClusterId_FST = i_cluster;
+		  preDistance_FST = minDistance_FST;
+		}
 	      }
 	    }
-	    h_mTrackXResIST_3Layer->Fill(x2_ist-x2_proj);
-	    h_mTrackYResIST_3Layer->Fill(y2_ist-y2_proj);
+
+	    double distance_IST = abs(x2_ist-x2_proj)/FST::pitchColumn + abs(y2_ist-y2_proj)/FST::pitchRow;
+	    if(distance_IST < preDistance_IST)
+	    { 
+	      minDistance_IST = distance_IST;
+	      minClusterId_IST = i_ist2;
+	      preDistance_IST = minDistance_IST;
+	    }
 	  }
+	}
+
+	if(minClusterId_FST > -0.5)
+	{
+	  double r_fst   = clusterVec_fst[minClusterId_FST]->getMeanX(); // r for fst
+	  double phi_fst = clusterVec_fst[minClusterId_FST]->getMeanY(); // phi for fst
+	  double x0_fst  = r_fst*TMath::Cos(phi_fst);
+	  double y0_fst  = r_fst*TMath::Sin(phi_fst);
+
+	  h_mTrackXRes_Clusters_3Layer->Fill(x0_fst-x0_proj);
+	  h_mTrackYRes_Clusters_3Layer->Fill(y0_fst-y0_proj);
+	  h_mTrackRRes_Clusters_3Layer->Fill(r_fst-r_proj);
+	  h_mTrackPhiRes_Clusters_3Layer->Fill(phi_fst-phi_proj);
+	}
+
+	if(minClusterId_IST > -0.5)
+	{
+	  double x2_ist = clusterVec_ist2[minClusterId_IST]->getMeanX(); // x for ist2
+	  double y2_ist = clusterVec_ist2[minClusterId_IST]->getMeanY(); // y for ist2
+
+	  h_mTrackXResIST_3Layer->Fill(x2_ist-x2_proj);
+	  h_mTrackYResIST_3Layer->Fill(y2_ist-y2_proj);
 	}
       }
     }
@@ -670,6 +759,8 @@ void FstTracking::calEfficiency_Hits(FstEvent *fstEvent)
     { // used for efficiency only if the projected position is within FST acceptance
       for(int i_match = 0; i_match < 4; ++i_match)
       {
+	h_mTrackHits_IST[i_match]->Fill(r_proj,phi_proj);
+	int nMatchedTrack = 0;
 	if(numOfFstHits > 0)
 	{
 	  for(int i_hit = 0; i_hit < numOfFstHits; ++i_hit)
@@ -678,19 +769,15 @@ void FstTracking::calEfficiency_Hits(FstEvent *fstEvent)
 	    double phi_fst = fstRawHitVec[i_hit]->getPosY();
 	    if(i_match == 0)
 	    {
-	      h_mTrackHits_FST[i_match]->Fill(r_proj,phi_proj);
+	      nMatchedTrack++;
 	    }
-	    if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= (i_match*10+0.5)*FST::pitchPhi)
+	    if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
 	    {
-	      h_mTrackHits_FST[i_match]->Fill(r_proj,phi_proj);
+	      nMatchedTrack++;
 	    }
-	    h_mTrackHits_IST[i_match]->Fill(r_proj,phi_proj);
 	  }
 	}
-	else
-	{
-	  h_mTrackHits_IST[i_match]->Fill(r_proj,phi_proj);
-	}
+	if(nMatchedTrack > 0) h_mTrackHits_FST[i_match]->Fill(r_proj,phi_proj);
       }
     }
   }
@@ -774,6 +861,8 @@ void FstTracking::calEfficiency_Clusters(FstEvent *fstEvent)
       { // used for efficiency only if the projected position is within FST acceptance
 	for(int i_match = 0; i_match < 4; ++i_match)
 	{
+	  h_mTrackClusters_IST_2Layer[i_match]->Fill(r_proj,phi_proj);
+	  int nMatchedTrack = 0;
 	  if(clusterVec_fst.size() > 0)
 	  {
 	    for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
@@ -782,19 +871,15 @@ void FstTracking::calEfficiency_Clusters(FstEvent *fstEvent)
 	      double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
 	      if(i_match == 0)
 	      {
-		h_mTrackClusters_FST_2Layer[i_match]->Fill(r_proj,phi_proj);
+		nMatchedTrack++;
 	      }
-	      if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= (i_match*10+0.5)*FST::pitchPhi)
+	      if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
 	      {
-		h_mTrackClusters_FST_2Layer[i_match]->Fill(r_proj,phi_proj);
+		nMatchedTrack++;
 	      }
-	      h_mTrackClusters_IST_2Layer[i_match]->Fill(r_proj,phi_proj);
 	    }
 	  }
-	  else
-	  {
-	    h_mTrackClusters_IST_2Layer[i_match]->Fill(r_proj,phi_proj);
-	  }
+	  if(nMatchedTrack > 0) h_mTrackClusters_FST_2Layer[i_match]->Fill(r_proj,phi_proj);
 	}
       }
     }
@@ -833,6 +918,8 @@ void FstTracking::calEfficiency_Clusters(FstEvent *fstEvent)
 	      { // IST2 matching cut
 		for(int i_match = 0; i_match < 4; ++i_match)
 		{
+		  h_mTrackClusters_IST_3Layer[i_match]->Fill(r_proj,phi_proj);
+		  int nMatchedTrack = 0;
 		  if(clusterVec_fst.size() > 0)
 		  {
 		    for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
@@ -841,19 +928,15 @@ void FstTracking::calEfficiency_Clusters(FstEvent *fstEvent)
 		      double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
 		      if(i_match == 0)
 		      {
-			h_mTrackClusters_FST_3Layer[i_match]->Fill(r_proj,phi_proj);
+			nMatchedTrack++;
 		      }
-		      if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= (i_match*10+0.5)*FST::pitchPhi)
+		      if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
 		      {
-			h_mTrackClusters_FST_3Layer[i_match]->Fill(r_proj,phi_proj);
+			nMatchedTrack++;
 		      }
-		      h_mTrackClusters_IST_3Layer[i_match]->Fill(r_proj,phi_proj);
 		    }
 		  }
-		  else
-		  {
-		    h_mTrackClusters_IST_3Layer[i_match]->Fill(r_proj,phi_proj);
-		  }
+		  if(nMatchedTrack > 0) h_mTrackClusters_FST_3Layer[i_match]->Fill(r_proj,phi_proj);
 		}
 	      }
 	    }

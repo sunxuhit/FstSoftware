@@ -204,9 +204,9 @@ FstRawHit* FstCluster::createRawHit()
 {
   if(mNumOfRawHits == mFstRawHits->GetSize())
     mFstRawHits->Expand( mNumOfRawHits + 10 );
-  if(mNumOfRawHits >= 25)
+  if(mNumOfRawHits >= 1000)
   {
-    Fatal( "FstCluster::createRawHit()", "ERROR: Too many hits (>25)!" );
+    Fatal( "FstCluster::createRawHit()", "ERROR: Too many hits (>1000)!" );
     exit( 2 );
   }
 

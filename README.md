@@ -29,7 +29,8 @@
 - group raw hits into clusters
 - find tracking based on hits and clusters in IST1 & IST3
 - save all information to FstEvent
-- `FstClusterMaker.cxx` line 216 -- line 593 to change used time bin from 3 to 1
+- `FstClusterMaker.cxx` line 263 -- line 333 to change used time bin for Hits from 3 to 1
+- `FstClusterMaker.cxx` line 369 -- line 439 to change used time bin for Peds from 3 to 1
 
 ##### FstTracking
 - read in FstEvent

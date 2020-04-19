@@ -211,10 +211,10 @@ int FstClusterMaker::Make()
     rawHitVec_orig.clear();
     std::vector<FstRawHit *> rawHitsVec_Used;
     rawHitsVec_Used.clear();
-    int numOfHits = 0;
-    int numOfHits_Used = 0;
+    int numOfHits = 0; // Hits & Peds on FST & IST
+    int numOfHits_Used = 0; // Hits on FST & IST
+    int numOfHits_IST = 0; // Hits on IST
 
-    // 3 time bin requirement
     for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
     {
       for(int i_port = 0; i_port < FST::numPorts; ++i_port)
@@ -232,48 +232,19 @@ int FstClusterMaker::Make()
 	      int maxTB = 0;
 	      double preADC = maxADC;
 	      bool isHit = false;
-	      float nHitsCut = FST::nIstHitsCut; // 6.0 for IST
-	      if(i_arm == 1 && i_port == 1) nHitsCut = FST::nFstHitsCut; // 4.5 for FST
-	      for(int i_tb = 1; i_tb < FST::numTBins-1; ++i_tb)
-	      { // only if 3 consequetive timebins of a ch exceed the threshold cut is considered as a hit
-		if( 
-		    ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nHitsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
-		    ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nHitsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]) &&
-		    ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > nHitsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb+1])
-		  ) 
-		{
-		  isHit = true; // set isHit to true if 3 consequetive time bins exceed the threshold
-		  if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
-		  { // find time bin with max adc for 0-FST::numTBins-2
-		    maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb];
-		    maxTB = i_tb;
-		    preADC = maxADC;
-		  }
-		  if(i_tb == FST::numTBins-2 && mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > preADC)
-		  { // check if last time bin has the max ADC
-		    maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1];
-		    maxTB = i_tb+1;
-		  }
-		}
-	      }
 
-	      bool isPed = false;
-	      if( !isHit && mSavePed)
+	      if( !(i_arm == 1 && i_port == 1) ) // IST Hits always required 3 time bin
 	      {
-		maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][0]; // init with 1st tb
-		maxTB = 0;
-		preADC = maxADC;
-		float nPedsCut = FST::nIstThresholdCut; // 3.0 for IST
-		if(i_arm == 1 && i_port == 1) nPedsCut = FST::nFstThresholdCut; // 2.0 for FST
+		float nHitsCut = FST::nIstHitsCut; // 6.0 for IST
 		for(int i_tb = 1; i_tb < FST::numTBins-1; ++i_tb)
 		{ // only if 3 consequetive timebins of a ch exceed the threshold cut is considered as a hit
 		  if( 
-		      ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
-		      ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]) &&
-		      ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb+1])
+		      ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nHitsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
+		      ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nHitsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]) &&
+		      ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > nHitsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb+1])
 		    ) 
 		  {
-		    isPed = true; // set isHit to true if 3 consequetive time bins exceed the threshold
+		    isHit = true; // set isHit to true if 3 consequetive time bins exceed the threshold
 		    if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
 		    { // find time bin with max adc for 0-FST::numTBins-2
 		      maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb];
@@ -289,101 +260,45 @@ int FstClusterMaker::Make()
 		}
 	      }
 
-
-	      // if( (isHit || isPed) && numOfHits < FST::maxNHits)
-	      if( (isHit || isPed) && numOfHits_Used < FST::maxNHits)
-	      { // set Hit info
-		FstRawHit *fstRawHit = new FstRawHit();
-		fstRawHit->Clear();
-		fstRawHit->setLayer(getLayer(i_arm,i_port));
-		fstRawHit->setSensor(getSensor(i_arm,i_port,i_apv));
-		fstRawHit->setAPV(i_apv);
-		fstRawHit->setChannel(i_ch);
-		fstRawHit->setColumn(getColumn(i_arm,i_port,i_apv,i_ch));
-		fstRawHit->setRow(getRow(i_arm,i_port,i_apv,i_ch));
-		fstRawHit->setPosX(getPosX(i_arm,i_port,i_apv,i_ch));
-		fstRawHit->setPosY(getPosY(i_arm,i_port,i_apv,i_ch));
-		for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
-		{
-		  fstRawHit->setPedMean(mPed[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
-		  fstRawHit->setPedStdDev(mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
-		  fstRawHit->setPedRMS(mPedRMS[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
-		  fstRawHit->setCharge(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
-		}
-		// fstRawHit->setCharge(maxADC, maxTB);
-		fstRawHit->setMaxTb(maxTB);
-		fstRawHit->setHitId(numOfHits);
-		fstRawHit->setDefaultTb(FST::defaultTimeBin);
-		fstRawHit->setIsHit(isHit && !isPed);
-		rawHitVec_orig.push_back(fstRawHit); // hit container includes RawHits & Peds
-		numOfHits++;
-
-		if(isHit && !isPed) 
-		{
-		  rawHitsVec_Used.push_back(fstRawHit); // hit container for RawHits only
-		  numOfHits_Used++;
-		}
-	      }
-	    }
-	  }
-	}
-      }
-    }
-
-#if 0
-    // 2 time bin requirementu
-    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
-    {
-      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
-      {
-	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
-	{
-	  for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
-	  {
-	    if( // some hit quality cuts => 1st one is questionable | 2nd made sure ch shows reasonable noise
-		( mSigPedCorr[i_arm][i_port][i_apv][i_ch][0] < mSigPedCorr[i_arm][i_port][i_apv][i_ch][3] ) &&
-		( mPedStdDev[i_arm][i_port][i_apv][i_ch][FST::pedTimeBin] > FST::MinNoise)  
-	      )
-	    {
-	      double maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][0]; // init with 1st tb
-	      int maxTB = 0;
-	      double preADC = maxADC;
-	      bool isHit = false;
-	      float nHitsCut = FST::nIstHitsCut; // 6.0 for IST
-	      if(i_arm == 1 && i_port == 1) nHitsCut = FST::nFstHitsCut; // 4.5 for FST
-	      for(int i_tb = 1; i_tb < FST::numTBins; ++i_tb)
-	      { // only if 2 consequetive timebins of a ch exceed the threshold cut is considered as a hit
-		if( 
-		    ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nHitsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
-		    ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nHitsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb])
-		  ) 
-		{
-		  isHit = true; // set isHit to true if 3 consequetive time bins exceed the threshold
-		  if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
-		  { // find time bin with max adc for 0-FST::numTBins-1
-		    maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb];
-		    maxTB = i_tb;
-		    preADC = maxADC;
+	      if(i_arm == 1 && i_port == 1)  // FST Hits 3 Time Bins
+	      {
+		float nHitsCut = FST::nFstHitsCut; // 4.5 for FST
+		for(int i_tb = 1; i_tb < FST::numTBins-1; ++i_tb)
+		{ // only if 3 consequetive timebins of a ch exceed the threshold cut is considered as a hit
+		  if( 
+		      ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nHitsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
+		      ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nHitsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]) &&
+		      ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > nHitsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb+1])
+		    ) 
+		  {
+		    isHit = true; // set isHit to true if 3 consequetive time bins exceed the threshold
+		    if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
+		    { // find time bin with max adc for 0-FST::numTBins-2
+		      maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb];
+		      maxTB = i_tb;
+		      preADC = maxADC;
+		    }
+		    if(i_tb == FST::numTBins-2 && mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > preADC)
+		    { // check if last time bin has the max ADC
+		      maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1];
+		      maxTB = i_tb+1;
+		    }
 		  }
 		}
 	      }
 
-	      bool isPed = false;
-	      if( !isHit && mSavePed)
+	      /*
+	      if(i_arm == 1 && i_port == 1) // FST Hits with 2 Time Bins
 	      {
-		maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][0]; // init with 1st tb
-		maxTB = 0;
-		preADC = maxADC;
-		float nPedsCut = FST::nIstThresholdCut; // 3.0 for IST
-		if(i_arm == 1 && i_port == 1) nPedsCut = FST::nFstThresholdCut; // 2.0 for FST
+		float nHitsCut = FST::nFstHitsCut; // 4.5 for FST
 		for(int i_tb = 1; i_tb < FST::numTBins; ++i_tb)
 		{ // only if 2 consequetive timebins of a ch exceed the threshold cut is considered as a hit
 		  if( 
-		      ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
-		      ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb])
+		      ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nHitsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
+		      ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nHitsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb])
 		    ) 
 		  {
-		    isPed = true; // set isPed to true if 2 consequetive time bins exceed the threshold
+		    isHit = true; // set isHit to true if 3 consequetive time bins exceed the threshold
 		    if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
 		    { // find time bin with max adc for 0-FST::numTBins-1
 		      maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb];
@@ -393,85 +308,29 @@ int FstClusterMaker::Make()
 		  }
 		}
 	      }
+	      */
 
-
-	      // if( (isHit || isPed) && numOfHits < FST::maxNHits)
-	      if( (isHit || isPed) && numOfHits_Used < FST::maxNHits)
-	      { // set Hit info
-		FstRawHit *fstRawHit = new FstRawHit();
-		fstRawHit->Clear();
-		fstRawHit->setLayer(getLayer(i_arm,i_port));
-		fstRawHit->setSensor(getSensor(i_arm,i_port,i_apv));
-		fstRawHit->setAPV(i_apv);
-		fstRawHit->setChannel(i_ch);
-		fstRawHit->setColumn(getColumn(i_arm,i_port,i_apv,i_ch));
-		fstRawHit->setRow(getRow(i_arm,i_port,i_apv,i_ch));
-		fstRawHit->setPosX(getPosX(i_arm,i_port,i_apv,i_ch));
-		fstRawHit->setPosY(getPosY(i_arm,i_port,i_apv,i_ch));
-		for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
-		{
-		  fstRawHit->setPedMean(mPed[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
-		  fstRawHit->setPedStdDev(mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
-		  fstRawHit->setPedRMS(mPedRMS[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
-		  fstRawHit->setCharge(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
-		}
-		// fstRawHit->setCharge(maxADC, maxTB);
-		fstRawHit->setMaxTb(maxTB);
-		fstRawHit->setHitId(numOfHits);
-		fstRawHit->setDefaultTb(FST::defaultTimeBin);
-		fstRawHit->setIsHit(isHit && !isPed);
-		rawHitVec_orig.push_back(fstRawHit); // hit container includes RawHits & Peds
-		numOfHits++;
-
-		if(isHit && !isPed) 
-		{
-		  rawHitsVec_Used.push_back(fstRawHit); // hit container for RawHits only
-		  numOfHits_Used++;
-		}
-	      }
-	    }
-	  }
-	}
-      }
-    }
-#endif
-
-#if 0
-    // 1 time bin requirementu
-    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
-    {
-      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
-      {
-	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
-	{
-	  for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
-	  {
-	    if( // some hit quality cuts => 1st one is questionable | 2nd made sure ch shows reasonable noise
-		( mSigPedCorr[i_arm][i_port][i_apv][i_ch][0] < mSigPedCorr[i_arm][i_port][i_apv][i_ch][3] ) &&
-		( mPedStdDev[i_arm][i_port][i_apv][i_ch][FST::pedTimeBin] > FST::MinNoise)  
-	      )
-	    {
-	      double maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][0]; // init with 1st tb
-	      int maxTB = 0;
-	      double preADC = maxADC;
-	      bool isHit = false;
-	      float nHitsCut = FST::nIstHitsCut; // 6.0 for IST
-	      if(i_arm == 1 && i_port == 1) nHitsCut = FST::nFstHitsCut; // 4.5 for FST
-	      for(int i_tb = 1; i_tb < FST::numTBins; ++i_tb)
-	      { // only if 1 timebin of a ch exceed the threshold cut is considered as a hit
-		if( 
-		    ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nHitsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb])
-		  ) 
-		{
-		  isHit = true; // set isHit to true if 3 consequetive time bins exceed the threshold
-		  if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
-		  { // find time bin with max adc for 0-FST::numTBins-1
-		    maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb];
-		    maxTB = i_tb;
-		    preADC = maxADC;
+	      /*
+	      if(i_arm == 1 && i_port == 1) // FST Hits with 1 Time Bin 
+	      {
+		float nHitsCut = FST::nFstHitsCut; // 4.5 for FST
+		for(int i_tb = 1; i_tb < FST::numTBins; ++i_tb)
+		{ // only if 1 timebin of a ch exceed the threshold cut is considered as a hit
+		  if( 
+		      ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nHitsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb])
+		    ) 
+		  {
+		    isHit = true; // set isHit to true if 3 consequetive time bins exceed the threshold
+		    if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
+		    { // find time bin with max adc for 0-FST::numTBins-1
+		      maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb];
+		      maxTB = i_tb;
+		      preADC = maxADC;
+		    }
 		  }
 		}
 	      }
+	      */
 
 	      bool isPed = false;
 	      if( !isHit && mSavePed)
@@ -479,27 +338,111 @@ int FstClusterMaker::Make()
 		maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][0]; // init with 1st tb
 		maxTB = 0;
 		preADC = maxADC;
-		float nPedsCut = FST::nIstThresholdCut; // 3.0 for IST
-		if(i_arm == 1 && i_port == 1) nPedsCut = FST::nFstThresholdCut; // 2.0 for FST
-		for(int i_tb = 1; i_tb < FST::numTBins; ++i_tb)
-		{ // only if 1 timebin of a ch exceed the threshold cut is considered as a hit
-		  if( 
-		      ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb])
-		    ) 
-		  {
-		    isPed = true; // set isPed to true if 1 time bins exceed the threshold
-		    if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
-		    { // find time bin with max adc for 0-FST::numTBins-1
-		      maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb];
-		      maxTB = i_tb;
-		      preADC = maxADC;
+
+		if( !(i_arm == 1 && i_port == 1) ) // IST Peds always required 3 time bin
+		{
+		  float nPedsCut = FST::nIstThresholdCut; // 3.0 for IST
+		  for(int i_tb = 1; i_tb < FST::numTBins-1; ++i_tb)
+		  { // only if 3 consequetive timebins of a ch exceed the threshold cut is considered as a hit
+		    if( 
+			( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
+			( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]) &&
+			( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb+1])
+		      ) 
+		    {
+		      isPed = true; // set isHit to true if 3 consequetive time bins exceed the threshold
+		      if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
+		      { // find time bin with max adc for 0-FST::numTBins-2
+			maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb];
+			maxTB = i_tb;
+			preADC = maxADC;
+		      }
+		      if(i_tb == FST::numTBins-2 && mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > preADC)
+		      { // check if last time bin has the max ADC
+			maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1];
+			maxTB = i_tb+1;
+		      }
 		    }
 		  }
 		}
+
+		if(i_arm == 1 && i_port == 1) // FST Peds with 3 Time bins
+		{
+		  float nPedsCut = FST::nFstThresholdCut; // 2.0 for FST
+		  for(int i_tb = 1; i_tb < FST::numTBins-1; ++i_tb)
+		  { // only if 3 consequetive timebins of a ch exceed the threshold cut is considered as a hit
+		    if( 
+			( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
+			( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]) &&
+			( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb+1])
+		      ) 
+		    {
+		      isPed = true; // set isHit to true if 3 consequetive time bins exceed the threshold
+		      if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
+		      { // find time bin with max adc for 0-FST::numTBins-2
+			maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb];
+			maxTB = i_tb;
+			preADC = maxADC;
+		      }
+		      if(i_tb == FST::numTBins-2 && mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > preADC)
+		      { // check if last time bin has the max ADC
+			maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1];
+			maxTB = i_tb+1;
+		      }
+		    }
+		  }
+		}
+
+		/*
+		if(i_arm == 1 && i_port == 1) // FST Peds with 2 Time bins
+		{
+		  float nPedsCut = FST::nFstThresholdCut; // 2.0 for FST
+		  for(int i_tb = 1; i_tb < FST::numTBins; ++i_tb)
+		  { // only if 2 consequetive timebins of a ch exceed the threshold cut is considered as a hit
+		    if( 
+			( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
+			( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb])
+		      ) 
+		    {
+		      isPed = true; // set isPed to true if 2 consequetive time bins exceed the threshold
+		      if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
+		      { // find time bin with max adc for 0-FST::numTBins-1
+			maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb];
+			maxTB = i_tb;
+			preADC = maxADC;
+		      }
+		    }
+		  }
+		}
+		*/
+
+		/*
+		if(i_arm == 1 && i_port == 1) // FST Peds with 1 Time bin
+		{
+		  float nPedsCut = FST::nFstThresholdCut; // 2.0 for FST
+		  for(int i_tb = 1; i_tb < FST::numTBins; ++i_tb)
+		  { // only if 1 timebin of a ch exceed the threshold cut is considered as a hit
+		    if( 
+			( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb])
+		      ) 
+		    {
+		      isPed = true; // set isPed to true if 1 time bins exceed the threshold
+		      if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
+		      { // find time bin with max adc for 0-FST::numTBins-1
+			maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb];
+			maxTB = i_tb;
+			preADC = maxADC;
+		      }
+		    }
+		  }
+		}
+		*/
 	      }
 
+
 	      // if( (isHit || isPed) && numOfHits < FST::maxNHits)
-	      if( (isHit || isPed) && numOfHits_Used < FST::maxNHits)
+	      // if( (isHit || isPed) && numOfHits_Used < FST::maxNHits)
+	      if( (isHit || isPed) && numOfHits_IST < FST::maxNHits)
 	      { // set Hit info
 		FstRawHit *fstRawHit = new FstRawHit();
 		fstRawHit->Clear();
@@ -530,6 +473,10 @@ int FstClusterMaker::Make()
 		{
 		  rawHitsVec_Used.push_back(fstRawHit); // hit container for RawHits only
 		  numOfHits_Used++;
+		  if(fstRawHit->getLayer() != 0)
+		  {
+		    numOfHits_IST++;
+		  }
 		}
 	      }
 	    }
@@ -537,10 +484,10 @@ int FstClusterMaker::Make()
 	}
       }
     }
-#endif
 
     // if(numOfHits > 0 && numOfHits <= FST::maxNHitsPerEvent) // maximum hits to expect per event is 10
-    if(numOfHits_Used > 0 && numOfHits_Used <= FST::maxNHitsPerEvent) // maximum hits to expect per event is 10
+    // if(numOfHits_Used > 0 && numOfHits_Used <= FST::maxNHitsPerEvent) // maximum hits to expect per event is 10
+    if(numOfHits_IST > 0 && numOfHits_IST <= FST::maxNHitsPerEvent) // maximum hits to expect per event is 20
     {
       fillHitDisplay(rawHitVec_orig); // fill hit display
 
@@ -973,15 +920,12 @@ bool FstClusterMaker::initHitDisplay()
 
 void FstClusterMaker::fillHitDisplay(std::vector<FstRawHit *> rawHitsVec)
 {
-  // if(rawHitsVec.size() < FST::maxNHits)
-  // {
   for(int i_hit = 0; i_hit < rawHitsVec.size(); ++i_hit)
   {
     int layer = rawHitsVec[i_hit]->getLayer();
     h_mHitDisplay[layer]->Fill(rawHitsVec[i_hit]->getColumn(),rawHitsVec[i_hit]->getRow());
     h_mMaxTb[layer]->Fill(rawHitsVec[i_hit]->getMaxTb());
   }
-  // }
 }
 
 void FstClusterMaker::writeHitDisplay()

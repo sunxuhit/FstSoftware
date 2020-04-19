@@ -40,7 +40,7 @@ void plotNumOfRawHits(string hv = "HV140V", string config = "Th4o5Tb3")
   // h_mNumFstRawHitsDisplay->SetStats(0);
   h_mNumFstRawHitsDisplay->GetXaxis()->SetTitle("# Raw Hits");
   h_mNumFstRawHitsDisplay->GetXaxis()->SetTitleSize(0.06);
-  h_mNumFstRawHitsDisplay->GetXaxis()->SetRangeUser(-0.5,24.5);
+  h_mNumFstRawHitsDisplay->GetXaxis()->SetRangeUser(-0.5,44.5);
   h_mNumFstRawHitsDisplay->Draw();
 
   c_EventDisplay->cd(2);
@@ -48,7 +48,7 @@ void plotNumOfRawHits(string hv = "HV140V", string config = "Th4o5Tb3")
   // h_mNumFstClustersDisplay->SetStats(0);
   h_mNumFstClustersDisplay->GetXaxis()->SetTitle("# Clusters");
   h_mNumFstClustersDisplay->GetXaxis()->SetTitleSize(0.06);
-  h_mNumFstClustersDisplay->GetXaxis()->SetRangeUser(-0.5,24.5);
+  h_mNumFstClustersDisplay->GetXaxis()->SetRangeUser(-0.5,44.5);
   h_mNumFstClustersDisplay->Draw();
 
   // c_EventDisplay->SaveAs("./figures/NumOfRawHits.eps");
