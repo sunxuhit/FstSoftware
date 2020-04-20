@@ -43,6 +43,7 @@ int FstQAStudy::Init()
   initAdc_Clusters();
   initClusterSize();
   initClusterSize_TrackClusters();
+  initSignalQA();
   initEventDisplay_TrackClusters();
 
   if(!isInPut) 
@@ -107,6 +108,7 @@ int FstQAStudy::Make()
       }
     }
     fillClusterSize_TrackClusters(mFstEvent_InPut);
+    fillSignalQA(mFstEvent_InPut);
     fillEventDisplay_TrackClusters(mFstEvent_InPut);
   }
 
@@ -123,6 +125,7 @@ int FstQAStudy::Finish()
   writeAdc_Cluster();
   writeClusterSize();
   writeClusterSize_TrackClusters();
+  writeSignalQA();
   writeEventDisplay_TrackClusters();
 
   return 1;
@@ -256,12 +259,15 @@ void FstQAStudy::fillAdc_Hits(std::vector<FstRawHit *> rawHitVec_orig)
     int layer = rawHitVec[i_hit]->getLayer();
     int maxTb = rawHitVec[i_hit]->getMaxTb();
     double adc = rawHitVec[i_hit]->getCharge(maxTb);
-    h_mAdcIst_Hits[layer]->Fill(adc);
+    if(rawHitVec[i_hit]->getIsHit())
+    {
+      h_mAdcIst_Hits[layer]->Fill(adc);
 
-    if(layer == 0)
-    { // FST
-      int column = rawHitVec[i_hit]->getColumn(); // R strip
-      h_mAdcFst_Hits[column-4]->Fill(adc);
+      if(layer == 0)
+      { // FST
+	int column = rawHitVec[i_hit]->getColumn(); // R strip
+	h_mAdcFst_Hits[column-4]->Fill(adc);
+      }
     }
   }
 }
@@ -534,6 +540,116 @@ void FstQAStudy::writeClusterSize_TrackClusters()
   }
 }
 //--------------Cluster Size with Track---------------------
+
+//--------------Signal QA---------------------
+void FstQAStudy::initSignalQA()
+{
+  p_mPedMap_FST = new TProfile2D("p_mPedMap_FST","p_mPedMap_FST",FST::numRStrip,-0.5,FST::numRStrip-0.5,FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5);
+  p_mSigMap_FST = new TProfile2D("p_mSigMap_FST","p_mSigMap_FST",FST::numRStrip,-0.5,FST::numRStrip-0.5,FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5);
+  h_mSignalHits_FST = new TH1F("h_mSignalHits_FST","h_mSignalHits_FST",200,-0.5,1999.5);
+  h_mNoiseHits_FST = new TH1F("h_mNoiseHits_FST","h_mNoiseHits_FST",100,-0.5,99.5);
+  h_mSNRatioHits_FST = new TH1F("h_mSNRatioHits_FST","h_mSNRatioHits_FST",100,-0.5,49.5);
+  h_mSignalClusters_FST = new TH1F("h_mSignalClusters_FST","h_mSignalClusters_FST",200,-0.5,1999.5);
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    string HistName;
+    HistName = Form("h_mSignalHits_Rstrip%d",i_rstrip);
+    h_mSignalHits_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+    HistName = Form("h_mNoiseHits_Rstrip%d",i_rstrip);
+    h_mNoiseHits_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,99.5);
+    HistName = Form("h_mSNRatioHits_Rstrip%d",i_rstrip);
+    h_mSNRatioHits_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,49.5);
+    HistName = Form("h_mSignalClusters_Rstrip%d",i_rstrip);
+    h_mSignalClusters_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+  }
+}
+
+void FstQAStudy::fillSignalQA(FstEvent *fstEvent)
+{
+  std::vector<FstRawHit *> fstRawHitVec;
+  fstRawHitVec.clear(); // clear the container for hits
+  for(int i_hit = 0; i_hit < fstEvent->getNumRawHits(); ++i_hit)
+  { // get Hits info
+    FstRawHit *fstRawHit = fstEvent->getRawHit(i_hit);
+    if(fstRawHit->getLayer() == 0)
+    {
+      fstRawHitVec.push_back(fstRawHit);
+    }
+  }
+  int numOfFstHits = fstEvent->getNumFstRawHits();
+
+  if(numOfFstHits > 0)
+  {
+    for(int i_hit = 0; i_hit < numOfFstHits; ++i_hit)
+    {
+      if(fstRawHitVec[i_hit]->getIsHit())
+      {
+	int column    = fstRawHitVec[i_hit]->getColumn();
+	int row       = fstRawHitVec[i_hit]->getRow();
+	int maxTb     = fstRawHitVec[i_hit]->getMaxTb();
+	double ped    = fstRawHitVec[i_hit]->getPedMean(maxTb); // pedMean
+	double signal = fstRawHitVec[i_hit]->getCharge(maxTb); // adc - pedMean
+	double noise  = fstRawHitVec[i_hit]->getPedStdDev(maxTb); // pedStdDev
+	p_mPedMap_FST->Fill(column,row,ped);
+	p_mSigMap_FST->Fill(column,row,signal);
+	h_mSignalHits_FST->Fill(signal);
+	h_mNoiseHits_FST->Fill(noise);
+	h_mSNRatioHits_FST->Fill(signal/noise);
+
+	h_mSignalHits_Rstrip[column-4]->Fill(signal);
+	h_mNoiseHits_Rstrip[column-4]->Fill(noise);
+	h_mSNRatioHits_Rstrip[column-4]->Fill(signal/noise);
+      }
+    }
+  }
+
+  std::vector<FstCluster *> fstClusterVec;
+  fstClusterVec.clear(); // clear the container for clusters
+  for(int i_cluster = 0; i_cluster < fstEvent->getNumClusters(); ++i_cluster)
+  { // get Clusters info
+    FstCluster *fstCluster = fstEvent->getCluster(i_cluster);
+    if(fstCluster->getLayer() == 0)
+    {
+      fstClusterVec.push_back(fstCluster);
+    }
+  }
+  int numOfFstClusters = fstEvent->getNumFstClusters();
+  if(numOfFstClusters > 0)
+  {
+    for(int i_cluster = 0; i_cluster < numOfFstClusters; ++i_cluster)
+    {
+      double meanColumn = fstClusterVec[i_cluster]->getMeanColumn();
+      double meanRow = fstClusterVec[i_cluster]->getMeanRow();
+      double signal = fstClusterVec[i_cluster]->getTotCharge(); // adc - pedMean
+      h_mSignalClusters_FST->Fill(signal);
+
+      int column = 0;
+      if(meanColumn > 3.5 && meanColumn <= 4.5) column = 0;
+      if(meanColumn > 4.5 && meanColumn <= 5.5) column = 1;
+      if(meanColumn > 5.5 && meanColumn <= 6.5) column = 2;
+      if(meanColumn > 6.5 && meanColumn <= 7.5) column = 3;
+      h_mSignalClusters_Rstrip[column]->Fill(signal);
+    }
+  }
+}
+
+void FstQAStudy::writeSignalQA()
+{
+  p_mPedMap_FST->Write();
+  p_mSigMap_FST->Write();
+  h_mSignalHits_FST->Write();
+  h_mNoiseHits_FST->Write();
+  h_mSNRatioHits_FST->Write();
+  h_mSignalClusters_FST->Write();
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    h_mSignalHits_Rstrip[i_rstrip]->Write();
+    h_mNoiseHits_Rstrip[i_rstrip]->Write();
+    h_mSNRatioHits_Rstrip[i_rstrip]->Write();
+    h_mSignalClusters_Rstrip[i_rstrip]->Write();
+  }
+}
+//--------------Signal QA---------------------
 
 //--------------Event Display---------------------
 void FstQAStudy::initEventDisplay_TrackClusters()

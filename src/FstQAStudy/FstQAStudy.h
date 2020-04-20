@@ -64,6 +64,11 @@ class FstQAStudy : public TObject
     void initClusterSize_TrackClusters();
     void fillClusterSize_TrackClusters(FstEvent *fstEvent);
     void writeClusterSize_TrackClusters();
+    
+    // signal & noise
+    void initSignalQA();
+    void fillSignalQA(FstEvent *fstEvent);
+    void writeSignalQA();
 
     // Event Display
     void initEventDisplay_TrackClusters();
@@ -105,6 +110,19 @@ class FstQAStudy : public TObject
     TProfile *p_mNHitsR_phiP[4];
     TProfile *p_mNHitsPhi_rP[4];
     TProfile *p_mNHitsPhi_phiP[4];
+
+    // Signal & noise for max time bin
+    TProfile2D *p_mPedMap_FST;
+    TProfile2D *p_mSigMap_FST;
+    TH1F *h_mSignalHits_FST;
+    TH1F *h_mNoiseHits_FST;
+    TH1F *h_mSNRatioHits_FST;
+    TH1F *h_mSignalClusters_FST;
+
+    TH1F *h_mSignalHits_Rstrip[4];
+    TH1F *h_mNoiseHits_Rstrip[4];
+    TH1F *h_mSNRatioHits_Rstrip[4];
+    TH1F *h_mSignalClusters_Rstrip[4];
 
     // Output TTree for Event Display
     TTree *mTree_EventDisplay;

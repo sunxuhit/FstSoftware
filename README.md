@@ -29,7 +29,7 @@
 - group raw hits into clusters
 - find tracking based on hits and clusters in IST1 & IST3
 - save all information to FstEvent
-- Thershold and number of used time bins can be changed in src/FstUtil/FstCons.h
+- Thershold and number of used time bins can be changed in `src/FstUtil/FstCons.h`
 
 ##### FstTracking
 - read in FstEvent

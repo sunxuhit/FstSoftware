@@ -4,7 +4,7 @@
 
 R__LOAD_LIBRARY(/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/lib/libFstClusterMaker.dylib)
 
-int makeFstCluster()
+int makeFstCluster(string hv = "HV140V")
 {
   std::cout << "gSystem::Load <- libFstClusterMaker.dylib" << endl;
 
@@ -12,7 +12,7 @@ int makeFstCluster()
 
   bool isSavePed = true;
   // bool isSavePed = false;
-  std::string hv = "HV140V";
+  // std::string hv = "HV140V";
   std::string inputlist = "/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/list/FST/FstData_" + hv + ".list";
   cout << "input list set to: " << inputlist.c_str() << endl;
 

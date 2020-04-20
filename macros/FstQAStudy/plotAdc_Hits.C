@@ -13,7 +13,7 @@ using namespace std;
 
 void plotAdc_Hits()
 {
-  string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140_woPed.root";
+  string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstQAStudy_HV140V_withPed_Th4o5Tb3.root";
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TH1F *h_mAdcIst_Hits[4];
   TH1F *h_mAdcFst_Hits[4];
@@ -100,5 +100,5 @@ void plotAdc_Hits()
   }
   leg_FST->Draw("same");
 
-  c_AdcHits->SaveAs("./figures/AdcHits.eps");
+  // c_AdcHits->SaveAs("./figures/AdcHits.eps");
 }

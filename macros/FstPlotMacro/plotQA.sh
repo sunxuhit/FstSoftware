@@ -6,7 +6,7 @@ date
 if [ $# -eq 0 ]
 then
   hv=HV140V
-  config=Th3Tb1
+  config=Th4o5Tb3
 
   mkdir -p ./figures/${hv}_${config}
 
@@ -14,9 +14,9 @@ then
   root -l -b -q plotNumOfRawHits.C\(\"${hv}\",\"${config}\"\)
   mv ./figures/NumOfRawHits.pdf ./figures/${hv}_${config}/NumOfRawHits_${hv}_${config}.pdf
 
-  # echo "Plot Residual of Fst Clusters from 2-Layer tracking!!"
-  # root -l -b -q plotResidual_FSTClusters_2Layer.C\(\"${hv}\",\"${config}\"\)
-  # mv ./figures/Residual_FSTClusters_2Layer.pdf ./figures/${hv}_${config}/Residual_FSTClusters_2Layer_${hv}_${config}.pdf
+  # echo "Plot Signal QA!!"
+  root -l -b -q plotSignalQA.C\(\"${hv}\",\"${config}\"\)
+  mv ./figures/SignalQA.pdf ./figures/${hv}_${config}/SignalQA_${hv}_${config}.pdf
 
   # echo "Plot Residual of Fst Cluster Tracks from 2-Layer tracking!!"
   root -l -b -q plotResidual_FSTClusterTracks_2Layer.C\(\"${hv}\",\"${config}\"\)
@@ -29,10 +29,6 @@ then
   # echo "Plot Event Display from 2-Layer tracking!!"
   root -l -b -q plotEventDisplay_2Layer.C\(\"${hv}\",\"${config}\"\)
   mv ./figures/EventDisplay_2Layer.pdf ./figures/${hv}_${config}/EventDisplay_2Layer_${hv}_${config}.pdf
-
-  # echo "Plot Residual of Fst Clusters from 3-Layer tracking!!"
-  # root -l -b -q plotResidual_FSTClusters_3Layer.C\(\"${hv}\",\"${config}\"\)
-  # mv ./figures/Residual_FSTClusters_3Layer.pdf ./figures/${hv}_${config}/Residual_FSTClusters_3Layer_${hv}_${config}.pdf
 
   # echo "Plot Residual of Fst Cluster Tracks from 3-Layer tracking!!"
   root -l -b -q plotResidual_FSTClusterTracks_3Layer.C\(\"${hv}\",\"${config}\"\)

@@ -17,17 +17,19 @@ void calTrackClusterEfficiency_2Layer(string hv = "HV140V", string config = "Th4
   const double phiMaxFst = 64.0*FST::pitchPhi;
   const double phiMinFst = 0.0;
 
+  const int nMatch = 7;
+
   string inputfile = Form("/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstTracking_%s_withPed_%s.root",hv.c_str(),config.c_str());
 
   TFile *File_InPut = TFile::Open(inputfile.c_str());
-  TH2F *h_mTrackClusters_IST[4];
-  TH1F *h_mClustersR_IST[4];
-  TH1F *h_mClustersPhi_IST[4];
+  TH2F *h_mTrackClusters_IST[nMatch];
+  TH1F *h_mClustersR_IST[nMatch];
+  TH1F *h_mClustersPhi_IST[nMatch];
 
-  TH2F *h_mTrackClusters_FST[4];
-  TH1F *h_mClustersR_FST[4];
-  TH1F *h_mClustersPhi_FST[4];
-  for(int i_match = 0; i_match < 4; ++i_match)
+  TH2F *h_mTrackClusters_FST[nMatch];
+  TH1F *h_mClustersR_FST[nMatch];
+  TH1F *h_mClustersPhi_FST[nMatch];
+  for(int i_match = 0; i_match < nMatch; ++i_match)
   {
     string HistName;
     HistName = Form("h_mTrackClusters_IST_2Layer_SF%d",i_match);
@@ -51,10 +53,10 @@ void calTrackClusterEfficiency_2Layer(string hv = "HV140V", string config = "Th4
     h_mClustersPhi_FST[i_match] = (TH1F*)h_mTrackClusters_FST[i_match]->ProjectionY(HistName.c_str());
   }
 
-  TH2F *h_mEfficiency[4];
-  TH1F *h_mEffR[4];
-  TH1F *h_mEffPhi[4];
-  for(int i_match = 0; i_match < 4; ++i_match)
+  TH2F *h_mEfficiency[nMatch];
+  TH1F *h_mEffR[nMatch];
+  TH1F *h_mEffPhi[nMatch];
+  for(int i_match = 0; i_match < nMatch; ++i_match)
   {
     string HistName;
     HistName = Form("h_mEfficiency_2Layer_SF%d",i_match);
@@ -90,7 +92,7 @@ void calTrackClusterEfficiency_2Layer(string hv = "HV140V", string config = "Th4
   string output_start = "./figures/Efficiency_TrackCluster_2Layer.pdf[";
   c_play->Print(output_start.c_str()); // open pdf file
 
-  for(int i_match = 0; i_match < 4; ++i_match)
+  for(int i_match = 0; i_match < nMatch; ++i_match)
   {
     // projection position from IST
     c_play->cd(1);

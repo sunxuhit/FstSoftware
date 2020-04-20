@@ -4,7 +4,7 @@
 
 R__LOAD_LIBRARY(/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/lib/libFstQAStudy.dylib)
 
-int doFstQAStudy()
+int doFstQAStudy(string hv = "HV140V", string config = "Th4o5Tb3")
 {
   std::cout << "gSystem::Load <- libFstQAStudy.dylib" << endl;
 
@@ -12,15 +12,15 @@ int doFstQAStudy()
 
   bool isSavePed = true;
   // bool isSavePed = false;
-  std::string hv = "HV140V";
+  // std::string hv = "HV140V";
   std::string inputlist;
-  if(isSavePed) inputlist  = "/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/list/FST/FstQAStudy_" + hv + "_withPed.list";
-  if(!isSavePed) inputlist  = "/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/list/FST/FstQAStudy_" + hv + "_woPed.list";
+  if(isSavePed) inputlist = Form("/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/list/FST/FstCluster_%s_withPed_%s.list",hv.c_str(),config.c_str());
+  if(!isSavePed) inputlist = Form("/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/list/FST/FstCluster_%s_woPed_%s.list",hv.c_str(),config.c_str());
   cout << "input list set to: " << inputlist.c_str() << endl;
 
   std::string outputfile;
-  if(isSavePed) outputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstQAStudy_" + hv + "_withPed.root";
-  if(!isSavePed) outputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstQAStudy_" + hv + "_woPed.root";
+  if(isSavePed) outputfile = Form("/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstQAStudy_%s_withPed_%s.root",hv.c_str(),config.c_str());
+  if(!isSavePed) outputfile = Form("/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstQAStudy_%s_woPed_%s.root",hv.c_str(),config.c_str());
   cout << "output file set to: " << outputfile.c_str() << endl;
 
   fst->set_list(inputlist.c_str());
