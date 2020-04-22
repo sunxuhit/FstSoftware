@@ -20,7 +20,7 @@ void plotSignalQA(string hv = "HV140V", string config = "Th4o5Tb3")
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
   gStyle->SetStatW(0.25); gStyle->SetStatH(0.55);
 
-  string inputfile = Form("/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstQAStudy_%s_withPed_%s.root",hv.c_str(),config.c_str());
+  string inputfile = Form("../../output/FstQAStudy_%s_withPed_%s.root",hv.c_str(),config.c_str());
 
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TProfile2D *p_mPedMap_FST = (TProfile2D*)File_InPut->Get("p_mPedMap_FST");;

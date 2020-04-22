@@ -14,7 +14,7 @@
 #include "../../src/FstUtil/FstTrack.h"
 #include "../../src/FstUtil/FstEvent.h"
 
-R__LOAD_LIBRARY(/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/lib/libFstEvent.dylib)
+R__LOAD_LIBRARY(../../lib/libFstEvent.dylib)
 
 int plotResidual_FSTClusters_2Layer(string hv = "HV140V", string config = "Th4o5Tb3")
 {
@@ -37,7 +37,7 @@ int plotResidual_FSTClusters_2Layer(string hv = "HV140V", string config = "Th4o5
   const double x2_shift = 134.99;
   const double y2_shift = -20.7848;
 
-  std::string inputfile = Form("/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstClusters_%s_withPed_%s.root",hv.c_str(),config.c_str());
+  std::string inputfile = Form("../../output/FstClusters_%s_withPed_%s.root",hv.c_str(),config.c_str());
   std::cout << "inputfile = " << inputfile.c_str() << std::endl;
 
   TFile *mFile_InPut = TFile::Open(inputfile.c_str());

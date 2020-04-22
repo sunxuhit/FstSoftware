@@ -12,12 +12,12 @@ using namespace std;
 
 void calTrackHitEfficiency()
 {
-  // bool isSavePed = true;
-  bool isSavePed = false;
+  bool isSavePed = true;
+  // bool isSavePed = false;
   std::string hv = "HV140V";
   std::string inputfile;
-  if(isSavePed) inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstTracking_" + hv + "_withPed.root";
-  if(!isSavePed) inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstTracking_" + hv + "_woPed.root";
+  if(isSavePed) inputfile = "../../output/FstTracking_" + hv + "_withPed.root";
+  if(!isSavePed) inputfile = "../../output/FstTracking_" + hv + "_woPed.root";
 
   const double rMaxFst = FST::rOuter + 4.0*FST::pitchR;
   const double rMinFst = FST::rOuter;

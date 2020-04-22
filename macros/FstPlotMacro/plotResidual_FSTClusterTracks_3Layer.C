@@ -39,7 +39,7 @@ void plotResidual_FSTClusterTracks_3Layer(string hv = "HV140V", string config = 
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
   gStyle->SetStatW(0.15); gStyle->SetStatH(0.25);
 
-  string inputfile = Form("/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstTracking_%s_withPed_%s.root",hv.c_str(),config.c_str());
+  string inputfile = Form("../../output/FstTracking_%s_withPed_%s.root",hv.c_str(),config.c_str());
 
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TH1F *h_mTrackXResIST_3Layer = (TH1F*)File_InPut->Get("h_mTrackXResIST_3Layer");

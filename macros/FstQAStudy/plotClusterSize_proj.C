@@ -15,7 +15,7 @@ using namespace std;
 
 void plotClusterSize_proj()
 {
-  string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140_woPed.root";
+  string inputfile = "../../output/FstQAStudy_HV140_woPed.root";
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TProfile *p_mNHitsR_rP[4]; // 0: no matching | 1-3 matching within (1-3)*pitchR in r & (1-3)*pitchPhi in phi
   TProfile *p_mNHitsR_phiP[4];

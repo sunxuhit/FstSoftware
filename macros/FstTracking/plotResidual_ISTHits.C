@@ -14,7 +14,7 @@
 #include "../../src/FstUtil/FstTrack.h"
 #include "../../src/FstUtil/FstEvent.h"
 
-R__LOAD_LIBRARY(/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/lib/libFstEvent.dylib)
+R__LOAD_LIBRARY(../../lib/libFstEvent.dylib)
 
 int plotResidual_ISTHits()
 {
@@ -23,7 +23,7 @@ int plotResidual_ISTHits()
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
   gStyle->SetStatW(0.15); gStyle->SetStatH(0.25);
 
-  std::string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstClusters_HV140V_woPed.root";
+  std::string inputfile = "../../output/FstClusters_HV140V_woPed.root";
   std::cout << "inputfile = " << inputfile.c_str() << std::endl;
 
   TFile *mFile_InPut = TFile::Open(inputfile.c_str());

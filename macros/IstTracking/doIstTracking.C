@@ -2,7 +2,7 @@
 #include <string>
 #include "TSystem.h"
 
-R__LOAD_LIBRARY(/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/lib/libIstTracking.dylib)
+R__LOAD_LIBRARY(../../lib/libIstTracking.dylib)
 
 int doIstTracking()
 {

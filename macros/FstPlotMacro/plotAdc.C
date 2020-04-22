@@ -13,7 +13,7 @@ using namespace std;
 
 void plotAdc(string hv = "HV140V", string config = "Th4o5Tb3")
 {
-  string inputfile = Form("/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstQAStudy_%s_withPed_%s.root",hv.c_str(),config.c_str());
+  string inputfile = Form("../../output/FstQAStudy_%s_withPed_%s.root",hv.c_str(),config.c_str());
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TH1F *h_mSignalHits_Rstrip[4];
   TH1F *h_mNoiseHits_Rstrip[4];

@@ -14,7 +14,7 @@
 #include "../../src/FstUtil/FstTrack.h"
 #include "../../src/FstUtil/FstEvent.h"
 
-R__LOAD_LIBRARY(/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/lib/libFstEvent.dylib)
+R__LOAD_LIBRARY(../../lib/libFstEvent.dylib)
 
 int plotResidual_ISTClusters()
 {
@@ -33,7 +33,7 @@ int plotResidual_ISTClusters()
   const double xMax = 24.0*FST::pitchColumn; // center of 23 column + 0.5*pitchColumn
   const double xMin = 20.0*FST::pitchColumn; // center of 20 column - 0.5*pitchColumn
 
-  std::string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstClusters_HV140V_woPed.root";
+  std::string inputfile = "../../output/FstClusters_HV140V_woPed.root";
   std::cout << "inputfile = " << inputfile.c_str() << std::endl;
 
   TFile *mFile_InPut = TFile::Open(inputfile.c_str());

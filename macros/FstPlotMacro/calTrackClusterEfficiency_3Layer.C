@@ -19,7 +19,7 @@ void calTrackClusterEfficiency_3Layer(string hv = "HV140V", string config = "Th4
 
   const int nMatch = 7;
 
-  string inputfile = Form("/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstTracking_%s_withPed_%s.root",hv.c_str(),config.c_str());
+  string inputfile = Form("../../output/FstTracking_%s_withPed_%s.root",hv.c_str(),config.c_str());
 
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TH2F *h_mTrackClusters_IST[nMatch];

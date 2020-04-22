@@ -13,7 +13,7 @@ using namespace std;
 
 void plotAdc_Hits()
 {
-  string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstQAStudy_HV140V_withPed_Th4o5Tb3.root";
+  string inputfile = "../../output/FstQAStudy_HV140V_withPed_Th4o5Tb3.root";
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TH1F *h_mAdcIst_Hits[4];
   TH1F *h_mAdcFst_Hits[4];

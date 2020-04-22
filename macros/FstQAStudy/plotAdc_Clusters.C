@@ -13,7 +13,7 @@ using namespace std;
 
 void plotAdc_Clusters()
 {
-  string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140_woPed.root";
+  string inputfile = "../../output/FstQAStudy_HV140_woPed.root";
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TH1F *h_mAdcIst_Clusters[4];
   TH1F *h_mAdcFst_Clusters[4];

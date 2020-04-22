@@ -15,9 +15,9 @@
 
 using namespace std;
 
-void plotNoiseQA(string hv = "HV140V")
+void plotNoiseQA(string hv = "HV140V", string config = "Th4o5Tb3")
 {
-  string inputfile = Form("/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstClusters_%s_withPed.root",hv.c_str());
+  string inputfile = Form("../../output/FstClusters_%s_withPed_%s.root",hv.c_str(),config.c_str());
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TH1F *h_mPedMean_FST[4][FST::numTBins]; // for RStrip
   TH1F *h_mPedSigma_FST[4][FST::numTBins];

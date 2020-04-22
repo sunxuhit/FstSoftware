@@ -17,7 +17,7 @@ using namespace std;
 
 void plotNumOfRawHits(string hv = "HV140V", string config = "Th4o5Tb3")
 {
-  string inputfile = Form("/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstQAStudy_%s_withPed_%s.root",hv.c_str(),config.c_str());
+  string inputfile = Form("../../output/FstQAStudy_%s_withPed_%s.root",hv.c_str(),config.c_str());
 
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TH1F *h_mNumFstRawHitsDisplay = (TH1F*)File_InPut->Get("h_mNumFstRawHitsDisplay");

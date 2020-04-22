@@ -13,7 +13,7 @@ using namespace std;
 
 void plotClusterSize()
 {
-  string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140_woPed.root";
+  string inputfile = "../../output/FstQAStudy_HV140_woPed.root";
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TProfile *p_mNHitsR_meanColumn   = (TProfile*)File_InPut->Get("p_mNHitsR_meanColumn");
   TProfile *p_mNHitsR_meanRow      = (TProfile*)File_InPut->Get("p_mNHitsR_meanRow");

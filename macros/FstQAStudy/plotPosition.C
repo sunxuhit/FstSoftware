@@ -10,7 +10,7 @@ using namespace std;
 
 void plotPosition()
 {
-  string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140_woPed.root";
+  string inputfile = "../../output/FstQAStudy_HV140_woPed.root";
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TH2F *h_mPositionR_Clusters = (TH2F*)File_InPut->Get("h_mPositionR_Clusters");
   TH2F *h_mPositionPhi_Clusters = (TH2F*)File_InPut->Get("h_mPositionPhi_Clusters");

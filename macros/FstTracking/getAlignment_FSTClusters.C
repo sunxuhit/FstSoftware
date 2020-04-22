@@ -23,7 +23,7 @@ typedef std::tuple<double, double, double, double, double, int> tPars; // phi_ro
 tPars minuitAlignment(dVec x0_orig, dVec y0_orig, dVec x1_orig, dVec y1_orig, dVec x3_orig, dVec y3_orig, tPars cParameters);
 tPars updateFitParameters(tPars fitPars, double xCut, double yCut, int nOffset);
 
-R__LOAD_LIBRARY(/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/lib/libFstEvent.dylib)
+R__LOAD_LIBRARY(../../lib/libFstEvent.dylib)
 
 int getAlignment_FSTClusters()
 {
@@ -50,7 +50,7 @@ int getAlignment_FSTClusters()
   const double y3_shift = 1.0116;
 
   FstEvent *mFstEvent = new FstEvent();
-  std::string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstClusters_HV140V_woPed.root";
+  std::string inputfile = "../../output/FstClusters_HV140V_woPed.root";
   std::cout << "inputfile = " << inputfile.c_str() << std::endl;
   TFile *mFile_InPut = TFile::Open(inputfile.c_str());
   TTree *mTree_FstEvent = (TTree*)mFile_InPut->Get("mTree_FstEvent");

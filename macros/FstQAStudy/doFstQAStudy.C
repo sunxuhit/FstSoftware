@@ -2,7 +2,7 @@
 #include <string>
 #include "TSystem.h"
 
-R__LOAD_LIBRARY(/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/lib/libFstQAStudy.dylib)
+R__LOAD_LIBRARY(../../lib/libFstQAStudy.dylib)
 
 int doFstQAStudy(string hv = "HV140V", string config = "Th4o5Tb3")
 {
@@ -14,13 +14,13 @@ int doFstQAStudy(string hv = "HV140V", string config = "Th4o5Tb3")
   // bool isSavePed = false;
   // std::string hv = "HV140V";
   std::string inputlist;
-  if(isSavePed) inputlist = Form("/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/list/FST/FstCluster_%s_withPed_%s.list",hv.c_str(),config.c_str());
-  if(!isSavePed) inputlist = Form("/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/list/FST/FstCluster_%s_woPed_%s.list",hv.c_str(),config.c_str());
+  if(isSavePed) inputlist = Form("../../list/FST/FstCluster_%s_withPed_%s.list",hv.c_str(),config.c_str());
+  if(!isSavePed) inputlist = Form("../../list/FST/FstCluster_%s_woPed_%s.list",hv.c_str(),config.c_str());
   cout << "input list set to: " << inputlist.c_str() << endl;
 
   std::string outputfile;
-  if(isSavePed) outputfile = Form("/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstQAStudy_%s_withPed_%s.root",hv.c_str(),config.c_str());
-  if(!isSavePed) outputfile = Form("/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstQAStudy_%s_woPed_%s.root",hv.c_str(),config.c_str());
+  if(isSavePed) outputfile = Form("../../output/FstQAStudy_%s_withPed_%s.root",hv.c_str(),config.c_str());
+  if(!isSavePed) outputfile = Form("../../output/FstQAStudy_%s_woPed_%s.root",hv.c_str(),config.c_str());
   cout << "output file set to: " << outputfile.c_str() << endl;
 
   fst->set_list(inputlist.c_str());

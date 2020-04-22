@@ -16,3 +16,6 @@ macros/*/figures/*.pdf
 macros/*/figures/*/*.eps
 macros/*/figures/*/*.pdf
 
+# ignore intput and output root file
+data/*/*/*.root
+output/*.root

@@ -3,7 +3,7 @@
 #include <vector>
 #include "TSystem.h"
 
-R__LOAD_LIBRARY(/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/lib/libFstRawHit.dylib)
+R__LOAD_LIBRARY(../../lib/libFstRawHit.dylib)
 
 int genRawHit()
 {

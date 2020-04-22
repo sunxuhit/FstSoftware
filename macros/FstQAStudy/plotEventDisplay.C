@@ -17,7 +17,7 @@ using namespace std;
 void plotEventDisplay()
 {
   gStyle->SetPalette(kRainBow);
-  string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstQAStudy_HV140_woPed.root";
+  string inputfile = "../../output/FstQAStudy_HV140_woPed.root";
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TH2F *h_mEventDisplay[100];
   TH2F *h_mEventProjection[100];

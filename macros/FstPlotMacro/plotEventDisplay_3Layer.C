@@ -53,7 +53,7 @@ void plotEventDisplay_3Layer(string hv = "HV140V", string config = "Th4o5Tb3")
   TGraph *g_mClusterTracksDisplay = new TGraph();
 
 
-  std::string inputfile = Form("/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/OutPut/FstQAStudy_%s_withPed_%s.root",hv.c_str(),config.c_str());
+  std::string inputfile = Form("../../output/FstQAStudy_%s_withPed_%s.root",hv.c_str(),config.c_str());
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TTree *mTree_EventDisplay = (TTree*)File_InPut->Get("mTree_EventDisplay");
   mTree_EventDisplay->SetBranchAddress("mEventId",&mEventId);

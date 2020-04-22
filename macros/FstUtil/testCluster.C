@@ -5,8 +5,8 @@
 #include "TFile.h"
 #include "TTree.h"
 
-R__LOAD_LIBRARY(/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/lib/libFstRawHit.dylib)
-R__LOAD_LIBRARY(/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/lib/libFstCluster.dylib)
+R__LOAD_LIBRARY(../../lib/libFstRawHit.dylib)
+R__LOAD_LIBRARY(../../lib/libFstCluster.dylib)
 
 int testCluster()
 {

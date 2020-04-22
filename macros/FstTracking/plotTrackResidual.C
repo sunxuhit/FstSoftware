@@ -15,7 +15,7 @@ void plotTrackResidual()
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
   gStyle->SetStatW(0.15); gStyle->SetStatH(0.25);
 
-  string inputfile = "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstCosmicTestStand_Mar2020/output/FstTracking_HV140V_woPed.root";
+  string inputfile = "../../output/FstTracking_HV140V_woPed.root";
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TH1F *h_mTrackXRes_Hits = (TH1F*)File_InPut->Get("h_mTrackXRes_Hits");
   TH1F *h_mTrackYRes_Hits = (TH1F*)File_InPut->Get("h_mTrackYRes_Hits");

@@ -3,7 +3,7 @@
 #include <vector>
 #include "TSystem.h"
 
-R__LOAD_LIBRARY(/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/lib/libFstCluster.dylib)
+R__LOAD_LIBRARY(../../lib/libFstCluster.dylib)
 
 int genCluster()
 {
