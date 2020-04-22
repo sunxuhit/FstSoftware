@@ -550,9 +550,14 @@ void FstQAStudy::initSignalQA()
   h_mNoiseHits_FST = new TH1F("h_mNoiseHits_FST","h_mNoiseHits_FST",100,-0.5,99.5);
   h_mSNRatioHits_FST = new TH1F("h_mSNRatioHits_FST","h_mSNRatioHits_FST",100,-0.5,49.5);
   h_mSignalClusters_FST = new TH1F("h_mSignalClusters_FST","h_mSignalClusters_FST",200,-0.5,1999.5);
+
   for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
   {
     string HistName;
+    HistName = Form("h_mMaxTbHits_Rstrip%d",i_rstrip);
+    h_mMaxTbHits_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),10,-0.5,9.5);
+    HistName = Form("h_mMaxTbClusters_Rstrip%d",i_rstrip);
+    h_mMaxTbClusters_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),20,-0.5,9.5);
     HistName = Form("h_mSignalHits_Rstrip%d",i_rstrip);
     h_mSignalHits_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
     HistName = Form("h_mNoiseHits_Rstrip%d",i_rstrip);
@@ -561,6 +566,17 @@ void FstQAStudy::initSignalQA()
     h_mSNRatioHits_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,49.5);
     HistName = Form("h_mSignalClusters_Rstrip%d",i_rstrip);
     h_mSignalClusters_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+    {
+      HistName = Form("h_mSignalHits_Rstrip%d_TimeBin%d",i_rstrip,i_tb);
+      h_mSignalHits_Rstrip_TimeBin[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+      HistName = Form("h_mNoiseHits_Rstrip%d_TimeBin%d",i_rstrip,i_tb);
+      h_mNoiseHits_Rstrip_TimeBin[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,99.5);
+      HistName = Form("h_mSNRatioHits_Rstrip%d_TimeBin%d",i_rstrip,i_tb);
+      h_mSNRatioHits_Rstrip_TimeBin[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,49.5);
+      HistName = Form("h_mSignalClusters_Rstrip%d_TimeBin%d",i_rstrip,i_tb);
+      h_mSignalClusters_Rstrip_TimeBin[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+    }
   }
 }
 
@@ -596,9 +612,14 @@ void FstQAStudy::fillSignalQA(FstEvent *fstEvent)
 	h_mNoiseHits_FST->Fill(noise);
 	h_mSNRatioHits_FST->Fill(signal/noise);
 
+	h_mMaxTbHits_Rstrip[column-4]->Fill(maxTb);
 	h_mSignalHits_Rstrip[column-4]->Fill(signal);
 	h_mNoiseHits_Rstrip[column-4]->Fill(noise);
 	h_mSNRatioHits_Rstrip[column-4]->Fill(signal/noise);
+
+	h_mSignalHits_Rstrip_TimeBin[column-4][maxTb]->Fill(signal);
+	h_mNoiseHits_Rstrip_TimeBin[column-4][maxTb]->Fill(noise);
+	h_mSNRatioHits_Rstrip_TimeBin[column-4][maxTb]->Fill(signal/noise);
       }
     }
   }
@@ -621,6 +642,7 @@ void FstQAStudy::fillSignalQA(FstEvent *fstEvent)
       double meanColumn = fstClusterVec[i_cluster]->getMeanColumn();
       double meanRow = fstClusterVec[i_cluster]->getMeanRow();
       double signal = fstClusterVec[i_cluster]->getTotCharge(); // adc - pedMean
+      double maxTb = fstClusterVec[i_cluster]->getMaxTb();
       h_mSignalClusters_FST->Fill(signal);
 
       int column = 0;
@@ -629,6 +651,8 @@ void FstQAStudy::fillSignalQA(FstEvent *fstEvent)
       if(meanColumn > 5.5 && meanColumn <= 6.5) column = 2;
       if(meanColumn > 6.5 && meanColumn <= 7.5) column = 3;
       h_mSignalClusters_Rstrip[column]->Fill(signal);
+      h_mSignalClusters_Rstrip_TimeBin[column][(int)maxTb]->Fill(signal);
+      h_mMaxTbClusters_Rstrip[column]->Fill(maxTb);
     }
   }
 }
@@ -641,12 +665,22 @@ void FstQAStudy::writeSignalQA()
   h_mNoiseHits_FST->Write();
   h_mSNRatioHits_FST->Write();
   h_mSignalClusters_FST->Write();
+
   for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
   {
+    h_mMaxTbHits_Rstrip[i_rstrip]->Write();
+    h_mMaxTbClusters_Rstrip[i_rstrip]->Write();
     h_mSignalHits_Rstrip[i_rstrip]->Write();
     h_mNoiseHits_Rstrip[i_rstrip]->Write();
     h_mSNRatioHits_Rstrip[i_rstrip]->Write();
     h_mSignalClusters_Rstrip[i_rstrip]->Write();
+    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+    {
+      h_mSignalHits_Rstrip_TimeBin[i_rstrip][i_tb]->Write();
+      h_mNoiseHits_Rstrip_TimeBin[i_rstrip][i_tb]->Write();
+      h_mSNRatioHits_Rstrip_TimeBin[i_rstrip][i_tb]->Write();
+      h_mSignalClusters_Rstrip_TimeBin[i_rstrip][i_tb]->Write();
+    }
   }
 }
 //--------------Signal QA---------------------

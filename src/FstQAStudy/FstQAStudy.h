@@ -119,10 +119,16 @@ class FstQAStudy : public TObject
     TH1F *h_mSNRatioHits_FST;
     TH1F *h_mSignalClusters_FST;
 
+    TH1F *h_mMaxTbHits_Rstrip[4];
+    TH1F *h_mMaxTbClusters_Rstrip[4];
     TH1F *h_mSignalHits_Rstrip[4];
     TH1F *h_mNoiseHits_Rstrip[4];
     TH1F *h_mSNRatioHits_Rstrip[4];
     TH1F *h_mSignalClusters_Rstrip[4];
+    TH1F *h_mSignalHits_Rstrip_TimeBin[4][FST::numTBins];
+    TH1F *h_mNoiseHits_Rstrip_TimeBin[4][FST::numTBins];
+    TH1F *h_mSNRatioHits_Rstrip_TimeBin[4][FST::numTBins];
+    TH1F *h_mSignalClusters_Rstrip_TimeBin[4][FST::numTBins];
 
     // Output TTree for Event Display
     TTree *mTree_EventDisplay;

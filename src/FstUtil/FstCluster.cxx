@@ -52,7 +52,7 @@ void FstCluster::setTotCharge(double charge)
 {
   mTotCharge = charge;
 }
-void FstCluster::setMaxTb(int maxTb)
+void FstCluster::setMaxTb(double maxTb)
 {
   mMaxTb = maxTb;
 }
@@ -114,7 +114,7 @@ double FstCluster::getTotCharge() const
 {
   return mTotCharge;
 }
-int FstCluster::getMaxTb() const
+double FstCluster::getMaxTb() const
 {
   return mMaxTb;
 }

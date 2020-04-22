@@ -17,7 +17,7 @@ class FstCluster : public TObject
     double mMeanX; // extracted from column & row
     double mMeanY; // r/phi for FST | x/y for IST
     double mTotCharge; // sum of pedestal subtracted ADC for max time bin of each hit in the cluster
-    int mMaxTb;
+    double mMaxTb;
     int mClusterType; // 0 for ARMDisplay | 1 for Simple | 2 for Scan
     int mNRawHits; // number of hits in the cluster
     int mNRawHitsR; // number of hits in the cluster along the R direction
@@ -40,7 +40,7 @@ class FstCluster : public TObject
     void setMeanX(double meanX);
     void setMeanY(double meanY);
     void setTotCharge(double charge);
-    void setMaxTb(int maxTb);
+    void setMaxTb(double maxTb);
     void setClusterType(int type);
     void setNRawHits(int nRawHits);
     void setNRawHitsR(int nRawHitsR);
@@ -56,7 +56,7 @@ class FstCluster : public TObject
     double getMeanX() const;
     double getMeanY() const;
     double getTotCharge() const;
-    int getMaxTb() const;
+    double getMaxTb() const;
     int getClusterType() const;
     int getNRawHits() const;
     int getNRawHitsR() const;

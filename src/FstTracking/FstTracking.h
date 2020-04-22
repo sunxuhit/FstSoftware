@@ -103,22 +103,35 @@ class FstTracking : public TObject
     // Tracking
     TH1F *h_mTrackXRes_Hits;
     TH1F *h_mTrackYRes_Hits;
+    TH2F *h_mTrackXYRes_Hits; // 2D distribution
+
     TH1F *h_mTrackRRes_Hits;
     TH1F *h_mTrackPhiRes_Hits;
+    TH2F *h_mTrackRPhiRes_Hits; // 2D distribution
 
     TH1F *h_mTrackXRes_Clusters_2Layer;
     TH1F *h_mTrackYRes_Clusters_2Layer;
+    TH2F *h_mTrackXYRes_Clusters_2Layer; // 2D distribution
+
     TH1F *h_mTrackRRes_Clusters_2Layer;
     TH1F *h_mTrackPhiRes_Clusters_2Layer;
+    TH2F *h_mTrackRPhiRes_Clusters_2Layer; // 2D distribution
+
     TH1F *h_mTrackXResIST_2Layer;
     TH1F *h_mTrackYResIST_2Layer;
+    TH2F *h_mTrackXYResIST_2Layer; // 2D distribution
 
     TH1F *h_mTrackXRes_Clusters_3Layer;
     TH1F *h_mTrackYRes_Clusters_3Layer;
+    TH2F *h_mTrackXYRes_Clusters_3Layer; // 2D distribution
+
     TH1F *h_mTrackRRes_Clusters_3Layer;
     TH1F *h_mTrackPhiRes_Clusters_3Layer;
+    TH2F *h_mTrackRPhiRes_Clusters_3Layer; // 2D distribution
+
     TH1F *h_mTrackXResIST_3Layer;
     TH1F *h_mTrackYResIST_3Layer;
+    TH2F *h_mTrackXYResIST_3Layer;
 
     // Efficiency based on Hits
     // 0: no matching | 1-3 matching within (1-3)*pitchR in r & (1-3)*pitchPhi in phi

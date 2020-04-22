@@ -380,10 +380,13 @@ void FstTracking::writeTrackingQA_Hits()
 //--------------Track Resolution with Hits---------------------
 void FstTracking::initTracking_Hits()
 {
-  h_mTrackXRes_Hits   = new TH1F("h_mTrackXRes_Hits","h_mTrackXRes_Hits",100,-80.0,80.0);
-  h_mTrackYRes_Hits   = new TH1F("h_mTrackYRes_Hits","h_mTrackYRes_Hits",100,-16.0,16.0);
-  h_mTrackRRes_Hits   = new TH1F("h_mTrackRRes_Hits","h_mTrackRRes_Hits",100,-80.0,80.0);
-  h_mTrackPhiRes_Hits = new TH1F("h_mTrackPhiRes_Hits","h_mTrackPhiRes_Hits",100,-0.05,0.05);
+  h_mTrackXRes_Hits    = new TH1F("h_mTrackXRes_Hits","h_mTrackXRes_Hits",100,-80.0,80.0);
+  h_mTrackYRes_Hits    = new TH1F("h_mTrackYRes_Hits","h_mTrackYRes_Hits",100,-16.0,16.0);
+  h_mTrackXYRes_Hits   = new TH2F("h_mTrackXYRes_Hits","h_mTrackXYRes_Hits",100,-80.0,80.0,100,-16.0,16.0);
+
+  h_mTrackRRes_Hits    = new TH1F("h_mTrackRRes_Hits","h_mTrackRRes_Hits",100,-80.0,80.0);
+  h_mTrackPhiRes_Hits  = new TH1F("h_mTrackPhiRes_Hits","h_mTrackPhiRes_Hits",100,-0.05,0.05);
+  h_mTrackRPhiRes_Hits = new TH2F("h_mTrackRPhiRes_Hits","h_mTrackRPhiRes_Hits",100,-80.0,80.0,100,-0.05,0.05);
 }
 
 void FstTracking::calResolution_Hits(FstEvent *fstEvent)
@@ -450,8 +453,11 @@ void FstTracking::calResolution_Hits(FstEvent *fstEvent)
 
 	h_mTrackXRes_Hits->Fill(x0_fst-x0_proj);
 	h_mTrackYRes_Hits->Fill(y0_fst-y0_proj);
+	h_mTrackXYRes_Hits->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
+
 	h_mTrackRRes_Hits->Fill(r_fst-r_proj);
 	h_mTrackPhiRes_Hits->Fill(phi_fst-phi_proj);
+	h_mTrackRPhiRes_Hits->Fill(r_fst-r_proj,phi_fst-phi_proj);
       }
     }
   }
@@ -461,27 +467,40 @@ void FstTracking::writeTracking_Hits()
 {
   h_mTrackXRes_Hits->Write();
   h_mTrackYRes_Hits->Write();
+  h_mTrackXYRes_Hits->Write();
+
   h_mTrackRRes_Hits->Write();
   h_mTrackPhiRes_Hits->Write();
+  h_mTrackRPhiRes_Hits->Write();
 }
 //--------------Track Resolution with Hits---------------------
 
 //--------------Track Resolution with Clusters---------------------
 void FstTracking::initTracking_Clusters()
 {
-  h_mTrackXRes_Clusters_2Layer   = new TH1F("h_mTrackXRes_Clusters_2Layer","h_mTrackXRes_Clusters_2Layer",50,-160.0,160.0);
-  h_mTrackYRes_Clusters_2Layer   = new TH1F("h_mTrackYRes_Clusters_2Layer","h_mTrackYRes_Clusters_2Layer",100,-16.0,16.0);
-  h_mTrackRRes_Clusters_2Layer   = new TH1F("h_mTrackRRes_Clusters_2Layer","h_mTrackRRes_Clusters_2Layer",50,-160.0,160.0);
-  h_mTrackPhiRes_Clusters_2Layer = new TH1F("h_mTrackPhiRes_Clusters_2Layer","h_mTrackPhiRes_Clusters_2Layer",100,-0.05,0.05);
-  h_mTrackXResIST_2Layer         = new TH1F("h_mTrackXResIST_2Layer","h_mTrackXResIST_2Layer",15,-20.0,20.0);
-  h_mTrackYResIST_2Layer         = new TH1F("h_mTrackYResIST_2Layer","h_mTrackYResIST_2Layer",100,-5.0,5.0);
+  h_mTrackXRes_Clusters_2Layer    = new TH1F("h_mTrackXRes_Clusters_2Layer","h_mTrackXRes_Clusters_2Layer",50,-160.0,160.0);
+  h_mTrackYRes_Clusters_2Layer    = new TH1F("h_mTrackYRes_Clusters_2Layer","h_mTrackYRes_Clusters_2Layer",100,-16.0,16.0);
+  h_mTrackXYRes_Clusters_2Layer   = new TH2F("h_mTrackXYRes_Clusters_2Layer","h_mTrackXYRes_Clusters_2Layer",50,-160.0,160.0,100,-16.0,16.0);
 
-  h_mTrackXRes_Clusters_3Layer   = new TH1F("h_mTrackXRes_Clusters_3Layer","h_mTrackXRes_Clusters_3Layer",50,-160.0,160.0);
-  h_mTrackYRes_Clusters_3Layer   = new TH1F("h_mTrackYRes_Clusters_3Layer","h_mTrackYRes_Clusters_3Layer",100,-16.0,16.0);
-  h_mTrackRRes_Clusters_3Layer   = new TH1F("h_mTrackRRes_Clusters_3Layer","h_mTrackRRes_Clusters_3Layer",50,-160.0,160.0);
-  h_mTrackPhiRes_Clusters_3Layer = new TH1F("h_mTrackPhiRes_Clusters_3Layer","h_mTrackPhiRes_Clusters_3Layer",100,-0.05,0.05);
-  h_mTrackXResIST_3Layer         = new TH1F("h_mTrackXResIST_3Layer","h_mTrackXResIST_3Layer",15,-20.0,20.0);
-  h_mTrackYResIST_3Layer         = new TH1F("h_mTrackYResIST_3Layer","h_mTrackYResIST_3Layer",100,-5.0,5.0);
+  h_mTrackRRes_Clusters_2Layer    = new TH1F("h_mTrackRRes_Clusters_2Layer","h_mTrackRRes_Clusters_2Layer",50,-160.0,160.0);
+  h_mTrackPhiRes_Clusters_2Layer  = new TH1F("h_mTrackPhiRes_Clusters_2Layer","h_mTrackPhiRes_Clusters_2Layer",100,-0.05,0.05);
+  h_mTrackRPhiRes_Clusters_2Layer = new TH2F("h_mTrackRPhiRes_Clusters_2Layer","h_mTrackRPhiRes_Clusters_2Layer",50,-160.0,160.0,100,-0.05,0.05);
+
+  h_mTrackXResIST_2Layer          = new TH1F("h_mTrackXResIST_2Layer","h_mTrackXResIST_2Layer",15,-20.0,20.0);
+  h_mTrackYResIST_2Layer          = new TH1F("h_mTrackYResIST_2Layer","h_mTrackYResIST_2Layer",100,-5.0,5.0);
+  h_mTrackXYResIST_2Layer         = new TH2F("h_mTrackXYResIST_2Layer","h_mTrackXYResIST_2Layer",15,-20.0,20.0,100,-5.0,5.0);
+
+  h_mTrackXRes_Clusters_3Layer    = new TH1F("h_mTrackXRes_Clusters_3Layer","h_mTrackXRes_Clusters_3Layer",50,-160.0,160.0);
+  h_mTrackYRes_Clusters_3Layer    = new TH1F("h_mTrackYRes_Clusters_3Layer","h_mTrackYRes_Clusters_3Layer",100,-16.0,16.0);
+  h_mTrackXYRes_Clusters_3Layer   = new TH2F("h_mTrackXYRes_Clusters_3Layer","h_mTrackXYRes_Clusters_3Layer",50,-160.0,160.0,100,-16.0,16.0);
+
+  h_mTrackRRes_Clusters_3Layer    = new TH1F("h_mTrackRRes_Clusters_3Layer","h_mTrackRRes_Clusters_3Layer",50,-160.0,160.0);
+  h_mTrackPhiRes_Clusters_3Layer  = new TH1F("h_mTrackPhiRes_Clusters_3Layer","h_mTrackPhiRes_Clusters_3Layer",100,-0.05,0.05);
+  h_mTrackRPhiRes_Clusters_3Layer = new TH2F("h_mTrackRPhiRes_Clusters_3Layer","h_mTrackRPhiRes_Clusters_3Layer",50,-160.0,160.0,100,-0.05,0.05);
+
+  h_mTrackXResIST_3Layer          = new TH1F("h_mTrackXResIST_3Layer","h_mTrackXResIST_3Layer",15,-20.0,20.0);
+  h_mTrackYResIST_3Layer          = new TH1F("h_mTrackYResIST_3Layer","h_mTrackYResIST_3Layer",100,-5.0,5.0);
+  h_mTrackXYResIST_3Layer         = new TH2F("h_mTrackXYResIST_3Layer","h_mTrackXYResIST_3Layer",15,-20.0,20.0,100,-5.0,5.0);
 }
 
 void FstTracking::calResolution_Clusters(FstEvent *fstEvent)
@@ -565,8 +584,11 @@ void FstTracking::calResolution_Clusters(FstEvent *fstEvent)
 
 	  h_mTrackXRes_Clusters_2Layer->Fill(x0_fst-x0_proj);
 	  h_mTrackYRes_Clusters_2Layer->Fill(y0_fst-y0_proj);
+	  h_mTrackXYRes_Clusters_2Layer->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
+
 	  h_mTrackRRes_Clusters_2Layer->Fill(r_fst-r_proj);
 	  h_mTrackPhiRes_Clusters_2Layer->Fill(phi_fst-phi_proj);
+	  h_mTrackRPhiRes_Clusters_2Layer->Fill(r_fst-r_proj,phi_fst-phi_proj);
 	}
       }
       if(clusterVec_ist2.size() > 0)
@@ -595,6 +617,7 @@ void FstTracking::calResolution_Clusters(FstEvent *fstEvent)
 
 	  h_mTrackXResIST_2Layer->Fill(x2_ist-x2_proj);
 	  h_mTrackYResIST_2Layer->Fill(y2_ist-y2_proj);
+	  h_mTrackXYResIST_2Layer->Fill(x2_ist-x2_proj,y2_ist-y2_proj);
 	}
       }
     }
@@ -675,8 +698,11 @@ void FstTracking::calResolution_Clusters(FstEvent *fstEvent)
 
 	  h_mTrackXRes_Clusters_3Layer->Fill(x0_fst-x0_proj);
 	  h_mTrackYRes_Clusters_3Layer->Fill(y0_fst-y0_proj);
+	  h_mTrackXYRes_Clusters_3Layer->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
+
 	  h_mTrackRRes_Clusters_3Layer->Fill(r_fst-r_proj);
 	  h_mTrackPhiRes_Clusters_3Layer->Fill(phi_fst-phi_proj);
+	  h_mTrackRPhiRes_Clusters_3Layer->Fill(r_fst-r_proj,phi_fst-phi_proj);
 	}
 
 	if(minClusterId_IST > -0.5)
@@ -686,6 +712,7 @@ void FstTracking::calResolution_Clusters(FstEvent *fstEvent)
 
 	  h_mTrackXResIST_3Layer->Fill(x2_ist-x2_proj);
 	  h_mTrackYResIST_3Layer->Fill(y2_ist-y2_proj);
+	  h_mTrackXYResIST_3Layer->Fill(x2_ist-x2_proj,y2_ist-y2_proj);
 	}
       }
     }
@@ -696,17 +723,27 @@ void FstTracking::writeTracking_Clusters()
 {
   h_mTrackXRes_Clusters_2Layer->Write();
   h_mTrackYRes_Clusters_2Layer->Write();
+  h_mTrackXYRes_Clusters_2Layer->Write();
+
   h_mTrackRRes_Clusters_2Layer->Write();
   h_mTrackPhiRes_Clusters_2Layer->Write();
+  h_mTrackRPhiRes_Clusters_2Layer->Write();
+
   h_mTrackXResIST_2Layer->Write();
   h_mTrackYResIST_2Layer->Write();
+  h_mTrackXYResIST_2Layer->Write();
 
   h_mTrackXRes_Clusters_3Layer->Write();
   h_mTrackYRes_Clusters_3Layer->Write();
+  h_mTrackXYRes_Clusters_3Layer->Write();
+
   h_mTrackRRes_Clusters_3Layer->Write();
   h_mTrackPhiRes_Clusters_3Layer->Write();
+  h_mTrackRPhiRes_Clusters_3Layer->Write();
+
   h_mTrackXResIST_3Layer->Write();
   h_mTrackYResIST_3Layer->Write();
+  h_mTrackXYResIST_3Layer->Write();
 }
 //--------------Track Resolution with Clusters---------------------
 

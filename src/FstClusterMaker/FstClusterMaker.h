@@ -82,6 +82,8 @@ class FstClusterMaker : public TObject
     TGraph *g_mPedMean[4][FST::numTBins]; // 0 for FST, 1-3 for IST
     TGraph *g_mPedSigma[4][FST::numTBins];
     TH2F *h_mPedDisplay[4][FST::numTBins]; // phi & r_strip
+    TH1F *h_mPedMean_FST[4][FST::numTBins]; // for RStrip
+    TH1F *h_mPedSigma_FST[4][FST::numTBins];
 
     // Signal
     double mRawSig[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins];

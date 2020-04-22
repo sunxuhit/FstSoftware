@@ -165,7 +165,7 @@ int FstClusterMaker::Make()
 
   long NumOfEvents = (long)mChainInPut->GetEntries();
   // if(NumOfEvents > 1000) NumOfEvents = 1000;
-  // NumOfEvents = 1000;
+  // NumOfEvents = 10000;
   mChainInPut->GetEntry(0);
 
   for(int i_event = 0; i_event < NumOfEvents; ++i_event)
@@ -224,7 +224,7 @@ int FstClusterMaker::Make()
 	  for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
 	  {
 	    if( // some hit quality cuts => 1st one is questionable | 2nd made sure ch shows reasonable noise
-		( mSigPedCorr[i_arm][i_port][i_apv][i_ch][0] < mSigPedCorr[i_arm][i_port][i_apv][i_ch][3] ) &&
+		// ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][0] < mSigPedCorr[i_arm][i_port][i_apv][i_ch][3] ) &&
 		( mPedStdDev[i_arm][i_port][i_apv][i_ch][FST::pedTimeBin] > FST::MinNoise)  
 	      )
 	    {
@@ -671,6 +671,12 @@ bool FstClusterMaker::initPedestal()
       std::string HistName = Form("h_mPedDisplay_Layer%d_TimeBin%d",i_layer,i_tb);
       if(i_layer == 0) h_mPedDisplay[i_layer][i_tb] = new TH2F(HistName.c_str(),HistName.c_str(),FST::numRStrip,-0.5,FST::numRStrip-0.5,FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5);
       else h_mPedDisplay[i_layer][i_tb] = new TH2F(HistName.c_str(),HistName.c_str(),FST::noColumns,-0.5,FST::noColumns-0.5,FST::noRows,-0.5,FST::noRows-0.5);
+
+      HistName = Form("h_mPedMean_FST_RStrip%d_TimeBin%d",i_layer,i_tb);
+      h_mPedMean_FST[i_layer][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),FST::noRows,-0.5,FST::noRows-0.5);
+
+      HistName = Form("h_mPedSigma_FST_RStrip%d_TimeBin%d",i_layer,i_tb);
+      h_mPedSigma_FST[i_layer][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),FST::noRows,-0.5,FST::noRows-0.5);
     }
   }
 
@@ -866,6 +872,11 @@ bool FstClusterMaker::calPedestal()
 	    g_mPedMean[layer][i_tb]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mPed[i_arm][i_port][i_apv][i_ch][i_tb]);
 	    g_mPedSigma[layer][i_tb]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
 	    h_mPedDisplay[layer][i_tb]->Fill(col,row,mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	    if(layer == 0 && col > 3) 
+	    { // FST
+	      h_mPedMean_FST[col-4][i_tb]->SetBinContent(row+1,mPed[i_arm][i_port][i_apv][i_ch][i_tb]);
+	      h_mPedSigma_FST[col-4][i_tb]->SetBinContent(row+1,mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	    }
 	  }
 	}
       }
@@ -887,6 +898,8 @@ void FstClusterMaker::writePedestal()
       g_mPedMean[i_layer][i_tb]->Write();
       g_mPedSigma[i_layer][i_tb]->Write();
       h_mPedDisplay[i_layer][i_tb]->Write();
+      h_mPedMean_FST[i_layer][i_tb]->Write();
+      h_mPedSigma_FST[i_layer][i_tb]->Write();
     }
   }
 }
@@ -997,18 +1010,19 @@ std::vector<FstCluster *> FstClusterMaker::findCluster_Simple(std::vector<FstRaw
 	      tempSumAdc = (*clusterIt)->getTotCharge() + currentAdc;
 	      weight = currentAdc/tempSumAdc;
 
-	      int layer_temp        = (*clusterIt)->getLayer();
-	      int sensor_temp        = (*clusterIt)->getSensor();
-	      double meanColumn_temp = (1.0 - weight) * (*clusterIt)->getMeanColumn() + weight * (*rawHitsIt)->getColumn();
-	      double meanRow_temp    = (1.0 - weight) * (*clusterIt)->getMeanRow()    + weight * (*rawHitsIt)->getRow();
-	      double totAdc_temp     = tempSumAdc;
+	      int layer_temp          = (*clusterIt)->getLayer();
+	      int sensor_temp         = (*clusterIt)->getSensor();
+	      double meanColumn_temp  = (1.0 - weight) * (*clusterIt)->getMeanColumn() + weight * (*rawHitsIt)->getColumn();
+	      double meanRow_temp     = (1.0 - weight) * (*clusterIt)->getMeanRow()    + weight * (*rawHitsIt)->getRow();
+	      double meanTb_temp = (1.0 - weight) * (*clusterIt)->getMaxTb()      + weight * (*rawHitsIt)->getMaxTb();
+	      double totAdc_temp      = tempSumAdc;
 
 	      (*clusterIt)->setLayer(layer_temp);
 	      (*clusterIt)->setSensor(sensor_temp);
 	      (*clusterIt)->setMeanColumn(meanColumn_temp);
 	      (*clusterIt)->setMeanRow(meanRow_temp);
 	      (*clusterIt)->setTotCharge(totAdc_temp);
-	      (*clusterIt)->setMaxTb(maxTb_temp);
+	      (*clusterIt)->setMaxTb(meanTb_temp);
 	      (*clusterIt)->setClusterType(1);
 	      (*clusterIt)->setNRawHits(nRawHits);
 	      (*clusterIt)->setNRawHitsR(nRawHitsR);
