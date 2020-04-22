@@ -9,6 +9,16 @@
 
 ---------------
 
+#### data
+- directory for raw data file
+
+---------------
+
+#### output
+- directory for output file
+
+---------------
+
 #### src
 
 ##### IstTracking
@@ -77,16 +87,16 @@
 2. `FstClusterMaker`: root -l -b -q makeFstCluster.C
   - produce TTree with FstEvent
   - output file canbe sepcified in the macro
-3. `FstTracking`: root -l -b -q doFstTracking.C
-  - produce histograms for residual and efficiency
-  - output file canbe sepcified in the macro
-4. `FstQAStudy`: root -l -b -q doFstQAStudy.C
-  - generate TTree for EventDisplay
-  - output file canbe sepcified in the macro
-5. rename the output with configuration
+3. rename the output with configuration
   - default output file name is *FstClusters\_HV140V\_withPed.root*
   - rename it with configurations: **FstClusters\_HV140V\_withPed\_Th4o5Tb3.root**
     - Th4o5Tb3 stands for 4.5 threshold and 3 used time bins
+4. `FstTracking`: root -l -b -q doFstTracking.C
+  - produce histograms for residual and efficiency
+  - output file canbe sepcified in the macro
+5. `FstQAStudy`: root -l -b -q doFstQAStudy.C
+  - generate TTree for EventDisplay
+  - output file canbe sepcified in the macro
 6. `FstPlotMacro`: . ./plotQA.sh
   - change **hv** and **config** in `plotQA.sh` for different HV and configuration
   - all QA plots can be found in **figures/hv\_config**
