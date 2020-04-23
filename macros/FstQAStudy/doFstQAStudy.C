@@ -4,13 +4,13 @@
 
 R__LOAD_LIBRARY(../../lib/libFstQAStudy.dylib)
 
-int doFstQAStudy(string hv = "HV140V", string config = "Th4o5Tb3")
+int doFstQAStudy(string hv = "HV140V", string config = "Th4o5Tb3", bool isSavePed = "true")
 {
   std::cout << "gSystem::Load <- libFstQAStudy.dylib" << endl;
 
   FstQAStudy *fst = new FstQAStudy();
 
-  bool isSavePed = true;
+  // bool isSavePed = true;
   // bool isSavePed = false;
   // std::string hv = "HV140V";
   std::string inputlist;

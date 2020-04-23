@@ -5,13 +5,13 @@
 
 R__LOAD_LIBRARY(../../lib/libFstTracking.dylib)
 
-int doFstTracking(string hv = "HV140V", string config = "Th4o5Tb3")
+int doFstTracking(string hv = "HV140V", string config = "Th4o5Tb3", bool isSavePed = false)
 {
   std::cout << "gSystem::Load <- libFstTracking.dylib" << endl;
 
   FstTracking *fst = new FstTracking();
 
-  bool isSavePed = true;
+  // bool isSavePed = true;
   // bool isSavePed = false;
   // std::string hv = "HV140V";
   string inputlist;
