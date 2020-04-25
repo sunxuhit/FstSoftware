@@ -5,7 +5,7 @@ date
 
 if [ $# -eq 0 ]
 then
-  config=Th3Tb1
+  config=Th4o5Tb2
   isSavePed=true
 
   root -l -b -q makeFstCluster.C\(\"HV70V\",\"${config}\",${isSavePed}\)
