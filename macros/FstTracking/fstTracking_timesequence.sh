@@ -9,6 +9,7 @@ then
   isSavePed=true
 
   root -l -b -q doFstTracking_timesequence.C\(\"HV70V\",\"${config}\",${isSavePed},\"03182020\"\)
+  root -l -b -q doFstTracking_timesequence.C\(\"HV70V\",\"${config}\",${isSavePed},\"04062020\"\)
   root -l -b -q doFstTracking_timesequence.C\(\"HV70V\",\"${config}\",${isSavePed},\"04102020\"\)
   root -l -b -q doFstTracking_timesequence.C\(\"HV70V\",\"${config}\",${isSavePed},\"04112020\"\)
   root -l -b -q doFstTracking_timesequence.C\(\"HV70V\",\"${config}\",${isSavePed},\"04142020\"\)

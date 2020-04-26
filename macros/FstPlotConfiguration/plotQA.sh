@@ -5,8 +5,8 @@ date
 
 if [ $# -eq 0 ]
 then
-  hv=HV200V
-  config=Th3Tb1
+  hv=HV140V
+  config=Th4o5Tb3
 
   mkdir -p ./figures/${hv}_${config}
 
@@ -18,6 +18,10 @@ then
   root -l -b -q plotSignalQA.C\(\"${hv}\",\"${config}\"\)
   mv ./figures/SignalQA.pdf ./figures/${hv}_${config}/SignalQA_${hv}_${config}.pdf
 
+  # echo "Plot Noise QA!!"
+  root -l -b -q plotNoiseQA.C\(\"${hv}\",\"${config}\"\)
+  mv ./figures/NoiseQA.pdf ./figures/${hv}_${config}/NoiseQA_${hv}_${config}.pdf
+
   # echo "Plot Residual of Fst Cluster Tracks from 2-Layer tracking!!"
   root -l -b -q plotResidual_FSTClusterTracks_2Layer.C\(\"${hv}\",\"${config}\"\)
   mv ./figures/Residual_FSTClusterTracks_2Layer.pdf ./figures/${hv}_${config}/Residual_FSTClusterTracks_2Layer_${hv}_${config}.pdf
@@ -27,8 +31,8 @@ then
   mv ./figures/Efficiency_TrackCluster_2Layer.pdf ./figures/${hv}_${config}/Efficiency_TrackCluster_2Layer_${hv}_${config}.pdf
 
   # echo "Plot Event Display from 2-Layer tracking!!"
-  # root -l -b -q plotEventDisplay_2Layer.C\(\"${hv}\",\"${config}\"\)
-  # mv ./figures/EventDisplay_2Layer.pdf ./figures/${hv}_${config}/EventDisplay_2Layer_${hv}_${config}.pdf
+  root -l -b -q plotEventDisplay_2Layer.C\(\"${hv}\",\"${config}\"\)
+  mv ./figures/EventDisplay_2Layer.pdf ./figures/${hv}_${config}/EventDisplay_2Layer_${hv}_${config}.pdf
 
   # echo "Plot Residual of Fst Cluster Tracks from 3-Layer tracking!!"
   root -l -b -q plotResidual_FSTClusterTracks_3Layer.C\(\"${hv}\",\"${config}\"\)
@@ -39,6 +43,6 @@ then
   mv ./figures/Efficiency_TrackCluster_3Layer.pdf ./figures/${hv}_${config}/Efficiency_TrackCluster_3Layer_${hv}_${config}.pdf
 
   # echo "Plot Event Display from 3-Layer tracking!!"
-  # root -l -b -q plotEventDisplay_3Layer.C\(\"${hv}\",\"${config}\"\)
-  # mv ./figures/EventDisplay_3Layer.pdf ./figures/${hv}_${config}/EventDisplay_3Layer_${hv}_${config}.pdf
+  root -l -b -q plotEventDisplay_3Layer.C\(\"${hv}\",\"${config}\"\)
+  mv ./figures/EventDisplay_3Layer.pdf ./figures/${hv}_${config}/EventDisplay_3Layer_${hv}_${config}.pdf
 fi

@@ -85,9 +85,9 @@ void plotSignalTS_HV200V()
 
   string outputname = "./figures/SignalTS_200V.pdf";
 
-  TCanvas *c_Signal = new TCanvas("c_Signal","c_Signal",10,10,numOfTS*200,1000);
-  c_Signal->Divide(numOfTS,5);
-  for(int i_pad = 0;i_pad < numOfTS*5; ++i_pad)
+  TCanvas *c_Signal = new TCanvas("c_Signal","c_Signal",10,10,1000,1000);
+  c_Signal->Divide(5,5);
+  for(int i_pad = 0;i_pad < 25; ++i_pad)
   {
     c_Signal->cd(i_pad+1)->SetLeftMargin(0.15);
     c_Signal->cd(i_pad+1)->SetRightMargin(0.15);
@@ -99,175 +99,185 @@ void plotSignalTS_HV200V()
   string output_start = "./figures/SignalTS_200V.pdf[";
   c_Signal->Print(output_start.c_str()); // open pdf file
 
-  for(int i_ts = 0; i_ts < numOfTS; ++i_ts)
+  int numOfUsedTS = 0;
+  while(numOfUsedTS < numOfTS)
   {
-    c_Signal->cd(i_ts+1);
+    for(int i_pad = 0;i_pad < 25; ++i_pad)
     {
-      TLegend *leg_FST = new TLegend(0.4,0.6,0.85,0.8);
-      leg_FST->SetBorderSize(0);
-      leg_FST->SetFillColor(10);
-      for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
-      {
-	string title = Form("FST Hits @ Date %s",date[i_ts].c_str());
-	h_mSignalHits_Rstrip[i_ts][i_rstrip]->SetStats(0);
-	h_mSignalHits_Rstrip[i_ts][i_rstrip]->SetTitle(title.c_str());
-	h_mSignalHits_Rstrip[i_ts][i_rstrip]->GetXaxis()->SetTitle("ADC");
-	h_mSignalHits_Rstrip[i_ts][i_rstrip]->GetXaxis()->SetTitleSize(0.06);
-	h_mSignalHits_Rstrip[i_ts][i_rstrip]->SetLineColor(i_rstrip+1);
-
-	if(i_rstrip == 0) h_mSignalHits_Rstrip[i_ts][i_rstrip]->Draw();
-	else h_mSignalHits_Rstrip[i_ts][i_rstrip]->Draw("same");
-
-	string LegName = Form("R_strip %d: Mean %1.2f",i_rstrip,h_mSignalHits_Rstrip[i_ts][i_rstrip]->GetMean());
-	leg_FST->AddEntry(h_mSignalHits_Rstrip[i_ts][i_rstrip],LegName.c_str(),"L");
-
-	double mean_orig    = h_mSignalHits_Rstrip[0][i_rstrip]->GetMean();
-	double err_orig     = h_mSignalHits_Rstrip[0][i_rstrip]->GetMeanError();
-	double mean_current = h_mSignalHits_Rstrip[i_ts][i_rstrip]->GetMean();
-	double err_current  = h_mSignalHits_Rstrip[i_ts][i_rstrip]->GetMeanError();
-	double ratio = mean_current/mean_orig;
-	double error = ErrDiv(mean_current, mean_orig, err_current, err_orig);
-	h_mMeanSignalHits_Rstrip[i_rstrip]->SetBinContent(i_ts+1,ratio);
-	h_mMeanSignalHits_Rstrip[i_rstrip]->SetBinError(i_ts+1,error);
-	// h_mMeanSignalHits_Rstrip[i_rstrip]->SetBinContent(i_ts+1,h_mSignalHits_Rstrip[i_ts][i_rstrip]->GetMean());
-      }
-      leg_FST->Draw("same");
+      c_Signal->cd(i_pad+1)->Clear();
     }
-
-    c_Signal->cd(numOfTS+i_ts+1);
+    for(int i_ts = 0; i_ts < 5; ++i_ts)
     {
-      TLegend *leg_FST = new TLegend(0.4,0.6,0.85,0.8);
-      leg_FST->SetBorderSize(0);
-      leg_FST->SetFillColor(10);
-      for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+      if(numOfUsedTS == numOfTS) continue;
+      c_Signal->cd(5*i_ts+1);
       {
-	string title = Form("FST Clusters @ Date %s",date[i_ts].c_str());
-	h_mSignalClusters_Rstrip[i_ts][i_rstrip]->SetStats(0);
-	h_mSignalClusters_Rstrip[i_ts][i_rstrip]->SetTitle(title.c_str());
-	h_mSignalClusters_Rstrip[i_ts][i_rstrip]->GetXaxis()->SetTitle("ADC");
-	h_mSignalClusters_Rstrip[i_ts][i_rstrip]->GetXaxis()->SetTitleSize(0.06);
-	h_mSignalClusters_Rstrip[i_ts][i_rstrip]->SetLineColor(i_rstrip+1);
+	TLegend *leg_FST = new TLegend(0.4,0.6,0.85,0.8);
+	leg_FST->SetBorderSize(0);
+	leg_FST->SetFillColor(10);
+	for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+	{
+	  string title = Form("FST Hits @ Date %s",date[numOfUsedTS].c_str());
+	  h_mSignalHits_Rstrip[numOfUsedTS][i_rstrip]->SetStats(0);
+	  h_mSignalHits_Rstrip[numOfUsedTS][i_rstrip]->SetTitle(title.c_str());
+	  h_mSignalHits_Rstrip[numOfUsedTS][i_rstrip]->GetXaxis()->SetTitle("ADC");
+	  h_mSignalHits_Rstrip[numOfUsedTS][i_rstrip]->GetXaxis()->SetTitleSize(0.06);
+	  h_mSignalHits_Rstrip[numOfUsedTS][i_rstrip]->SetLineColor(i_rstrip+1);
 
-	if(i_rstrip == 0) h_mSignalClusters_Rstrip[i_ts][i_rstrip]->Draw();
-	else h_mSignalClusters_Rstrip[i_ts][i_rstrip]->Draw("same");
+	  if(i_rstrip == 0) h_mSignalHits_Rstrip[numOfUsedTS][i_rstrip]->Draw();
+	  else h_mSignalHits_Rstrip[numOfUsedTS][i_rstrip]->Draw("same");
 
-	string LegName = Form("R_strip %d: Mean %1.2f",i_rstrip,h_mSignalClusters_Rstrip[i_ts][i_rstrip]->GetMean());
-	leg_FST->AddEntry(h_mSignalClusters_Rstrip[i_ts][i_rstrip],LegName.c_str(),"L");
+	  string LegName = Form("R_strip %d: Mean %1.2f",i_rstrip,h_mSignalHits_Rstrip[numOfUsedTS][i_rstrip]->GetMean());
+	  leg_FST->AddEntry(h_mSignalHits_Rstrip[numOfUsedTS][i_rstrip],LegName.c_str(),"L");
 
-	double mean_orig    = h_mSignalClusters_Rstrip[0][i_rstrip]->GetMean();
-	double err_orig     = h_mSignalClusters_Rstrip[0][i_rstrip]->GetMeanError();
-	double mean_current = h_mSignalClusters_Rstrip[i_ts][i_rstrip]->GetMean();
-	double err_current  = h_mSignalClusters_Rstrip[i_ts][i_rstrip]->GetMeanError();
-	double ratio = mean_current/mean_orig;
-	double error = ErrDiv(mean_current, mean_orig, err_current, err_orig);
-	h_mMeanSignalClusters_Rstrip[i_rstrip]->SetBinContent(i_ts+1,ratio);
-	h_mMeanSignalClusters_Rstrip[i_rstrip]->SetBinError(i_ts+1,error);
-	// h_mMeanSignalClusters_Rstrip[i_rstrip]->SetBinContent(i_ts+1,h_mSignalClusters_Rstrip[i_ts][i_rstrip]->GetMean());
+	  double mean_orig    = h_mSignalHits_Rstrip[0][i_rstrip]->GetMean();
+	  double err_orig     = h_mSignalHits_Rstrip[0][i_rstrip]->GetMeanError();
+	  double mean_current = h_mSignalHits_Rstrip[numOfUsedTS][i_rstrip]->GetMean();
+	  double err_current  = h_mSignalHits_Rstrip[numOfUsedTS][i_rstrip]->GetMeanError();
+	  double ratio = mean_current/mean_orig;
+	  double error = ErrDiv(mean_current, mean_orig, err_current, err_orig);
+	  h_mMeanSignalHits_Rstrip[i_rstrip]->SetBinContent(numOfUsedTS+1,ratio);
+	  h_mMeanSignalHits_Rstrip[i_rstrip]->SetBinError(numOfUsedTS+1,error);
+	  // h_mMeanSignalHits_Rstrip[i_rstrip]->SetBinContent(numOfUsedTS+1,h_mSignalHits_Rstrip[numOfUsedTS][i_rstrip]->GetMean());
+	}
+	leg_FST->Draw("same");
       }
-      leg_FST->Draw("same");
-    }
 
-    c_Signal->cd(2*numOfTS+i_ts+1);
-    {
-      TLegend *leg_FST = new TLegend(0.4,0.6,0.85,0.8);
-      leg_FST->SetBorderSize(0);
-      leg_FST->SetFillColor(10);
-      for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+      c_Signal->cd(5*i_ts+2);
       {
-	string title = Form("FST Noise @ Date %s",date[i_ts].c_str());
-	h_mNoiseHits_Rstrip[i_ts][i_rstrip]->SetStats(0);
-	h_mNoiseHits_Rstrip[i_ts][i_rstrip]->SetTitle(title.c_str());
-	h_mNoiseHits_Rstrip[i_ts][i_rstrip]->GetXaxis()->SetTitle("ADC");
-	h_mNoiseHits_Rstrip[i_ts][i_rstrip]->GetXaxis()->SetTitleSize(0.06);
-	h_mNoiseHits_Rstrip[i_ts][i_rstrip]->SetLineColor(i_rstrip+1);
+	TLegend *leg_FST = new TLegend(0.4,0.6,0.85,0.8);
+	leg_FST->SetBorderSize(0);
+	leg_FST->SetFillColor(10);
+	for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+	{
+	  string title = Form("FST Clusters @ Date %s",date[numOfUsedTS].c_str());
+	  h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->SetStats(0);
+	  h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->SetTitle(title.c_str());
+	  h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->GetXaxis()->SetTitle("ADC");
+	  h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->GetXaxis()->SetTitleSize(0.06);
+	  h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->SetLineColor(i_rstrip+1);
 
-	if(i_rstrip == 0) h_mNoiseHits_Rstrip[i_ts][i_rstrip]->Draw();
-	else h_mNoiseHits_Rstrip[i_ts][i_rstrip]->Draw("same");
+	  if(i_rstrip == 0) h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->Draw();
+	  else h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->Draw("same");
 
-	string LegName = Form("R_strip %d: Mean %1.2f",i_rstrip,h_mNoiseHits_Rstrip[i_ts][i_rstrip]->GetMean());
-	leg_FST->AddEntry(h_mNoiseHits_Rstrip[i_ts][i_rstrip],LegName.c_str(),"L");
+	  string LegName = Form("R_strip %d: Mean %1.2f",i_rstrip,h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->GetMean());
+	  leg_FST->AddEntry(h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip],LegName.c_str(),"L");
 
-	double mean_orig    = h_mNoiseHits_Rstrip[0][i_rstrip]->GetMean();
-	double err_orig     = h_mNoiseHits_Rstrip[0][i_rstrip]->GetMeanError();
-	double mean_current = h_mNoiseHits_Rstrip[i_ts][i_rstrip]->GetMean();
-	double err_current  = h_mNoiseHits_Rstrip[i_ts][i_rstrip]->GetMeanError();
-	double ratio = mean_current/mean_orig;
-	double error = ErrDiv(mean_current, mean_orig, err_current, err_orig);
-	h_mMeanNoiseHits_Rstrip[i_rstrip]->SetBinContent(i_ts+1,ratio);
-	h_mMeanNoiseHits_Rstrip[i_rstrip]->SetBinError(i_ts+1,error);
-	// h_mMeanNoiseHits_Rstrip[i_rstrip]->SetBinContent(i_ts+1,h_mNoiseHits_Rstrip[i_ts][i_rstrip]->GetMean());
+	  double mean_orig    = h_mSignalClusters_Rstrip[0][i_rstrip]->GetMean();
+	  double err_orig     = h_mSignalClusters_Rstrip[0][i_rstrip]->GetMeanError();
+	  double mean_current = h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->GetMean();
+	  double err_current  = h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->GetMeanError();
+	  double ratio = mean_current/mean_orig;
+	  double error = ErrDiv(mean_current, mean_orig, err_current, err_orig);
+	  h_mMeanSignalClusters_Rstrip[i_rstrip]->SetBinContent(numOfUsedTS+1,ratio);
+	  h_mMeanSignalClusters_Rstrip[i_rstrip]->SetBinError(numOfUsedTS+1,error);
+	  // h_mMeanSignalClusters_Rstrip[i_rstrip]->SetBinContent(numOfUsedTS+1,h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->GetMean());
+	}
+	leg_FST->Draw("same");
       }
-      leg_FST->Draw("same");
-    }
 
-    c_Signal->cd(3*numOfTS+i_ts+1);
-    {
-      TLegend *leg_FST = new TLegend(0.50,0.6,0.90,0.8);
-      leg_FST->SetBorderSize(0);
-      leg_FST->SetFillColor(10);
-      for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+      c_Signal->cd(5*i_ts+3);
       {
-	string title = Form("FST Signal/Noise @ Date %s",date[i_ts].c_str());
-	h_mSNRatioHits_Rstrip[i_ts][i_rstrip]->SetStats(0);
-	h_mSNRatioHits_Rstrip[i_ts][i_rstrip]->SetTitle(title.c_str());
-	h_mSNRatioHits_Rstrip[i_ts][i_rstrip]->GetXaxis()->SetTitle("Signal/Noise");
-	h_mSNRatioHits_Rstrip[i_ts][i_rstrip]->GetXaxis()->SetTitleSize(0.06);
-	h_mSNRatioHits_Rstrip[i_ts][i_rstrip]->SetLineColor(i_rstrip+1);
+	TLegend *leg_FST = new TLegend(0.4,0.6,0.85,0.8);
+	leg_FST->SetBorderSize(0);
+	leg_FST->SetFillColor(10);
+	for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+	{
+	  string title = Form("FST Noise @ Date %s",date[numOfUsedTS].c_str());
+	  h_mNoiseHits_Rstrip[numOfUsedTS][i_rstrip]->SetStats(0);
+	  h_mNoiseHits_Rstrip[numOfUsedTS][i_rstrip]->SetTitle(title.c_str());
+	  h_mNoiseHits_Rstrip[numOfUsedTS][i_rstrip]->GetXaxis()->SetTitle("ADC");
+	  h_mNoiseHits_Rstrip[numOfUsedTS][i_rstrip]->GetXaxis()->SetTitleSize(0.06);
+	  h_mNoiseHits_Rstrip[numOfUsedTS][i_rstrip]->SetLineColor(i_rstrip+1);
 
-	if(i_rstrip == 0) h_mSNRatioHits_Rstrip[i_ts][i_rstrip]->Draw();
-	else h_mSNRatioHits_Rstrip[i_ts][i_rstrip]->Draw("same");
+	  if(i_rstrip == 0) h_mNoiseHits_Rstrip[numOfUsedTS][i_rstrip]->Draw();
+	  else h_mNoiseHits_Rstrip[numOfUsedTS][i_rstrip]->Draw("same");
 
-	string LegName = Form("R_strip %d: Mean %1.2f",i_rstrip,h_mSNRatioHits_Rstrip[i_ts][i_rstrip]->GetMean());
-	leg_FST->AddEntry(h_mSNRatioHits_Rstrip[i_ts][i_rstrip],LegName.c_str(),"L");
+	  string LegName = Form("R_strip %d: Mean %1.2f",i_rstrip,h_mNoiseHits_Rstrip[numOfUsedTS][i_rstrip]->GetMean());
+	  leg_FST->AddEntry(h_mNoiseHits_Rstrip[numOfUsedTS][i_rstrip],LegName.c_str(),"L");
 
-	double mean_orig    = h_mSNRatioHits_Rstrip[0][i_rstrip]->GetMean();
-	double err_orig     = h_mSNRatioHits_Rstrip[0][i_rstrip]->GetMeanError();
-	double mean_current = h_mSNRatioHits_Rstrip[i_ts][i_rstrip]->GetMean();
-	double err_current  = h_mSNRatioHits_Rstrip[i_ts][i_rstrip]->GetMeanError();
-	double ratio = mean_current/mean_orig;
-	double error = ErrDiv(mean_current, mean_orig, err_current, err_orig);
-	h_mMeanSNRatioHits_Rstrip[i_rstrip]->SetBinContent(i_ts+1,ratio);
-	h_mMeanSNRatioHits_Rstrip[i_rstrip]->SetBinError(i_ts+1,error);
-	// h_mMeanSNRatioHits_Rstrip[i_rstrip]->SetBinContent(i_ts+1,h_mSNRatioHits_Rstrip[i_ts][i_rstrip]->GetMean());
+	  double mean_orig    = h_mNoiseHits_Rstrip[0][i_rstrip]->GetMean();
+	  double err_orig     = h_mNoiseHits_Rstrip[0][i_rstrip]->GetMeanError();
+	  double mean_current = h_mNoiseHits_Rstrip[numOfUsedTS][i_rstrip]->GetMean();
+	  double err_current  = h_mNoiseHits_Rstrip[numOfUsedTS][i_rstrip]->GetMeanError();
+	  double ratio = mean_current/mean_orig;
+	  double error = ErrDiv(mean_current, mean_orig, err_current, err_orig);
+	  h_mMeanNoiseHits_Rstrip[i_rstrip]->SetBinContent(numOfUsedTS+1,ratio);
+	  h_mMeanNoiseHits_Rstrip[i_rstrip]->SetBinError(numOfUsedTS+1,error);
+	  // h_mMeanNoiseHits_Rstrip[i_rstrip]->SetBinContent(numOfUsedTS+1,h_mNoiseHits_Rstrip[numOfUsedTS][i_rstrip]->GetMean());
+	}
+	leg_FST->Draw("same");
       }
-      leg_FST->Draw("same");
-    }
 
-    c_Signal->cd(4*numOfTS+i_ts+1);
-    {
-      TLegend *leg_FST = new TLegend(0.55,0.6,0.8,0.8);
-      leg_FST->SetBorderSize(0);
-      leg_FST->SetFillColor(10);
-      for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+      c_Signal->cd(5*i_ts+4);
       {
-	h_mMaxTbHits_Rstrip[i_ts][i_rstrip]->SetStats(0);
-	h_mMaxTbHits_Rstrip[i_ts][i_rstrip]->SetTitle("Max Time Bin Hits");
-	h_mMaxTbHits_Rstrip[i_ts][i_rstrip]->GetXaxis()->SetTitle("Maxt Time Bin");
-	h_mMaxTbHits_Rstrip[i_ts][i_rstrip]->GetXaxis()->SetTitleSize(0.06);
-	h_mMaxTbHits_Rstrip[i_ts][i_rstrip]->SetLineColor(i_rstrip+1);
+	TLegend *leg_FST = new TLegend(0.50,0.6,0.90,0.8);
+	leg_FST->SetBorderSize(0);
+	leg_FST->SetFillColor(10);
+	for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+	{
+	  string title = Form("FST Signal/Noise @ Date %s",date[numOfUsedTS].c_str());
+	  h_mSNRatioHits_Rstrip[numOfUsedTS][i_rstrip]->SetStats(0);
+	  h_mSNRatioHits_Rstrip[numOfUsedTS][i_rstrip]->SetTitle(title.c_str());
+	  h_mSNRatioHits_Rstrip[numOfUsedTS][i_rstrip]->GetXaxis()->SetTitle("Signal/Noise");
+	  h_mSNRatioHits_Rstrip[numOfUsedTS][i_rstrip]->GetXaxis()->SetTitleSize(0.06);
+	  h_mSNRatioHits_Rstrip[numOfUsedTS][i_rstrip]->SetLineColor(i_rstrip+1);
 
-	if(i_rstrip == 0) h_mMaxTbHits_Rstrip[i_ts][i_rstrip]->Draw();
-	else h_mMaxTbHits_Rstrip[i_ts][i_rstrip]->Draw("same");
+	  if(i_rstrip == 0) h_mSNRatioHits_Rstrip[numOfUsedTS][i_rstrip]->Draw();
+	  else h_mSNRatioHits_Rstrip[numOfUsedTS][i_rstrip]->Draw("same");
 
-	string LegName = Form("R_strip %d: Mean %1.2f",i_rstrip,h_mMaxTbHits_Rstrip[i_ts][i_rstrip]->GetMean());
-	leg_FST->AddEntry(h_mMaxTbHits_Rstrip[i_ts][i_rstrip],LegName.c_str(),"L");
+	  string LegName = Form("R_strip %d: Mean %1.2f",i_rstrip,h_mSNRatioHits_Rstrip[numOfUsedTS][i_rstrip]->GetMean());
+	  leg_FST->AddEntry(h_mSNRatioHits_Rstrip[numOfUsedTS][i_rstrip],LegName.c_str(),"L");
 
-	double mean_orig    = h_mMaxTbHits_Rstrip[0][i_rstrip]->GetMean();
-	double err_orig     = h_mMaxTbHits_Rstrip[0][i_rstrip]->GetMeanError();
-	double mean_current = h_mMaxTbHits_Rstrip[i_ts][i_rstrip]->GetMean();
-	double err_current  = h_mMaxTbHits_Rstrip[i_ts][i_rstrip]->GetMeanError();
-	double ratio = mean_current/mean_orig;
-	double error = ErrDiv(mean_current, mean_orig, err_current, err_orig);
-	h_mMeanMaxTbHits_Rstrip[i_rstrip]->SetBinContent(i_ts+1,ratio);
-	h_mMeanMaxTbHits_Rstrip[i_rstrip]->SetBinError(i_ts+1,error);
-	// h_mMeanMaxTbHits_Rstrip[i_rstrip]->SetBinContent(i_ts+1,h_mMaxTbHits_Rstrip[i_ts][i_rstrip]->GetMean());
+	  double mean_orig    = h_mSNRatioHits_Rstrip[0][i_rstrip]->GetMean();
+	  double err_orig     = h_mSNRatioHits_Rstrip[0][i_rstrip]->GetMeanError();
+	  double mean_current = h_mSNRatioHits_Rstrip[numOfUsedTS][i_rstrip]->GetMean();
+	  double err_current  = h_mSNRatioHits_Rstrip[numOfUsedTS][i_rstrip]->GetMeanError();
+	  double ratio = mean_current/mean_orig;
+	  double error = ErrDiv(mean_current, mean_orig, err_current, err_orig);
+	  h_mMeanSNRatioHits_Rstrip[i_rstrip]->SetBinContent(numOfUsedTS+1,ratio);
+	  h_mMeanSNRatioHits_Rstrip[i_rstrip]->SetBinError(numOfUsedTS+1,error);
+	  // h_mMeanSNRatioHits_Rstrip[i_rstrip]->SetBinContent(numOfUsedTS+1,h_mSNRatioHits_Rstrip[numOfUsedTS][i_rstrip]->GetMean());
+	}
+	leg_FST->Draw("same");
       }
-      leg_FST->Draw("same");
+
+      c_Signal->cd(5*i_ts+5);
+      {
+	TLegend *leg_FST = new TLegend(0.55,0.6,0.8,0.8);
+	leg_FST->SetBorderSize(0);
+	leg_FST->SetFillColor(10);
+	for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+	{
+	  h_mMaxTbHits_Rstrip[numOfUsedTS][i_rstrip]->SetStats(0);
+	  h_mMaxTbHits_Rstrip[numOfUsedTS][i_rstrip]->SetTitle("Max Time Bin Hits");
+	  h_mMaxTbHits_Rstrip[numOfUsedTS][i_rstrip]->GetXaxis()->SetTitle("Maxt Time Bin");
+	  h_mMaxTbHits_Rstrip[numOfUsedTS][i_rstrip]->GetXaxis()->SetTitleSize(0.06);
+	  h_mMaxTbHits_Rstrip[numOfUsedTS][i_rstrip]->SetLineColor(i_rstrip+1);
+
+	  if(i_rstrip == 0) h_mMaxTbHits_Rstrip[numOfUsedTS][i_rstrip]->Draw();
+	  else h_mMaxTbHits_Rstrip[numOfUsedTS][i_rstrip]->Draw("same");
+
+	  string LegName = Form("R_strip %d: Mean %1.2f",i_rstrip,h_mMaxTbHits_Rstrip[numOfUsedTS][i_rstrip]->GetMean());
+	  leg_FST->AddEntry(h_mMaxTbHits_Rstrip[numOfUsedTS][i_rstrip],LegName.c_str(),"L");
+
+	  double mean_orig    = h_mMaxTbHits_Rstrip[0][i_rstrip]->GetMean();
+	  double err_orig     = h_mMaxTbHits_Rstrip[0][i_rstrip]->GetMeanError();
+	  double mean_current = h_mMaxTbHits_Rstrip[numOfUsedTS][i_rstrip]->GetMean();
+	  double err_current  = h_mMaxTbHits_Rstrip[numOfUsedTS][i_rstrip]->GetMeanError();
+	  double ratio = mean_current/mean_orig;
+	  double error = ErrDiv(mean_current, mean_orig, err_current, err_orig);
+	  h_mMeanMaxTbHits_Rstrip[i_rstrip]->SetBinContent(numOfUsedTS+1,ratio);
+	  h_mMeanMaxTbHits_Rstrip[i_rstrip]->SetBinError(numOfUsedTS+1,error);
+	  // h_mMeanMaxTbHits_Rstrip[i_rstrip]->SetBinContent(numOfUsedTS+1,h_mMaxTbHits_Rstrip[numOfUsedTS][i_rstrip]->GetMean());
+	}
+	leg_FST->Draw("same");
+      }
+      numOfUsedTS++;
     }
+    c_Signal->Update();
+    c_Signal->Print(outputname.c_str());
   }
 
-  c_Signal->Update();
-  c_Signal->Print(outputname.c_str());
 
   TCanvas *c_Signal_TS = new TCanvas("c_Signal_TS","c_Signal_TS",10,10,1000,1000);
   c_Signal_TS->Divide(1,5);
@@ -294,11 +304,11 @@ void plotSignalTS_HV200V()
 	h_mMeanSignalHits_Rstrip[i_rstrip]->GetXaxis()->SetBinLabel(i_ts+1,date[i_ts].c_str());
       }
       h_mMeanSignalHits_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(0.14);
-      h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("#frac{<ADC>_{Hits}}{<ADC>_{Hits @ 0402}}");
+      h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("#frac{<ADC>_{Hits}}{<ADC>_{Hits @ 0320}}");
       h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
       // h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(200.0,650.0);
-      h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(0.5,1.5);
+      h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(0.3,1.5);
       h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
       h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetNdivisions(505);
       h_mMeanSignalHits_Rstrip[i_rstrip]->SetLineColor(i_rstrip+1);
@@ -310,6 +320,7 @@ void plotSignalTS_HV200V()
       leg_FST->AddEntry(h_mMeanSignalHits_Rstrip[i_rstrip],LegName.c_str(),"L");
     }
     leg_FST->Draw("same");
+    PlotLine(-0.5, numOfTS-0.5, 1.0, 1.0, 1, 2, 2);
   }
 
   c_Signal_TS->cd(2);
@@ -323,11 +334,11 @@ void plotSignalTS_HV200V()
 	h_mMeanSignalClusters_Rstrip[i_rstrip]->GetXaxis()->SetBinLabel(i_ts+1,date[i_ts].c_str());
       }
       h_mMeanSignalClusters_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(0.14);
-      h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetTitle("#frac{<ADC>_{Clusters}}{<ADC>_{Clusters @ 0402}}");
+      h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetTitle("#frac{<ADC>_{Clusters}}{<ADC>_{Clusters @ 0320}}");
       h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
       // h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(200.0,650.0);
-      h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(0.5,1.5);
+      h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(0.3,1.5);
       h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
       h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetNdivisions(505);
       h_mMeanSignalClusters_Rstrip[i_rstrip]->SetLineColor(i_rstrip+1);
@@ -335,6 +346,7 @@ void plotSignalTS_HV200V()
       if(i_rstrip == 0) h_mMeanSignalClusters_Rstrip[i_rstrip]->Draw();
       else h_mMeanSignalClusters_Rstrip[i_rstrip]->Draw("same");
     }
+    PlotLine(-0.5, numOfTS-0.5, 1.0, 1.0, 1, 2, 2);
   }
 
   c_Signal_TS->cd(3);
@@ -348,7 +360,7 @@ void plotSignalTS_HV200V()
 	h_mMeanNoiseHits_Rstrip[i_rstrip]->GetXaxis()->SetBinLabel(i_ts+1,date[i_ts].c_str());
       }
       h_mMeanNoiseHits_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(0.14);
-      h_mMeanNoiseHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("Noise #frac{<ADC>_{Hits}}{<ADC>_{Hits @ 0402}}");
+      h_mMeanNoiseHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("Noise #frac{<ADC>_{Hits}}{<ADC>_{Hits @ 0320}}");
       h_mMeanNoiseHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanNoiseHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
       // h_mMeanNoiseHits_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(10.0,35.0);
@@ -360,6 +372,7 @@ void plotSignalTS_HV200V()
       if(i_rstrip == 0) h_mMeanNoiseHits_Rstrip[i_rstrip]->Draw();
       else h_mMeanNoiseHits_Rstrip[i_rstrip]->Draw("same");
     }
+    PlotLine(-0.5, numOfTS-0.5, 1.0, 1.0, 1, 2, 2);
   }
 
   c_Signal_TS->cd(4);
@@ -373,7 +386,7 @@ void plotSignalTS_HV200V()
 	h_mMeanSNRatioHits_Rstrip[i_rstrip]->GetXaxis()->SetBinLabel(i_ts+1,date[i_ts].c_str());
       }
       h_mMeanSNRatioHits_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(0.14);
-      h_mMeanSNRatioHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("#frac{<Signal/Noise>_{Hits}}{<Signal/Noise>_{Hits @ 0402}}");
+      h_mMeanSNRatioHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("#frac{<Signal/Noise>_{Hits}}{<Signal/Noise>_{Hits @ 0320}}");
       h_mMeanSNRatioHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanSNRatioHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
       // h_mMeanSNRatioHits_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(5.0,30.0);
@@ -385,6 +398,7 @@ void plotSignalTS_HV200V()
       if(i_rstrip == 0) h_mMeanSNRatioHits_Rstrip[i_rstrip]->Draw();
       else h_mMeanSNRatioHits_Rstrip[i_rstrip]->Draw("same");
     }
+    PlotLine(-0.5, numOfTS-0.5, 1.0, 1.0, 1, 2, 2);
   }
 
   c_Signal_TS->cd(5);
@@ -398,7 +412,7 @@ void plotSignalTS_HV200V()
 	h_mMeanMaxTbHits_Rstrip[i_rstrip]->GetXaxis()->SetBinLabel(i_ts+1,date[i_ts].c_str());
       }
       h_mMeanMaxTbHits_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(0.14);
-      h_mMeanMaxTbHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("#frac{<Max Time Bin>_{Hits}}{<Max Time Bin>_{Hits @ 0402}}");
+      h_mMeanMaxTbHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("#frac{<Max Time Bin>_{Hits}}{<Max Time Bin>_{Hits @ 0320}}");
       h_mMeanMaxTbHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanMaxTbHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
       // h_mMeanMaxTbHits_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(2.0,5.0);
@@ -410,6 +424,7 @@ void plotSignalTS_HV200V()
       if(i_rstrip == 0) h_mMeanMaxTbHits_Rstrip[i_rstrip]->Draw();
       else h_mMeanMaxTbHits_Rstrip[i_rstrip]->Draw("same");
     }
+    PlotLine(-0.5, numOfTS-0.5, 1.0, 1.0, 1, 2, 2);
   }
 
   c_Signal_TS->Update();
