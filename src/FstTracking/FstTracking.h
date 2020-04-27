@@ -135,14 +135,14 @@ class FstTracking : public TObject
 
     // Efficiency based on Hits
     // 0: no matching | 1-3 matching within (1-3)*pitchR in r & (1-3)*pitchPhi in phi
-    TH2F *h_mTrackHits_IST[7]; // position on FST from IST projection
-    TH2F *h_mTrackHits_FST[7]; // position on FST from FST measurement
+    TH2F *h_mTrackHits_IST[8]; // position on FST from IST projection
+    TH2F *h_mTrackHits_FST[8]; // position on FST from FST measurement
 
-    TH2F *h_mTrackClusters_IST_2Layer[7]; // position on FST from IST projection
-    TH2F *h_mTrackClusters_FST_2Layer[7]; // position on FST from FST measurement
+    TH2F *h_mTrackClusters_IST_2Layer[8]; // position on FST from IST projection
+    TH2F *h_mTrackClusters_FST_2Layer[8]; // position on FST from FST measurement
 
-    TH2F *h_mTrackClusters_IST_3Layer[7]; // position on FST from IST projection
-    TH2F *h_mTrackClusters_FST_3Layer[7]; // position on FST from FST measurement
+    TH2F *h_mTrackClusters_IST_3Layer[8]; // position on FST from IST projection
+    TH2F *h_mTrackClusters_FST_3Layer[8]; // position on FST from FST measurement
 
     // Input TChain for hits and clusters
     TChain *mChainInPut; // input TTree

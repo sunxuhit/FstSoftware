@@ -17,7 +17,7 @@ void calTrackClusterEfficiency_2Layer(string hv = "HV140V", string config = "Th4
   const double phiMaxFst = 64.0*FST::pitchPhi;
   const double phiMinFst = 0.0;
 
-  const int nMatch = 7;
+  const int nMatch = 8;
 
   string inputfile = Form("../../output/configuration/FstTracking_%s_withPed_%s.root",hv.c_str(),config.c_str());
 

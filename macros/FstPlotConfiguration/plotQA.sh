@@ -1,12 +1,12 @@
 #!/bin/bash
 date
 
-#. ./plotQA.sh
+#. ./plotQA.sh hv config
 
-if [ $# -eq 0 ]
+if [ $# -eq 2 ]
 then
-  hv=HV140V
-  config=Th4o5Tb3
+  hv=$1
+  config=$2
 
   mkdir -p ./figures/${hv}_${config}
 

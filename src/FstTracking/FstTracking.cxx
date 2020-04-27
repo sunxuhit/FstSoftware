@@ -750,7 +750,7 @@ void FstTracking::writeTracking_Clusters()
 //--------------Efficiency with Hits---------------------
 void FstTracking::initEfficiency_Hits()
 {
-  for(int i_match = 0; i_match < 7; ++i_match)
+  for(int i_match = 0; i_match < 8; ++i_match)
   {
     string HistName;
     HistName = Form("h_mTrackHits_IST_SF%d",i_match);
@@ -794,7 +794,7 @@ void FstTracking::calEfficiency_Hits(FstEvent *fstEvent)
 
     if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
     { // used for efficiency only if the projected position is within FST acceptance
-      for(int i_match = 0; i_match < 7; ++i_match)
+      for(int i_match = 0; i_match < 8; ++i_match)
       {
 	h_mTrackHits_IST[i_match]->Fill(r_proj,phi_proj);
 	int nMatchedTrack = 0;
@@ -823,7 +823,7 @@ void FstTracking::calEfficiency_Hits(FstEvent *fstEvent)
 
 void FstTracking::writeEfficiency_Hits()
 {
-  for(int i_match = 0; i_match < 7; ++i_match)
+  for(int i_match = 0; i_match < 8; ++i_match)
   {
     h_mTrackHits_IST[i_match]->Write();
     h_mTrackHits_FST[i_match]->Write();
@@ -834,7 +834,7 @@ void FstTracking::writeEfficiency_Hits()
 //--------------Efficiency with Clusters---------------------
 void FstTracking::initEfficiency_Clusters()
 {
-  for(int i_match = 0; i_match < 7; ++i_match)
+  for(int i_match = 0; i_match < 8; ++i_match)
   {
     string HistName;
     HistName = Form("h_mTrackClusters_IST_2Layer_SF%d",i_match);
@@ -897,7 +897,7 @@ void FstTracking::calEfficiency_Clusters(FstEvent *fstEvent)
     {
       if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
       { // used for efficiency only if the projected position is within FST acceptance
-	for(int i_match = 0; i_match < 7; ++i_match)
+	for(int i_match = 0; i_match < 8; ++i_match)
 	{
 	  h_mTrackClusters_IST_2Layer[i_match]->Fill(r_proj,phi_proj);
 	  int nMatchedTrack = 0;
@@ -955,7 +955,7 @@ void FstTracking::calEfficiency_Clusters(FstEvent *fstEvent)
 	    {
 	      if( abs(x2_ist-x2_proj) < 6.0 && abs(y2_ist-y2_proj) < 0.6 )
 	      { // IST2 matching cut
-		for(int i_match = 0; i_match < 7; ++i_match)
+		for(int i_match = 0; i_match < 8; ++i_match)
 		{
 		  h_mTrackClusters_IST_3Layer[i_match]->Fill(r_proj,phi_proj);
 		  int nMatchedTrack = 0;
@@ -989,7 +989,7 @@ void FstTracking::calEfficiency_Clusters(FstEvent *fstEvent)
 
 void FstTracking::writeEfficiency_Clusters()
 {
-  for(int i_match = 0; i_match < 7; ++i_match)
+  for(int i_match = 0; i_match < 8; ++i_match)
   {
     h_mTrackClusters_IST_2Layer[i_match]->Write();
     h_mTrackClusters_FST_2Layer[i_match]->Write();
