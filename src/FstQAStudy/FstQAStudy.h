@@ -125,10 +125,17 @@ class FstQAStudy : public TObject
     TH1F *h_mNoiseHits_Rstrip[4];
     TH1F *h_mSNRatioHits_Rstrip[4];
     TH1F *h_mSignalClusters_Rstrip[4];
-    TH1F *h_mSignalHits_Rstrip_TimeBin[4][FST::numTBins];
+    TH1F *h_mSignalHits_Rstrip_TimeBin[4][FST::numTBins]; // time bin differential
     TH1F *h_mNoiseHits_Rstrip_TimeBin[4][FST::numTBins];
     TH1F *h_mSNRatioHits_Rstrip_TimeBin[4][FST::numTBins];
     TH1F *h_mSignalClusters_Rstrip_TimeBin[4][FST::numTBins];
+
+    TH1F *h_mMaxTbHits_Apv[2][4][2]; // APV chips & R & phi: 0-63 & 64-127
+    TH1F *h_mMaxTbClusters_Apv[2][4][2];
+    TH1F *h_mSignalHits_Apv[2][4][2];
+    TH1F *h_mNoiseHits_Apv[2][4][2];
+    TH1F *h_mSNRatioHits_Apv[2][4][2];
+    TH1F *h_mSignalClusters_Apv[2][4][2];
 
     // Output TTree for Event Display
     TTree *mTree_EventDisplay;

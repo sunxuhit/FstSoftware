@@ -578,6 +578,29 @@ void FstQAStudy::initSignalQA()
       h_mSignalClusters_Rstrip_TimeBin[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
     }
   }
+
+  for(int i_apv = 0; i_apv < 2; ++i_apv)
+  {
+    for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+    {
+      for(int i_phi = 0; i_phi < 2; ++i_phi)
+      {
+	string HistName;
+	HistName = Form("h_mMaxTbHits_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
+	h_mMaxTbHits_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),10,-0.5,9.5);
+	HistName = Form("h_mMaxTbClusters_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
+	h_mMaxTbClusters_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),20,-0.5,9.5);
+	HistName = Form("h_mSignalHits_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
+	h_mSignalHits_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+	HistName = Form("h_mNoiseHits_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
+	h_mNoiseHits_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,99.5);
+	HistName = Form("h_mSNRatioHits_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
+	h_mSNRatioHits_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,49.5);
+	HistName = Form("h_mSignalClusters_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
+	h_mSignalClusters_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+      }
+    }
+  }
 }
 
 void FstQAStudy::fillSignalQA(FstEvent *fstEvent)
@@ -600,12 +623,14 @@ void FstQAStudy::fillSignalQA(FstEvent *fstEvent)
     {
       if(fstRawHitVec[i_hit]->getIsHit())
       {
-	int column    = fstRawHitVec[i_hit]->getColumn();
-	int row       = fstRawHitVec[i_hit]->getRow();
-	int maxTb     = fstRawHitVec[i_hit]->getMaxTb();
-	double ped    = fstRawHitVec[i_hit]->getPedMean(maxTb); // pedMean
-	double signal = fstRawHitVec[i_hit]->getCharge(maxTb); // adc - pedMean
-	double noise  = fstRawHitVec[i_hit]->getPedStdDev(maxTb); // pedStdDev
+	const int apv       = fstRawHitVec[i_hit]->getAPV();
+	const int channel   = fstRawHitVec[i_hit]->getChannel();
+	const int column    = fstRawHitVec[i_hit]->getColumn();
+	const int row       = fstRawHitVec[i_hit]->getRow();
+	const int maxTb     = fstRawHitVec[i_hit]->getMaxTb();
+	const double ped    = fstRawHitVec[i_hit]->getPedMean(maxTb); // pedMean
+	const double signal = fstRawHitVec[i_hit]->getCharge(maxTb); // adc - pedMean
+	const double noise  = fstRawHitVec[i_hit]->getPedStdDev(maxTb); // pedStdDev
 	p_mPedMap_FST->Fill(column,row,ped);
 	p_mSigMap_FST->Fill(column,row,signal);
 	h_mSignalHits_FST->Fill(signal);
@@ -620,6 +645,17 @@ void FstQAStudy::fillSignalQA(FstEvent *fstEvent)
 	h_mSignalHits_Rstrip_TimeBin[column-4][maxTb]->Fill(signal);
 	h_mNoiseHits_Rstrip_TimeBin[column-4][maxTb]->Fill(noise);
 	h_mSNRatioHits_Rstrip_TimeBin[column-4][maxTb]->Fill(signal/noise);
+
+	int phibin = 0;
+	if(channel > 63) phibin = 1;
+
+	if(apv == 4 || apv == 5)
+	{
+	  h_mMaxTbHits_Apv[apv-4][column-4][phibin]->Fill(maxTb);
+	  h_mSignalHits_Apv[apv-4][column-4][phibin]->Fill(signal);
+	  h_mNoiseHits_Apv[apv-4][column-4][phibin]->Fill(noise);
+	  h_mSNRatioHits_Apv[apv-4][column-4][phibin]->Fill(signal/noise);
+	}
       }
     }
   }
@@ -650,9 +686,21 @@ void FstQAStudy::fillSignalQA(FstEvent *fstEvent)
       if(meanColumn > 4.5 && meanColumn <= 5.5) column = 1;
       if(meanColumn > 5.5 && meanColumn <= 6.5) column = 2;
       if(meanColumn > 6.5 && meanColumn <= 7.5) column = 3;
+      h_mMaxTbClusters_Rstrip[column]->Fill(maxTb);
       h_mSignalClusters_Rstrip[column]->Fill(signal);
       h_mSignalClusters_Rstrip_TimeBin[column][(int)maxTb]->Fill(signal);
-      h_mMaxTbClusters_Rstrip[column]->Fill(maxTb);
+
+      int apv = 0;
+      int phibin = 0;
+      if(meanRow >= 0.00 && meanRow < 16.0) {apv = 4; phibin = 0;}
+      if(meanRow >= 16.0 && meanRow < 32.0) {apv = 4; phibin = 1;}
+      if(meanRow >= 32.0 && meanRow < 48.0) {apv = 5; phibin = 0;}
+      if(meanRow >= 48.0 && meanRow < 64.0) {apv = 5; phibin = 1;}
+      if(apv == 4 || apv == 5)
+      {
+	h_mMaxTbClusters_Apv[apv-4][column][phibin]->Fill(maxTb);
+	h_mSignalClusters_Apv[apv-4][column][phibin]->Fill(signal);
+      }
     }
   }
 }
@@ -680,6 +728,22 @@ void FstQAStudy::writeSignalQA()
       h_mNoiseHits_Rstrip_TimeBin[i_rstrip][i_tb]->Write();
       h_mSNRatioHits_Rstrip_TimeBin[i_rstrip][i_tb]->Write();
       h_mSignalClusters_Rstrip_TimeBin[i_rstrip][i_tb]->Write();
+    }
+  }
+
+  for(int i_apv = 0; i_apv < 2; ++i_apv)
+  {
+    for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+    {
+      for(int i_phi = 0; i_phi < 2; ++i_phi)
+      {
+	h_mMaxTbHits_Apv[i_apv][i_rstrip][i_phi]->Write();
+	h_mMaxTbClusters_Apv[i_apv][i_rstrip][i_phi]->Write();
+	h_mSignalHits_Apv[i_apv][i_rstrip][i_phi]->Write();
+	h_mNoiseHits_Apv[i_apv][i_rstrip][i_phi]->Write();
+	h_mSNRatioHits_Apv[i_apv][i_rstrip][i_phi]->Write();
+	h_mSignalClusters_Apv[i_apv][i_rstrip][i_phi]->Write();
+      }
     }
   }
 }
