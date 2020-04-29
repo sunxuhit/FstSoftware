@@ -334,7 +334,7 @@ void plotSignalQA(string hv = "HV140V", string config = "Th4o5Tb3")
       h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("<ADC>_{Hits}");
       h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
-      h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(200.0,650.0);
+      h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(0.5*h_mMeanSignalHits_Rstrip[i_rstrip]->GetMinimum(),1.5*h_mMeanSignalHits_Rstrip[i_rstrip]->GetMaximum());
       h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
       h_mMeanSignalHits_Rstrip[i_rstrip]->SetLineColor(i_rstrip+1);
 
@@ -359,7 +359,7 @@ void plotSignalQA(string hv = "HV140V", string config = "Th4o5Tb3")
       h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetTitle("<ADC>_{Clusters}");
       h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetTitleSize(0.08);
       h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
-      h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(200.0,650.0);
+      h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(0.5*h_mMeanSignalClusters_Rstrip[i_rstrip]->GetMinimum(),1.5*h_mMeanSignalClusters_Rstrip[i_rstrip]->GetMaximum());
       h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
       h_mMeanSignalClusters_Rstrip[i_rstrip]->SetLineColor(i_rstrip+1);
 

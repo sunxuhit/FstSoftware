@@ -304,6 +304,12 @@ int FstClusterMaker::Make()
 			maxTB = i_tb;
 			preADC = maxADC;
 		      }
+		      if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > preADC)
+		      { // check if i_tb-1 has the max ADC
+			maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1];
+			maxTB = i_tb-1;
+			preADC = maxADC;
+		      }
 		    }
 		  }
 		}
@@ -403,6 +409,12 @@ int FstClusterMaker::Make()
 			{ // find time bin with max adc for 0-FST::numTBins-1
 			  maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb];
 			  maxTB = i_tb;
+			  preADC = maxADC;
+			}
+			if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > preADC)
+			{ // check if i_tb-1 has the max ADC
+			  maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1];
+			  maxTB = i_tb-1;
 			  preADC = maxADC;
 			}
 		      }
