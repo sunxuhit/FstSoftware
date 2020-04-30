@@ -36,6 +36,10 @@ include(${ROOT_USE_FILE})
 include_directories("${PROJECT_SOURCE_DIR}/src/FstUtil")
 add_subdirectory(src/FstUtil)
 
+# include FstNoiseStudy
+include_directories("${PROJECT_SOURCE_DIR}/src/FstNoiseStudy")
+add_subdirectory(src/FstNoiseStudy)
+
 # include FstClusterMaker
 include_directories("${PROJECT_SOURCE_DIR}/src/FstClusterMaker")
 add_subdirectory(src/FstClusterMaker)
