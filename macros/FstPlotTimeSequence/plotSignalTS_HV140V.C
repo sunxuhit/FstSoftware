@@ -32,8 +32,8 @@ float ErrDiv(float x, float y, float dx, float dy)
 
 void plotSignalTS_HV140V()
 {
-  const int numOfTS = 13;
-  string date[numOfTS] = {"0320","0329","0330","0331","0402","0403","0404","0406","0407","0408","0413","0417","0423"};
+  const int numOfTS = 12;
+  string date[numOfTS] = {"0329","0330","0331","0402","0403","0404","0406","0407","0408","0413","0417","0423"};
 
   TH1F *h_mMeanSignalHits_Rstrip[4];
   TH1F *h_mMeanNoiseHits_Rstrip[4];

@@ -51,9 +51,14 @@ class FstNoiseStudy : public TObject
     double mPed[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // ped for each time bin
     double mPedStdDev[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // std of ped for each time bin
     double mPedRMS[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // rms of ped for each time bin
+
     // Commen Mode Noise => only meaningful for FST
-    double mNoiseCMN[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins]; // CMN for each time bin
-    double mNoiseDiff[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins]; // std of ped for each time bin
+    double mCMNMean[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins]; // CMN for each time bin
+    double mCMNStdDev[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // CMN for each time bin
+
+    double mCMNMean_Diff[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins]; // CMN for each time bin
+    double mCMNStdDev_Diff[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // CMN for each time bin
+    double mDiffStdDev[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // std of ped for each time bin
 
     // Pedestal Display
     TGraph *g_mPedMean[4][FST::numTBins]; // 0 for FST, 1-3 for IST
@@ -63,9 +68,10 @@ class FstNoiseStudy : public TObject
     TH1F *h_mPedSigma_FST[4][FST::numTBins];
 
     TGraph *g_mNoiseCMN[FST::numTBins]; // for FST
+    TH1F *h_mCMNSigma_FST[4][FST::numTBins]; // RStrip & TimeBin
+
     TGraph *g_mNoiseDiff[FST::numTBins];
-    TH1F *h_mNoiseCMN[2][4][FST::numTBins]; // apv & RStrip & TimeBin
-    TH1F *h_mNoiseCMN_Evt[2][4][FST::numTBins]; // apv & RStrip & TimeBin
+    TH1F *h_mDiffSIgma_FST[4][FST::numTBins]; // RStrip & TimeBin
 
     // Utility for tracking
     int getLayer(int arm, int port); // return layer based on arm & port

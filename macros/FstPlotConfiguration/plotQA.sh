@@ -18,9 +18,13 @@ then
   root -l -b -q plotSignalQA.C\(\"${hv}\",\"${config}\"\)
   mv ./figures/SignalQA.pdf ./figures/${hv}_${config}/SignalQA_${hv}_${config}.pdf
 
-  # echo "Plot Noise QA!!"
-  root -l -b -q plotNoiseQA.C\(\"${hv}\",\"${config}\"\)
-  mv ./figures/NoiseQA.pdf ./figures/${hv}_${config}/NoiseQA_${hv}_${config}.pdf
+  # echo "Plot Ped Noise QA!!"
+  root -l -b -q plotNoiseQA.C\(\"${hv}\",\"Ped\"\)
+  mv ./figures/PedNoiseQA.pdf ./figures/${hv}_${config}/PedNoiseQA_${hv}_${config}.pdf
+
+  # echo "Plot Data Noise QA!!"
+  root -l -b -q plotNoiseQA.C\(\"${hv}\",\"Data\"\)
+  mv ./figures/DataNoiseQA.pdf ./figures/${hv}_${config}/DataNoiseQA_${hv}_${config}.pdf
 
   # echo "Plot Residual of Fst Cluster Tracks from 2-Layer tracking!!"
   root -l -b -q plotResidual_FSTClusterTracks_2Layer.C\(\"${hv}\",\"${config}\"\)

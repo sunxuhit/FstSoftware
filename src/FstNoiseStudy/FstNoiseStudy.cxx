@@ -142,11 +142,15 @@ bool FstNoiseStudy::clearPedestal()
 	    mPed[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
 	    mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
 	    mPedRMS[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
+
+	    mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
+	    mDiffStdDev[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
+	    mCMNStdDev_Diff[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
 	  }
 	  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
 	  {
-	    mNoiseCMN[i_arm][i_port][i_apv][i_rstrip][i_tb] = -1.0;
-	    mNoiseDiff[i_arm][i_port][i_apv][i_rstrip][i_tb] = -1.0;
+	    mCMNMean[i_arm][i_port][i_apv][i_rstrip][i_tb] = -1.0;
+	    mCMNMean_Diff[i_arm][i_port][i_apv][i_rstrip][i_tb] = -1.0;
 	  }
 	}
       }
@@ -194,16 +198,14 @@ bool FstNoiseStudy::initPedestal()
     g_mNoiseDiff[i_tb] = new TGraph();
     g_mNoiseDiff[i_tb]->SetName(gName.c_str());
 
-    for(int i_apv = 0; i_apv < 2; ++i_apv)
+    for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
     {
-      for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
-      {
-	std::string HistName = Form("h_mNoiseCMN_FST_Apv%d_RStrip%d_TimeBin%d",i_apv+4,i_rstrip+4,i_tb);
-	h_mNoiseCMN[i_apv][i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),100,-200.0,200.0);
+      std::string HistName;
+      HistName = Form("h_mCMNSigma_FST_RStrip%d_TimeBin%d",i_rstrip+4,i_tb);
+      h_mCMNSigma_FST[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),FST::noRows,-0.5,FST::noRows-0.5);
 
-	HistName = Form("h_mNoiseCMN_Evt_FST_Apv%d_RStrip%d_TimeBin%d",i_apv+4,i_rstrip+4,i_tb);
-	h_mNoiseCMN_Evt[i_apv][i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),100,-200.0,200.0);
-      }
+      HistName = Form("h_mDiffSigma_FST_RStrip%d_TimeBin%d",i_rstrip+4,i_tb);
+      h_mDiffSIgma_FST[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),FST::noRows,-0.5,FST::noRows-0.5);
     }
   }
 
@@ -213,10 +215,10 @@ bool FstNoiseStudy::initPedestal()
 bool FstNoiseStudy::calPedestal()
 {
   cout << "FstNoiseStudy::calPedestal -> " << endl;
-  // cout << " Only use first 1000 event for Pedstal Calculation!" << endl;
+  cout << " Only use first 1000 event for Pedstal Calculation!" << endl;
 
   int NumOfEvents = (int)mChainInPut->GetEntries();
-  // if(NumOfEvents > 1000) NumOfEvents = 1000;
+  if(NumOfEvents > 1000) NumOfEvents = 1000;
   // const int NumOfEvents = 1000;
   mChainInPut->GetEntry(0);
 
@@ -412,13 +414,14 @@ bool FstNoiseStudy::calPedestal()
   //--------------------------------------------------------
 
   //--------------------------------------------------------
-  // 3rd loop to find Commen Mode Noist and Differetial Noise excluding Hits
-  cout << "=====>Third Pedestal Pass...." << endl;
+  // 3rd loop to find Common Mode Noise
 
   //  Calculate a rolling average and standard deviation
   int counters_CMN[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins];
   double sumValues_CMN[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins];
   double sumValuesSquared_CMN[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins];
+
+  cout << "=====>Third Pass for Common Mode Noise...." << endl;
   for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
   {
     for(int i_port = 0; i_port < FST::numPorts; ++i_port)
@@ -463,7 +466,6 @@ bool FstNoiseStudy::calPedestal()
 	}
       }
     }
-
     for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
     {
       for(int i_port = 0; i_port < FST::numPorts; ++i_port)
@@ -495,13 +497,8 @@ bool FstNoiseStudy::calPedestal()
 		int row = this->getRow(arm,port,apv,ch);
 		if ( (adc < mPed[arm][port][apv][ch][tb]+nPedsCut*mPedStdDev[arm][port][apv][ch][tb]) && ( adc >= 0 && adc < 4096)  && layer == 0)
 		{ // only adc below ped+3sigma on FST are considered for 3rd loop
-		  sumValues_CMN[arm][port][apv][col][tb] += adc-mPed[arm][port][apv][ch][tb];
-		  sumValuesSquared_CMN[arm][port][apv][col][tb] += (adc-mPed[arm][port][apv][ch][tb])*(adc-mPed[arm][port][apv][ch][tb]);
-		  counters_CMN[arm][port][apv][col][tb]++;
-
 		  sumValues_evt[arm][port][apv][col][tb] += adc-mPed[arm][port][apv][ch][tb];
 		  counters_evt[arm][port][apv][col][tb]++;
-		  h_mNoiseCMN[apv-4][col-4][tb]->Fill(adc-mPed[arm][port][apv][ch][tb]);
 		}
 	      // }
 	    }
@@ -516,40 +513,48 @@ bool FstNoiseStudy::calPedestal()
       {
 	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
 	{
-	  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+	  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
 	  {
-	    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+	    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
 	    {
 	      if(counters_evt[i_arm][i_port][i_apv][i_rstrip][i_tb] > 0) // eject bad channels
-	      {
-		h_mNoiseCMN_Evt[i_apv-4][i_rstrip-4][i_tb]->Fill(sumValues_evt[i_arm][i_port][i_apv][i_rstrip][i_tb]/counters_evt[i_arm][i_port][i_apv][i_rstrip][i_tb]);
+	      { // calculate CMN for each rstrip
+		double CMN_evt = sumValues_evt[i_arm][i_port][i_apv][i_rstrip][i_tb]/counters_evt[i_arm][i_port][i_apv][i_rstrip][i_tb];
+		sumValues_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb] += CMN_evt;
+		sumValuesSquared_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb] += CMN_evt*CMN_evt;
+		counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]++;
 	      }
 	    }
 	  }
 	}
       }
     }
-  }
-
-  // calculate Commen Mode Noise & Differetial Noise excluding Hits
-  for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
-  {
-    for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
     {
-      for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
       {
-	for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
 	{
 	  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
 	  {
-	    if(counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb] > 0) // eject bad channels
+	    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
 	    {
-	      // cout << "i_arm = " << i_arm << "i_port = " << i_port << ", i_apv = " << i_apv << ", i_rstrip = " << i_rstrip << ", i_tb = " << i_tb << ", sumValues_CMN = " << sumValues_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb] << ", counters_CMN = " << counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb] << endl;
-	      mNoiseCMN[i_arm][i_port][i_apv][i_rstrip][i_tb] = sumValues_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]/counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb];
-	      mNoiseDiff[i_arm][i_port][i_apv][i_rstrip][i_tb] = sqrt((sumValuesSquared_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]-(double)counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]*mNoiseCMN[i_arm][i_port][i_apv][i_rstrip][i_tb]*mNoiseCMN[i_arm][i_port][i_apv][i_rstrip][i_tb])/(double)(counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]-1));
-
-	      g_mNoiseCMN[i_tb]->SetPoint(i_apv*FST::numRStrip+i_rstrip,i_apv*FST::numRStrip+i_rstrip,mNoiseCMN[i_arm][i_port][i_apv][i_rstrip][i_tb]);
-	      g_mNoiseDiff[i_tb]->SetPoint(i_apv*FST::numRStrip+i_rstrip,i_apv*FST::numRStrip+i_rstrip,mNoiseDiff[i_arm][i_port][i_apv][i_rstrip][i_tb]);
+	      if(counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb] > 0) // eject bad channels
+	      {
+		double meanCMN = sumValues_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]/counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb];
+		mCMNMean[i_arm][i_port][i_apv][i_rstrip][i_tb] = sqrt((sumValuesSquared_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]-(double)counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]*meanCMN*meanCMN)/(double)(counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]-1));
+	      }
+	    }
+	    for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+	    {
+	      int rstrip = this->getColumn(i_arm,i_port,i_apv,i_ch);
+	      int row = this->getRow(i_arm,i_port,i_apv,i_ch);
+	      if(counters_CMN[i_arm][i_port][i_apv][rstrip][i_tb] > 0 && rstrip > -1)
+	      { // set CMN for each channel
+		mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb] = mCMNMean[i_arm][i_port][i_apv][rstrip][i_tb];
+		g_mNoiseCMN[i_tb]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+		h_mCMNSigma_FST[rstrip-4][i_tb]->SetBinContent(row+1,mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	      }
 	    }
 	  }
 	}
@@ -558,6 +563,191 @@ bool FstNoiseStudy::calPedestal()
   }
   //--------------------------------------------------------
 
+  //--------------------------------------------------------
+  // 4th loop to find Differential Noise
+  cout << "=====>Fourth Pass for Differential Noise...." << endl;
+  for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+  {
+    for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+    {
+      for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+      {
+	for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+	{
+	  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+	  {
+	    counters[i_arm][i_port][i_apv][i_ch][i_tb] = 0;
+	    sumValues[i_arm][i_port][i_apv][i_ch][i_tb] = 0.0;
+	    sumValuesSquared[i_arm][i_port][i_apv][i_ch][i_tb] = 0.0;
+	  }
+	}
+      }
+    }
+  }
+
+  for(int i_event = 0; i_event < NumOfEvents; ++i_event)
+  { 
+    // if(i_event%1000==0) cout << "processing events:  " << i_event << "/" << NumOfEvents << endl;
+    mChainInPut->GetEntry(i_event);
+
+    // calculate a rolling average for each event => CMN distribution
+    int counters_evt[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins];
+    double sumValues_evt[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins];
+    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+    {
+      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+      {
+	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+	{
+	  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+	  {
+	    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+	    {
+	      counters_evt[i_arm][i_port][i_apv][i_rstrip][i_tb] = 0;
+	      sumValues_evt[i_arm][i_port][i_apv][i_rstrip][i_tb] = 0.0;
+	    }
+	  }
+	}
+      }
+    }
+    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+    {
+      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+      {
+	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+	{
+	  int rdo  = evt_rdo[i_arm][i_port][i_apv];
+	  int arm  = evt_arm[i_arm][i_port][i_apv];
+	  int port = evt_port[i_arm][i_port][i_apv];
+	  int apv  = evt_apv[i_arm][i_port][i_apv];
+
+	  // NOTE THAT RDO/ARM/PORT ARE HARDWIRED HERE!!!
+	  bool pass = ( ( rdo == 1 ) && ( (arm == 0) || (arm == 1 ) ) && ( (port == 0) || (port == 1) ) &&  ( apv >= 0 ) && ( apv < FST::numAPVs ) ) ;
+	  bool bAPV = isBadAPV(arm,port,apv);
+	  if(pass && !bAPV)
+	  {
+	    for(int i_ro = 0; i_ro < FST::numROChannels; ++i_ro)
+	    {
+	      int tb = hit_tb[i_arm][i_port][i_apv][i_ro]; // time bin
+	      // if(tb == FST::pedTimeBin)
+	      // {
+		int ch = hit_ch[i_arm][i_port][i_apv][i_ro]; // real channel number 
+		int adc = hit_adc[i_arm][i_port][i_apv][i_ro];
+		float nPedsCut = FST::nIstPedsCut; // 3.0 for IST
+		if(i_arm == 1 && i_port == 1) nPedsCut = FST::nFstPedsCut; // 3.0 for FST
+
+		int layer = this->getLayer(arm,port);
+		int col = this->getColumn(arm,port,apv,ch);
+		int row = this->getRow(arm,port,apv,ch);
+		if ( (adc < mPed[arm][port][apv][ch][tb]+nPedsCut*mPedStdDev[arm][port][apv][ch][tb]) && ( adc >= 0 && adc < 4096)  && layer == 0)
+		{ // only adc below ped+3sigma on FST are considered for 3rd loop
+		  sumValues_evt[arm][port][apv][col][tb] += adc-mPed[arm][port][apv][ch][tb];
+		  counters_evt[arm][port][apv][col][tb]++;
+		}
+	      // }
+	    }
+	  }
+	}
+      }
+    }
+
+    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+    {
+      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+      {
+	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+	{
+	  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+	  {
+	    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+	    {
+	      if(counters_evt[i_arm][i_port][i_apv][i_rstrip][i_tb] > 0) // eject bad channels
+	      { // calculate CMN for each rstrip
+		mCMNMean_Diff[i_arm][i_port][i_apv][i_rstrip][i_tb] = sumValues_evt[i_arm][i_port][i_apv][i_rstrip][i_tb]/counters_evt[i_arm][i_port][i_apv][i_rstrip][i_tb];
+	      }
+	    }
+	    for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+	    {
+	      int rstrip = this->getColumn(i_arm,i_port,i_apv,i_ch);
+	      if(counters_evt[i_arm][i_port][i_apv][rstrip][i_tb] > 0 && rstrip > -1)
+	      { // set CMN for each channel
+		mCMNStdDev_Diff[i_arm][i_port][i_apv][i_ch][i_tb] = mCMNMean_Diff[i_arm][i_port][i_apv][rstrip][i_tb];
+	      }
+	    }
+	  }
+	}
+      }
+    }
+
+    // calculate differential noise
+    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+    {
+      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+      {
+	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+	{
+	  int rdo  = evt_rdo[i_arm][i_port][i_apv];
+	  int arm  = evt_arm[i_arm][i_port][i_apv];
+	  int port = evt_port[i_arm][i_port][i_apv];
+	  int apv  = evt_apv[i_arm][i_port][i_apv];
+
+	  // NOTE THAT RDO/ARM/PORT ARE HARDWIRED HERE!!!
+	  bool pass = ( ( rdo == 1 ) && ( (arm == 0) || (arm == 1 ) ) && ( (port == 0) || (port == 1) ) &&  ( apv >= 0 ) && ( apv < FST::numAPVs ) ) ;
+	  bool bAPV = isBadAPV(arm,port,apv);
+	  if(pass && !bAPV)
+	  {
+	    for(int i_ro = 0; i_ro < FST::numROChannels; ++i_ro)
+	    {
+	      int tb = hit_tb[i_arm][i_port][i_apv][i_ro]; // time bin
+	      // if(tb == FST::pedTimeBin)
+	      // {
+		int ch = hit_ch[i_arm][i_port][i_apv][i_ro]; // real channel number 
+		int adc = hit_adc[i_arm][i_port][i_apv][i_ro];
+		float nPedsCut = FST::nIstPedsCut; // 3.0 for IST
+		if(i_arm == 1 && i_port == 1) nPedsCut = FST::nFstPedsCut; // 3.0 for FST
+		if ( (adc < mPed[arm][port][apv][ch][tb]+nPedsCut*mPedStdDev[arm][port][apv][ch][tb]) && ( adc >= 0 && adc < 4096) )
+		{ // only adc belew ped+3sigma are considered
+		  sumValues[arm][port][apv][ch][tb] += adc-mPed[arm][port][apv][ch][tb]-mCMNStdDev_Diff[arm][port][apv][ch][tb];
+		  sumValuesSquared[arm][port][apv][ch][tb] += (adc-mPed[arm][port][apv][ch][tb]-mCMNStdDev_Diff[arm][port][apv][ch][tb])*(adc-mPed[arm][port][apv][ch][tb]-mCMNStdDev_Diff[arm][port][apv][ch][tb]);
+		  counters[arm][port][apv][ch][tb]++;
+		}
+	      // }
+	    }
+	  }
+	}
+      }
+    }
+  }
+  for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+  {
+    for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+    {
+      for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+      {
+	for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+	{
+	  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+	  {
+	    if(counters[i_arm][i_port][i_apv][i_ch][i_tb] > 0) // eject bad channels
+	    {
+	      double meanDiff = sumValues[i_arm][i_port][i_apv][i_ch][i_tb]/counters[i_arm][i_port][i_apv][i_ch][i_tb];
+	      mDiffStdDev[i_arm][i_port][i_apv][i_ch][i_tb] = sqrt((sumValuesSquared[i_arm][i_port][i_apv][i_ch][i_tb]-(double)counters[i_arm][i_port][i_apv][i_ch][i_tb]*meanDiff*meanDiff)/(double)(counters[i_arm][i_port][i_apv][i_ch][i_tb]-1));
+	    }
+
+	    int layer = this->getLayer(i_arm,i_port);
+	    int rstrip = this->getColumn(i_arm,i_port,i_apv,i_ch);
+	    int row = this->getRow(i_arm,i_port,i_apv,i_ch);
+	    if(layer == 0 && rstrip > -1) 
+	    { // FST
+	      g_mNoiseDiff[i_tb]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mDiffStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	      h_mDiffSIgma_FST[rstrip-4][i_tb]->SetBinContent(row+1,mDiffStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	    }
+	  }
+	}
+      }
+    }
+  }
+  //--------------------------------------------------------
 
   return true;
 }
@@ -582,13 +772,10 @@ void FstNoiseStudy::writePedestal()
   {
     g_mNoiseCMN[i_tb]->Write();
     g_mNoiseDiff[i_tb]->Write();
-    for(int i_apv = 0; i_apv < 2; ++i_apv)
+    for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
     {
-      for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
-      {
-	h_mNoiseCMN[i_apv][i_rstrip][i_tb]->Write();
-	h_mNoiseCMN_Evt[i_apv][i_rstrip][i_tb]->Write();
-      }
+      h_mCMNSigma_FST[i_rstrip][i_tb]->Write();
+      h_mDiffSIgma_FST[i_rstrip][i_tb]->Write();
     }
   }
 }
