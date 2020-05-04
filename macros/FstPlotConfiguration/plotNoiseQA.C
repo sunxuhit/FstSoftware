@@ -173,7 +173,7 @@ void plotNoiseQA(string hv = "HV140V", string mode = "Ped")
   c_NoiseSum->Divide(3,3);
   for(int i_pad = 0; i_pad < 9; ++i_pad)
   {
-    c_NoiseSum->cd(i_pad+1)->SetLeftMargin(0.1);
+    c_NoiseSum->cd(i_pad+1)->SetLeftMargin(0.15);
     c_NoiseSum->cd(i_pad+1)->SetBottomMargin(0.15);
     c_NoiseSum->cd(i_pad+1)->SetTicks(1,1);
     c_NoiseSum->cd(i_pad+1)->SetGrid(0,0);
@@ -182,6 +182,71 @@ void plotNoiseQA(string hv = "HV140V", string mode = "Ped")
   TLegend *leg = new TLegend(0.5,0.7,0.9,0.9);
   leg->SetBorderSize(0);
   leg->SetFillColor(10);
+
+  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+  {
+    c_NoiseSum->cd(i_tb+1);
+    string title = Form("Noise @ TimeBin%d",i_tb);
+    h_play->SetTitle(title.c_str());
+    h_play->DrawCopy("pE");
+
+    g_mPedSigma[i_tb]->SetMarkerStyle(20);
+    g_mPedSigma[i_tb]->SetMarkerColor(kGray+1);
+    g_mPedSigma[i_tb]->SetMarkerSize(1.0);
+    g_mPedSigma[i_tb]->Draw("P same");
+
+    // g_mCMNSigma_FST[i_tb]->SetMarkerStyle(24);
+    // g_mCMNSigma_FST[i_tb]->SetMarkerColor(2);
+    // g_mCMNSigma_FST[i_tb]->SetMarkerSize(1.0);
+    // g_mCMNSigma_FST[i_tb]->Draw("P same");
+    //
+    // g_mDiffSigma_FST[i_tb]->SetMarkerStyle(24);
+    // g_mDiffSigma_FST[i_tb]->SetMarkerColor(4);
+    // g_mDiffSigma_FST[i_tb]->SetMarkerSize(1.0);
+    // g_mDiffSigma_FST[i_tb]->Draw("P same");
+    if(i_tb == 0)
+    {
+      leg->AddEntry(g_mPedSigma[i_tb],"Total Noise","P");
+      // leg->AddEntry(g_mCMNSigma_FST[i_tb],"CMN","P");
+      // leg->AddEntry(g_mDiffSigma_FST[i_tb],"Differential Noise","P");
+      leg->Draw("same");
+    }
+  }
+  c_NoiseSum->Update();
+  c_NoiseSum->Print(outputname.c_str());
+
+  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+  {
+    c_NoiseSum->cd(i_tb+1);
+    string title = Form("Noise @ TimeBin%d",i_tb);
+    h_play->SetTitle(title.c_str());
+    h_play->DrawCopy("pE");
+
+    g_mPedSigma[i_tb]->SetMarkerStyle(20);
+    g_mPedSigma[i_tb]->SetMarkerColor(kGray+1);
+    g_mPedSigma[i_tb]->SetMarkerSize(1.0);
+    g_mPedSigma[i_tb]->Draw("P same");
+
+    g_mCMNSigma_FST[i_tb]->SetMarkerStyle(24);
+    g_mCMNSigma_FST[i_tb]->SetMarkerColor(2);
+    g_mCMNSigma_FST[i_tb]->SetMarkerSize(1.0);
+    g_mCMNSigma_FST[i_tb]->Draw("P same");
+
+    // g_mDiffSigma_FST[i_tb]->SetMarkerStyle(24);
+    // g_mDiffSigma_FST[i_tb]->SetMarkerColor(4);
+    // g_mDiffSigma_FST[i_tb]->SetMarkerSize(1.0);
+    // g_mDiffSigma_FST[i_tb]->Draw("P same");
+    if(i_tb == 0)
+    {
+      // leg->AddEntry(g_mPedSigma[i_tb],"Total Noise","P");
+      leg->AddEntry(g_mCMNSigma_FST[i_tb],"CMN","P");
+      // leg->AddEntry(g_mDiffSigma_FST[i_tb],"Differential Noise","P");
+      leg->Draw("same");
+    }
+  }
+  c_NoiseSum->Update();
+  c_NoiseSum->Print(outputname.c_str());
+
   for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
   {
     c_NoiseSum->cd(i_tb+1);
@@ -205,11 +270,45 @@ void plotNoiseQA(string hv = "HV140V", string mode = "Ped")
     g_mDiffSigma_FST[i_tb]->Draw("P same");
     if(i_tb == 0)
     {
-      leg->AddEntry(g_mPedSigma[i_tb],"Total Noise","P");
-      leg->AddEntry(g_mCMNSigma_FST[i_tb],"CMN","P");
+      // leg->AddEntry(g_mPedSigma[i_tb],"Total Noise","P");
+      // leg->AddEntry(g_mCMNSigma_FST[i_tb],"CMN","P");
       leg->AddEntry(g_mDiffSigma_FST[i_tb],"Differential Noise","P");
       leg->Draw("same");
     }
+  }
+  c_NoiseSum->Update();
+  c_NoiseSum->Print(outputname.c_str());
+
+  TH1F *h_ratio[FST::numTBins];
+  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+  {
+    string HistName = Form("h_ratio_%d",i_tb);
+    h_ratio[i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),2000,-0.5,1999.5);
+    for(int i_bin = 0; i_bin < 2000; ++i_bin)
+    {
+      double x_PedSigma, y_PedSigma;
+      g_mPedSigma[i_tb]->GetPoint(i_bin,x_PedSigma,y_PedSigma);
+      double x_DiffSigma, y_DiffSigma;
+      g_mDiffSigma_FST[i_tb]->GetPoint(i_bin,x_DiffSigma,y_DiffSigma);
+      if(y_PedSigma > 0)
+      {
+	h_ratio[i_tb]->SetBinContent(i_bin+1,y_DiffSigma/y_PedSigma);
+      }
+    }
+  }
+
+  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+  {
+    c_NoiseSum->cd(i_tb+1);
+    string title = Form("Differetial Noise @ TimeBin%d",i_tb);
+    h_ratio[i_tb]->SetTitle(title.c_str());
+    h_ratio[i_tb]->SetStats(0);
+    h_ratio[i_tb]->GetXaxis()->SetRangeUser(4*128-50,6*128+50);
+    h_ratio[i_tb]->GetXaxis()->SetTitle("ch");
+    h_ratio[i_tb]->GetXaxis()->SetTitleSize(0.06);
+    h_ratio[i_tb]->GetYaxis()->SetTitle("Noise_{diff}/Noise_{total}");
+    h_ratio[i_tb]->GetYaxis()->SetTitleSize(0.06);
+    h_ratio[i_tb]->Draw("h");
   }
   c_NoiseSum->Update();
   c_NoiseSum->Print(outputname.c_str());
