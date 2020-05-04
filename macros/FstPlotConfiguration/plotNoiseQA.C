@@ -138,15 +138,63 @@ void plotNoiseQA(string hv = "HV140V", string mode = "Ped")
   c_Noise->Update();
   c_Noise->Print(outputname.c_str());
 
-  TH1F *h_ratio[4][FST::numTBins];
-  TH1F *h_meanRatio_Rstrip[4];
+  TH1F *h_mMeanDiffSigma_RStrip[4];
   for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
   {
-    string HistName = Form("h_meanRatio_Rstrip%d",i_rstrip);
-    h_meanRatio_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numTBins,-0.5,FST::numTBins-0.5);
+    string HistName = Form("h_mMeanDiffSigma_RStrip%d",i_rstrip);
+    h_mMeanDiffSigma_RStrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numTBins,-0.5,FST::numTBins-0.5);
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
     {
-      HistName = Form("h_ratio_RStrip%d_TimeBin%d",i_rstrip,i_tb);
+      int counter = 0;
+      double sum = 0.0;
+      for(int i_bin = 0; i_bin < h_mDiffSigma_FST[i_rstrip][i_tb]->GetNbinsX(); ++i_bin)
+      {
+	sum += h_mDiffSigma_FST[i_rstrip][i_tb]->GetBinContent(i_bin+1);
+	counter++;
+      }
+      h_mMeanDiffSigma_RStrip[i_rstrip]->SetBinContent(i_tb+1,sum/counter);
+    }
+  }
+  TCanvas *c_NoiseMean = new TCanvas("c_NoiseMean","c_NoiseMean",10,10,800,200);
+  c_NoiseMean->cd()->SetLeftMargin(0.15);
+  c_NoiseMean->cd()->SetBottomMargin(0.15);
+  c_NoiseMean->cd()->SetTicks(1,1);
+  c_NoiseMean->cd()->SetGrid(0,0);
+
+  TLegend *leg_mean = new TLegend(0.7,0.2,0.8,0.5);
+  leg_mean->SetBorderSize(0);
+  leg_mean->SetFillColor(10);
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    c_NoiseMean->cd();
+    h_mMeanDiffSigma_RStrip[i_rstrip]->SetTitle("");
+    h_mMeanDiffSigma_RStrip[i_rstrip]->SetStats(0);
+    h_mMeanDiffSigma_RStrip[i_rstrip]->GetXaxis()->SetTitle("Time Bin");
+    h_mMeanDiffSigma_RStrip[i_rstrip]->GetXaxis()->SetTitleSize(0.06);
+    h_mMeanDiffSigma_RStrip[i_rstrip]->GetXaxis()->SetLabelSize(0.06);
+    h_mMeanDiffSigma_RStrip[i_rstrip]->GetYaxis()->SetTitle("<Noise_{Diff}>");
+    h_mMeanDiffSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
+    h_mMeanDiffSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
+    h_mMeanDiffSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(5.0,20.0);
+    h_mMeanDiffSigma_RStrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
+    h_mMeanDiffSigma_RStrip[i_rstrip]->SetLineColor(i_rstrip+1);
+
+    if(i_rstrip == 0) h_mMeanDiffSigma_RStrip[i_rstrip]->Draw();
+    else h_mMeanDiffSigma_RStrip[i_rstrip]->Draw("same");
+
+    string LegName = Form("R_strip %d",i_rstrip);
+    leg_mean->AddEntry(h_mMeanDiffSigma_RStrip[i_rstrip],LegName.c_str(),"L");
+  }
+  leg_mean->Draw("same");
+  c_NoiseMean->Update();
+  c_NoiseMean->Print(outputname.c_str());
+
+  TH1F *h_ratio[4][FST::numTBins];
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+    {
+      string HistName = Form("h_ratio_RStrip%d_TimeBin%d",i_rstrip,i_tb);
       h_ratio[i_rstrip][i_tb] = (TH1F*)h_mDiffSigma_FST[i_rstrip][i_tb]->Clone(HistName.c_str());
       h_ratio[i_rstrip][i_tb]->SetTitle(HistName.c_str());
       h_ratio[i_rstrip][i_tb]->Reset();
@@ -158,7 +206,6 @@ void plotNoiseQA(string hv = "HV140V", string mode = "Ped")
 	sum += h_ratio[i_rstrip][i_tb]->GetBinContent(i_bin+1);
 	counter++;
       }
-      h_meanRatio_Rstrip[i_rstrip]->SetBinContent(i_tb+1,sum/counter);
     }
   }
   for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
@@ -180,15 +227,23 @@ void plotNoiseQA(string hv = "HV140V", string mode = "Ped")
   c_Noise->Update();
   c_Noise->Print(outputname.c_str());
 
-  TCanvas *c_NoiseMean = new TCanvas("c_NoiseMean","c_NoiseMean",10,10,800,200);
-  c_NoiseMean->cd()->SetLeftMargin(0.15);
-  c_NoiseMean->cd()->SetBottomMargin(0.15);
-  c_NoiseMean->cd()->SetTicks(1,1);
-  c_NoiseMean->cd()->SetGrid(0,0);
-
-  TLegend *leg_mean = new TLegend(0.7,0.2,0.8,0.5);
-  leg_mean->SetBorderSize(0);
-  leg_mean->SetFillColor(10);
+  TH1F *h_meanRatio_Rstrip[4];
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    string HistName = Form("h_meanRatio_Rstrip%d",i_rstrip);
+    h_meanRatio_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numTBins,-0.5,FST::numTBins-0.5);
+    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+    {
+      int counter = 0;
+      double sum = 0.0;
+      for(int i_bin = 0; i_bin < h_ratio[i_rstrip][i_tb]->GetNbinsX(); ++i_bin)
+      {
+	sum += h_ratio[i_rstrip][i_tb]->GetBinContent(i_bin+1);
+	counter++;
+      }
+      h_meanRatio_Rstrip[i_rstrip]->SetBinContent(i_tb+1,sum/counter);
+    }
+  }
   for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
   {
     c_NoiseMean->cd();
@@ -200,18 +255,15 @@ void plotNoiseQA(string hv = "HV140V", string mode = "Ped")
     h_meanRatio_Rstrip[i_rstrip]->GetYaxis()->SetTitle("Noise_{Diff}/Noise_{Total}");
     h_meanRatio_Rstrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
     h_meanRatio_Rstrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
-    h_meanRatio_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(0.0,1.0);
+    h_meanRatio_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(0.5,1.0);
+    h_meanRatio_Rstrip[i_rstrip]->GetYaxis()->SetNdivisions(505);
     h_meanRatio_Rstrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
     h_meanRatio_Rstrip[i_rstrip]->SetLineColor(i_rstrip+1);
 
     if(i_rstrip == 0) h_meanRatio_Rstrip[i_rstrip]->Draw();
     else h_meanRatio_Rstrip[i_rstrip]->Draw("same");
-
-    string LegName = Form("R_strip %d",i_rstrip);
-    leg_mean->AddEntry(h_meanRatio_Rstrip[i_rstrip],LegName.c_str(),"L");
   }
   leg_mean->Draw("same");
-
   c_NoiseMean->Update();
   c_NoiseMean->Print(outputname.c_str());
 
