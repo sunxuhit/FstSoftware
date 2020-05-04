@@ -138,10 +138,86 @@ void plotNoiseQA(string hv = "HV140V", string mode = "Ped")
   c_Noise->Update();
   c_Noise->Print(outputname.c_str());
 
+  TH1F *h_ratio[4][FST::numTBins];
+  TH1F *h_meanRatio_Rstrip[4];
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    string HistName = Form("h_meanRatio_Rstrip%d",i_rstrip);
+    h_meanRatio_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numTBins,-0.5,FST::numTBins-0.5);
+    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+    {
+      HistName = Form("h_ratio_RStrip%d_TimeBin%d",i_rstrip,i_tb);
+      h_ratio[i_rstrip][i_tb] = (TH1F*)h_mDiffSigma_FST[i_rstrip][i_tb]->Clone(HistName.c_str());
+      h_ratio[i_rstrip][i_tb]->SetTitle(HistName.c_str());
+      h_ratio[i_rstrip][i_tb]->Reset();
+      h_ratio[i_rstrip][i_tb]->Divide(h_mDiffSigma_FST[i_rstrip][i_tb],h_mPedSigma_FST[i_rstrip][i_tb],1,1,"B");
+      int counter = 0;
+      double sum = 0.0;
+      for(int i_bin = 0; i_bin < h_ratio[i_rstrip][i_tb]->GetNbinsX(); ++i_bin)
+      {
+	sum += h_ratio[i_rstrip][i_tb]->GetBinContent(i_bin+1);
+	counter++;
+      }
+      h_meanRatio_Rstrip[i_rstrip]->SetBinContent(i_tb+1,sum/counter);
+    }
+  }
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+    {
+      int i_pad = i_rstrip*9 + i_tb;
+      c_Noise->cd(i_pad+1);
+      string title = Form("Noise_{Diff}/Noise_{total} RStrip%d & TB%d",i_rstrip,i_tb);
+      h_ratio[i_rstrip][i_tb]->SetTitle(title.c_str());
+      h_ratio[i_rstrip][i_tb]->SetStats(0);
+      h_ratio[i_rstrip][i_tb]->GetXaxis()->SetLabelSize(0.06);
+      h_ratio[i_rstrip][i_tb]->GetYaxis()->SetRangeUser(0,1.0);
+      h_ratio[i_rstrip][i_tb]->GetYaxis()->SetLabelSize(0.06);
+      h_ratio[i_rstrip][i_tb]->Draw();
+      PlotLine(31.5, 31.5,0,1.0,2,1,2);
+    }
+  }
+  c_Noise->Update();
+  c_Noise->Print(outputname.c_str());
+
+  TCanvas *c_NoiseMean = new TCanvas("c_NoiseMean","c_NoiseMean",10,10,800,200);
+  c_NoiseMean->cd()->SetLeftMargin(0.15);
+  c_NoiseMean->cd()->SetBottomMargin(0.15);
+  c_NoiseMean->cd()->SetTicks(1,1);
+  c_NoiseMean->cd()->SetGrid(0,0);
+
+  TLegend *leg_mean = new TLegend(0.7,0.2,0.8,0.5);
+  leg_mean->SetBorderSize(0);
+  leg_mean->SetFillColor(10);
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    c_NoiseMean->cd();
+    h_meanRatio_Rstrip[i_rstrip]->SetTitle("");
+    h_meanRatio_Rstrip[i_rstrip]->SetStats(0);
+    h_meanRatio_Rstrip[i_rstrip]->GetXaxis()->SetTitle("Time Bin");
+    h_meanRatio_Rstrip[i_rstrip]->GetXaxis()->SetTitleSize(0.06);
+    h_meanRatio_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(0.06);
+    h_meanRatio_Rstrip[i_rstrip]->GetYaxis()->SetTitle("Noise_{Diff}/Noise_{Total}");
+    h_meanRatio_Rstrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
+    h_meanRatio_Rstrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
+    h_meanRatio_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(0.0,1.0);
+    h_meanRatio_Rstrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
+    h_meanRatio_Rstrip[i_rstrip]->SetLineColor(i_rstrip+1);
+
+    if(i_rstrip == 0) h_meanRatio_Rstrip[i_rstrip]->Draw();
+    else h_meanRatio_Rstrip[i_rstrip]->Draw("same");
+
+    string LegName = Form("R_strip %d",i_rstrip);
+    leg_mean->AddEntry(h_meanRatio_Rstrip[i_rstrip],LegName.c_str(),"L");
+  }
+  leg_mean->Draw("same");
+
+  c_NoiseMean->Update();
+  c_NoiseMean->Print(outputname.c_str());
+
   TGraph *g_mPedSigma[FST::numTBins];
   TGraph *g_mCMNSigma_FST[FST::numTBins];
   TGraph *g_mDiffSigma_FST[FST::numTBins];
-
   for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
   {
     std::string gName;
@@ -275,40 +351,6 @@ void plotNoiseQA(string hv = "HV140V", string mode = "Ped")
       leg->AddEntry(g_mDiffSigma_FST[i_tb],"Differential Noise","P");
       leg->Draw("same");
     }
-  }
-  c_NoiseSum->Update();
-  c_NoiseSum->Print(outputname.c_str());
-
-  TH1F *h_ratio[FST::numTBins];
-  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
-  {
-    string HistName = Form("h_ratio_%d",i_tb);
-    h_ratio[i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),2000,-0.5,1999.5);
-    for(int i_bin = 0; i_bin < 2000; ++i_bin)
-    {
-      double x_PedSigma, y_PedSigma;
-      g_mPedSigma[i_tb]->GetPoint(i_bin,x_PedSigma,y_PedSigma);
-      double x_DiffSigma, y_DiffSigma;
-      g_mDiffSigma_FST[i_tb]->GetPoint(i_bin,x_DiffSigma,y_DiffSigma);
-      if(y_PedSigma > 0)
-      {
-	h_ratio[i_tb]->SetBinContent(i_bin+1,y_DiffSigma/y_PedSigma);
-      }
-    }
-  }
-
-  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
-  {
-    c_NoiseSum->cd(i_tb+1);
-    string title = Form("Differetial Noise @ TimeBin%d",i_tb);
-    h_ratio[i_tb]->SetTitle(title.c_str());
-    h_ratio[i_tb]->SetStats(0);
-    h_ratio[i_tb]->GetXaxis()->SetRangeUser(4*128-50,6*128+50);
-    h_ratio[i_tb]->GetXaxis()->SetTitle("ch");
-    h_ratio[i_tb]->GetXaxis()->SetTitleSize(0.06);
-    h_ratio[i_tb]->GetYaxis()->SetTitle("Noise_{diff}/Noise_{total}");
-    h_ratio[i_tb]->GetYaxis()->SetTitleSize(0.06);
-    h_ratio[i_tb]->Draw("h");
   }
   c_NoiseSum->Update();
   c_NoiseSum->Print(outputname.c_str());
