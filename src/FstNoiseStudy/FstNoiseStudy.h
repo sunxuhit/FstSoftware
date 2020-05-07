@@ -52,26 +52,26 @@ class FstNoiseStudy : public TObject
     double mPedStdDev[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // std of ped for each time bin
     double mPedRMS[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // rms of ped for each time bin
 
-    // Commen Mode Noise => only meaningful for FST
+    // Commen Mode Noise: numRStrip => 0-1 for IST & 4-5 for FST 
     double mCMNMean[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins]; // CMN for each time bin
     double mCMNStdDev[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // CMN for each time bin
 
-    double mCMNMean_Diff[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins]; // CMN for each time bin
-    double mCMNStdDev_Diff[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // CMN for each time bin
-    double mDiffStdDev[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // std of ped for each time bin
+    double mCMNMean_Evt[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins]; // CMN for each time bin
+    double mCMNStdDev_Evt[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // CMN for each time bin
+    double mRanStdDev[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // std of ped for each time bin
 
     // Pedestal Display
-    TGraph *g_mPedMean[4][FST::numTBins]; // 0 for FST, 1-3 for IST
+    TGraph *g_mPedMean[4][FST::numTBins]; // 0 for FST & 1-3 for IST
     TGraph *g_mPedSigma[4][FST::numTBins];
     TH2F *h_mPedDisplay[4][FST::numTBins]; // phi & r_strip
     TH1F *h_mPedMean_FST[4][FST::numTBins]; // for RStrip
     TH1F *h_mPedSigma_FST[4][FST::numTBins];
 
-    TGraph *g_mNoiseCMN[FST::numTBins]; // for FST
+    TGraph *g_mCMNSigma[4][FST::numTBins]; // 0 for FST & 1-3 for IST
     TH1F *h_mCMNSigma_FST[4][FST::numTBins]; // RStrip & TimeBin
 
-    TGraph *g_mNoiseDiff[FST::numTBins];
-    TH1F *h_mDiffSIgma_FST[4][FST::numTBins]; // RStrip & TimeBin
+    TGraph *g_mRanSigma[4][FST::numTBins]; // 0 for FST & 1-3 for IST
+    TH1F *h_mRanSigma_FST[4][FST::numTBins]; // RStrip & TimeBin
 
     // Utility for tracking
     int getLayer(int arm, int port); // return layer based on arm & port
