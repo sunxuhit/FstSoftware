@@ -28,6 +28,10 @@ then
   root -l -b -q doFstTracking_timesequence.C\(\"HV140V\",\"${config}\",${isSavePed},\"04132020\"\)
   root -l -b -q doFstTracking_timesequence.C\(\"HV140V\",\"${config}\",${isSavePed},\"04172020\"\)
   root -l -b -q doFstTracking_timesequence.C\(\"HV140V\",\"${config}\",${isSavePed},\"04232020\"\)
+  root -l -b -q doFstTracking_timesequence.C\(\"HV140V\",\"${config}\",${isSavePed},\"04272020\"\)
+  root -l -b -q doFstTracking_timesequence.C\(\"HV140V\",\"${config}\",${isSavePed},\"04292020\"\)
+  root -l -b -q doFstTracking_timesequence.C\(\"HV140V\",\"${config}\",${isSavePed},\"05022020\"\)
+  root -l -b -q doFstTracking_timesequence.C\(\"HV140V\",\"${config}\",${isSavePed},\"05042020\"\)
 
   root -l -b -q doFstTracking_timesequence.C\(\"HV200V\",\"${config}\",${isSavePed},\"04022020\"\)
   root -l -b -q doFstTracking_timesequence.C\(\"HV200V\",\"${config}\",${isSavePed},\"04052020\"\)
@@ -36,4 +40,7 @@ then
   root -l -b -q doFstTracking_timesequence.C\(\"HV200V\",\"${config}\",${isSavePed},\"04182020\"\)
   root -l -b -q doFstTracking_timesequence.C\(\"HV200V\",\"${config}\",${isSavePed},\"04192020\"\)
   root -l -b -q doFstTracking_timesequence.C\(\"HV200V\",\"${config}\",${isSavePed},\"04232020\"\)
+  root -l -b -q doFstTracking_timesequence.C\(\"HV200V\",\"${config}\",${isSavePed},\"04242020\"\)
+  root -l -b -q doFstTracking_timesequence.C\(\"HV200V\",\"${config}\",${isSavePed},\"04252020\"\)
+  root -l -b -q doFstTracking_timesequence.C\(\"HV200V\",\"${config}\",${isSavePed},\"04262020\"\)
 fi

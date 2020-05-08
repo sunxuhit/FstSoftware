@@ -32,8 +32,8 @@ float ErrDiv(float x, float y, float dx, float dy)
 
 void plotSignalTS_HV200V_APV(int apv = 1, int phibin = 1)
 {
-  const int numOfTS = 7;
-  string date[numOfTS] = {"0402","0405","0409","0412","0418","0419","0423"};
+  const int numOfTS = 10;
+  string date[numOfTS] = {"0402","0405","0409","0412","0418","0419","0423","0424","0425","0426"};
 
   TH1F *h_mMeanSignalHits_Apv[4];
   TH1F *h_mMeanNoiseHits_Apv[4];

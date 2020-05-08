@@ -18,7 +18,10 @@ class FstRawHit : public TObject
     double mPedMean[FST::numTBins]; // mean pedestal for each time bin
     double mPedStdDev[FST::numTBins]; // rms of pedestal for each time bin => noise level
     double mPedRMS[FST::numTBins]; // rms of pedestal for each time bin => noise level
-    double mCharge[FST::numTBins]; // pedestal subtracted ADC for each time bin
+    double mCMNStdDev[FST::numTBins]; // rms of pedestal for each time bin => noise level
+    double mRanStdDev[FST::numTBins]; // rms of pedestal for each time bin => noise level
+    double mRawCharge[FST::numTBins]; // FST: adc-ped-cmn | IST: adc-ped
+    double mCharge[FST::numTBins]; // FST: adc-ped-cmn | IST: adc-ped
     int mMaxTb;
     int mHitId; // hit id
     int mDefaultTb;
@@ -39,6 +42,9 @@ class FstRawHit : public TObject
     void setPedMean(double pedMean, int tb);
     void setPedStdDev(double pedStdDev, int tb);
     void setPedRMS(double pedRMS, int tb);
+    void setCMNStdDev(double cmnStdDev, int tb);
+    void setRanStdDev(double ranStdDev, int tb);
+    void setRawCharge(double charge, int tb);
     void setCharge(double charge, int tb);
     void setMaxTb(int maxTb);
     void setHitId(int hitId);
@@ -56,6 +62,9 @@ class FstRawHit : public TObject
     double getPedMean(int tb = 0) const;
     double getPedStdDev(int tb = 0) const;
     double getPedRMS(int tb = 0) const;
+    double getCMNStdDev(int tb = 0) const;
+    double getRanStdDev(int tb = 0) const;
+    double getRawCharge(int tb = 0) const;
     double getCharge(int tb = 0) const;
     int getMaxTb() const;
     int getHitId() const;

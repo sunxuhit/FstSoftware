@@ -140,8 +140,9 @@ bool FstClusterMaker::clearSignal()
 	{
 	  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
 	  {
-	    mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
 	    mRawSig[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
+	    mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
+	    mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
 	  }
 	}
       }
@@ -174,8 +175,98 @@ int FstClusterMaker::Make()
     mChainInPut->GetEntry(i_event);
     clearSignal();
 
-    // calculate ped corrected signal for each ch & time bin
-    // ped is calcualte from pedTimeBin = 0
+    //--------------------------------
+    // Calculate event-by-event CMN
+    clearCMN(); // clear event-by-event CMN
+    int counters_evt[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins];
+    double sumValues_evt[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins];
+    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+    {
+      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+      {
+	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+	{
+	  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+	  {
+	    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+	    {
+	      counters_evt[i_arm][i_port][i_apv][i_rstrip][i_tb] = 0;
+	      sumValues_evt[i_arm][i_port][i_apv][i_rstrip][i_tb] = 0.0;
+	    }
+	  }
+	}
+      }
+    }
+    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+    {
+      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+      {
+	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+	{
+	  int rdo  = evt_rdo[i_arm][i_port][i_apv];
+	  int arm  = evt_arm[i_arm][i_port][i_apv];
+	  int port = evt_port[i_arm][i_port][i_apv];
+	  int apv  = evt_apv[i_arm][i_port][i_apv];
+
+	  // NOTE THAT RDO/ARM/PORT ARE HARDWIRED HERE!!!
+	  bool pass = ( ( rdo == 1 ) && ( (arm == 0) || (arm == 1 ) ) && ( (port == 0) || (port == 1) ) &&  ( apv >= 0 ) && ( apv < FST::numAPVs ) ) ;
+	  bool bAPV = isBadAPV(arm,port,apv);
+	  if(pass && !bAPV)
+	  {
+	    for(int i_ro = 0; i_ro < FST::numROChannels; ++i_ro)
+	    {
+	      int tb = hit_tb[i_arm][i_port][i_apv][i_ro]; // time bin
+	      int ch = hit_ch[i_arm][i_port][i_apv][i_ro]; // real channel number 
+	      int adc = hit_adc[i_arm][i_port][i_apv][i_ro];
+	      float nPedsCut = FST::nIstPedsCut; // 3.0 for IST
+	      if(i_arm == 1 && i_port == 1) nPedsCut = FST::nFstPedsCut; // 3.0 for FST
+
+	      if ( (adc < mPed[arm][port][apv][ch][tb]+nPedsCut*mPedStdDev[arm][port][apv][ch][tb]) && ( adc >= 0 && adc < 4096) )
+	      { // only adc below ped+3sigma on FST are considered for 4th loop
+		int layer = this->getLayer(arm,port);
+		int col = this->getColumn(arm,port,apv,ch); // 0-7 for FST & 0-23 for IST => convert to 0 (even) & 1 (odd)
+		if(layer > 0) col = col%2;
+		sumValues_evt[arm][port][apv][col][tb] += adc-mPed[arm][port][apv][ch][tb];
+		counters_evt[arm][port][apv][col][tb]++;
+	      }
+	    }
+	  }
+	}
+      }
+    }
+    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+    {
+      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+      {
+	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+	{
+	  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+	  {
+	    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+	    {
+	      if(counters_evt[i_arm][i_port][i_apv][i_rstrip][i_tb] > 0) // eject bad channels
+	      { // calculate CMN for each group
+		mCMNMean_Evt[i_arm][i_port][i_apv][i_rstrip][i_tb] = sumValues_evt[i_arm][i_port][i_apv][i_rstrip][i_tb]/counters_evt[i_arm][i_port][i_apv][i_rstrip][i_tb];
+	      }
+	    }
+	    for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+	    {
+	      int layer = this->getLayer(i_arm,i_port);
+	      int col = this->getColumn(i_arm,i_port,i_apv,i_ch);
+	      if(layer > 0) col = col%2;
+	      int row = this->getRow(i_arm,i_port,i_apv,i_ch);
+	      if(counters_evt[i_arm][i_port][i_apv][col][i_tb] > 0 && col > -1)
+	      { // set CMN for each channel
+		mCMNStdDev_Evt[i_arm][i_port][i_apv][i_ch][i_tb] = mCMNMean_Evt[i_arm][i_port][i_apv][col][i_tb];
+	      }
+	    }
+	  }
+	}
+      }
+    }
+    //--------------------------------
+
+    // calculate ped & cmn corrected signal for each ch & time bin
     for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
     {
       for(int i_port = 0; i_port < FST::numPorts; ++i_port)
@@ -198,8 +289,9 @@ int FstClusterMaker::Make()
 	      int ch = hit_ch[i_arm][i_port][i_apv][i_ro]; // real channel number 
 	      int adc = hit_adc[i_arm][i_port][i_apv][i_ro];
 
-	      mSigPedCorr[i_arm][i_port][i_apv][ch][tb] = adc-mPed[i_arm][i_port][i_apv][ch][tb]; // adc - ped
 	      mRawSig[i_arm][i_port][i_apv][ch][tb] = adc;
+	      mSigPedCorr[i_arm][i_port][i_apv][ch][tb] = adc-mPed[i_arm][i_port][i_apv][ch][tb]; // adc - ped
+	      mSigCMNCorr[i_arm][i_port][i_apv][ch][tb] = adc-mPed[i_arm][i_port][i_apv][ch][tb]-mCMNStdDev_Evt[i_arm][i_port][i_apv][ch][tb]; // adc - ped - cmn
 	    }
 	  }
 	}
@@ -228,13 +320,13 @@ int FstClusterMaker::Make()
 		( mPedStdDev[i_arm][i_port][i_apv][i_ch][FST::pedTimeBin] > FST::MinNoise)  
 	      )
 	    {
-	      double maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][0]; // init with 1st tb
-	      int maxTB = 0;
-	      double preADC = maxADC;
 	      bool isHit = false;
+	      int maxTB = 0;
 
 	      if( !(i_arm == 1 && i_port == 1) ) // IST Hits always required 3 time bin
 	      {
+		double maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][0]; // init with 1st tb
+		double preADC = maxADC;
 		float nHitsCut = FST::nIstHitsCut; // 6.0 for IST
 		for(int i_tb = 1; i_tb < FST::numTBins-1; ++i_tb)
 		{ // only if 3 consequetive timebins of a ch exceed the threshold cut is considered as a hit
@@ -262,27 +354,29 @@ int FstClusterMaker::Make()
 
 	      if(i_arm == 1 && i_port == 1) // FST Hits
 	      {
+		double maxADC = mSigCMNCorr[i_arm][i_port][i_apv][i_ch][0]; // init with 1st tb
+		double preADC = maxADC;
 		float nHitsCut = FST::nFstHitsCut; // 4.5 for FST
 		if(FST::numOfUsedTimeBins == 3) // FST Hits with 3 Time Bins
 		{
 		  for(int i_tb = 1; i_tb < FST::numTBins-1; ++i_tb)
 		  { // only if 3 consequetive timebins of a ch exceed the threshold cut is considered as a hit
 		    if( 
-			( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nHitsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
-			( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nHitsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]) &&
-			( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > nHitsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb+1])
+			( mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nHitsCut*mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
+			( mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb]   > nHitsCut*mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb]) &&
+			( mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > nHitsCut*mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb+1])
 		      ) 
 		    {
 		      isHit = true; // set isHit to true if 3 consequetive time bins exceed the threshold
-		      if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
+		      if(mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
 		      { // find time bin with max adc for 0-FST::numTBins-2
-			maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb];
+			maxADC = mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb];
 			maxTB = i_tb;
 			preADC = maxADC;
 		      }
-		      if(i_tb == FST::numTBins-2 && mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > preADC)
+		      if(i_tb == FST::numTBins-2 && mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > preADC)
 		      { // check if last time bin has the max ADC
-			maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1];
+			maxADC = mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb+1];
 			maxTB = i_tb+1;
 		      }
 		    }
@@ -293,20 +387,20 @@ int FstClusterMaker::Make()
 		  for(int i_tb = 1; i_tb < FST::numTBins; ++i_tb)
 		  { // only if 2 consequetive timebins of a ch exceed the threshold cut is considered as a hit
 		    if( 
-			( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nHitsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
-			( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nHitsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb])
+			( mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nHitsCut*mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
+			( mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb]   > nHitsCut*mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb])
 		      ) 
 		    {
 		      isHit = true; // set isHit to true if 3 consequetive time bins exceed the threshold
-		      if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
+		      if(mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
 		      { // find time bin with max adc for 0-FST::numTBins-1
-			maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb];
+			maxADC = mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb];
 			maxTB = i_tb;
 			preADC = maxADC;
 		      }
-		      if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > preADC)
+		      if(mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > preADC)
 		      { // check if i_tb-1 has the max ADC
-			maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1];
+			maxADC = mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb-1];
 			maxTB = i_tb-1;
 			preADC = maxADC;
 		      }
@@ -318,13 +412,13 @@ int FstClusterMaker::Make()
 		  for(int i_tb = 1; i_tb < FST::numTBins; ++i_tb)
 		  { // only if 1 timebin of a ch exceed the threshold cut is considered as a hit
 		    if( 
-			( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nHitsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb])
+			( mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nHitsCut*mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb])
 		      ) 
 		    {
 		      isHit = true; // set isHit to true if 3 consequetive time bins exceed the threshold
-		      if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
+		      if(mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
 		      { // find time bin with max adc for 0-FST::numTBins-1
-			maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb];
+			maxADC = mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb];
 			maxTB = i_tb;
 			preADC = maxADC;
 		      }
@@ -336,18 +430,17 @@ int FstClusterMaker::Make()
 	      bool isPed = false;
 	      if( !isHit && mSavePed)
 	      {
-		maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][0]; // init with 1st tb
 		maxTB = 0;
-		preADC = maxADC;
-
 		if( !(i_arm == 1 && i_port == 1) ) // IST Peds always required 3 time bin
 		{
+		  double maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][0]; // init with 1st tb
+		  double preADC = maxADC;
 		  float nPedsCut = FST::nIstThresholdCut; // 3.0 for IST
 		  for(int i_tb = 1; i_tb < FST::numTBins-1; ++i_tb)
 		  { // only if 3 consequetive timebins of a ch exceed the threshold cut is considered as a hit
 		    if( 
 			( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
-			( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]) &&
+			( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb]   > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]) &&
 			( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb+1])
 		      ) 
 		    {
@@ -369,27 +462,29 @@ int FstClusterMaker::Make()
 
 		if(i_arm == 1 && i_port == 1) // FST Peds 
 		{
+		  double maxADC = mSigCMNCorr[i_arm][i_port][i_apv][i_ch][0]; // init with 1st tb
+		  double preADC = maxADC;
 		  float nPedsCut = FST::nFstThresholdCut; // 2.0 for FST
 		  if(FST::numOfUsedTimeBins == 3) // FST Peds with 3 Time Bins
 		  {
 		    for(int i_tb = 1; i_tb < FST::numTBins-1; ++i_tb)
 		    { // only if 3 consequetive timebins of a ch exceed the threshold cut is considered as a hit
 		      if( 
-			  ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
-			  ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]) &&
-			  ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb+1])
+			  ( mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nPedsCut*mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
+			  ( mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb]   > nPedsCut*mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb]) &&
+			  ( mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > nPedsCut*mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb+1])
 			) 
 		      {
 			isPed = true; // set isHit to true if 3 consequetive time bins exceed the threshold
-			if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
+			if(mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
 			{ // find time bin with max adc for 0-FST::numTBins-2
-			  maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb];
+			  maxADC = mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb];
 			  maxTB = i_tb;
 			  preADC = maxADC;
 			}
-			if(i_tb == FST::numTBins-2 && mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > preADC)
+			if(i_tb == FST::numTBins-2 && mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb+1] > preADC)
 			{ // check if last time bin has the max ADC
-			  maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb+1];
+			  maxADC = mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb+1];
 			  maxTB = i_tb+1;
 			}
 		      }
@@ -400,20 +495,20 @@ int FstClusterMaker::Make()
 		    for(int i_tb = 1; i_tb < FST::numTBins; ++i_tb)
 		    { // only if 2 consequetive timebins of a ch exceed the threshold cut is considered as a hit
 		      if( 
-			  ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
-			  ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb])
+			  ( mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > nPedsCut*mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
+			  ( mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb]   > nPedsCut*mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb])
 			) 
 		      {
 			isPed = true; // set isPed to true if 2 consequetive time bins exceed the threshold
-			if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
+			if(mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
 			{ // find time bin with max adc for 0-FST::numTBins-1
-			  maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb];
+			  maxADC = mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb];
 			  maxTB = i_tb;
 			  preADC = maxADC;
 			}
-			if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > preADC)
+			if(mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb-1] > preADC)
 			{ // check if i_tb-1 has the max ADC
-			  maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb-1];
+			  maxADC = mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb-1];
 			  maxTB = i_tb-1;
 			  preADC = maxADC;
 			}
@@ -425,13 +520,13 @@ int FstClusterMaker::Make()
 		    for(int i_tb = 1; i_tb < FST::numTBins; ++i_tb)
 		    { // only if 1 timebin of a ch exceed the threshold cut is considered as a hit
 		      if( 
-			  ( mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nPedsCut*mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb])
+			  ( mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb] > nPedsCut*mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb])
 			) 
 		      {
 			isPed = true; // set isPed to true if 1 time bins exceed the threshold
-			if(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
+			if(mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
 			{ // find time bin with max adc for 0-FST::numTBins-1
-			  maxADC = mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb];
+			  maxADC = mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb];
 			  maxTB = i_tb;
 			  preADC = maxADC;
 			}
@@ -440,7 +535,6 @@ int FstClusterMaker::Make()
 		  }
 		}
 	      }
-
 
 	      // if( (isHit || isPed) && numOfHits < FST::maxNHits)
 	      // if( (isHit || isPed) && numOfHits_Used < FST::maxNHits)
@@ -461,7 +555,11 @@ int FstClusterMaker::Make()
 		  fstRawHit->setPedMean(mPed[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
 		  fstRawHit->setPedStdDev(mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
 		  fstRawHit->setPedRMS(mPedRMS[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
-		  fstRawHit->setCharge(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
+		  fstRawHit->setCMNStdDev(mCMNStdDev_Evt[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
+		  fstRawHit->setRanStdDev(mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
+		  fstRawHit->setRawCharge(mRawSig[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
+		  if(getLayer(i_arm,i_port) > 0) fstRawHit->setCharge(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb], i_tb); // IST
+		  if(getLayer(i_arm,i_port) == 0) fstRawHit->setCharge(mSigCMNCorr[i_arm][i_port][i_apv][i_ch][i_tb], i_tb); // FST
 		}
 		// fstRawHit->setCharge(maxADC, maxTB);
 		fstRawHit->setMaxTb(maxTB);
@@ -513,6 +611,9 @@ int FstClusterMaker::Make()
 	  mFstRawHit->setPedMean(rawHitVec_orig[i_hit]->getPedMean(i_tb), i_tb);
 	  mFstRawHit->setPedStdDev(rawHitVec_orig[i_hit]->getPedStdDev(i_tb), i_tb);
 	  mFstRawHit->setPedRMS(rawHitVec_orig[i_hit]->getPedRMS(i_tb), i_tb);
+	  mFstRawHit->setCMNStdDev(rawHitVec_orig[i_hit]->getCMNStdDev(i_tb), i_tb);
+	  mFstRawHit->setRanStdDev(rawHitVec_orig[i_hit]->getRanStdDev(i_tb), i_tb);
+	  mFstRawHit->setRawCharge(rawHitVec_orig[i_hit]->getRawCharge(i_tb), i_tb);
 	  mFstRawHit->setCharge(rawHitVec_orig[i_hit]->getCharge(i_tb), i_tb);
 	}
 	// mFstRawHit->setCharge(rawHitVec_orig[i_hit]->getCharge(rawHitVec_orig[i_hit]->getMaxTb()),rawHitVec_orig[i_hit]->getMaxTb());
@@ -648,13 +749,48 @@ bool FstClusterMaker::clearPedestal()
     {
       for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
       {
-	for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+	for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
 	{
-	  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+	  for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
 	  {
 	    mPed[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
 	    mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
 	    mPedRMS[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
+
+	    mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
+	    mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
+	  }
+	  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+	  {
+	    mCMNMean[i_arm][i_port][i_apv][i_rstrip][i_tb] = -1.0;
+	  }
+	}
+      }
+    }
+  }
+
+  clearCMN();
+
+  return true;
+}
+
+bool FstClusterMaker::clearCMN()
+{
+  for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+  {
+    for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+    {
+      for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+      {
+	for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+	{
+	  for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+	  {
+	    mCMNStdDev_Evt[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
+	  }
+	  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+	  {
+	    mCMNMean_Evt[i_arm][i_port][i_apv][i_rstrip][i_tb] = -1.0;
 	  }
 	}
       }
@@ -680,15 +816,36 @@ bool FstClusterMaker::initPedestal()
       g_mPedSigma[i_layer][i_tb] = new TGraph();
       g_mPedSigma[i_layer][i_tb]->SetName(gName.c_str());
 
+      gName = Form("g_mCMNSigma_Layer%d_TimeBin%d",i_layer,i_tb);
+      g_mCMNSigma[i_layer][i_tb] = new TGraph();
+      g_mCMNSigma[i_layer][i_tb]->SetName(gName.c_str());
+
+      gName = Form("g_mRanSigma_Layer%d_TimeBin%d",i_layer,i_tb);
+      g_mRanSigma[i_layer][i_tb] = new TGraph();
+      g_mRanSigma[i_layer][i_tb]->SetName(gName.c_str());
+
       std::string HistName = Form("h_mPedDisplay_Layer%d_TimeBin%d",i_layer,i_tb);
       if(i_layer == 0) h_mPedDisplay[i_layer][i_tb] = new TH2F(HistName.c_str(),HistName.c_str(),FST::numRStrip,-0.5,FST::numRStrip-0.5,FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5);
       else h_mPedDisplay[i_layer][i_tb] = new TH2F(HistName.c_str(),HistName.c_str(),FST::noColumns,-0.5,FST::noColumns-0.5,FST::noRows,-0.5,FST::noRows-0.5);
+    }
+  }
 
-      HistName = Form("h_mPedMean_FST_RStrip%d_TimeBin%d",i_layer,i_tb);
-      h_mPedMean_FST[i_layer][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),FST::noRows,-0.5,FST::noRows-0.5);
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+    {
+      std::string HistName;
+      HistName = Form("h_mPedMean_FST_RStrip%d_TimeBin%d",i_rstrip,i_tb);
+      h_mPedMean_FST[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5);
 
-      HistName = Form("h_mPedSigma_FST_RStrip%d_TimeBin%d",i_layer,i_tb);
-      h_mPedSigma_FST[i_layer][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),FST::noRows,-0.5,FST::noRows-0.5);
+      HistName = Form("h_mPedSigma_FST_RStrip%d_TimeBin%d",i_rstrip,i_tb);
+      h_mPedSigma_FST[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5);
+
+      HistName = Form("h_mCMNSigma_FST_RStrip%d_TimeBin%d",i_rstrip,i_tb);
+      h_mCMNSigma_FST[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5);
+
+      HistName = Form("h_mRanSigma_FST_RStrip%d_TimeBin%d",i_rstrip,i_tb);
+      h_mRanSigma_FST[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5);
     }
   }
 
@@ -756,14 +913,11 @@ bool FstClusterMaker::calPedestal()
 	    for(int i_ro = 0; i_ro < FST::numROChannels; ++i_ro)
 	    {
 	      int tb = hit_tb[i_arm][i_port][i_apv][i_ro]; // time bin
-	      // if(tb == FST::pedTimeBin)
-	      // {
-		int ch = hit_ch[i_arm][i_port][i_apv][i_ro]; // real channel number 
-		int adc = hit_adc[i_arm][i_port][i_apv][i_ro];
-		sumValues[arm][port][apv][ch][tb] += adc;
-		sumValuesSquared[arm][port][apv][ch][tb] += adc * adc;
-		counters[arm][port][apv][ch][tb]++;
-	      // }
+	      int ch = hit_ch[i_arm][i_port][i_apv][i_ro]; // real channel number 
+	      int adc = hit_adc[i_arm][i_port][i_apv][i_ro];
+	      sumValues[arm][port][apv][ch][tb] += adc;
+	      sumValuesSquared[arm][port][apv][ch][tb] += adc * adc;
+	      counters[arm][port][apv][ch][tb]++;
 	    }
 	  }
 	}
@@ -840,19 +994,16 @@ bool FstClusterMaker::calPedestal()
 	    for(int i_ro = 0; i_ro < FST::numROChannels; ++i_ro)
 	    {
 	      int tb = hit_tb[i_arm][i_port][i_apv][i_ro]; // time bin
-	      // if(tb == FST::pedTimeBin)
-	      // {
-		int ch = hit_ch[i_arm][i_port][i_apv][i_ro]; // real channel number 
-		int adc = hit_adc[i_arm][i_port][i_apv][i_ro];
-		float nPedsCut = FST::nIstPedsCut; // 3.0 for IST
-		if(i_arm == 1 && i_port == 1) nPedsCut = FST::nFstPedsCut; // 3.0 for FST
-		if ( (adc < mPed[arm][port][apv][ch][tb]+nPedsCut*mPedStdDev[arm][port][apv][ch][tb]) && ( adc >= 0 && adc < 4096) )
-		{ // only adc belew ped+3sigma are considered for 2nd loop
-		  sumValues[arm][port][apv][ch][tb] += adc;
-		  sumValuesSquared[arm][port][apv][ch][tb] += adc * adc;
-		  counters[arm][port][apv][ch][tb]++;
-		}
-	      // }
+	      int ch = hit_ch[i_arm][i_port][i_apv][i_ro]; // real channel number 
+	      int adc = hit_adc[i_arm][i_port][i_apv][i_ro];
+	      float nPedsCut = FST::nIstPedsCut; // 3.0 for IST
+	      if(i_arm == 1 && i_port == 1) nPedsCut = FST::nFstPedsCut; // 3.0 for FST
+	      if ( (adc < mPed[arm][port][apv][ch][tb]+nPedsCut*mPedStdDev[arm][port][apv][ch][tb]) && ( adc >= 0 && adc < 4096) )
+	      { // only adc belew ped+3sigma are considered for 2nd loop
+		sumValues[arm][port][apv][ch][tb] += adc;
+		sumValuesSquared[arm][port][apv][ch][tb] += adc * adc;
+		counters[arm][port][apv][ch][tb]++;
+	      }
 	    }
 	  }
 	}
@@ -896,6 +1047,336 @@ bool FstClusterMaker::calPedestal()
   }
   //--------------------------------------------------------
 
+  //--------------------------------------------------------
+  // 3rd loop to find Common Mode Noise
+
+  //  Calculate a rolling average and standard deviation
+  int counters_CMN[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins];
+  double sumValues_CMN[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins];
+  double sumValuesSquared_CMN[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins];
+
+  cout << "=====>Third Pass for Common Mode Noise...." << endl;
+  for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+  {
+    for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+    {
+      for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+      {
+	for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+	{
+	  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+	  {
+	    counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb] = 0;
+	    sumValues_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb] = 0.0;
+	    sumValuesSquared_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb] = 0.0;
+	  }
+	}
+      }
+    }
+  }
+
+  for(int i_event = 0; i_event < NumOfEvents; ++i_event)
+  { 
+    // if(i_event%1000==0) cout << "processing events:  " << i_event << "/" << NumOfEvents << endl;
+    mChainInPut->GetEntry(i_event);
+
+    // calculate a rolling average for each event => CMN distribution
+    int counters_evt[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins];
+    double sumValues_evt[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins];
+    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+    {
+      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+      {
+	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+	{
+	  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+	  {
+	    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+	    {
+	      counters_evt[i_arm][i_port][i_apv][i_rstrip][i_tb] = 0;
+	      sumValues_evt[i_arm][i_port][i_apv][i_rstrip][i_tb] = 0.0;
+	    }
+	  }
+	}
+      }
+    }
+    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+    {
+      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+      {
+	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+	{
+	  int rdo  = evt_rdo[i_arm][i_port][i_apv];
+	  int arm  = evt_arm[i_arm][i_port][i_apv];
+	  int port = evt_port[i_arm][i_port][i_apv];
+	  int apv  = evt_apv[i_arm][i_port][i_apv];
+
+	  // NOTE THAT RDO/ARM/PORT ARE HARDWIRED HERE!!!
+	  bool pass = ( ( rdo == 1 ) && ( (arm == 0) || (arm == 1 ) ) && ( (port == 0) || (port == 1) ) &&  ( apv >= 0 ) && ( apv < FST::numAPVs ) ) ;
+	  bool bAPV = isBadAPV(arm,port,apv);
+	  if(pass && !bAPV)
+	  {
+	    for(int i_ro = 0; i_ro < FST::numROChannels; ++i_ro)
+	    {
+	      int tb = hit_tb[i_arm][i_port][i_apv][i_ro]; // time bin
+	      int ch = hit_ch[i_arm][i_port][i_apv][i_ro]; // real channel number 
+	      int adc = hit_adc[i_arm][i_port][i_apv][i_ro];
+	      float nPedsCut = FST::nIstPedsCut; // 3.0 for IST
+	      if(i_arm == 1 && i_port == 1) nPedsCut = FST::nFstPedsCut; // 3.0 for FST
+
+	      if ( (adc < mPed[arm][port][apv][ch][tb]+nPedsCut*mPedStdDev[arm][port][apv][ch][tb]) && ( adc >= 0 && adc < 4096) )
+	      { // only adc below ped+3sigma on FST are considered for 3rd loop
+		int layer = this->getLayer(arm,port);
+		int col = this->getColumn(arm,port,apv,ch); // 0-7 for FST & 0-23 for IST => convert to 0 (even) & 1 (odd)
+		if(layer > 0) col = col%2;
+		sumValues_evt[arm][port][apv][col][tb] += adc-mPed[arm][port][apv][ch][tb];
+		counters_evt[arm][port][apv][col][tb]++;
+	      }
+	    }
+	  }
+	}
+      }
+    }
+
+    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+    {
+      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+      {
+	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+	{
+	  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+	  {
+	    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+	    {
+	      if(counters_evt[i_arm][i_port][i_apv][i_rstrip][i_tb] > 0) // eject bad channels
+	      { // calculate CMN for each rstrip
+		double CMN_evt = sumValues_evt[i_arm][i_port][i_apv][i_rstrip][i_tb]/counters_evt[i_arm][i_port][i_apv][i_rstrip][i_tb];
+		sumValues_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb] += CMN_evt;
+		sumValuesSquared_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb] += CMN_evt*CMN_evt;
+		counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]++;
+	      }
+	    }
+	  }
+	}
+      }
+    }
+    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+    {
+      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+      {
+	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+	{
+	  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+	  {
+	    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+	    {
+	      if(counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb] > 0) // eject bad channels
+	      {
+		double meanCMN = sumValues_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]/counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb];
+		mCMNMean[i_arm][i_port][i_apv][i_rstrip][i_tb] = sqrt((sumValuesSquared_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]-(double)counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]*meanCMN*meanCMN)/(double)(counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]-1));
+	      }
+	    }
+	    for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+	    {
+	      int layer = this->getLayer(i_arm,i_port);
+	      int col = this->getColumn(i_arm,i_port,i_apv,i_ch);
+	      if(layer > 0) col = col%2;
+	      int row = this->getRow(i_arm,i_port,i_apv,i_ch);
+	      if(counters_CMN[i_arm][i_port][i_apv][col][i_tb] > 0 && col > -1)
+	      { // set CMN for each channel
+		mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb] = mCMNMean[i_arm][i_port][i_apv][col][i_tb];
+	      }
+	      g_mCMNSigma[layer][i_tb]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	      if(layer == 0 && col > 3) h_mCMNSigma_FST[col-4][i_tb]->SetBinContent(row+1,mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	    }
+	  }
+	}
+      }
+    }
+  }
+  //--------------------------------------------------------
+
+  //--------------------------------------------------------
+  // 4th loop to find Differential Noise
+  cout << "=====>Fourth Pass for Differential Noise...." << endl;
+  for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+  {
+    for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+    {
+      for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+      {
+	for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+	{
+	  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+	  {
+	    counters[i_arm][i_port][i_apv][i_ch][i_tb] = 0;
+	    sumValues[i_arm][i_port][i_apv][i_ch][i_tb] = 0.0;
+	    sumValuesSquared[i_arm][i_port][i_apv][i_ch][i_tb] = 0.0;
+	  }
+	}
+      }
+    }
+  }
+
+  for(int i_event = 0; i_event < NumOfEvents; ++i_event)
+  { 
+    // if(i_event%1000==0) cout << "processing events:  " << i_event << "/" << NumOfEvents << endl;
+    mChainInPut->GetEntry(i_event);
+
+    clearCMN(); // clear event-by-event CMN
+    // calculate a rolling average for each event => CMN distribution
+    int counters_evt[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins];
+    double sumValues_evt[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins];
+    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+    {
+      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+      {
+	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+	{
+	  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+	  {
+	    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+	    {
+	      counters_evt[i_arm][i_port][i_apv][i_rstrip][i_tb] = 0;
+	      sumValues_evt[i_arm][i_port][i_apv][i_rstrip][i_tb] = 0.0;
+	    }
+	  }
+	}
+      }
+    }
+    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+    {
+      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+      {
+	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+	{
+	  int rdo  = evt_rdo[i_arm][i_port][i_apv];
+	  int arm  = evt_arm[i_arm][i_port][i_apv];
+	  int port = evt_port[i_arm][i_port][i_apv];
+	  int apv  = evt_apv[i_arm][i_port][i_apv];
+
+	  // NOTE THAT RDO/ARM/PORT ARE HARDWIRED HERE!!!
+	  bool pass = ( ( rdo == 1 ) && ( (arm == 0) || (arm == 1 ) ) && ( (port == 0) || (port == 1) ) &&  ( apv >= 0 ) && ( apv < FST::numAPVs ) ) ;
+	  bool bAPV = isBadAPV(arm,port,apv);
+	  if(pass && !bAPV)
+	  {
+	    for(int i_ro = 0; i_ro < FST::numROChannels; ++i_ro)
+	    {
+	      int tb = hit_tb[i_arm][i_port][i_apv][i_ro]; // time bin
+	      int ch = hit_ch[i_arm][i_port][i_apv][i_ro]; // real channel number 
+	      int adc = hit_adc[i_arm][i_port][i_apv][i_ro];
+	      float nPedsCut = FST::nIstPedsCut; // 3.0 for IST
+	      if(i_arm == 1 && i_port == 1) nPedsCut = FST::nFstPedsCut; // 3.0 for FST
+
+	      if ( (adc < mPed[arm][port][apv][ch][tb]+nPedsCut*mPedStdDev[arm][port][apv][ch][tb]) && ( adc >= 0 && adc < 4096) )
+	      { // only adc below ped+3sigma on FST are considered for 4th loop
+		int layer = this->getLayer(arm,port);
+		int col = this->getColumn(arm,port,apv,ch); // 0-7 for FST & 0-23 for IST => convert to 0 (even) & 1 (odd)
+		if(layer > 0) col = col%2;
+		sumValues_evt[arm][port][apv][col][tb] += adc-mPed[arm][port][apv][ch][tb];
+		counters_evt[arm][port][apv][col][tb]++;
+	      }
+	    }
+	  }
+	}
+      }
+    }
+
+    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+    {
+      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+      {
+	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+	{
+	  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+	  {
+	    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+	    {
+	      if(counters_evt[i_arm][i_port][i_apv][i_rstrip][i_tb] > 0) // eject bad channels
+	      { // calculate CMN for each group
+		mCMNMean_Evt[i_arm][i_port][i_apv][i_rstrip][i_tb] = sumValues_evt[i_arm][i_port][i_apv][i_rstrip][i_tb]/counters_evt[i_arm][i_port][i_apv][i_rstrip][i_tb];
+	      }
+	    }
+	    for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+	    {
+	      int layer = this->getLayer(i_arm,i_port);
+	      int col = this->getColumn(i_arm,i_port,i_apv,i_ch);
+	      if(layer > 0) col = col%2;
+	      int row = this->getRow(i_arm,i_port,i_apv,i_ch);
+	      if(counters_evt[i_arm][i_port][i_apv][col][i_tb] > 0 && col > -1)
+	      { // set CMN for each channel
+		mCMNStdDev_Evt[i_arm][i_port][i_apv][i_ch][i_tb] = mCMNMean_Evt[i_arm][i_port][i_apv][col][i_tb];
+	      }
+	    }
+	  }
+	}
+      }
+    }
+
+    // calculate differential noise
+    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+    {
+      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+      {
+	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+	{
+	  int rdo  = evt_rdo[i_arm][i_port][i_apv];
+	  int arm  = evt_arm[i_arm][i_port][i_apv];
+	  int port = evt_port[i_arm][i_port][i_apv];
+	  int apv  = evt_apv[i_arm][i_port][i_apv];
+
+	  // NOTE THAT RDO/ARM/PORT ARE HARDWIRED HERE!!!
+	  bool pass = ( ( rdo == 1 ) && ( (arm == 0) || (arm == 1 ) ) && ( (port == 0) || (port == 1) ) &&  ( apv >= 0 ) && ( apv < FST::numAPVs ) ) ;
+	  bool bAPV = isBadAPV(arm,port,apv);
+	  if(pass && !bAPV)
+	  {
+	    for(int i_ro = 0; i_ro < FST::numROChannels; ++i_ro)
+	    {
+	      int tb = hit_tb[i_arm][i_port][i_apv][i_ro]; // time bin
+	      int ch = hit_ch[i_arm][i_port][i_apv][i_ro]; // real channel number 
+	      int adc = hit_adc[i_arm][i_port][i_apv][i_ro];
+	      float nPedsCut = FST::nIstPedsCut; // 3.0 for IST
+	      if(i_arm == 1 && i_port == 1) nPedsCut = FST::nFstPedsCut; // 3.0 for FST
+	      if ( (adc < mPed[arm][port][apv][ch][tb]+nPedsCut*mPedStdDev[arm][port][apv][ch][tb]) && ( adc >= 0 && adc < 4096) )
+	      { // only adc belew ped+3sigma are considered
+		sumValues[arm][port][apv][ch][tb] += adc-mPed[arm][port][apv][ch][tb]-mCMNStdDev_Evt[arm][port][apv][ch][tb];
+		sumValuesSquared[arm][port][apv][ch][tb] += (adc-mPed[arm][port][apv][ch][tb]-mCMNStdDev_Evt[arm][port][apv][ch][tb])*(adc-mPed[arm][port][apv][ch][tb]-mCMNStdDev_Evt[arm][port][apv][ch][tb]);
+		counters[arm][port][apv][ch][tb]++;
+	      }
+	    }
+	  }
+	}
+      }
+    }
+  }
+  for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+  {
+    for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+    {
+      for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+      {
+	for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+	{
+	  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+	  {
+	    if(counters[i_arm][i_port][i_apv][i_ch][i_tb] > 0) // eject bad channels
+	    {
+	      double meanDiff = sumValues[i_arm][i_port][i_apv][i_ch][i_tb]/counters[i_arm][i_port][i_apv][i_ch][i_tb];
+	      mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb] = sqrt((sumValuesSquared[i_arm][i_port][i_apv][i_ch][i_tb]-(double)counters[i_arm][i_port][i_apv][i_ch][i_tb]*meanDiff*meanDiff)/(double)(counters[i_arm][i_port][i_apv][i_ch][i_tb]-1));
+	    }
+
+	    int layer = this->getLayer(i_arm,i_port);
+	    int col = this->getColumn(i_arm,i_port,i_apv,i_ch);
+	    int row = this->getRow(i_arm,i_port,i_apv,i_ch);
+	    g_mRanSigma[layer][i_tb]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	    if(layer == 0 && col > 3) h_mRanSigma_FST[col-4][i_tb]->SetBinContent(row+1,mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	  }
+	}
+      }
+    }
+  }
+  //--------------------------------------------------------
+
   return true;
 }
 
@@ -909,9 +1390,20 @@ void FstClusterMaker::writePedestal()
     {
       g_mPedMean[i_layer][i_tb]->Write();
       g_mPedSigma[i_layer][i_tb]->Write();
+      g_mCMNSigma[i_layer][i_tb]->Write();
+      g_mRanSigma[i_layer][i_tb]->Write();
       h_mPedDisplay[i_layer][i_tb]->Write();
-      h_mPedMean_FST[i_layer][i_tb]->Write();
-      h_mPedSigma_FST[i_layer][i_tb]->Write();
+    }
+  }
+
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+    {
+      h_mPedMean_FST[i_rstrip][i_tb]->Write();
+      h_mPedSigma_FST[i_rstrip][i_tb]->Write();
+      h_mCMNSigma_FST[i_rstrip][i_tb]->Write();
+      h_mRanSigma_FST[i_rstrip][i_tb]->Write();
     }
   }
 }

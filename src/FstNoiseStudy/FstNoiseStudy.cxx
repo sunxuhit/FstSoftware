@@ -145,11 +145,37 @@ bool FstNoiseStudy::clearPedestal()
 
 	    mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
 	    mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
-	    mCMNStdDev_Evt[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
 	  }
 	  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
 	  {
 	    mCMNMean[i_arm][i_port][i_apv][i_rstrip][i_tb] = -1.0;
+	  }
+	}
+      }
+    }
+  }
+
+  clearCMN();
+
+  return true;
+}
+
+bool FstNoiseStudy::clearCMN()
+{
+  for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+  {
+    for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+    {
+      for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+      {
+	for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+	{
+	  for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+	  {
+	    mCMNStdDev_Evt[i_arm][i_port][i_apv][i_ch][i_tb] = -1.0;
+	  }
+	  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+	  {
 	    mCMNMean_Evt[i_arm][i_port][i_apv][i_rstrip][i_tb] = -1.0;
 	  }
 	}
@@ -583,6 +609,7 @@ bool FstNoiseStudy::calPedestal()
     // if(i_event%1000==0) cout << "processing events:  " << i_event << "/" << NumOfEvents << endl;
     mChainInPut->GetEntry(i_event);
 
+    clearCMN(); // clear event-by-event CMN
     // calculate a rolling average for each event => CMN distribution
     int counters_evt[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins];
     double sumValues_evt[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins];

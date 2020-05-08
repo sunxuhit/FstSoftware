@@ -63,6 +63,18 @@ void FstRawHit::setPedRMS(double pedRMS, int tb)
 {
   mPedRMS[ (tb < 0 || tb >= FST::numTBins) ? mDefaultTb : tb ] = pedRMS;
 }
+void FstRawHit::setCMNStdDev(double cmnStdDev, int tb)
+{
+  mCMNStdDev[ (tb < 0 || tb >= FST::numTBins) ? mDefaultTb : tb ] = cmnStdDev;
+}
+void FstRawHit::setRanStdDev(double ranStdDev, int tb)
+{
+  mRanStdDev[ (tb < 0 || tb >= FST::numTBins) ? mDefaultTb : tb ] = ranStdDev;
+}
+void FstRawHit::setRawCharge(double charge, int tb)
+{
+  mRawCharge[ (tb < 0 || tb >= FST::numTBins) ? mDefaultTb : tb ] = charge;
+}
 void FstRawHit::setCharge(double charge, int tb)
 {
   mCharge[ (tb < 0 || tb >= FST::numTBins) ? mDefaultTb : tb ] = charge;
@@ -129,6 +141,18 @@ double FstRawHit::getPedRMS(int tb) const
 {
   return mPedRMS[ (tb < 0 || tb >= FST::numTBins) ? mDefaultTb : tb ];
 }
+double FstRawHit::getCMNStdDev(int tb) const
+{
+  return mCMNStdDev[ (tb < 0 || tb >= FST::numTBins) ? mDefaultTb : tb ];
+}
+double FstRawHit::getRanStdDev(int tb) const
+{
+  return mRanStdDev[ (tb < 0 || tb >= FST::numTBins) ? mDefaultTb : tb ];
+}
+double FstRawHit::getRawCharge(int tb) const
+{
+  return mRawCharge[ (tb < 0 || tb >= FST::numTBins) ? mDefaultTb : tb ];
+}
 double FstRawHit::getCharge(int tb) const
 {
   return mCharge[ (tb < 0 || tb >= FST::numTBins) ? mDefaultTb : tb ];
@@ -153,25 +177,28 @@ bool FstRawHit::getIsHit() const
 //------------------------------------------
 void FstRawHit::Print() const
 {
-  cout << "mLayer = " << mLayer << endl;
-  cout << "mSensor = " << mSensor << endl;
-  cout << "mAPV = " << mAPV << endl;
+  cout << "mLayer   = " << mLayer << endl;
+  cout << "mSensor  = " << mSensor << endl;
+  cout << "mAPV     = " << mAPV << endl;
   cout << "mChannel = " << mChannel << endl;
-  cout << "mColumn = " << mColumn << endl;
-  cout << "mRow = " << mRow << endl;
-  cout << "mPosX = " << mPosX << endl;
-  cout << "mPosY = " << mPosY << endl;
+  cout << "mColumn  = " << mColumn << endl;
+  cout << "mRow     = " << mRow << endl;
+  cout << "mPosX    = " << mPosX << endl;
+  cout << "mPosY    = " << mPosY << endl;
   for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
   {
-    cout << "i_tb = " << i_tb << ", mPedMean = " <<  mPedMean[i_tb] << endl;
+    cout << "i_tb = " << i_tb << ", mPedMean   = " <<  mPedMean[i_tb] << endl;
     cout << "i_tb = " << i_tb << ", mPedStdDev = " <<  mPedStdDev[i_tb] << endl;
-    cout << "i_tb = " << i_tb << ", mPedRMS = " <<  mPedRMS[i_tb] << endl;
-    cout << "i_tb = " << i_tb << ", mCharge = " <<  mCharge[i_tb] << endl;
+    cout << "i_tb = " << i_tb << ", mPedRMS    = " <<  mPedRMS[i_tb] << endl;
+    cout << "i_tb = " << i_tb << ", mCMNStdDev = " <<  mCMNStdDev[i_tb] << endl;
+    cout << "i_tb = " << i_tb << ", mRanStdDev = " <<  mRanStdDev[i_tb] << endl;
+    cout << "i_tb = " << i_tb << ", mRawCharge = " <<  mRawCharge[i_tb] << endl;
+    cout << "i_tb = " << i_tb << ", mCharge    = " <<  mCharge[i_tb] << endl;
   }
-  cout << "mMaxTb =" << mMaxTb << endl;
-  cout << "mHitId =" << mHitId << endl;
+  cout << "mMaxTb     =" << mMaxTb << endl;
+  cout << "mHitId     =" << mHitId << endl;
   cout << "mDefaultTb = " << mDefaultTb  << endl;
-  cout << "mIsHit = " << mIsHit << endl;
+  cout << "mIsHit     = " << mIsHit << endl;
   cout << endl;
 }
 
@@ -190,6 +217,9 @@ void FstRawHit::Clear()
     mPedMean[i_tb] = -1.0;
     mPedStdDev[i_tb] = -1.0;
     mPedRMS[i_tb] = -1.0;
+    mCMNStdDev[i_tb] = -1.0;
+    mRanStdDev[i_tb] = -1.0;
+    mRawCharge[i_tb] = -1.0;
     mCharge[i_tb] = -1.0;
   }
   mMaxTb = -1;

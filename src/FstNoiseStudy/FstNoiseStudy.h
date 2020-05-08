@@ -37,6 +37,7 @@ class FstNoiseStudy : public TObject
 
     // pedestal & signal
     bool clearPedestal();
+    bool clearCMN();
     bool initPedestal();
     bool calPedestal(); // extract pedestal for each ch and fill TGraphs for ped mean & sigma (noise)
     void writePedestal();
