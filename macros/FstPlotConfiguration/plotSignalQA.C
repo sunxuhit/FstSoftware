@@ -380,7 +380,7 @@ void plotSignalQA(string hv = "HV140V", string config = "Th4o5Tb3")
       h_mMeanNoiseHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("Noise <ADC>_{Hits}");
       h_mMeanNoiseHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleSize(0.08);
       h_mMeanNoiseHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
-      h_mMeanNoiseHits_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(10.0,35.0);
+      h_mMeanNoiseHits_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(5.0,25.0);
       h_mMeanNoiseHits_Rstrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
       h_mMeanNoiseHits_Rstrip[i_rstrip]->SetLineColor(i_rstrip+1);
 

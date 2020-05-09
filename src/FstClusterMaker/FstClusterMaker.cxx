@@ -23,7 +23,7 @@ ClassImp(FstClusterMaker)
 
 //------------------------------------------
 
-FstClusterMaker::FstClusterMaker() : mList("../../list/FST/FstPed_HV70.list"), mOutPutFile("./FstPed_HV70.root"), mSavePed(false)
+FstClusterMaker::FstClusterMaker() : mList("../../list/FST/FstData_HV140.list"), mOutPutFile("./FstData_HV140.root"), mSavePed(false), mFstHitsCut(4.5), mFstThresholdCut(2.0), mNumOfUsedTimeBins(3)
 {
   cout << "FstClusterMaker::FstClusterMaker() -------- Constructor!  --------" << endl;
   mHome = getenv("HOME");
@@ -38,6 +38,7 @@ FstClusterMaker::~FstClusterMaker()
 int FstClusterMaker::Init()
 {
   cout << "FstClusterMaker::Init => " << endl;
+  cout << "Configurations: mSavePed: " <<  mSavePed  << ", mFstHitsCut: " << mFstHitsCut << ", mNumOfUsedTimeBins: " << mNumOfUsedTimeBins << ", mFstThresholdCut: " << mFstThresholdCut << endl;
   File_mOutPut = new TFile(mOutPutFile.c_str(),"RECREATE");
 
   bool isInPut = initChain(); // initialize input data/ped TChain;
@@ -356,8 +357,10 @@ int FstClusterMaker::Make()
 	      {
 		double maxADC = mSigCMNCorr[i_arm][i_port][i_apv][i_ch][0]; // init with 1st tb
 		double preADC = maxADC;
-		float nHitsCut = FST::nFstHitsCut; // 4.5 for FST
-		if(FST::numOfUsedTimeBins == 3) // FST Hits with 3 Time Bins
+		// float nHitsCut = FST::nFstHitsCut; // 4.5 for FST
+		float nHitsCut = mFstHitsCut; // 4.5 for FST
+		// if(FST::numOfUsedTimeBins == 3) // FST Hits with 3 Time Bins
+		if(mNumOfUsedTimeBins == 3) // FST Hits with 3 Time Bins
 		{
 		  for(int i_tb = 1; i_tb < FST::numTBins-1; ++i_tb)
 		  { // only if 3 consequetive timebins of a ch exceed the threshold cut is considered as a hit
@@ -382,7 +385,8 @@ int FstClusterMaker::Make()
 		    }
 		  }
 		}
-		if(FST::numOfUsedTimeBins == 2) // FST Hits with 2 Time Bins
+		// if(FST::numOfUsedTimeBins == 2) // FST Hits with 2 Time Bins
+		if(mNumOfUsedTimeBins == 2) // FST Hits with 2 Time Bins
 		{
 		  for(int i_tb = 1; i_tb < FST::numTBins; ++i_tb)
 		  { // only if 2 consequetive timebins of a ch exceed the threshold cut is considered as a hit
@@ -407,7 +411,8 @@ int FstClusterMaker::Make()
 		    }
 		  }
 		}
-		if(FST::numOfUsedTimeBins == 1) // FST Hits with 1 Time Bin
+		// if(FST::numOfUsedTimeBins == 1) // FST Hits with 1 Time Bin
+		if(mNumOfUsedTimeBins == 1) // FST Hits with 1 Time Bin
 		{
 		  for(int i_tb = 1; i_tb < FST::numTBins; ++i_tb)
 		  { // only if 1 timebin of a ch exceed the threshold cut is considered as a hit
@@ -464,8 +469,10 @@ int FstClusterMaker::Make()
 		{
 		  double maxADC = mSigCMNCorr[i_arm][i_port][i_apv][i_ch][0]; // init with 1st tb
 		  double preADC = maxADC;
-		  float nPedsCut = FST::nFstThresholdCut; // 2.0 for FST
-		  if(FST::numOfUsedTimeBins == 3) // FST Peds with 3 Time Bins
+		  // float nPedsCut = FST::nFstThresholdCut; // 2.0 for FST
+		  float nPedsCut = mFstThresholdCut; // 2.0 for FST
+		  // if(FST::numOfUsedTimeBins == 3) // FST Peds with 3 Time Bins
+		  if(mNumOfUsedTimeBins == 3) // FST Peds with 3 Time Bins
 		  {
 		    for(int i_tb = 1; i_tb < FST::numTBins-1; ++i_tb)
 		    { // only if 3 consequetive timebins of a ch exceed the threshold cut is considered as a hit
@@ -490,7 +497,8 @@ int FstClusterMaker::Make()
 		      }
 		    }
 		  }
-		  if(FST::numOfUsedTimeBins == 2) // FST Peds with 2 Time Bins
+		  // if(FST::numOfUsedTimeBins == 2) // FST Peds with 2 Time Bins
+		  if(mNumOfUsedTimeBins == 2) // FST Peds with 2 Time Bins
 		  {
 		    for(int i_tb = 1; i_tb < FST::numTBins; ++i_tb)
 		    { // only if 2 consequetive timebins of a ch exceed the threshold cut is considered as a hit
@@ -515,7 +523,7 @@ int FstClusterMaker::Make()
 		      }
 		    }
 		  }
-		  if(FST::numOfUsedTimeBins == 1) // FST Peds with 1 Time Bin
+		  if(mNumOfUsedTimeBins == 1) // FST Peds with 1 Time Bin
 		  {
 		    for(int i_tb = 1; i_tb < FST::numTBins; ++i_tb)
 		    { // only if 1 timebin of a ch exceed the threshold cut is considered as a hit

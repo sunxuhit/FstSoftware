@@ -629,8 +629,9 @@ void FstQAStudy::fillSignalQA(FstEvent *fstEvent)
 	const int row       = fstRawHitVec[i_hit]->getRow();
 	const int maxTb     = fstRawHitVec[i_hit]->getMaxTb();
 	const double ped    = fstRawHitVec[i_hit]->getPedMean(maxTb); // pedMean
-	const double signal = fstRawHitVec[i_hit]->getCharge(maxTb); // adc - pedMean
-	const double noise  = fstRawHitVec[i_hit]->getPedStdDev(maxTb); // pedStdDev
+	const double signal = fstRawHitVec[i_hit]->getCharge(maxTb); // adc - pedMean - cmn
+	// const double noise  = fstRawHitVec[i_hit]->getPedStdDev(maxTb); // pedStdDev
+	const double noise  = fstRawHitVec[i_hit]->getRanStdDev(maxTb); // pedStdDev
 	p_mPedMap_FST->Fill(column,row,ped);
 	p_mSigMap_FST->Fill(column,row,signal);
 	h_mSignalHits_FST->Fill(signal);
@@ -855,7 +856,8 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
       double phi_fst = fstRawHit->getPosY(); // phi for fst
       int maxTb = fstRawHit->getMaxTb();
       double adc = fstRawHit->getCharge(maxTb); // adc - pedMean
-      double ped = fstRawHit->getPedStdDev(maxTb); // pedStdDev
+      // double ped = fstRawHit->getPedStdDev(maxTb); // pedStdDev
+      double ped = fstRawHit->getRanStdDev(maxTb); // ranStdDev
       if( fstRawHit->getIsHit() )
       { // above threshold
 	mNumOfFstRawHits++;

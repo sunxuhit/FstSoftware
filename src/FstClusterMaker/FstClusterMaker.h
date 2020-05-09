@@ -35,6 +35,18 @@ class FstClusterMaker : public TObject
     {
       mSavePed = savePed;
     }
+    void set_nFstHitsCut(float nFstHitsCut)
+    {
+      mFstHitsCut = nFstHitsCut;
+    }
+    void set_nFstThresholdCut(float nFstThresholdCut)
+    {
+      mFstThresholdCut = nFstThresholdCut;
+    }
+    void set_numOfUsedTimeBins(float numOfUsedTimeBins)
+    {
+      mNumOfUsedTimeBins = numOfUsedTimeBins;
+    }
 
     int Init();
     int Make(); // subtract pedestal => signal & find Hits
@@ -71,6 +83,10 @@ class FstClusterMaker : public TObject
   private:
     std::string mHome, mList;
     std::string mOutPutFile;
+
+    float mFstHitsCut;
+    float mFstThresholdCut;
+    int mNumOfUsedTimeBins;
 
     TFile *File_mOutPut;
 

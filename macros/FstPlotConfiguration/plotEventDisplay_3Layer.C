@@ -130,7 +130,9 @@ void plotEventDisplay_3Layer(string hv = "HV140V", string config = "Th4o5Tb3")
     if(mNumOfClusterTracks == 1 && mNumOfClusterTracks_2Layer == 1 && mNumOfClusterTracks_3Layer == 1) // 3-Layer Tracking
     {
       c_EventDisplay->cd(1);
-      string Title = Form("Event %d (Threshold 4.5)", mEventId);
+      string Title; 
+      if(config == "Th4o5Tb3" || config == "Th4o5Tb2" || config == "Th4o5Tb1") Title = Form("Event %d (Threshold 4.5)", mEventId);
+      if(config == "Th3Tb3" || config == "Th3Tb2" || config == "Th3Tb1") Title = Form("Event %d (Threshold 3.0)", mEventId);
       h_mFstRawHitsDisplay->SetTitle(Title.c_str());
       h_mFstRawHitsDisplay->SetStats(0);
       h_mFstRawHitsDisplay->GetXaxis()->SetTitle("R");
