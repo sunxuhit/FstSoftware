@@ -35,6 +35,10 @@ class FstClusterMaker : public TObject
     {
       mSavePed = savePed;
     }
+    void set_cmncorrection(bool applyCMNCorr)
+    {
+      mApplyCMNCorr = applyCMNCorr;
+    }
     void set_nFstHitsCut(float nFstHitsCut)
     {
       mFstHitsCut = nFstHitsCut;
@@ -84,10 +88,6 @@ class FstClusterMaker : public TObject
     std::string mHome, mList;
     std::string mOutPutFile;
 
-    float mFstHitsCut;
-    float mFstThresholdCut;
-    int mNumOfUsedTimeBins;
-
     TFile *File_mOutPut;
 
     // Pedestal
@@ -133,6 +133,10 @@ class FstClusterMaker : public TObject
     FstRawHit *mFstClusteredRawHit;
     FstTrack *mFstTrack;
     bool mSavePed;
+    bool mApplyCMNCorr;
+    float mFstHitsCut;
+    int mNumOfUsedTimeBins;
+    float mFstThresholdCut;
 
     // Utility for tracking
     int getLayer(int arm, int port); // return layer based on arm & port

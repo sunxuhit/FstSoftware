@@ -4,7 +4,7 @@
 
 R__LOAD_LIBRARY(../../lib/libFstClusterMaker.dylib)
 
-int makeFstCluster(string hv = "HV140V", string config = "Th4o5Tb3", bool isSavePed = true, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 3, float nFstThresholdCut = 2.0)
+int makeFstCluster(string hv = "HV140V", string config = "Th4o5Tb3", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 3, float nFstThresholdCut = 2.0)
 {
   std::cout << "gSystem::Load <- libFstClusterMaker.dylib" << endl;
 
@@ -24,6 +24,7 @@ int makeFstCluster(string hv = "HV140V", string config = "Th4o5Tb3", bool isSave
   fst->set_list(inputlist.c_str());
   fst->set_outputfile(outputfile.c_str());
   fst->set_saveped(isSavePed);
+  fst->set_cmncorrection(isApplyCMNCorr);
   fst->set_nFstHitsCut(nFstHitsCut);
   fst->set_nFstThresholdCut(nFstThresholdCut);
   fst->set_numOfUsedTimeBins(numOfUsedTimeBins);
