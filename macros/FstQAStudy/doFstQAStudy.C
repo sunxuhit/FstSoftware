@@ -4,27 +4,25 @@
 
 R__LOAD_LIBRARY(../../lib/libFstQAStudy.dylib)
 
-int doFstQAStudy(string hv = "HV140V", string config = "Th4o5Tb3", bool isSavePed = "true")
+int doFstQAStudy(string hv = "HV140V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 3)
 {
   std::cout << "gSystem::Load <- libFstQAStudy.dylib" << endl;
 
-  FstQAStudy *fst = new FstQAStudy();
+  std::string pedMode = "withPed";
+  if(!isSavePed) pedMode = "woPed";
+  std::string cmnMode = "withCMNCorr";
+  if(!isApplyCMNCorr) cmnMode = "woCMNCorr";
 
-  // bool isSavePed = true;
-  // bool isSavePed = false;
-  // std::string hv = "HV140V";
-  std::string inputlist;
-  if(isSavePed) inputlist = Form("../../list/FST/configuration/FstCluster_%s_withPed_%s.list",hv.c_str(),config.c_str());
-  if(!isSavePed) inputlist = Form("../../list/FST/configuration/FstCluster_%s_woPed_%s.list",hv.c_str(),config.c_str());
+  std::string inputlist = Form("../../list/FST/configuration/FstCluster_%s_Th%1.1fTb%d_%s_%s.list",hv.c_str(),nFstHitsCut,numOfUsedTimeBins,pedMode.c_str(),cmnMode.c_str());
   cout << "input list set to: " << inputlist.c_str() << endl;
 
-  std::string outputfile;
-  if(isSavePed) outputfile = Form("../../output/configuration/FstQAStudy_%s_withPed_%s.root",hv.c_str(),config.c_str());
-  if(!isSavePed) outputfile = Form("../../output/configuration/FstQAStudy_%s_woPed_%s.root",hv.c_str(),config.c_str());
+  std::string outputfile = Form("../../output/configuration/FstQAStudy_%s_Th%1.1fTb%d_%s_%s.root",hv.c_str(),nFstHitsCut,numOfUsedTimeBins,pedMode.c_str(),cmnMode.c_str());
   cout << "output file set to: " << outputfile.c_str() << endl;
 
+  FstQAStudy *fst = new FstQAStudy();
   fst->set_list(inputlist.c_str());
   fst->set_outputfile(outputfile.c_str());
+  fst->set_cmncorrection(isApplyCMNCorr);
 
   fst->Init();
   fst->Make();

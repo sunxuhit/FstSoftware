@@ -1,29 +1,25 @@
 #!/bin/bash
 date
 
-#. ./fstQAStudy.sh
+#. ./fstQAStudy.sh isApplyCMNCorr nFstHitsCut
 
-if [ $# -eq 0 ]
+if [ $# -eq 2 ]
 then
   isSavePed=true
-  root -l -b -q doFstQAStudy.C\(\"HV70V\",\"Th4o5Tb3\",${isSavePed}\)
-  root -l -b -q doFstQAStudy.C\(\"HV70V\",\"Th4o5Tb2\",${isSavePed}\)
-  root -l -b -q doFstQAStudy.C\(\"HV70V\",\"Th4o5Tb1\",${isSavePed}\)
-  root -l -b -q doFstQAStudy.C\(\"HV70V\",\"Th3Tb3\",${isSavePed}\)
-  root -l -b -q doFstQAStudy.C\(\"HV70V\",\"Th3Tb2\",${isSavePed}\)
-  root -l -b -q doFstQAStudy.C\(\"HV70V\",\"Th3Tb1\",${isSavePed}\)
+  isApplyCMNCorr=$1
+  nFstHitsCut=$2
+  # HV70V
+  # root -l -b -q doFstQAStudy.C\(\"HV70V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},3\)
+  # root -l -b -q doFstQAStudy.C\(\"HV70V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2\)
+  # root -l -b -q doFstQAStudy.C\(\"HV70V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},1\)
 
-  root -l -b -q doFstQAStudy.C\(\"HV140V\",\"Th4o5Tb3\",${isSavePed}\)
-  root -l -b -q doFstQAStudy.C\(\"HV140V\",\"Th4o5Tb2\",${isSavePed}\)
-  root -l -b -q doFstQAStudy.C\(\"HV140V\",\"Th4o5Tb1\",${isSavePed}\)
-  root -l -b -q doFstQAStudy.C\(\"HV140V\",\"Th3Tb3\",${isSavePed}\)
-  root -l -b -q doFstQAStudy.C\(\"HV140V\",\"Th3Tb2\",${isSavePed}\)
-  root -l -b -q doFstQAStudy.C\(\"HV140V\",\"Th3Tb1\",${isSavePed}\)
+  # HV140V
+  root -l -b -q doFstQAStudy.C\(\"HV140V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},3\)
+  root -l -b -q doFstQAStudy.C\(\"HV140V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2\)
+  root -l -b -q doFstQAStudy.C\(\"HV140V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},1\)
 
-  root -l -b -q doFstQAStudy.C\(\"HV200V\",\"Th4o5Tb3\",${isSavePed}\)
-  root -l -b -q doFstQAStudy.C\(\"HV200V\",\"Th4o5Tb2\",${isSavePed}\)
-  root -l -b -q doFstQAStudy.C\(\"HV200V\",\"Th4o5Tb1\",${isSavePed}\)
-  root -l -b -q doFstQAStudy.C\(\"HV200V\",\"Th3Tb3\",${isSavePed}\)
-  root -l -b -q doFstQAStudy.C\(\"HV200V\",\"Th3Tb2\",${isSavePed}\)
-  root -l -b -q doFstQAStudy.C\(\"HV200V\",\"Th3Tb1\",${isSavePed}\)
+  # HV200V
+  root -l -b -q doFstQAStudy.C\(\"HV200V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},3\)
+  root -l -b -q doFstQAStudy.C\(\"HV200V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2\)
+  root -l -b -q doFstQAStudy.C\(\"HV200V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},1\)
 fi

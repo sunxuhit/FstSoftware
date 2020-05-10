@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotSignalQA(string hv = "HV140V", string config = "Th4o5Tb3")
+void plotSignalQA(string hv = "HV140V", bool isSavePed = true, bool isApplyCMNCorr = false, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 3)
 {
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
   gStyle->SetStatW(0.25); gStyle->SetStatH(0.55);
@@ -37,7 +37,12 @@ void plotSignalQA(string hv = "HV140V", string config = "Th4o5Tb3")
     h_mMeanSignalClusters_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numTBins,-0.5,FST::numTBins-0.5);
   }
 
-  string inputfile = Form("../../output/configuration/FstQAStudy_%s_withPed_%s.root",hv.c_str(),config.c_str());
+  std::string pedMode = "withPed";
+  if(!isSavePed) pedMode = "woPed";
+  std::string cmnMode = "withCMNCorr";
+  if(!isApplyCMNCorr) cmnMode = "woCMNCorr";
+
+  string inputfile = Form("../../output/configuration/FstQAStudy_%s_Th%1.1fTb%d_%s_%s.root",hv.c_str(),nFstHitsCut,numOfUsedTimeBins,pedMode.c_str(),cmnMode.c_str());
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TProfile2D *p_mPedMap_FST = (TProfile2D*)File_InPut->Get("p_mPedMap_FST");;
   TProfile2D *p_mSigMap_FST = (TProfile2D*)File_InPut->Get("p_mSigMap_FST");

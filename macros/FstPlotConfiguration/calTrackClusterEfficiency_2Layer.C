@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void calTrackClusterEfficiency_2Layer(string hv = "HV140V", string config = "Th4o5Tb3")
+void calTrackClusterEfficiency_2Layer(string hv = "HV140V", bool isSavePed = true, bool isApplyCMNCorr = false, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 3)
 {
   const double rMaxFst = FST::rOuter + 4.0*FST::pitchR;
   const double rMinFst = FST::rOuter;
@@ -19,7 +19,12 @@ void calTrackClusterEfficiency_2Layer(string hv = "HV140V", string config = "Th4
 
   const int nMatch = 8;
 
-  string inputfile = Form("../../output/configuration/FstTracking_%s_withPed_%s.root",hv.c_str(),config.c_str());
+  std::string pedMode = "withPed";
+  if(!isSavePed) pedMode = "woPed";
+  std::string cmnMode = "withCMNCorr";
+  if(!isApplyCMNCorr) cmnMode = "woCMNCorr";
+
+  string inputfile = Form("../../output/configuration/FstTracking_%s_Th%1.1fTb%d_%s_%s.root",hv.c_str(),nFstHitsCut,numOfUsedTimeBins,pedMode.c_str(),cmnMode.c_str());
 
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TH2F *h_mTrackClusters_IST[nMatch];

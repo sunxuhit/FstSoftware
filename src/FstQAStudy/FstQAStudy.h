@@ -34,6 +34,10 @@ class FstQAStudy : public TObject
     {
       mOutPutFile = outputfile;
     }
+    void set_cmncorrection(bool applyCMNCorr)
+    {
+      mApplyCMNCorr = applyCMNCorr;
+    }
 
     int Init();
     int Make(); // subtract pedestal => signal & find Hits
@@ -138,6 +142,7 @@ class FstQAStudy : public TObject
     TH1F *h_mSignalClusters_Apv[2][4][2];
 
     // Output TTree for Event Display
+    bool mApplyCMNCorr;
     TTree *mTree_EventDisplay;
     int mEventId;
     int mNumOfFstRawHits;

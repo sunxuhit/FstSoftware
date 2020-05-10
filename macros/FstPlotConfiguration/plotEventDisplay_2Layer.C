@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotEventDisplay_2Layer(string hv = "HV140V", string config = "Th4o5Tb3")
+void plotEventDisplay_2Layer(string hv = "HV140V", bool isSavePed = true, bool isApplyCMNCorr = false, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 3)
 {
   // gStyle->SetPalette(kRainBow);
   gStyle->SetPalette(kBlackBody);
@@ -52,8 +52,12 @@ void plotEventDisplay_2Layer(string hv = "HV140V", string config = "Th4o5Tb3")
   TGraph *g_mHitTracksDisplay     = new TGraph();
   TGraph *g_mClusterTracksDisplay = new TGraph();
 
+  std::string pedMode = "withPed";
+  if(!isSavePed) pedMode = "woPed";
+  std::string cmnMode = "withCMNCorr";
+  if(!isApplyCMNCorr) cmnMode = "woCMNCorr";
 
-  std::string inputfile = Form("../../output/configuration/FstQAStudy_%s_withPed_%s.root",hv.c_str(),config.c_str());
+  string inputfile = Form("../../output/configuration/FstQAStudy_%s_Th%1.1fTb%d_%s_%s.root",hv.c_str(),nFstHitsCut,numOfUsedTimeBins,pedMode.c_str(),cmnMode.c_str());
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TTree *mTree_EventDisplay = (TTree*)File_InPut->Get("mTree_EventDisplay");
   mTree_EventDisplay->SetBranchAddress("mEventId",&mEventId);
@@ -130,9 +134,7 @@ void plotEventDisplay_2Layer(string hv = "HV140V", string config = "Th4o5Tb3")
     // if(mNumOfClusterTracks == 1 && mNumOfClusterTracks_2Layer == 1 && mNumOfClusterTracks_3Layer == 1) // 3-Layer Tracking
     {
       c_EventDisplay->cd(1);
-      string Title;
-      if(config == "Th4o5Tb3" || config == "Th4o5Tb2" || config == "Th4o5Tb1") Title = Form("Event %d (Threshold 4.5)", mEventId);
-      if(config == "Th3Tb3" || config == "Th3Tb2" || config == "Th3Tb1") Title = Form("Event %d (Threshold 3.0)", mEventId);
+      string Title = Form("Event %d (Threshold %1.1f)", mEventId, nFstHitsCut);
       h_mFstRawHitsDisplay->SetTitle(Title.c_str());
       h_mFstRawHitsDisplay->SetStats(0);
       h_mFstRawHitsDisplay->GetXaxis()->SetTitle("R");
