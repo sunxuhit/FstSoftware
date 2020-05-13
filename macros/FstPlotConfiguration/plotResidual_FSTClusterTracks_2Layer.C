@@ -10,6 +10,7 @@
 #include <TProfile2D.h>
 #include <TGraph.h>
 #include <TStyle.h>
+#include <TPaveStats.h>
 #include "./draw.h"
 #include "../../src/FstUtil/FstCons.h"
 
@@ -38,7 +39,7 @@ void plotResidual_FSTClusterTracks_2Layer(string hv = "HV140V", bool isSavePed =
   gStyle->SetOptStat(111111);
   gStyle->SetOptFit(1001);
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
-  gStyle->SetStatW(0.15); gStyle->SetStatH(0.25);
+  gStyle->SetStatW(0.20); gStyle->SetStatH(0.20);
 
   std::string pedMode = "withPed";
   if(!isSavePed) pedMode = "woPed";
@@ -175,6 +176,11 @@ void plotResidual_FSTClusterTracks_2Layer(string hv = "HV140V", bool isSavePed =
   f_gausR->SetRange(-20,50);
   h_mTrackRRes_Clusters_2Layer->Fit(f_gausR,"R");
   f_gausR->Draw("l same");
+  // gPad->Update();
+  // TPaveStats *st1 = (TPaveStats*)h_mTrackRRes_Clusters_2Layer->FindObject("stats");
+  // st1->SetOptStat(111111);
+  // st1->SetX1NDC(0.6);
+  // st1->SetX2NDC(0.9);
 
   c_play->cd(9);
   h_mTrackPhiRes_Clusters_2Layer->SetTitle("Corrected #phi-residual FST");
@@ -188,10 +194,16 @@ void plotResidual_FSTClusterTracks_2Layer(string hv = "HV140V", bool isSavePed =
   f_gausPhi->SetParameter(0,100.0);
   f_gausPhi->SetParameter(1,0.0);
   f_gausPhi->SetParameter(2,10.0);
+  // f_gausPhi->SetParName(0,"No. Tracks");
+  // f_gausPhi->SetParName(1,"Mean");
+  // f_gausPhi->SetParName(2,"#sigma");
   f_gausPhi->FixParameter(3,h_mTrackPhiRes_Clusters_2Layer->GetBinWidth(1));
   f_gausPhi->SetRange(-0.01,0.01);
   h_mTrackPhiRes_Clusters_2Layer->Fit(f_gausPhi,"R");
   f_gausPhi->Draw("l same");
+  // gPad->Update();
+  // TPaveStats *st2 = (TPaveStats*)h_mTrackPhiRes_Clusters_2Layer->FindObject("stats");
+  // st2->SetOptStat(110011);
 
   c_play->SaveAs("./figures/Residual_FSTClusterTracks_2Layer.pdf");
 }

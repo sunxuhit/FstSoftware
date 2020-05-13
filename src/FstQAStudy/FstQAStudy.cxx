@@ -548,7 +548,7 @@ void FstQAStudy::initSignalQA()
   p_mSigMap_FST = new TProfile2D("p_mSigMap_FST","p_mSigMap_FST",FST::numRStrip,-0.5,FST::numRStrip-0.5,FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5);
   h_mSignalHits_FST = new TH1F("h_mSignalHits_FST","h_mSignalHits_FST",200,-0.5,1999.5);
   h_mNoiseHits_FST = new TH1F("h_mNoiseHits_FST","h_mNoiseHits_FST",100,-0.5,99.5);
-  h_mSNRatioHits_FST = new TH1F("h_mSNRatioHits_FST","h_mSNRatioHits_FST",100,-0.5,49.5);
+  h_mSNRatioHits_FST = new TH1F("h_mSNRatioHits_FST","h_mSNRatioHits_FST",200,-0.5,99.5);
   h_mSignalClusters_FST = new TH1F("h_mSignalClusters_FST","h_mSignalClusters_FST",200,-0.5,1999.5);
 
   for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
@@ -563,7 +563,7 @@ void FstQAStudy::initSignalQA()
     HistName = Form("h_mNoiseHits_Rstrip%d",i_rstrip);
     h_mNoiseHits_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,99.5);
     HistName = Form("h_mSNRatioHits_Rstrip%d",i_rstrip);
-    h_mSNRatioHits_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,49.5);
+    h_mSNRatioHits_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,99.5);
     HistName = Form("h_mSignalClusters_Rstrip%d",i_rstrip);
     h_mSignalClusters_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
@@ -573,7 +573,7 @@ void FstQAStudy::initSignalQA()
       HistName = Form("h_mNoiseHits_Rstrip%d_TimeBin%d",i_rstrip,i_tb);
       h_mNoiseHits_Rstrip_TimeBin[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,99.5);
       HistName = Form("h_mSNRatioHits_Rstrip%d_TimeBin%d",i_rstrip,i_tb);
-      h_mSNRatioHits_Rstrip_TimeBin[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,49.5);
+      h_mSNRatioHits_Rstrip_TimeBin[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,99.5);
       HistName = Form("h_mSignalClusters_Rstrip%d_TimeBin%d",i_rstrip,i_tb);
       h_mSignalClusters_Rstrip_TimeBin[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
     }
@@ -595,7 +595,7 @@ void FstQAStudy::initSignalQA()
 	HistName = Form("h_mNoiseHits_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
 	h_mNoiseHits_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,99.5);
 	HistName = Form("h_mSNRatioHits_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
-	h_mSNRatioHits_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,49.5);
+	h_mSNRatioHits_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,99.5);
 	HistName = Form("h_mSignalClusters_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
 	h_mSignalClusters_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
       }

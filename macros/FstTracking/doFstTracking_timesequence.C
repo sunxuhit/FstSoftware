@@ -5,7 +5,7 @@
 
 R__LOAD_LIBRARY(../../lib/libFstTracking.dylib)
 
-int doFstTracking_timesequence(string hv = "HV140V", bool isSavePed = "true", bool isApplyCMNCorr = true, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 3, string date = "04022020")
+int doFstTracking_timesequence(string hv = "HV140V", bool isSavePed = true, bool isApplyCMNCorr = false, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 3, string date = "04022020")
 {
   std::cout << "gSystem::Load <- libFstTracking.dylib" << endl;
 
