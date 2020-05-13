@@ -32,9 +32,8 @@ float ErrDiv(float x, float y, float dx, float dy)
 
 void plotSignalTS_HV140V_APV(int apv = 1, int phibin = 1)
 {
-  const int numOfTS = 16;
-  string date[numOfTS] = {"0329","0330","0331","0402","0403","0404","0406","0407","0408","0413","0417","0423","0427","0429","0502","0504"};
-
+  const int numOfTS = 19;
+  string date[numOfTS] = {"0329","0330","0331","0402","0403","0404","0406","0407","0408","0413","0417","0423","0427","0429","0502","0504","0507","0509","0511"};
 
   TH1F *h_mMeanSignalHits_Apv[4];
   TH1F *h_mMeanNoiseHits_Apv[4];
@@ -64,7 +63,7 @@ void plotSignalTS_HV140V_APV(int apv = 1, int phibin = 1)
   TH1F *h_mSignalClusters_Apv[numOfTS][4];
   for(int i_ts = 0; i_ts < numOfTS; ++i_ts)
   {
-    string inputfile = Form("../../output/timesequence/FstQAStudy_HV140V_withPed_Th4o5Tb3_%s2020.root",date[i_ts].c_str());
+    string inputfile = Form("../../output/timesequence/FstQAStudy_HV140V_Th4.5Tb3_withPed_woCMNCorr_%s2020.root",date[i_ts].c_str());
     cout << "open inputfile: " << inputfile.c_str() << endl;
     File_InPut[i_ts] = TFile::Open(inputfile.c_str());
 
