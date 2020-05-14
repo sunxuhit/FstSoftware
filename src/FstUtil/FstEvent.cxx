@@ -8,14 +8,15 @@ ClassImp(FstEvent)
 //------------------------------------------
 FstEvent::FstEvent()
 {
-  mNumOfHits        = 0;
-  mNumOfFstHits     = 0;
-  mNumOfClusters    = 0;
-  mNumOfFstClusters = 0;
-  mNumOfTracks      = 0;
-  mNumOfRawHitTracks = 0;
-  mNumOfClusterTracks = 0;
-  mEventId          = -1;
+  mNumOfHits               = 0;
+  mNumOfFstHits            = 0;
+  mNumOfClusters           = 0;
+  mNumOfFstClusters_Simple = 0;
+  mNumOfFstClusters_Scan   = 0;
+  mNumOfTracks             = 0;
+  mNumOfRawHitTracks       = 0;
+  mNumOfClusterTracks      = 0;
+  mEventId                 = -1;
 
   mRawHits  = new TClonesArray("FstRawHit", 10);
   mClusters = new TClonesArray("FstCluster", 10);
@@ -95,7 +96,8 @@ FstCluster* FstEvent::createCluster()
 void FstEvent::clearClustersList()
 {
   mNumOfClusters = 0;
-  mNumOfFstClusters = 0;
+  mNumOfFstClusters_Simple = 0;
+  mNumOfFstClusters_Scan = 0;
   mClusters->Clear();
 }
 
@@ -109,14 +111,24 @@ FstCluster* FstEvent::getCluster(int i_cluster) const
   return i_cluster < mNumOfClusters ? (FstCluster*)((*mClusters)[i_cluster]) : NULL;
 }
 
-void FstEvent::setNumFstClusters(int numOfFstClusters)
+void FstEvent::setNumFstClusters_Simple(int numOfFstClusters)
 {
-  mNumOfFstClusters = numOfFstClusters;
+  mNumOfFstClusters_Simple = numOfFstClusters;
 }
 
-int FstEvent::getNumFstClusters() const
+int FstEvent::getNumFstClusters_Simple() const
 {
-  return mNumOfFstClusters;
+  return mNumOfFstClusters_Simple;
+}
+
+void FstEvent::setNumFstClusters_Scan(int numOfFstClusters)
+{
+  mNumOfFstClusters_Scan = numOfFstClusters;
+}
+
+int FstEvent::getNumFstClusters_Scan() const
+{
+  return mNumOfFstClusters_Scan;
 }
 // FstCluster
 

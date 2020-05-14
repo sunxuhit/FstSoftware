@@ -485,7 +485,7 @@ void FstQAStudy::fillClusterSize_TrackClusters(FstEvent *fstEvent)
     }
   }
 
-  int numOfFstClusters = fstEvent->getNumFstClusters();
+  int numOfFstClusters = fstEvent->getNumFstClusters_Simple();
   // cout << "numOfFstClusters = " << numOfFstClusters << ",fstClusterVec.size() = " << fstClusterVec.size() << endl;
   if(numOfFstClusters > 0)
   {
@@ -671,7 +671,7 @@ void FstQAStudy::fillSignalQA(FstEvent *fstEvent)
       fstClusterVec.push_back(fstCluster);
     }
   }
-  int numOfFstClusters = fstEvent->getNumFstClusters();
+  int numOfFstClusters = fstEvent->getNumFstClusters_Simple();
   if(numOfFstClusters > 0)
   {
     for(int i_cluster = 0; i_cluster < numOfFstClusters; ++i_cluster)

@@ -28,6 +28,11 @@ namespace FST
   const double phiMax = TMath::Pi()*15.0/180.0; // 64.0*FST::pitchPhi;
   const double phiMin = 4.0*pitchPhi;
 
+  // FST Clustering
+  const int mFstNumSensorsPerModule = 3; // 0 for APV 0-3(1-4) on inner sector | 1 for APV 4&5(5&6) on outer sector | 2 for APV 6&7(7&8) on outer sector
+  const int mFstNumPhiSegPerSensor = 128; // 128 for sensor 0 | 64 for sensor 1 & 2
+  const int mFstNumRstripPerSensor = 4;
+
   // IST Cosmic Test Stand Geometry
   const int noRows    = 64; // for one group of sensors
   const int noColumns = 24;

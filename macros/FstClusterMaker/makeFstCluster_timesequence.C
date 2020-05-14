@@ -4,7 +4,7 @@
 
 R__LOAD_LIBRARY(../../lib/libFstClusterMaker.dylib)
 
-int makeFstCluster_timesequence(string hv = "HV140V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 3, float nFstThresholdCut = 2.0, string date = "04022020")
+int makeFstCluster_timesequence(string hv = "HV140V", bool isSavePed = true, bool isApplyCMNCorr = false, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 3, float nFstThresholdCut = 2.0, string date = "04022020")
 {
   std::cout << "gSystem::Load <- libFstClusterMaker.dylib" << endl;
 

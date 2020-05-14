@@ -167,7 +167,7 @@ int FstClusterMaker::Make()
 
   long NumOfEvents = (long)mChainInPut->GetEntries();
   // if(NumOfEvents > 1000) NumOfEvents = 1000;
-  // NumOfEvents = 10000;
+  // NumOfEvents = 1000;
   mChainInPut->GetEntry(0);
 
   for(int i_event = 0; i_event < NumOfEvents; ++i_event)
@@ -670,14 +670,10 @@ int FstClusterMaker::Make()
       mFstEvent->clearClustersList();
       // std::vector<FstCluster *> cluster_simple = findCluster_Simple(rawHitVec_orig);
       std::vector<FstCluster *> cluster_simple = findCluster_Simple(rawHitsVec_Used);
-      int nClusters = cluster_simple.size();
-      int numOfFstClusters = 0;
-      for(int i_cluster = 0; i_cluster < nClusters; ++i_cluster)
+      int nClusters_simple = cluster_simple.size();
+      int numOfFstClusters_simple = 0;
+      for(int i_cluster = 0; i_cluster < nClusters_simple; ++i_cluster)
       {
-	cluster_simple[i_cluster]->setMeanX(getMeanX(cluster_simple[i_cluster]->getLayer(),cluster_simple[i_cluster]->getMeanColumn()));
-	cluster_simple[i_cluster]->setMeanY(getMeanY(cluster_simple[i_cluster]->getLayer(),cluster_simple[i_cluster]->getMeanRow()));
-	cluster_simple[i_cluster]->setClusterId(i_cluster);
-
 	mFstCluster = mFstEvent->createCluster();
 	mFstCluster->setLayer(cluster_simple[i_cluster]->getLayer());
 	mFstCluster->setSensor(cluster_simple[i_cluster]->getSensor());
@@ -720,9 +716,60 @@ int FstClusterMaker::Make()
 	  mFstClusteredRawHit->setDefaultTb(rawHitsVec[i_hit]->getDefaultTb());
 	  mFstClusteredRawHit->setIsHit(rawHitsVec[i_hit]->getIsHit());
 	}
-	if(mFstCluster->getLayer() == 0) numOfFstClusters++;
+	if(mFstCluster->getLayer() == 0) numOfFstClusters_simple++;
       }
-      mFstEvent->setNumFstClusters(numOfFstClusters);
+      mFstEvent->setNumFstClusters_Simple(numOfFstClusters_simple);
+
+      std::vector<FstCluster *> cluster_scan = findCluster_Scan(rawHitsVec_Used);
+      int nClusters_scan = cluster_scan.size();
+      int numOfFstClusters_scan = 0;
+      for(int i_cluster = 0; i_cluster < nClusters_scan; ++i_cluster)
+      {
+	mFstCluster = mFstEvent->createCluster();
+	mFstCluster->setLayer(cluster_scan[i_cluster]->getLayer());
+	mFstCluster->setSensor(cluster_scan[i_cluster]->getSensor());
+	mFstCluster->setMeanColumn(cluster_scan[i_cluster]->getMeanColumn());
+	mFstCluster->setMeanRow(cluster_scan[i_cluster]->getMeanRow());
+	mFstCluster->setMeanX(cluster_scan[i_cluster]->getMeanX());
+	mFstCluster->setMeanY(cluster_scan[i_cluster]->getMeanY());
+	mFstCluster->setTotCharge(cluster_scan[i_cluster]->getTotCharge());
+	mFstCluster->setMaxTb(cluster_scan[i_cluster]->getMaxTb());
+	mFstCluster->setClusterType(cluster_scan[i_cluster]->getClusterType());
+	mFstCluster->setNRawHits(cluster_scan[i_cluster]->getNRawHits());
+	mFstCluster->setNRawHitsR(cluster_scan[i_cluster]->getNRawHitsR());
+	mFstCluster->setNRawHitsPhi(cluster_scan[i_cluster]->getNRawHitsPhi());
+	mFstCluster->setClusterId(cluster_scan[i_cluster]->getClusterId());
+	
+	std::vector<FstRawHit *> rawHitsVec = cluster_scan[i_cluster]->getRawHitVec(); // get raw hits vec from cluster finder
+	mFstCluster->clearRawHitsList(); // set up FstRawHit in the FstCluster
+	for(int i_hit = 0; i_hit < rawHitsVec.size(); ++i_hit)
+	{
+	  // mFstCluster->setHitId(i_hit, rawHitsVec[i_hit]->getHitId());
+	  mFstClusteredRawHit = mFstCluster->createRawHit();
+	  mFstClusteredRawHit->setLayer(rawHitsVec[i_hit]->getLayer());
+	  mFstClusteredRawHit->setSensor(rawHitsVec[i_hit]->getSensor());
+	  mFstClusteredRawHit->setAPV(rawHitsVec[i_hit]->getAPV());
+	  mFstClusteredRawHit->setChannel(rawHitsVec[i_hit]->getChannel());
+	  mFstClusteredRawHit->setColumn(rawHitsVec[i_hit]->getColumn());
+	  mFstClusteredRawHit->setRow(rawHitsVec[i_hit]->getRow());
+	  mFstClusteredRawHit->setPosX(rawHitsVec[i_hit]->getPosX());
+	  mFstClusteredRawHit->setPosY(rawHitsVec[i_hit]->getPosY());
+	  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+	  {
+	    mFstClusteredRawHit->setPedMean(rawHitsVec[i_hit]->getPedMean(i_tb), i_tb);
+	    mFstClusteredRawHit->setPedStdDev(rawHitsVec[i_hit]->getPedStdDev(i_tb), i_tb);
+	    mFstClusteredRawHit->setPedRMS(rawHitsVec[i_hit]->getPedRMS(i_tb), i_tb);
+	    mFstClusteredRawHit->setCharge(rawHitsVec[i_hit]->getCharge(i_tb), i_tb);
+	  }
+	  // mFstRawHit->setCharge(rawHitVec_orig[i_hit]->getCharge(rawHitVec_orig[i_hit]->getMaxTb()),rawHitVec_orig[i_hit]->getMaxTb());
+	  mFstClusteredRawHit->setMaxTb(rawHitsVec[i_hit]->getMaxTb());
+	  mFstClusteredRawHit->setHitId(rawHitsVec[i_hit]->getHitId());
+	  mFstClusteredRawHit->setDefaultTb(rawHitsVec[i_hit]->getDefaultTb());
+	  mFstClusteredRawHit->setIsHit(rawHitsVec[i_hit]->getIsHit());
+	}
+	if(mFstCluster->getLayer() == 0) numOfFstClusters_scan++;
+      }
+      mFstEvent->setNumFstClusters_Scan(numOfFstClusters_scan);
 
       // set up FstTrack 
       mFstEvent->clearTracksList(); // FstTrack
@@ -1490,8 +1537,6 @@ void FstClusterMaker::writeHitDisplay()
 //--------------cluster with Simple Algorithm---------------------
 std::vector<FstCluster *> FstClusterMaker::findCluster_Simple(std::vector<FstRawHit *> rawHitsVec_orig)
 {
-  double meanRow = 0., meanColumn = 0.;
-  double totAdc = 0.;
   int nRawHits = 1, nRawHitsR = 1, nRawHitsPhi = 1;
 
   int numOfHits = rawHitsVec_orig.size();
@@ -1506,6 +1551,8 @@ std::vector<FstCluster *> FstClusterMaker::findCluster_Simple(std::vector<FstRaw
   // find cluster
   std::vector<FstCluster *> clustersVec_Simple;
   clustersVec_Simple.clear();
+  int clusterId = 0;
+
   if(rawHitsVec.size() > 0)
   {
     // set 1st cluster to 1st hit
@@ -1517,6 +1564,8 @@ std::vector<FstCluster *> FstClusterMaker::findCluster_Simple(std::vector<FstRaw
     fstCluster_tmp->setSensor((*rawHitsIt)->getSensor());
     fstCluster_tmp->setMeanColumn((*rawHitsIt)->getColumn());
     fstCluster_tmp->setMeanRow((*rawHitsIt)->getRow());
+    fstCluster_tmp->setMeanX((*rawHitsIt)->getPosX());
+    fstCluster_tmp->setMeanY((*rawHitsIt)->getPosY());
     fstCluster_tmp->setTotCharge((*rawHitsIt)->getCharge((*rawHitsIt)->getMaxTb()));
     fstCluster_tmp->setMaxTb((*rawHitsIt)->getMaxTb());
     fstCluster_tmp->setClusterType(1);
@@ -1524,6 +1573,7 @@ std::vector<FstCluster *> FstClusterMaker::findCluster_Simple(std::vector<FstRaw
     fstCluster_tmp->setNRawHitsR(nRawHitsR);
     fstCluster_tmp->setNRawHitsPhi(nRawHitsPhi);
     fstCluster_tmp->addRawHit((*rawHitsIt)); // save hits for ith cluster
+    fstCluster_tmp->setClusterId(clusterId);
 
     clustersVec_Simple.push_back(fstCluster_tmp);
 
@@ -1555,17 +1605,23 @@ std::vector<FstCluster *> FstClusterMaker::findCluster_Simple(std::vector<FstRaw
 	      tempSumAdc = (*clusterIt)->getTotCharge() + currentAdc;
 	      weight = currentAdc/tempSumAdc;
 
-	      int layer_temp          = (*clusterIt)->getLayer();
-	      int sensor_temp         = (*clusterIt)->getSensor();
-	      double meanColumn_temp  = (1.0 - weight) * (*clusterIt)->getMeanColumn() + weight * (*rawHitsIt)->getColumn();
-	      double meanRow_temp     = (1.0 - weight) * (*clusterIt)->getMeanRow()    + weight * (*rawHitsIt)->getRow();
-	      double meanTb_temp = (1.0 - weight) * (*clusterIt)->getMaxTb()      + weight * (*rawHitsIt)->getMaxTb();
-	      double totAdc_temp      = tempSumAdc;
+	      int layer_temp         = (*clusterIt)->getLayer();
+	      int sensor_temp        = (*clusterIt)->getSensor();
+	      double meanColumn_temp = (1.0 - weight) * (*clusterIt)->getMeanColumn() + weight * (*rawHitsIt)->getColumn();
+	      double meanRow_temp    = (1.0 - weight) * (*clusterIt)->getMeanRow()    + weight * (*rawHitsIt)->getRow();
+	      double meanX_temp      = (1.0 - weight) * (*clusterIt)->getMeanX()      + weight * (*rawHitsIt)->getPosX();
+	      double meanY_temp      = (1.0 - weight) * (*clusterIt)->getMeanY()      + weight * (*rawHitsIt)->getPosY();
+	      double meanTb_temp     = (1.0 - weight) * (*clusterIt)->getMaxTb()      + weight * (*rawHitsIt)->getMaxTb();
+	      double totAdc_temp     = tempSumAdc;
+	      // double meanX_temp      = this->getMeanX(layer_temp,meanColumn_temp);
+	      // double meanY_temp      = this->getMeanY(layer_temp,meanRow_temp);
 
 	      (*clusterIt)->setLayer(layer_temp);
 	      (*clusterIt)->setSensor(sensor_temp);
 	      (*clusterIt)->setMeanColumn(meanColumn_temp);
 	      (*clusterIt)->setMeanRow(meanRow_temp);
+	      (*clusterIt)->setMeanX(meanX_temp);
+	      (*clusterIt)->setMeanY(meanY_temp);
 	      (*clusterIt)->setTotCharge(totAdc_temp);
 	      (*clusterIt)->setMaxTb(meanTb_temp);
 	      (*clusterIt)->setClusterType(1);
@@ -1573,6 +1629,7 @@ std::vector<FstCluster *> FstClusterMaker::findCluster_Simple(std::vector<FstRaw
 	      (*clusterIt)->setNRawHitsR(nRawHitsR);
 	      (*clusterIt)->setNRawHitsPhi(nRawHitsPhi);
 	      (*clusterIt)->addRawHit((*rawHitsIt));
+	      (*clusterIt)->setClusterId(clusterId);
 
 	      //include the hit to the cluster's component vector
 	      int itPosition = std::distance(clusteredHitsVec.begin(), clusteredHitsIt);
@@ -1595,6 +1652,7 @@ std::vector<FstCluster *> FstClusterMaker::findCluster_Simple(std::vector<FstRaw
 	if(rawHitsVec.size() < 1) continue;
 
 	rawHitsIt = rawHitsVec.begin();
+	clusterId++;
 
 	FstCluster *fstCluster_next = new FstCluster();
 	fstCluster_next->Clear();
@@ -1602,6 +1660,8 @@ std::vector<FstCluster *> FstClusterMaker::findCluster_Simple(std::vector<FstRaw
 	fstCluster_next->setSensor((*rawHitsIt)->getSensor());
 	fstCluster_next->setMeanColumn((*rawHitsIt)->getColumn());
 	fstCluster_next->setMeanRow((*rawHitsIt)->getRow());
+	fstCluster_next->setMeanX((*rawHitsIt)->getPosX());
+	fstCluster_next->setMeanY((*rawHitsIt)->getPosY());
 	fstCluster_next->setTotCharge((*rawHitsIt)->getCharge((*rawHitsIt)->getMaxTb()));
 	fstCluster_next->setMaxTb((*rawHitsIt)->getMaxTb());
 	fstCluster_next->setClusterType(1);
@@ -1609,6 +1669,7 @@ std::vector<FstCluster *> FstClusterMaker::findCluster_Simple(std::vector<FstRaw
 	fstCluster_next->setNRawHitsR(1);
 	fstCluster_next->setNRawHitsPhi(1);
 	fstCluster_next->addRawHit((*rawHitsIt)); // save hits for ith cluster
+	fstCluster_next->setClusterId(clusterId);
 
 	rawHitsVec.erase(rawHitsIt); //remove the new clustered 1st hit from the hits list
 
@@ -1623,6 +1684,207 @@ std::vector<FstCluster *> FstClusterMaker::findCluster_Simple(std::vector<FstRaw
   // cout << "rawHitsVec_orig.size = " << rawHitsVec_orig.size() << ", clustersVec_Simple.size = " << clustersVec_Simple.size() << endl;
 
   return clustersVec_Simple;
+}
+//--------------cluster with Simple Algorithm---------------------
+
+//--------------cluster with Simple Algorithm---------------------
+std::vector<FstCluster *> FstClusterMaker::findCluster_Scan(std::vector<FstRawHit *> rawHitsVec_orig)
+{
+  // temp vector for raw hits and clusters
+  // Merge all hits in the same phi-seg for FST Cosmic Test Stand
+  // => might separate clusters in R strip in the future
+  // then form clusters in neighboring phi seg
+  // applied to sensor 1 only right now => can be extended to the full module
+  // need to think geometry more careful when both inner and outer sectors are used
+  // => one might need to be fliped by 180 degree w.r.t. to original position 
+  std::vector<FstRawHit *> rawHitsVec[FST::mFstNumSensorsPerModule][FST::mFstNumPhiSegPerSensor];
+  std::vector<FstCluster *> clustersVec[FST::mFstNumSensorsPerModule][FST::mFstNumPhiSegPerSensor];
+  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
+  {
+    for(int i_phi = 0; i_phi < FST::mFstNumPhiSegPerSensor; ++i_phi)
+    {
+      rawHitsVec[i_sensor][i_phi].reserve(FST::mFstNumRstripPerSensor);
+      clustersVec[i_sensor][i_phi].reserve(FST::mFstNumRstripPerSensor);
+    }
+  }
+
+  // copy raw hits to the temp container
+  int numOfHits = rawHitsVec_orig.size();
+  for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
+  {
+    int layer = rawHitsVec_orig[i_hit]->getLayer();
+    int sensor = rawHitsVec_orig[i_hit]->getSensor();
+    int row = rawHitsVec_orig[i_hit]->getRow(); // phi segmentation
+    if(layer == 0) rawHitsVec[sensor][row].push_back(rawHitsVec_orig[i_hit]); // findCluster_Scan for FST only
+  }
+
+  // start cluster finder
+  std::vector<FstCluster *> clustersVec_Scan;
+  int clusterId = 100;
+
+  FstRawHit *rawHitFirst = 0;
+  FstRawHit *rawHitNext = 0;
+
+  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
+  {
+    // step 1: do clustering for each phi segmentation
+    for(int i_phi = 0; i_phi < FST::mFstNumPhiSegPerSensor; ++i_phi)
+    {
+      if( !rawHitsVec[i_sensor][i_phi].empty() )
+      {
+	FstCluster *fstClusterTemp = new FstCluster();
+	rawHitFirst= rawHitsVec[i_sensor][i_phi].back();
+	rawHitsVec[i_sensor][i_phi].pop_back();
+
+	fstClusterTemp->Clear();
+	fstClusterTemp->setLayer(rawHitFirst->getLayer());
+	fstClusterTemp->setSensor(rawHitFirst->getSensor());
+	fstClusterTemp->setMeanColumn(rawHitFirst->getColumn());
+	fstClusterTemp->setMeanRow(rawHitFirst->getRow());
+	fstClusterTemp->setMeanX(rawHitFirst->getPosX());
+	fstClusterTemp->setMeanY(rawHitFirst->getPosY());
+	fstClusterTemp->setTotCharge(rawHitFirst->getCharge(rawHitFirst->getMaxTb()));
+	fstClusterTemp->setMaxTb(rawHitFirst->getMaxTb());
+	fstClusterTemp->setClusterType(2);
+	fstClusterTemp->setNRawHits(1);
+	fstClusterTemp->setNRawHitsR(1);
+	fstClusterTemp->setNRawHitsPhi(1);
+	fstClusterTemp->addRawHit(rawHitFirst); // save hits for ith cluster
+	fstClusterTemp->setClusterId(clusterId); // save hits for ith cluster
+
+	while( !rawHitsVec[i_sensor][i_phi].empty() ) 
+	{ // loop over the rest of hits in rawHitsVec
+	  rawHitNext = rawHitsVec[i_sensor][i_phi].back();
+	  rawHitsVec[i_sensor][i_phi].pop_back();
+
+	  int nRawHits_temp  = fstClusterTemp->getNRawHits() + 1;
+	  int nRawHitsR_temp = fstClusterTemp->getNRawHitsR() + 1; //same phi
+
+	  int maxTb_temp    = rawHitNext->getMaxTb();
+	  double currentAdc = rawHitNext->getCharge(maxTb_temp);
+	  double tempSumAdc = fstClusterTemp->getTotCharge() + currentAdc;
+	  double weight     = currentAdc/tempSumAdc;
+
+	  int layer_temp         = fstClusterTemp->getLayer();
+	  int sensor_temp        = fstClusterTemp->getSensor();
+	  double meanColumn_temp = (1.0 - weight)*fstClusterTemp->getMeanColumn() + weight*rawHitNext->getColumn();
+	  double meanRow_temp    = (1.0 - weight)*fstClusterTemp->getMeanRow()    + weight*rawHitNext->getRow();
+	  double meanX_temp      = (1.0 - weight)*fstClusterTemp->getMeanX()      + weight*rawHitNext->getPosX();
+	  double meanY_temp      = (1.0 - weight)*fstClusterTemp->getMeanY()      + weight*rawHitNext->getPosY();
+	  double meanTb_temp     = (1.0 - weight)*fstClusterTemp->getMaxTb()      + weight*rawHitNext->getMaxTb();
+	  double totAdc_temp     = tempSumAdc;
+	  // double meanX_temp      = this->getMeanX(layer_temp,meanColumn_temp);
+	  // double meanY_temp      = this->getMeanY(layer_temp,meanRow_temp);
+
+	  fstClusterTemp->setLayer(layer_temp);
+	  fstClusterTemp->setSensor(sensor_temp);
+	  fstClusterTemp->setMeanColumn(meanColumn_temp);
+	  fstClusterTemp->setMeanRow(meanRow_temp);
+	  fstClusterTemp->setMeanX(meanX_temp);
+	  fstClusterTemp->setMeanY(meanY_temp);
+	  fstClusterTemp->setTotCharge(totAdc_temp);
+	  fstClusterTemp->setMaxTb(meanTb_temp);
+	  fstClusterTemp->setClusterType(2);
+	  fstClusterTemp->setNRawHits(nRawHitsR_temp);
+	  fstClusterTemp->setNRawHitsR(nRawHitsR_temp);
+	  fstClusterTemp->addRawHit(rawHitNext);
+	  fstClusterTemp->setClusterId(clusterId); // save hits for ith cluster
+	}
+	clustersVec[i_sensor][i_phi].push_back(fstClusterTemp);
+	clusterId++;
+      }
+    }
+
+    // step 2: do clustering for neighboring phi segmentation
+    std::vector<FstCluster *>::iterator clusterIt1, clusterIt2;
+    for(int phiIndex1 = 0; phiIndex1 < FST::mFstNumPhiSegPerSensor-1; ++phiIndex1)
+    {
+      int phiIndex2 = phiIndex1 + 1;
+
+      if(clustersVec[i_sensor][phiIndex1].size() > 0 && clustersVec[i_sensor][phiIndex2].size() > 0)
+      {
+	for(clusterIt1 = clustersVec[i_sensor][phiIndex1].begin(); clusterIt1 != clustersVec[i_sensor][phiIndex1].end() && !clustersVec[i_sensor][phiIndex1].empty(); clusterIt1++)
+	{
+	  for(clusterIt2 = clustersVec[i_sensor][phiIndex2].begin(); clusterIt2 != clustersVec[i_sensor][phiIndex2].end() && !clustersVec[i_sensor][phiIndex2].empty(); clusterIt2++)
+	  {
+	    // distance of mean RStrip between two clusters in neighboring phi segmentation
+	    // currently, there is only one cluster for each phi segmentation
+	    double columnDistance = (*clusterIt1)->getMeanColumn() - (*clusterIt2)->getMeanColumn();
+	    if(TMath::Abs(columnDistance) < 3.5)
+	    {
+	      clusterId = (*clusterIt1)->getClusterId();
+	      if( (*clusterIt1)->getTotCharge() < (*clusterIt2)-> getTotCharge() )
+	      {
+		clusterId = (*clusterIt2)->getClusterId();
+	      }
+
+	      double totCharge_temp  = (*clusterIt1)->getTotCharge() + (*clusterIt2)->getTotCharge();
+	      int layer_temp         = (*clusterIt1)->getLayer();
+	      int sensor_temp        = (*clusterIt1)->getSensor();
+	      double meanColumn_temp = (*clusterIt1)->getMeanColumn()*(*clusterIt1)->getTotCharge()/totCharge_temp + (*clusterIt2)->getMeanColumn()*(*clusterIt2)->getTotCharge()/totCharge_temp;
+	      double meanRow_temp    = (*clusterIt1)->getMeanRow()*(*clusterIt1)->getTotCharge()/totCharge_temp    + (*clusterIt2)->getMeanRow()*(*clusterIt2)->getTotCharge()/totCharge_temp;
+	      double meanX_temp      = (*clusterIt1)->getMeanX()*(*clusterIt1)->getTotCharge()/totCharge_temp      + (*clusterIt2)->getMeanX()*(*clusterIt2)->getTotCharge()/totCharge_temp;
+	      double meanY_temp      = (*clusterIt1)->getMeanY()*(*clusterIt1)->getTotCharge()/totCharge_temp      + (*clusterIt2)->getMeanY()*(*clusterIt2)->getTotCharge()/totCharge_temp;
+	      double meanTb_temp     = (*clusterIt1)->getMaxTb()*(*clusterIt1)->getTotCharge()/totCharge_temp      + (*clusterIt2)->getMaxTb()*(*clusterIt2)->getTotCharge()/totCharge_temp;
+	      int nRawHits_temp      = (*clusterIt1)->getNRawHits() + (*clusterIt2)->getNRawHits();
+	      int nRawHitsR_temp     = (*clusterIt1)->getNRawHitsR() + (*clusterIt2)->getNRawHitsR();
+	      int nRawHitsPhi_temp   = (*clusterIt1)->getNRawHitsPhi() + (*clusterIt2)->getNRawHitsPhi();
+	      // double meanX_temp      = this->getMeanX(layer_temp,meanColumn_temp);
+	      // double meanY_temp      = this->getMeanY(layer_temp,meanRow_temp);
+
+	      (*clusterIt2)->setLayer(layer_temp);
+	      (*clusterIt2)->setSensor(sensor_temp);
+	      (*clusterIt2)->setMeanColumn(meanColumn_temp);
+	      (*clusterIt2)->setMeanRow(meanRow_temp);
+	      (*clusterIt2)->setMeanX(meanX_temp);
+	      (*clusterIt2)->setMeanY(meanY_temp);
+	      (*clusterIt2)->setTotCharge(totCharge_temp);
+	      (*clusterIt2)->setMaxTb(meanTb_temp);
+	      (*clusterIt2)->setClusterType(2);
+	      (*clusterIt2)->setNRawHits(nRawHits_temp);
+	      (*clusterIt2)->setNRawHitsR(nRawHitsR_temp);
+	      (*clusterIt2)->setNRawHitsPhi(nRawHitsR_temp);
+	      (*clusterIt2)->setClusterId(clusterId);
+
+	      std::vector<FstRawHit *> rawHitsVec_clusterIt1 = (*clusterIt1)->getRawHitVec();
+	      for(int i_hit = 0; i_hit < rawHitsVec_clusterIt1.size(); ++i_hit)
+	      {
+		(*clusterIt2)->addRawHit(rawHitsVec_clusterIt1[i_hit]);
+	      }
+
+	      int distance1 = std::distance(clustersVec[i_sensor][phiIndex1].begin(), clusterIt1);
+	      clustersVec[i_sensor][phiIndex1].erase(clusterIt1);
+
+	      if(distance1 == 0)
+		clusterIt1 = clustersVec[i_sensor][phiIndex1].begin();
+	      else
+		--clusterIt1;
+	    }
+	  }
+	}
+      }
+    }
+  }
+
+  // fill output container
+  std::vector<FstCluster *>::iterator clusterIt;
+  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
+  {
+    for(int i_phi = 0; i_phi < FST::mFstNumPhiSegPerSensor; ++i_phi)
+    {
+      if(clustersVec[i_sensor][i_phi].size() <= 0) continue;
+
+      for(clusterIt = clustersVec[i_sensor][i_phi].begin(); clusterIt != clustersVec[i_sensor][i_phi].end(); ++clusterIt)
+      {
+	clustersVec_Scan.push_back(*clusterIt);
+      }
+
+      rawHitsVec[i_sensor][i_phi].clear();
+      clustersVec[i_sensor][i_phi].clear();
+    }
+  }
+
+  return clustersVec_Scan;
 }
 //--------------cluster with Simple Algorithm---------------------
 

@@ -13,7 +13,8 @@ class FstEvent : public TObject
     int mNumOfHits;
     int mNumOfFstHits;
     int mNumOfClusters;
-    int mNumOfFstClusters;
+    int mNumOfFstClusters_Simple;
+    int mNumOfFstClusters_Scan;
     int mNumOfTracks;
     int mNumOfRawHitTracks;
     int mNumOfClusterTracks;
@@ -38,8 +39,10 @@ class FstEvent : public TObject
     void clearClustersList();
     int getNumClusters() const;
     FstCluster* getCluster(int i_cluster) const;
-    void setNumFstClusters(int numOfFstClusters);
-    int getNumFstClusters() const;
+    void setNumFstClusters_Simple(int numOfFstClusters);
+    int getNumFstClusters_Simple() const;
+    void setNumFstClusters_Scan(int numOfFstClusters);
+    int getNumFstClusters_Scan() const;
 
     FstTrack* createTrack();
     void clearTracksList();
