@@ -116,30 +116,41 @@ class FstQAStudy : public TObject
     TProfile *p_mNHitsPhi_phiP[4];
 
     // Signal & noise for max time bin
+    // hits
     TProfile2D *p_mPedMap_FST;
     TProfile2D *p_mSigMap_FST;
     TH1F *h_mSignalHits_FST;
     TH1F *h_mNoiseHits_FST;
     TH1F *h_mSNRatioHits_FST;
-    TH1F *h_mSignalClusters_FST;
 
     TH1F *h_mMaxTbHits_Rstrip[4];
-    TH1F *h_mMaxTbClusters_Rstrip[4];
     TH1F *h_mSignalHits_Rstrip[4];
     TH1F *h_mNoiseHits_Rstrip[4];
     TH1F *h_mSNRatioHits_Rstrip[4];
-    TH1F *h_mSignalClusters_Rstrip[4];
+
     TH1F *h_mSignalHits_Rstrip_TimeBin[4][FST::numTBins]; // time bin differential
     TH1F *h_mNoiseHits_Rstrip_TimeBin[4][FST::numTBins];
     TH1F *h_mSNRatioHits_Rstrip_TimeBin[4][FST::numTBins];
-    TH1F *h_mSignalClusters_Rstrip_TimeBin[4][FST::numTBins];
 
     TH1F *h_mMaxTbHits_Apv[2][4][2]; // APV chips & R & phi: 0-63 & 64-127
-    TH1F *h_mMaxTbClusters_Apv[2][4][2];
     TH1F *h_mSignalHits_Apv[2][4][2];
     TH1F *h_mNoiseHits_Apv[2][4][2];
     TH1F *h_mSNRatioHits_Apv[2][4][2];
-    TH1F *h_mSignalClusters_Apv[2][4][2];
+
+    //clusters
+    TH1F *h_mFstSimpleClustersSignal;
+    TH1F *h_mFstSimpleClustersSignal_Rstrip[4];
+    TH1F *h_mFstSimpleClustersMaxTb_Rstrip[4];
+    TH1F *h_mFstSimpleClustersSignal_Rstrip_TimeBin[4][FST::numTBins];
+    TH1F *h_mFstSimpleClustersMaxTb_Apv[2][4][2];
+    TH1F *h_mFstSimpleClustersSignal_Apv[2][4][2];
+
+    TH1F *h_mFstScanClustersSignal;
+    TH1F *h_mFstScanClustersSignal_Rstrip[4];
+    TH1F *h_mFstScanClustersMaxTb_Rstrip[4];
+    TH1F *h_mFstScanClustersSignal_Rstrip_TimeBin[4][FST::numTBins];
+    TH1F *h_mFstScanClustersMaxTb_Apv[2][4][2];
+    TH1F *h_mFstScanClustersSignal_Apv[2][4][2];
 
     // Output TTree for Event Display
     bool mApplyCMNCorr;
@@ -149,7 +160,8 @@ class FstQAStudy : public TObject
     int mNumOfIst1RawHits;
     int mNumOfIst2RawHits;
     int mNumOfIst3RawHits;
-    int mNumOfFstClusters;
+    int mNumOfFstSimpleClusters;
+    int mNumOfFstScanClusters;
     int mNumOfIst1Clusters;
     int mNumOfIst2Clusters;
     int mNumOfIst3Clusters;
@@ -167,16 +179,19 @@ class FstQAStudy : public TObject
     TH2F *h_mFstRawPedsDisplay_bTh;
     TH2F *h_mFstMaxTbDisplay_bTh;
 
-    TH2F *h_mFstClustersDisplay;
+    TH2F *h_mFstSimpleClustersDisplay;
+    TH2F *h_mFstScanClustersDisplay;
     TH2F *h_mHitTracksDisplay;
     TH2F *h_mClusterTracksDisplay;
 
-    TGraph *g_mFstClustersDisplay; // display only
+    TGraph *g_mFstSimpleClustersDisplay; // display only
+    TGraph *g_mFstScanClustersDisplay; // display only
     TGraph *g_mHitTracksDisplay;
     TGraph *g_mClusterTracksDisplay;
 
     TH1F *h_mNumFstRawHitsDisplay;
-    TH1F *h_mNumFstClustersDisplay;
+    TH1F *h_mNumFstSimpleClustersDisplay;
+    TH1F *h_mNumFstScanClustersDisplay;
 
     // Input TChain for hits and clusters
     TChain *mChainInPut; // input TTree

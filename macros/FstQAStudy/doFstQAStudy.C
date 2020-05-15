@@ -4,7 +4,7 @@
 
 R__LOAD_LIBRARY(../../lib/libFstQAStudy.dylib)
 
-int doFstQAStudy(string hv = "HV140V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 3)
+int doFstQAStudy(string hv = "HV200V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 2)
 {
   std::cout << "gSystem::Load <- libFstQAStudy.dylib" << endl;
 

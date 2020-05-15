@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotNumOfRawHits(string hv = "HV140V", bool isSavePed = true, bool isApplyCMNCorr = false, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 3)
+void plotNumOfRawHits(string hv = "HV200V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 2)
 {
   std::string pedMode = "withPed";
   if(!isSavePed) pedMode = "woPed";
@@ -26,7 +26,8 @@ void plotNumOfRawHits(string hv = "HV140V", bool isSavePed = true, bool isApplyC
 
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TH1F *h_mNumFstRawHitsDisplay = (TH1F*)File_InPut->Get("h_mNumFstRawHitsDisplay");
-  TH1F *h_mNumFstClustersDisplay = (TH1F*)File_InPut->Get("h_mNumFstClustersDisplay");
+  TH1F *h_mNumFstSimpleClustersDisplay = (TH1F*)File_InPut->Get("h_mNumFstSimpleClustersDisplay");
+  TH1F *h_mNumFstScanClustersDisplay = (TH1F*)File_InPut->Get("h_mNumFstScanClustersDisplay");
 
   TCanvas *c_EventDisplay = new TCanvas("c_EventDisplay","c_EventDisplay",10,10,800,400);
   c_EventDisplay->Divide(2,1);
@@ -49,12 +50,22 @@ void plotNumOfRawHits(string hv = "HV140V", bool isSavePed = true, bool isApplyC
   h_mNumFstRawHitsDisplay->Draw();
 
   c_EventDisplay->cd(2);
-  h_mNumFstClustersDisplay->SetTitle("Number of Clusters");
-  // h_mNumFstClustersDisplay->SetStats(0);
-  h_mNumFstClustersDisplay->GetXaxis()->SetTitle("# Clusters");
-  h_mNumFstClustersDisplay->GetXaxis()->SetTitleSize(0.06);
-  h_mNumFstClustersDisplay->GetXaxis()->SetRangeUser(-0.5,44.5);
-  h_mNumFstClustersDisplay->Draw();
+  h_mNumFstSimpleClustersDisplay->SetTitle("Number of Clusters");
+  // h_mNumFstSimpleClustersDisplay->SetStats(0);
+  h_mNumFstSimpleClustersDisplay->GetXaxis()->SetTitle("# Clusters");
+  h_mNumFstSimpleClustersDisplay->GetXaxis()->SetTitleSize(0.06);
+  h_mNumFstSimpleClustersDisplay->GetXaxis()->SetRangeUser(-0.5,44.5);
+  h_mNumFstSimpleClustersDisplay->SetLineColor(1);
+  h_mNumFstSimpleClustersDisplay->Draw();
+  h_mNumFstScanClustersDisplay->SetLineColor(2);
+  h_mNumFstScanClustersDisplay->Draw("same");
+
+  TLegend *leg = new TLegend(0.4,0.6,0.85,0.8);
+  leg->SetBorderSize(0);
+  leg->SetFillColor(10);
+  leg->AddEntry(h_mNumFstSimpleClustersDisplay,"Simple Cluster","L");
+  leg->AddEntry(h_mNumFstScanClustersDisplay,"Scan Cluster","L");
+  leg->Draw("same");
 
   // c_EventDisplay->SaveAs("./figures/NumOfRawHits.eps");
   // c_EventDisplay->SaveAs("./figures/NumOfRawHits.png");

@@ -486,7 +486,6 @@ void FstQAStudy::fillClusterSize_TrackClusters(FstEvent *fstEvent)
   }
 
   int numOfFstClusters = fstEvent->getNumFstClusters_Simple();
-  // cout << "numOfFstClusters = " << numOfFstClusters << ",fstClusterVec.size() = " << fstClusterVec.size() << endl;
   if(numOfFstClusters > 0)
   {
     for(int i_cluster = 0; i_cluster < numOfFstClusters; ++i_cluster)
@@ -549,23 +548,28 @@ void FstQAStudy::initSignalQA()
   h_mSignalHits_FST = new TH1F("h_mSignalHits_FST","h_mSignalHits_FST",200,-0.5,1999.5);
   h_mNoiseHits_FST = new TH1F("h_mNoiseHits_FST","h_mNoiseHits_FST",100,-0.5,99.5);
   h_mSNRatioHits_FST = new TH1F("h_mSNRatioHits_FST","h_mSNRatioHits_FST",200,-0.5,99.5);
-  h_mSignalClusters_FST = new TH1F("h_mSignalClusters_FST","h_mSignalClusters_FST",200,-0.5,1999.5);
+  h_mFstSimpleClustersSignal = new TH1F("h_mFstSimpleClustersSignal","h_mFstSimpleClustersSignal",200,-0.5,1999.5);
+  h_mFstScanClustersSignal = new TH1F("h_mFstScanClustersSignal","h_mFstScanClustersSignal",200,-0.5,1999.5);
 
   for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
   {
     string HistName;
     HistName = Form("h_mMaxTbHits_Rstrip%d",i_rstrip);
     h_mMaxTbHits_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),10,-0.5,9.5);
-    HistName = Form("h_mMaxTbClusters_Rstrip%d",i_rstrip);
-    h_mMaxTbClusters_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),20,-0.5,9.5);
+    HistName = Form("h_mFstSimpleClustersMaxTb_Rstrip%d",i_rstrip);
+    h_mFstSimpleClustersMaxTb_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),20,-0.5,9.5);
+    HistName = Form("h_mFstScanClustersMaxTb_Rstrip%d",i_rstrip);
+    h_mFstScanClustersMaxTb_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),20,-0.5,9.5);
     HistName = Form("h_mSignalHits_Rstrip%d",i_rstrip);
     h_mSignalHits_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
     HistName = Form("h_mNoiseHits_Rstrip%d",i_rstrip);
     h_mNoiseHits_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,99.5);
     HistName = Form("h_mSNRatioHits_Rstrip%d",i_rstrip);
     h_mSNRatioHits_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,99.5);
-    HistName = Form("h_mSignalClusters_Rstrip%d",i_rstrip);
-    h_mSignalClusters_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+    HistName = Form("h_mFstSimpleClustersSignal_Rstrip%d",i_rstrip);
+    h_mFstSimpleClustersSignal_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+    HistName = Form("h_mFstScanClustersSignal_Rstrip%d",i_rstrip);
+    h_mFstScanClustersSignal_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
     {
       HistName = Form("h_mSignalHits_Rstrip%d_TimeBin%d",i_rstrip,i_tb);
@@ -574,8 +578,10 @@ void FstQAStudy::initSignalQA()
       h_mNoiseHits_Rstrip_TimeBin[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,99.5);
       HistName = Form("h_mSNRatioHits_Rstrip%d_TimeBin%d",i_rstrip,i_tb);
       h_mSNRatioHits_Rstrip_TimeBin[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,99.5);
-      HistName = Form("h_mSignalClusters_Rstrip%d_TimeBin%d",i_rstrip,i_tb);
-      h_mSignalClusters_Rstrip_TimeBin[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+      HistName = Form("h_mFstSimpleClustersSignal_Rstrip%d_TimeBin%d",i_rstrip,i_tb);
+      h_mFstSimpleClustersSignal_Rstrip_TimeBin[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+      HistName = Form("h_mFstScanClustersSignal_Rstrip%d_TimeBin%d",i_rstrip,i_tb);
+      h_mFstScanClustersSignal_Rstrip_TimeBin[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
     }
   }
 
@@ -588,16 +594,20 @@ void FstQAStudy::initSignalQA()
 	string HistName;
 	HistName = Form("h_mMaxTbHits_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
 	h_mMaxTbHits_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),10,-0.5,9.5);
-	HistName = Form("h_mMaxTbClusters_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
-	h_mMaxTbClusters_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),20,-0.5,9.5);
+	HistName = Form("h_mFstSimpleClustersMaxTb_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
+	h_mFstSimpleClustersMaxTb_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),20,-0.5,9.5);
+	HistName = Form("h_mFstScanClustersMaxTb_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
+	h_mFstScanClustersMaxTb_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),20,-0.5,9.5);
 	HistName = Form("h_mSignalHits_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
 	h_mSignalHits_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
 	HistName = Form("h_mNoiseHits_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
 	h_mNoiseHits_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,99.5);
 	HistName = Form("h_mSNRatioHits_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
 	h_mSNRatioHits_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,99.5);
-	HistName = Form("h_mSignalClusters_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
-	h_mSignalClusters_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+	HistName = Form("h_mFstSimpleClustersSignal_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
+	h_mFstSimpleClustersSignal_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+	HistName = Form("h_mFstScanClustersSignal_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
+	h_mFstScanClustersSignal_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
       }
     }
   }
@@ -671,36 +681,64 @@ void FstQAStudy::fillSignalQA(FstEvent *fstEvent)
       fstClusterVec.push_back(fstCluster);
     }
   }
-  int numOfFstClusters = fstEvent->getNumFstClusters_Simple();
+  int numOfFstClusters = fstClusterVec.size();
   if(numOfFstClusters > 0)
   {
     for(int i_cluster = 0; i_cluster < numOfFstClusters; ++i_cluster)
     {
       double meanColumn = fstClusterVec[i_cluster]->getMeanColumn();
       double meanRow = fstClusterVec[i_cluster]->getMeanRow();
-      double signal = fstClusterVec[i_cluster]->getTotCharge(); // adc - pedMean
+      double signal = fstClusterVec[i_cluster]->getTotCharge();
       double maxTb = fstClusterVec[i_cluster]->getMaxTb();
-      h_mSignalClusters_FST->Fill(signal);
+      if(fstClusterVec[i_cluster]->getClusterType() == 1)
+      { // Simple Clusters
+	h_mFstSimpleClustersSignal->Fill(signal);
 
-      int column = 0;
-      if(meanColumn > 3.5 && meanColumn <= 4.5) column = 0;
-      if(meanColumn > 4.5 && meanColumn <= 5.5) column = 1;
-      if(meanColumn > 5.5 && meanColumn <= 6.5) column = 2;
-      if(meanColumn > 6.5 && meanColumn <= 7.5) column = 3;
-      h_mMaxTbClusters_Rstrip[column]->Fill(maxTb);
-      h_mSignalClusters_Rstrip[column]->Fill(signal);
-      h_mSignalClusters_Rstrip_TimeBin[column][(int)maxTb]->Fill(signal);
+	int column = 0;
+	if(meanColumn > 3.5 && meanColumn <= 4.5) column = 0;
+	if(meanColumn > 4.5 && meanColumn <= 5.5) column = 1;
+	if(meanColumn > 5.5 && meanColumn <= 6.5) column = 2;
+	if(meanColumn > 6.5 && meanColumn <= 7.5) column = 3;
+	h_mFstSimpleClustersMaxTb_Rstrip[column]->Fill(maxTb);
+	h_mFstSimpleClustersSignal_Rstrip[column]->Fill(signal);
+	h_mFstSimpleClustersSignal_Rstrip_TimeBin[column][(int)maxTb]->Fill(signal);
 
-      int apv = 0;
-      int phibin = 0;
-      if(meanRow >= 0.00 && meanRow < 16.0) {apv = 4; phibin = 0;}
-      if(meanRow >= 16.0 && meanRow < 32.0) {apv = 4; phibin = 1;}
-      if(meanRow >= 32.0 && meanRow < 48.0) {apv = 5; phibin = 0;}
-      if(meanRow >= 48.0 && meanRow < 64.0) {apv = 5; phibin = 1;}
-      if(apv == 4 || apv == 5)
-      {
-	h_mMaxTbClusters_Apv[apv-4][column][phibin]->Fill(maxTb);
-	h_mSignalClusters_Apv[apv-4][column][phibin]->Fill(signal);
+	int apv = 0;
+	int phibin = 0;
+	if(meanRow >= 0.00 && meanRow < 16.0) {apv = 4; phibin = 0;}
+	if(meanRow >= 16.0 && meanRow < 32.0) {apv = 4; phibin = 1;}
+	if(meanRow >= 32.0 && meanRow < 48.0) {apv = 5; phibin = 0;}
+	if(meanRow >= 48.0 && meanRow < 64.0) {apv = 5; phibin = 1;}
+	if(apv == 4 || apv == 5)
+	{
+	  h_mFstSimpleClustersMaxTb_Apv[apv-4][column][phibin]->Fill(maxTb);
+	  h_mFstSimpleClustersSignal_Apv[apv-4][column][phibin]->Fill(signal);
+	}
+      }
+      if(fstClusterVec[i_cluster]->getClusterType() == 2)
+      { // Scan Clusters
+	h_mFstScanClustersSignal->Fill(signal);
+
+	int column = 0;
+	if(meanColumn > 3.5 && meanColumn <= 4.5) column = 0;
+	if(meanColumn > 4.5 && meanColumn <= 5.5) column = 1;
+	if(meanColumn > 5.5 && meanColumn <= 6.5) column = 2;
+	if(meanColumn > 6.5 && meanColumn <= 7.5) column = 3;
+	h_mFstScanClustersMaxTb_Rstrip[column]->Fill(maxTb);
+	h_mFstScanClustersSignal_Rstrip[column]->Fill(signal);
+	h_mFstScanClustersSignal_Rstrip_TimeBin[column][(int)maxTb]->Fill(signal);
+
+	int apv = 0;
+	int phibin = 0;
+	if(meanRow >= 0.00 && meanRow < 16.0) {apv = 4; phibin = 0;}
+	if(meanRow >= 16.0 && meanRow < 32.0) {apv = 4; phibin = 1;}
+	if(meanRow >= 32.0 && meanRow < 48.0) {apv = 5; phibin = 0;}
+	if(meanRow >= 48.0 && meanRow < 64.0) {apv = 5; phibin = 1;}
+	if(apv == 4 || apv == 5)
+	{
+	  h_mFstScanClustersMaxTb_Apv[apv-4][column][phibin]->Fill(maxTb);
+	  h_mFstScanClustersSignal_Apv[apv-4][column][phibin]->Fill(signal);
+	}
       }
     }
   }
@@ -713,22 +751,26 @@ void FstQAStudy::writeSignalQA()
   h_mSignalHits_FST->Write();
   h_mNoiseHits_FST->Write();
   h_mSNRatioHits_FST->Write();
-  h_mSignalClusters_FST->Write();
+  h_mFstSimpleClustersSignal->Write();
+  h_mFstScanClustersSignal->Write();
 
   for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
   {
     h_mMaxTbHits_Rstrip[i_rstrip]->Write();
-    h_mMaxTbClusters_Rstrip[i_rstrip]->Write();
+    h_mFstSimpleClustersMaxTb_Rstrip[i_rstrip]->Write();
+    h_mFstScanClustersMaxTb_Rstrip[i_rstrip]->Write();
     h_mSignalHits_Rstrip[i_rstrip]->Write();
     h_mNoiseHits_Rstrip[i_rstrip]->Write();
     h_mSNRatioHits_Rstrip[i_rstrip]->Write();
-    h_mSignalClusters_Rstrip[i_rstrip]->Write();
+    h_mFstSimpleClustersSignal_Rstrip[i_rstrip]->Write();
+    h_mFstScanClustersSignal_Rstrip[i_rstrip]->Write();
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
     {
       h_mSignalHits_Rstrip_TimeBin[i_rstrip][i_tb]->Write();
       h_mNoiseHits_Rstrip_TimeBin[i_rstrip][i_tb]->Write();
       h_mSNRatioHits_Rstrip_TimeBin[i_rstrip][i_tb]->Write();
-      h_mSignalClusters_Rstrip_TimeBin[i_rstrip][i_tb]->Write();
+      h_mFstSimpleClustersSignal_Rstrip_TimeBin[i_rstrip][i_tb]->Write();
+      h_mFstScanClustersSignal_Rstrip_TimeBin[i_rstrip][i_tb]->Write();
     }
   }
 
@@ -739,11 +781,13 @@ void FstQAStudy::writeSignalQA()
       for(int i_phi = 0; i_phi < 2; ++i_phi)
       {
 	h_mMaxTbHits_Apv[i_apv][i_rstrip][i_phi]->Write();
-	h_mMaxTbClusters_Apv[i_apv][i_rstrip][i_phi]->Write();
+	h_mFstSimpleClustersMaxTb_Apv[i_apv][i_rstrip][i_phi]->Write();
+	h_mFstScanClustersMaxTb_Apv[i_apv][i_rstrip][i_phi]->Write();
 	h_mSignalHits_Apv[i_apv][i_rstrip][i_phi]->Write();
 	h_mNoiseHits_Apv[i_apv][i_rstrip][i_phi]->Write();
 	h_mSNRatioHits_Apv[i_apv][i_rstrip][i_phi]->Write();
-	h_mSignalClusters_Apv[i_apv][i_rstrip][i_phi]->Write();
+	h_mFstSimpleClustersSignal_Apv[i_apv][i_rstrip][i_phi]->Write();
+	h_mFstScanClustersSignal_Apv[i_apv][i_rstrip][i_phi]->Write();
       }
     }
   }
@@ -759,12 +803,15 @@ void FstQAStudy::initEventDisplay_TrackClusters()
   h_mFstRawHitsDisplay_bTh = new TH2F("h_mFstRawHitsDisplay_bTh","h_mFstRawHitsDisplay_bTh",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
   h_mFstRawPedsDisplay_bTh = new TH2F("h_mFstRawPedsDisplay_bTh","h_mFstRawPedsDisplay_bTh",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
   h_mFstMaxTbDisplay_bTh   = new TH2F("h_mFstMaxTbDisplay_bTh","h_mFstMaxTbDisplay_bTh",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstClustersDisplay    = new TH2F("h_mFstClustersDisplay","h_mFstClustersDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstSimpleClustersDisplay    = new TH2F("h_mFstSimpleClustersDisplay","h_mFstSimpleClustersDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstScanClustersDisplay = new TH2F("h_mFstScanClustersDisplay","h_mFstScanClustersDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
   h_mHitTracksDisplay      = new TH2F("h_mHitTracksDisplay","h_mHitTracksDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
   h_mClusterTracksDisplay = new TH2F("h_mClusterTracksDisplay","h_mClusterTracksDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
 
-  g_mFstClustersDisplay = new TGraph();
-  g_mFstClustersDisplay->SetName("g_mFstClustersDisplay");
+  g_mFstSimpleClustersDisplay = new TGraph();
+  g_mFstSimpleClustersDisplay->SetName("g_mFstSimpleClustersDisplay");
+  g_mFstScanClustersDisplay = new TGraph();
+  g_mFstScanClustersDisplay->SetName("g_mFstScanClustersDisplay");
   g_mHitTracksDisplay = new TGraph();
   g_mHitTracksDisplay->SetName("g_mHitTracksDisplay");
   g_mClusterTracksDisplay = new TGraph();
@@ -783,11 +830,13 @@ void FstQAStudy::initEventDisplay_TrackClusters()
   mTree_EventDisplay->Branch("h_mFstRawPedsDisplay_bTh","TH2F",&h_mFstRawPedsDisplay_bTh);
   mTree_EventDisplay->Branch("h_mFstMaxTbDisplay_bTh","TH2F",&h_mFstMaxTbDisplay_bTh);
 
-  mTree_EventDisplay->Branch("mNumOfFstClusters",&mNumOfFstClusters,"mNumOfFstClusters/I");
+  mTree_EventDisplay->Branch("mNumOfFstSimpleClusters",&mNumOfFstSimpleClusters,"mNumOfFstSimpleClusters/I");
+  mTree_EventDisplay->Branch("mNumOfFstScanClusters",&mNumOfFstScanClusters,"mNumOfFstScanClusters/I");
   mTree_EventDisplay->Branch("mNumOfIst1Clusters",&mNumOfIst1Clusters,"mNumOfIst1Clusters/I");
   mTree_EventDisplay->Branch("mNumOfIst2Clusters",&mNumOfIst2Clusters,"mNumOfIst2Clusters/I");
   mTree_EventDisplay->Branch("mNumOfIst3Clusters",&mNumOfIst3Clusters,"mNumOfIst3Clusters/I");
-  mTree_EventDisplay->Branch("h_mFstClustersDisplay","TH2F",&h_mFstClustersDisplay);
+  mTree_EventDisplay->Branch("h_mFstSimpleClustersDisplay","TH2F",&h_mFstSimpleClustersDisplay);
+  mTree_EventDisplay->Branch("h_mFstScanClustersDisplay","TH2F",&h_mFstScanClustersDisplay);
 
   mTree_EventDisplay->Branch("mNumOfHitTracks",&mNumOfHitTracks,"mNumOfHitTracks/I");
   mTree_EventDisplay->Branch("h_mHitTracksDisplay","TH2F",&h_mHitTracksDisplay);
@@ -796,14 +845,16 @@ void FstQAStudy::initEventDisplay_TrackClusters()
   mTree_EventDisplay->Branch("mNumOfClusterTracks_3Layer",&mNumOfClusterTracks_3Layer,"mNumOfClusterTracks_3Layer/I");
   mTree_EventDisplay->Branch("h_mClusterTracksDisplay","TH2F",&h_mClusterTracksDisplay);
 
-  mTree_EventDisplay->Branch("g_mFstClustersDisplay","TGraph",&g_mFstClustersDisplay);
+  mTree_EventDisplay->Branch("g_mFstSimpleClustersDisplay","TGraph",&g_mFstSimpleClustersDisplay);
+  mTree_EventDisplay->Branch("g_mFstScanClustersDisplay","TGraph",&g_mFstScanClustersDisplay);
   mTree_EventDisplay->Branch("g_mHitTracksDisplay","TGraph",&g_mHitTracksDisplay);
   mTree_EventDisplay->Branch("g_mClusterTracksDisplay","TGraph",&g_mClusterTracksDisplay);
 
   mTree_EventDisplay->SetAutoSave(50000000);
 
   h_mNumFstRawHitsDisplay = new TH1F("h_mNumFstRawHitsDisplay","h_mNumFstRawHitsDisplay",100,-0.5,99.5);
-  h_mNumFstClustersDisplay = new TH1F("h_mNumFstClustersDisplay","h_mNumFstClustersDisplay",100,-0.5,99.5);
+  h_mNumFstSimpleClustersDisplay = new TH1F("h_mNumFstSimpleClustersDisplay","h_mNumFstSimpleClustersDisplay",100,-0.5,99.5);
+  h_mNumFstScanClustersDisplay = new TH1F("h_mNumFstScanClustersDisplay","h_mNumFstScanClustersDisplay",100,-0.5,99.5);
 }
 
 void FstQAStudy::clearEventDisplay_TrackClusters()
@@ -814,7 +865,8 @@ void FstQAStudy::clearEventDisplay_TrackClusters()
   mNumOfIst2RawHits = 0;
   mNumOfIst3RawHits = 0;
 
-  mNumOfFstClusters = 0;
+  mNumOfFstSimpleClusters = 0;
+  mNumOfFstScanClusters = 0;
   mNumOfIst1Clusters = 0;
   mNumOfIst2Clusters = 0;
   mNumOfIst3Clusters = 0;
@@ -831,11 +883,13 @@ void FstQAStudy::clearEventDisplay_TrackClusters()
   h_mFstRawPedsDisplay_bTh->Reset();
   h_mFstMaxTbDisplay_bTh->Reset();
 
-  h_mFstClustersDisplay->Reset();
+  h_mFstSimpleClustersDisplay->Reset();
+  h_mFstScanClustersDisplay->Reset();
   h_mHitTracksDisplay->Reset();
   h_mClusterTracksDisplay->Reset();
 
-  g_mFstClustersDisplay->Set(-1);
+  g_mFstSimpleClustersDisplay->Set(-1);
+  g_mFstScanClustersDisplay->Set(-1);
   g_mHitTracksDisplay->Set(-1);
   g_mClusterTracksDisplay->Set(-1);
 }
@@ -880,22 +934,32 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
   for(int i_cluster = 0; i_cluster < fstEvent->getNumClusters(); ++i_cluster)
   { // fill Clusters Display
     FstCluster *fstCluster = fstEvent->getCluster(i_cluster);
-    if(fstCluster->getLayer() == 0) // FST
+    if(fstCluster->getLayer() == 0 && fstCluster->getClusterType() == 1) // FST Simple Cluster
     {
-      mNumOfFstClusters++;
+      mNumOfFstSimpleClusters++;
       double r_fst = fstCluster->getMeanX(); // r for fst
       double phi_fst = fstCluster->getMeanY(); // phi for fst
       double adc = fstCluster->getTotCharge();
-      // h_mFstClustersDisplay->Fill(r_fst,phi_fst);
-      h_mFstClustersDisplay->Fill(r_fst,phi_fst,adc);
-      g_mFstClustersDisplay->SetPoint(mNumOfFstClusters-1,r_fst,phi_fst);
+      h_mFstSimpleClustersDisplay->Fill(r_fst,phi_fst,adc);
+      g_mFstSimpleClustersDisplay->SetPoint(mNumOfFstSimpleClusters-1,r_fst,phi_fst);
     }
-    if(fstCluster->getLayer() == 1) mNumOfIst1Clusters++;
-    if(fstCluster->getLayer() == 2) mNumOfIst2Clusters++;
-    if(fstCluster->getLayer() == 3) mNumOfIst3Clusters++;
+    if(fstCluster->getLayer() == 1 && fstCluster->getClusterType() == 1) mNumOfIst1Clusters++;
+    if(fstCluster->getLayer() == 2 && fstCluster->getClusterType() == 1) mNumOfIst2Clusters++;
+    if(fstCluster->getLayer() == 3 && fstCluster->getClusterType() == 1) mNumOfIst3Clusters++;
+
+    if(fstCluster->getLayer() == 0 && fstCluster->getClusterType() == 2) // FST Scan Cluster
+    {
+      mNumOfFstScanClusters++;
+      double r_fst = fstCluster->getMeanX(); // r for fst
+      double phi_fst = fstCluster->getMeanY(); // phi for fst
+      double adc = fstCluster->getTotCharge();
+      h_mFstScanClustersDisplay->Fill(r_fst,phi_fst,adc);
+      g_mFstScanClustersDisplay->SetPoint(mNumOfFstScanClusters-1,r_fst,phi_fst);
+    }
   }
-  // cout << "mNumOfFstClusters = " << mNumOfFstClusters << ", fstEvent->getNumClusters = " << fstEvent->getNumFstClusters() << endl;
-  h_mNumFstClustersDisplay->Fill(mNumOfFstClusters);
+  // cout << "mNumOfFstSimpleClusters = " << mNumOfFstSimpleClusters << ", fstEvent->getNumClusters = " << fstEvent->getNumFstClusters() << endl;
+  h_mNumFstSimpleClustersDisplay->Fill(mNumOfFstSimpleClusters);
+  h_mNumFstScanClustersDisplay->Fill(mNumOfFstScanClusters);
 
   for(int i_track = 0; i_track < mFstEvent_InPut->getNumTracks(); ++i_track)
   { // fill Tracks Display
@@ -959,6 +1023,7 @@ void FstQAStudy::writeEventDisplay_TrackClusters()
 {
   mTree_EventDisplay->Write();
   h_mNumFstRawHitsDisplay->Write();
-  h_mNumFstClustersDisplay->Write();
+  h_mNumFstSimpleClustersDisplay->Write();
+  h_mNumFstScanClustersDisplay->Write();
 }
 //--------------Event Display---------------------

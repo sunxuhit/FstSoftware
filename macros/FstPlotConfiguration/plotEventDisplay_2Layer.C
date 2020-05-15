@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotEventDisplay_2Layer(string hv = "HV140V", bool isSavePed = true, bool isApplyCMNCorr = false, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 3)
+void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 2)
 {
   // gStyle->SetPalette(kRainBow);
   gStyle->SetPalette(kBlackBody);
@@ -28,7 +28,8 @@ void plotEventDisplay_2Layer(string hv = "HV140V", bool isSavePed = true, bool i
   int mNumOfIst2RawHits;
   int mNumOfIst3RawHits;
 
-  int mNumOfFstClusters;
+  int mNumOfFstSimpleClusters;
+  int mNumOfFstScanClusters;
   int mNumOfIst1Clusters;
   int mNumOfIst2Clusters;
   int mNumOfIst3Clusters;
@@ -45,10 +46,12 @@ void plotEventDisplay_2Layer(string hv = "HV140V", bool isSavePed = true, bool i
   TH2F *h_mFstRawPedsDisplay_bTh  = new TH2F("h_mFstRawPedsDisplay_bTh","h_mFstRawPedsDisplay_bTh",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
   TH2F *h_mFstMaxTbDisplay_bTh    = new TH2F("h_mFstMaxTbDisplay_bTh","h_mFstMaxTbDisplay_bTh",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
 
-  TH2F *h_mFstClustersDisplay     = new TH2F("h_mFstClustersDisplay","h_mFstClustersDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstSimpleClustersDisplay     = new TH2F("h_mFstSimpleClustersDisplay","h_mFstSimpleClustersDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstScanClustersDisplay = new TH2F("h_mFstScanClustersDisplay","h_mFstScanClustersDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
   TH2F *h_mHitTracksDisplay       = new TH2F("h_mHitTracksDisplay","h_mHitTracksDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
   TH2F *h_mClusterTracksDisplay   = new TH2F("h_mClusterTracksDisplay","h_mClusterTracksDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TGraph *g_mFstClustersDisplay   = new TGraph();
+  TGraph *g_mFstSimpleClustersDisplay   = new TGraph();
+  TGraph *g_mFstScanClustersDisplay = new TGraph();
   TGraph *g_mHitTracksDisplay     = new TGraph();
   TGraph *g_mClusterTracksDisplay = new TGraph();
 
@@ -72,11 +75,13 @@ void plotEventDisplay_2Layer(string hv = "HV140V", bool isSavePed = true, bool i
   mTree_EventDisplay->SetBranchAddress("h_mFstRawPedsDisplay_bTh",&h_mFstRawPedsDisplay_bTh);
   mTree_EventDisplay->SetBranchAddress("h_mFstMaxTbDisplay_bTh",&h_mFstMaxTbDisplay_bTh);
 
-  mTree_EventDisplay->SetBranchAddress("mNumOfFstClusters",&mNumOfFstClusters);
+  mTree_EventDisplay->SetBranchAddress("mNumOfFstSimpleClusters",&mNumOfFstSimpleClusters);
+  mTree_EventDisplay->SetBranchAddress("mNumOfFstScanClusters",&mNumOfFstScanClusters);
   mTree_EventDisplay->SetBranchAddress("mNumOfIst1Clusters",&mNumOfIst1Clusters);
   mTree_EventDisplay->SetBranchAddress("mNumOfIst2Clusters",&mNumOfIst2Clusters);
   mTree_EventDisplay->SetBranchAddress("mNumOfIst3Clusters",&mNumOfIst3Clusters);
-  mTree_EventDisplay->SetBranchAddress("h_mFstClustersDisplay",&h_mFstClustersDisplay);
+  mTree_EventDisplay->SetBranchAddress("h_mFstSimpleClustersDisplay",&h_mFstSimpleClustersDisplay);
+  mTree_EventDisplay->SetBranchAddress("h_mFstScanClustersDisplay",&h_mFstScanClustersDisplay);
 
   mTree_EventDisplay->SetBranchAddress("mNumOfHitTracks",&mNumOfHitTracks);
   mTree_EventDisplay->SetBranchAddress("h_mHitTracksDisplay",&h_mHitTracksDisplay);
@@ -85,14 +90,15 @@ void plotEventDisplay_2Layer(string hv = "HV140V", bool isSavePed = true, bool i
   mTree_EventDisplay->SetBranchAddress("mNumOfClusterTracks_3Layer",&mNumOfClusterTracks_3Layer);
   mTree_EventDisplay->SetBranchAddress("h_mClusterTracksDisplay",&h_mClusterTracksDisplay);
 
-  mTree_EventDisplay->SetBranchAddress("g_mFstClustersDisplay",&g_mFstClustersDisplay);
+  mTree_EventDisplay->SetBranchAddress("g_mFstSimpleClustersDisplay",&g_mFstSimpleClustersDisplay);
+  mTree_EventDisplay->SetBranchAddress("g_mFstScanClustersDisplay",&g_mFstScanClustersDisplay);
   mTree_EventDisplay->SetBranchAddress("g_mHitTracksDisplay",&g_mHitTracksDisplay);
   mTree_EventDisplay->SetBranchAddress("g_mClusterTracksDisplay",&g_mClusterTracksDisplay);
 
   long NumOfEvents = (long)mTree_EventDisplay->GetEntries();
   cout << "total number of events: " << NumOfEvents << endl;
   // if(NumOfEvents > 1000) NumOfEvents = 1000;
-  // NumOfEvents = 1000;
+  NumOfEvents = 1000;
   mTree_EventDisplay->GetEntry(0);
 
   const double rMaxFst = FST::rOuter + 4.0*FST::pitchR;
@@ -126,7 +132,7 @@ void plotEventDisplay_2Layer(string hv = "HV140V", bool isSavePed = true, bool i
     mTree_EventDisplay->GetEntry(i_event);
 
     // cout << "mNumOfFstRawHits = " << mNumOfFstRawHits << ", h_mFstRawHitsDisplay->GetEntries() = " << h_mFstRawHitsDisplay->GetEntries() << endl;
-    // cout << "mNumOfFstClusters = " << mNumOfFstClusters << ", h_mFstClustersDisplay->GetEntries() = " << h_mFstClustersDisplay->GetEntries() << endl;
+    // cout << "mNumOfFstSimpleClusters = " << mNumOfFstSimpleClusters << ", h_mFstSimpleClustersDisplay->GetEntries() = " << h_mFstSimpleClustersDisplay->GetEntries() << endl;
     // cout << "mNumOfHitTracks = " << mNumOfHitTracks << ", h_mHitTracksDisplay->GetEntries() = " << h_mHitTracksDisplay->GetEntries() << endl;
     // cout << "mNumOfClusterTracks = " << mNumOfClusterTracks << ", h_mClusterTracksDisplay->GetEntries() = " << h_mClusterTracksDisplay->GetEntries() << endl;
 
@@ -134,6 +140,7 @@ void plotEventDisplay_2Layer(string hv = "HV140V", bool isSavePed = true, bool i
     // if(mNumOfClusterTracks == 1 && mNumOfClusterTracks_2Layer == 1 && mNumOfClusterTracks_3Layer == 1) // 3-Layer Tracking
     {
       c_EventDisplay->cd(1);
+      // plot hits
       string Title = Form("Event %d (Threshold %1.1f)", mEventId, nFstHitsCut);
       h_mFstRawHitsDisplay->SetTitle(Title.c_str());
       h_mFstRawHitsDisplay->SetStats(0);
@@ -157,14 +164,23 @@ void plotEventDisplay_2Layer(string hv = "HV140V", bool isSavePed = true, bool i
       h_mFstMaxTbDisplay->SetBarOffset(-3.5);
       h_mFstMaxTbDisplay->Draw("TEXT Same");
 
-      // plot track
-      if(g_mFstClustersDisplay->GetN() > 0)
+      // plot clusters
+      if(g_mFstSimpleClustersDisplay->GetN() > 0)
       {
-	g_mFstClustersDisplay->SetMarkerStyle(25);
-	g_mFstClustersDisplay->SetMarkerColor(1);
-	g_mFstClustersDisplay->SetMarkerSize(1.0);
-	g_mFstClustersDisplay->Draw("p Same");
+	g_mFstSimpleClustersDisplay->SetMarkerStyle(25);
+	g_mFstSimpleClustersDisplay->SetMarkerColor(1);
+	g_mFstSimpleClustersDisplay->SetMarkerSize(1.2);
+	g_mFstSimpleClustersDisplay->Draw("p Same");
       }
+      if(g_mFstScanClustersDisplay->GetN() > 0)
+      {
+	g_mFstScanClustersDisplay->SetMarkerStyle(25);
+	g_mFstScanClustersDisplay->SetMarkerColor(2);
+	g_mFstScanClustersDisplay->SetMarkerSize(0.8);
+	g_mFstScanClustersDisplay->Draw("p Same");
+      }
+
+      // plot tracks
       g_mClusterTracksDisplay->SetMarkerStyle(5);
       g_mClusterTracksDisplay->SetMarkerColor(1);
       g_mClusterTracksDisplay->SetMarkerSize(1.0);
@@ -177,6 +193,7 @@ void plotEventDisplay_2Layer(string hv = "HV140V", bool isSavePed = true, bool i
       PlotLine(rMaxFst, rMaxFst, phiMinFst, phiMaxFst, 1, 2, 2);
 
       c_EventDisplay->cd(2);
+      // plot hits
       Title = Form("Event %d (Threshold: 2.0)", mEventId);
       h_mFstRawHitsDisplay_bTh->SetTitle(Title.c_str());
       h_mFstRawHitsDisplay_bTh->SetStats(0);
@@ -200,14 +217,23 @@ void plotEventDisplay_2Layer(string hv = "HV140V", bool isSavePed = true, bool i
       h_mFstMaxTbDisplay_bTh->SetBarOffset(-3.5);
       h_mFstMaxTbDisplay_bTh->Draw("TEXT Same");
 
-      // plot track
-      if(g_mFstClustersDisplay->GetN() > 0)
+      // plot clusters
+      if(g_mFstSimpleClustersDisplay->GetN() > 0)
       {
-	g_mFstClustersDisplay->SetMarkerStyle(25);
-	g_mFstClustersDisplay->SetMarkerColor(1);
-	g_mFstClustersDisplay->SetMarkerSize(1.0);
-	g_mFstClustersDisplay->Draw("p Same");
+	g_mFstSimpleClustersDisplay->SetMarkerStyle(25);
+	g_mFstSimpleClustersDisplay->SetMarkerColor(1);
+	g_mFstSimpleClustersDisplay->SetMarkerSize(1.2);
+	g_mFstSimpleClustersDisplay->Draw("p Same");
       }
+      if(g_mFstScanClustersDisplay->GetN() > 0)
+      {
+	g_mFstScanClustersDisplay->SetMarkerStyle(25);
+	g_mFstScanClustersDisplay->SetMarkerColor(2);
+	g_mFstScanClustersDisplay->SetMarkerSize(0.8);
+	g_mFstScanClustersDisplay->Draw("p Same");
+      }
+
+      // plot tracks
       g_mClusterTracksDisplay->SetMarkerStyle(5);
       g_mClusterTracksDisplay->SetMarkerColor(1);
       g_mClusterTracksDisplay->SetMarkerSize(1.0);
