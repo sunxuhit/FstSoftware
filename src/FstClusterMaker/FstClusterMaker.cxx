@@ -1915,9 +1915,9 @@ std::vector<FstTrack *> FstClusterMaker::findTrack_Hits(std::vector<FstRawHit *>
   trackVec.clear();
   int numOfTracks = 0;
   if(numOfHits[1] > 0 && numOfHits[3] > 0)
-  { // only do tracking when at least 1 hit is found in fst & ist1 & ist3
-    TVector3 pos_fst, pos_ist1, pos_ist2, pos_ist3;
-    TVector3 pos_fst_orig, pos_ist1_orig, pos_ist2_orig, pos_ist3_orig;
+  { // only do tracking when at least 1 hit is found in ist1 & ist3
+    TVector3 pos_ist1, pos_ist3;
+    TVector3 pos_ist1_orig, pos_ist3_orig;
     TVector3 proj_fst, proj_ist2;
 
     for(int i_ist1 = 0; i_ist1 < numOfHits[1]; ++i_ist1)
@@ -2017,9 +2017,9 @@ std::vector<FstTrack *> FstClusterMaker::findTrack_Clusters(std::vector<FstClust
   trackVec.clear();
   int numOfTracks = 100; // 100 => reconstructed from simple cluster 
   if(numOfClusters[1] > 0 && numOfClusters[3] > 0)
-  { // only do tracking when at least 1 hit is found in fst & ist1 & ist3
-    TVector3 pos_fst, pos_ist1, pos_ist2, pos_ist3;
-    TVector3 pos_fst_orig, pos_ist1_orig, pos_ist2_orig, pos_ist3_orig;
+  { // only do tracking when at least 1 hit is found in ist1 & ist3
+    TVector3 pos_ist1, pos_ist3;
+    TVector3 pos_ist1_orig, pos_ist3_orig;
     TVector3 proj_fst, proj_ist2;
 
     for(int i_ist1 = 0; i_ist1 < numOfClusters[1]; ++i_ist1)
