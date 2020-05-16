@@ -38,16 +38,6 @@ class FstTracking : public TObject
     // init input TChain
     bool initChain();
 
-    // hit display
-    bool initHitDisplay();
-    void fillHitDisplay(std::vector<FstRawHit *> rawHitVec_orig);
-    void writeHitDisplay();
-
-    // cluster display
-    bool initClusterDisplay();
-    void fillClusterDisplay(std::vector<FstCluster *> clusterVec_orig);
-    void writeClusterDisplay();
-
     // track QA
     bool initTrackingQA_Hits();
     void fillTrackingQA_Hits(std::vector<FstRawHit *> rawHitVec_orig);
@@ -59,7 +49,8 @@ class FstTracking : public TObject
     void writeTracking_Hits();
 
     void initTracking_Clusters();
-    void calResolution_Clusters(FstEvent *fstEvent);
+    void calResolution_SimpleClusters(FstEvent *fstEvent);
+    void calResolution_ScanClusters(FstEvent *fstEvent);
     void writeTracking_Clusters();
 
     // efficiency
@@ -68,7 +59,8 @@ class FstTracking : public TObject
     void writeEfficiency_Hits();
 
     void initEfficiency_Clusters();
-    void calEfficiency_Clusters(FstEvent *fstEvent);
+    void calEfficiency_SimpleClusters(FstEvent *fstEvent);
+    void calEfficiency_ScanClusters(FstEvent *fstEvent);
     void writeEfficiency_Clusters();
 
   private:
@@ -76,19 +68,6 @@ class FstTracking : public TObject
     std::string mOutPutFile;
 
     TFile *File_mOutPut;
-
-    // QA
-    TH1F *h_mCounts_Hits[4]; // 0 for FST, 1-3 for IST
-    TH1F *h_mCounts_Clusters[4]; // 0 for FST, 1-3 for IST
-    TH2F *h_mCounts_Corr[4];
-
-    // hit Display
-    TH2F *h_mHitDisplay[4]; // 0 for FST, 1-3 for IST
-    TH1F *h_mMaxTb[4]; 
-    // cluster Display
-    TH2F *h_mClusterDisplay[4]; // 0 for FST, 1-3 for IST
-
-    // cluster QA
 
     // Tracking QA based on Hits
     TH2F *h_mHitsCorrXR[4]; // 0: ist1x vs. ist3x | 1: ist1x vs. fstr | 2: ist3x vs. fstr | 3: ist1x+ist3x vs. fstr
@@ -101,48 +80,76 @@ class FstTracking : public TObject
     TH1F *h_mPhiResidual_Hits;
 
     // Tracking
-    TH1F *h_mTrackXRes_Hits;
-    TH1F *h_mTrackYRes_Hits;
-    TH2F *h_mTrackXYRes_Hits; // 2D distribution
+    // hits
+    TH1F *h_mHitsTrackFstResX;
+    TH1F *h_mHitsTrackFstResY;
+    TH2F *h_mHitsTrackFstResXY; // 2D distribution
 
-    TH1F *h_mTrackRRes_Hits;
-    TH1F *h_mTrackPhiRes_Hits;
-    TH2F *h_mTrackRPhiRes_Hits; // 2D distribution
+    TH1F *h_mHitsTrackFstResR;
+    TH1F *h_mHitsTrackFstResPhi;
+    TH2F *h_mHitsTrackFstResRPhi; // 2D distribution
 
-    TH1F *h_mTrackXRes_Clusters_2Layer;
-    TH1F *h_mTrackYRes_Clusters_2Layer;
-    TH2F *h_mTrackXYRes_Clusters_2Layer; // 2D distribution
+    // simple clusters
+    TH1F *h_mSimpleClustersTrackFstResX_2Layer;
+    TH1F *h_mSimpleClustersTrackFstResY_2Layer;
+    TH2F *h_mSimpleClustersTrackFstResXY_2Layer; // 2D distribution
 
-    TH1F *h_mTrackRRes_Clusters_2Layer;
-    TH1F *h_mTrackPhiRes_Clusters_2Layer;
-    TH2F *h_mTrackRPhiRes_Clusters_2Layer; // 2D distribution
+    TH1F *h_mSimpleClustersTrackFstResR_2Layer;
+    TH1F *h_mSimpleClustersTrackFstResPhi_2Layer;
+    TH2F *h_mSimpleClustersTrackFstResRPhi_2Layer; // 2D distribution
 
-    TH1F *h_mTrackXResIST_2Layer;
-    TH1F *h_mTrackYResIST_2Layer;
-    TH2F *h_mTrackXYResIST_2Layer; // 2D distribution
+    TH1F *h_mSimpleClustersTrackIstResX_2Layer;
+    TH1F *h_mSimpleClustersTrackIstResY_2Layer;
+    TH2F *h_mSimpleClustersTrackIstResXY_2Layer; // 2D distribution
 
-    TH1F *h_mTrackXRes_Clusters_3Layer;
-    TH1F *h_mTrackYRes_Clusters_3Layer;
-    TH2F *h_mTrackXYRes_Clusters_3Layer; // 2D distribution
+    TH1F *h_mSimpleClustersTrackFstResX_3Layer;
+    TH1F *h_mSimpleClustersTrackFstResY_3Layer;
+    TH2F *h_mSimpleClustersTrackFstResXY_3Layer; // 2D distribution
 
-    TH1F *h_mTrackRRes_Clusters_3Layer;
-    TH1F *h_mTrackPhiRes_Clusters_3Layer;
-    TH2F *h_mTrackRPhiRes_Clusters_3Layer; // 2D distribution
+    TH1F *h_mSimpleClustersTrackFstResR_3Layer;
+    TH1F *h_mSimpleClustersTrackFstResPhi_3Layer;
+    TH2F *h_mSimpleClustersTrackFstResRPhi_3Layer; // 2D distribution
 
-    TH1F *h_mTrackXResIST_3Layer;
-    TH1F *h_mTrackYResIST_3Layer;
-    TH2F *h_mTrackXYResIST_3Layer;
+    TH1F *h_mSimpleClustersTrackIstResX_3Layer;
+    TH1F *h_mSimpleClustersTrackIstResY_3Layer;
+    TH2F *h_mSimpleClustersTrackIstResXY_3Layer;
+
+    // scan clusters
+    TH1F *h_mScanClustersTrackFstResX_2Layer;
+    TH1F *h_mScanClustersTrackFstResY_2Layer;
+    TH2F *h_mScanClustersTrackFstResXY_2Layer; // 2D distribution
+
+    TH1F *h_mScanClustersTrackFstResR_2Layer;
+    TH1F *h_mScanClustersTrackFstResPhi_2Layer;
+    TH2F *h_mScanClustersTrackFstResRPhi_2Layer; // 2D distribution
+
+    TH1F *h_mScanClustersTrackFstResX_3Layer;
+    TH1F *h_mScanClustersTrackFstResY_3Layer;
+    TH2F *h_mScanClustersTrackFstResXY_3Layer; // 2D distribution
+
+    TH1F *h_mScanClustersTrackFstResR_3Layer;
+    TH1F *h_mScanClustersTrackFstResPhi_3Layer;
+    TH2F *h_mScanClustersTrackFstResRPhi_3Layer; // 2D distribution
 
     // Efficiency based on Hits
     // 0: no matching | 1-3 matching within (1-3)*pitchR in r & (1-3)*pitchPhi in phi
-    TH2F *h_mTrackHits_IST[8]; // position on FST from IST projection
-    TH2F *h_mTrackHits_FST[8]; // position on FST from FST measurement
+    TH2F *h_mHitsTrackIstCounts[8]; // position on FST from IST projection
+    TH2F *h_mHitsTrackFstCounts[8]; // position on FST from FST measurement
 
-    TH2F *h_mTrackClusters_IST_2Layer[8]; // position on FST from IST projection
-    TH2F *h_mTrackClusters_FST_2Layer[8]; // position on FST from FST measurement
+    // Efficiency based on Clusters
+    // simple clusters
+    TH2F *h_mSimpleClustersTrackIstCounts_2Layer[8]; // position on FST from IST projection
+    TH2F *h_mSimpleClustersTrackFstCounts_2Layer[8]; // position on FST from FST measurement
 
-    TH2F *h_mTrackClusters_IST_3Layer[8]; // position on FST from IST projection
-    TH2F *h_mTrackClusters_FST_3Layer[8]; // position on FST from FST measurement
+    TH2F *h_mSimpleClustersTrackIstCounts_3Layer[8]; // position on FST from IST projection
+    TH2F *h_mSimpleClustersTrackFstCounts_3Layer[8]; // position on FST from FST measurement
+
+    // scan clusters
+    TH2F *h_mScanClustersTrackIstCounts_2Layer[8]; // position on FST from IST projection
+    TH2F *h_mScanClustersTrackFstCounts_2Layer[8]; // position on FST from FST measurement
+
+    TH2F *h_mScanClustersTrackIstCounts_3Layer[8]; // position on FST from IST projection
+    TH2F *h_mScanClustersTrackFstCounts_3Layer[8]; // position on FST from FST measurement
 
     // Input TChain for hits and clusters
     TChain *mChainInPut; // input TTree

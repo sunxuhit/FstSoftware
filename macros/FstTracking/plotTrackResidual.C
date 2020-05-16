@@ -17,8 +17,8 @@ void plotTrackResidual()
 
   string inputfile = "../../output/FstTracking_HV140V_woPed.root";
   TFile *File_InPut = TFile::Open(inputfile.c_str());
-  TH1F *h_mTrackXRes_Hits = (TH1F*)File_InPut->Get("h_mTrackXRes_Hits");
-  TH1F *h_mTrackYRes_Hits = (TH1F*)File_InPut->Get("h_mTrackYRes_Hits");
+  TH1F *h_mFstHitsTrackXRes = (TH1F*)File_InPut->Get("h_mFstHitsTrackXRes");
+  TH1F *h_mFstHitsTrackYRes = (TH1F*)File_InPut->Get("h_mFstHitsTrackYRes");
   TH1F *h_mTrackRRes_Hits = (TH1F*)File_InPut->Get("h_mTrackRRes_Hits");
   TH1F *h_mTrackPhiRes_Hits = (TH1F*)File_InPut->Get("h_mTrackPhiRes_Hits");
 
@@ -44,22 +44,22 @@ void plotTrackResidual()
 
   // track resoluiton with Hits
   c_play->cd(1);
-  h_mTrackXRes_Hits->SetTitle("Hits: x-residual");
-  h_mTrackXRes_Hits->GetXaxis()->SetTitle("x-residual (mm)");
-  h_mTrackXRes_Hits->GetXaxis()->SetTitleSize(0.06);
-  h_mTrackXRes_Hits->GetYaxis()->SetTitle("No. Tracks");
-  h_mTrackXRes_Hits->GetYaxis()->SetTitleSize(0.06);
-  h_mTrackXRes_Hits->Draw();
-  h_mTrackXRes_Hits->Fit("gaus");
+  h_mFstHitsTrackXRes->SetTitle("Hits: x-residual");
+  h_mFstHitsTrackXRes->GetXaxis()->SetTitle("x-residual (mm)");
+  h_mFstHitsTrackXRes->GetXaxis()->SetTitleSize(0.06);
+  h_mFstHitsTrackXRes->GetYaxis()->SetTitle("No. Tracks");
+  h_mFstHitsTrackXRes->GetYaxis()->SetTitleSize(0.06);
+  h_mFstHitsTrackXRes->Draw();
+  h_mFstHitsTrackXRes->Fit("gaus");
 
   c_play->cd(2);
-  h_mTrackYRes_Hits->SetTitle("Hits: y-residual");
-  h_mTrackYRes_Hits->GetXaxis()->SetTitle("y-residual (mm)");
-  h_mTrackYRes_Hits->GetXaxis()->SetTitleSize(0.06);
-  h_mTrackYRes_Hits->GetYaxis()->SetTitle("No. Tracks");
-  h_mTrackYRes_Hits->GetYaxis()->SetTitleSize(0.06);
-  h_mTrackYRes_Hits->Draw();
-  h_mTrackYRes_Hits->Fit("gaus");
+  h_mFstHitsTrackYRes->SetTitle("Hits: y-residual");
+  h_mFstHitsTrackYRes->GetXaxis()->SetTitle("y-residual (mm)");
+  h_mFstHitsTrackYRes->GetXaxis()->SetTitleSize(0.06);
+  h_mFstHitsTrackYRes->GetYaxis()->SetTitle("No. Tracks");
+  h_mFstHitsTrackYRes->GetYaxis()->SetTitleSize(0.06);
+  h_mFstHitsTrackYRes->Draw();
+  h_mFstHitsTrackYRes->Fit("gaus");
 
   c_play->cd(3);
   h_mTrackRRes_Hits->SetTitle("Hits: r-residual");
