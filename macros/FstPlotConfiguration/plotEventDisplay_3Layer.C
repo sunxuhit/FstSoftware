@@ -98,7 +98,7 @@ void plotEventDisplay_3Layer(string hv = "HV200V", bool isSavePed = true, bool i
   long NumOfEvents = (long)mTree_EventDisplay->GetEntries();
   cout << "total number of events: " << NumOfEvents << endl;
   // if(NumOfEvents > 1000) NumOfEvents = 1000;
-  NumOfEvents = 1000;
+  // NumOfEvents = 1000;
   mTree_EventDisplay->GetEntry(0);
 
   const double rMaxFst = FST::rOuter + 4.0*FST::pitchR;

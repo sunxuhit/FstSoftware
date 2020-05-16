@@ -10,6 +10,7 @@
 #include <TProfile2D.h>
 #include <TGraph.h>
 #include <TStyle.h>
+#include <TPaveStats.h>
 #include "./draw.h"
 #include "../../src/FstUtil/FstCons.h"
 
@@ -33,12 +34,12 @@ double gaussian(double *var, double *par)
   return y;
 }
 
-void plotResidual_FSTClusterTracks_3Layer(string hv = "HV140V", bool isSavePed = true, bool isApplyCMNCorr = false, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 3)
+void plotResidual_FSTClusterTracks_3Layer(string hv = "HV200V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 2)
 {
   gStyle->SetOptStat(111111);
   gStyle->SetOptFit(1001);
-  gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
-  gStyle->SetStatW(0.15); gStyle->SetStatH(0.25);
+  gStyle->SetStatX(0.95); gStyle->SetStatY(0.90);
+  gStyle->SetStatW(0.20); gStyle->SetStatH(0.20);
 
   std::string pedMode = "withPed";
   if(!isSavePed) pedMode = "woPed";
@@ -48,21 +49,31 @@ void plotResidual_FSTClusterTracks_3Layer(string hv = "HV140V", bool isSavePed =
   string inputfile = Form("../../output/configuration/FstTracking_%s_Th%1.1fTb%d_%s_%s.root",hv.c_str(),nFstHitsCut,numOfUsedTimeBins,pedMode.c_str(),cmnMode.c_str());
 
   TFile *File_InPut = TFile::Open(inputfile.c_str());
-  TH1F *h_mTrackXResIST_3Layer = (TH1F*)File_InPut->Get("h_mTrackXResIST_3Layer");
-  TH1F *h_mTrackYResIST_3Layer = (TH1F*)File_InPut->Get("h_mTrackYResIST_3Layer");
-  TH2F *h_mTrackXYResIST_3Layer = (TH2F*)File_InPut->Get("h_mTrackXYResIST_3Layer");;
+  // simple clusters
+  TH1F *h_mSimpleClustersTrackIstResX_3Layer = (TH1F*)File_InPut->Get("h_mSimpleClustersTrackIstResX_3Layer");
+  TH1F *h_mSimpleClustersTrackIstResY_3Layer = (TH1F*)File_InPut->Get("h_mSimpleClustersTrackIstResY_3Layer");
+  TH2F *h_mSimpleClustersTrackIstResXY_3Layer = (TH2F*)File_InPut->Get("h_mSimpleClustersTrackIstResXY_3Layer");;
 
-  TH1F *h_mTrackXRes_Clusters_3Layer = (TH1F*)File_InPut->Get("h_mTrackXRes_Clusters_3Layer");
-  TH1F *h_mTrackYRes_Clusters_3Layer = (TH1F*)File_InPut->Get("h_mTrackYRes_Clusters_3Layer");
-  TH2F *h_mTrackXYRes_Clusters_3Layer = (TH2F*)File_InPut->Get("h_mTrackXYRes_Clusters_3Layer");
+  TH1F *h_mSimpleClustersTrackFstResX_3Layer = (TH1F*)File_InPut->Get("h_mSimpleClustersTrackFstResX_3Layer");
+  TH1F *h_mSimpleClustersTrackFstResY_3Layer = (TH1F*)File_InPut->Get("h_mSimpleClustersTrackFstResY_3Layer");
+  TH2F *h_mSimpleClustersTrackFstResXY_3Layer = (TH2F*)File_InPut->Get("h_mSimpleClustersTrackFstResXY_3Layer");
 
-  TH1F *h_mTrackRRes_Clusters_3Layer = (TH1F*)File_InPut->Get("h_mTrackRRes_Clusters_3Layer");
-  TH1F *h_mTrackPhiRes_Clusters_3Layer = (TH1F*)File_InPut->Get("h_mTrackPhiRes_Clusters_3Layer");
-  TH2F *h_mTrackRPhiRes_Clusters_3Layer = (TH2F*)File_InPut->Get("h_mTrackRPhiRes_Clusters_3Layer");;
+  TH1F *h_mSimpleClustersTrackFstResR_3Layer = (TH1F*)File_InPut->Get("h_mSimpleClustersTrackFstResR_3Layer");
+  TH1F *h_mSimpleClustersTrackFstResPhi_3Layer = (TH1F*)File_InPut->Get("h_mSimpleClustersTrackFstResPhi_3Layer");
+  TH2F *h_mSimpleClustersTrackFstResRPhi_3Layer = (TH2F*)File_InPut->Get("h_mSimpleClustersTrackFstResRPhi_3Layer");;
 
-  TCanvas *c_play = new TCanvas("c_play","c_play",10,10,1200,1200);
-  c_play->Divide(3,3);
-  for(int i_pad = 0; i_pad < 9; ++i_pad)
+  // scan clusters
+  TH1F *h_mScanClustersTrackFstResX_3Layer = (TH1F*)File_InPut->Get("h_mScanClustersTrackFstResX_3Layer");
+  TH1F *h_mScanClustersTrackFstResY_3Layer = (TH1F*)File_InPut->Get("h_mScanClustersTrackFstResY_3Layer");
+  TH2F *h_mScanClustersTrackFstResXY_3Layer = (TH2F*)File_InPut->Get("h_mScanClustersTrackFstResXY_3Layer");
+
+  TH1F *h_mScanClustersTrackFstResR_3Layer = (TH1F*)File_InPut->Get("h_mScanClustersTrackFstResR_3Layer");
+  TH1F *h_mScanClustersTrackFstResPhi_3Layer = (TH1F*)File_InPut->Get("h_mScanClustersTrackFstResPhi_3Layer");
+  TH2F *h_mScanClustersTrackFstResRPhi_3Layer = (TH2F*)File_InPut->Get("h_mScanClustersTrackFstResRPhi_3Layer");;
+
+  TCanvas *c_play = new TCanvas("c_play","c_play",10,10,900,1500);
+  c_play->Divide(3,5);
+  for(int i_pad = 0; i_pad < 15; ++i_pad)
   {
     c_play->cd(i_pad+1)->SetLeftMargin(0.15);
     c_play->cd(i_pad+1)->SetRightMargin(0.15);
@@ -71,127 +82,224 @@ void plotResidual_FSTClusterTracks_3Layer(string hv = "HV140V", bool isSavePed =
     c_play->cd(i_pad+1)->SetGrid(0,0);
   }
 
-  c_play->cd(1);
-  h_mTrackXYResIST_3Layer->SetTitle("Corrected X & Y Residual IST2");
-  h_mTrackXYResIST_3Layer->SetStats(0);
-  h_mTrackXYResIST_3Layer->GetXaxis()->SetTitle("x-residual (mm)");
-  h_mTrackXYResIST_3Layer->GetYaxis()->SetTitle("y-residual (mm)");
-  h_mTrackXYResIST_3Layer->Draw("colz");
+  {
+    c_play->cd(1);
+    h_mSimpleClustersTrackIstResXY_3Layer->SetTitle("Corrected X & Y Residual IST2");
+    h_mSimpleClustersTrackIstResXY_3Layer->SetStats(0);
+    h_mSimpleClustersTrackIstResXY_3Layer->GetXaxis()->SetTitle("x-residual (mm)");
+    h_mSimpleClustersTrackIstResXY_3Layer->GetYaxis()->SetTitle("y-residual (mm)");
+    h_mSimpleClustersTrackIstResXY_3Layer->Draw("colz");
 
-  c_play->cd(2);
-  h_mTrackXResIST_3Layer->SetTitle("Corrected X-residual IST2");
-  h_mTrackXResIST_3Layer->GetXaxis()->SetTitle("x-residual (mm)");
-  h_mTrackXResIST_3Layer->GetXaxis()->SetTitleSize(0.06);
-  h_mTrackXResIST_3Layer->GetYaxis()->SetTitle("No. Tracks");
-  h_mTrackXResIST_3Layer->GetYaxis()->SetTitleSize(0.06);
-  h_mTrackXResIST_3Layer->Draw();
-  TF1 *f_gausX_IST = new TF1("f_gausX_IST",gaussian,-80.0,80.0,4);
-  f_gausX_IST->SetParameter(0,100.0);
-  f_gausX_IST->SetParameter(1,0.0);
-  f_gausX_IST->SetParameter(2,3.0);
-  f_gausX_IST->FixParameter(3,h_mTrackXResIST_3Layer->GetBinWidth(1));
-  f_gausX_IST->SetRange(-10,10);
-  h_mTrackXResIST_3Layer->Fit(f_gausX_IST,"R");
-  f_gausX_IST->Draw("l same");
+    c_play->cd(2);
+    h_mSimpleClustersTrackIstResX_3Layer->SetTitle("Corrected X-residual IST2");
+    h_mSimpleClustersTrackIstResX_3Layer->GetXaxis()->SetTitle("x-residual (mm)");
+    h_mSimpleClustersTrackIstResX_3Layer->GetXaxis()->SetTitleSize(0.06);
+    h_mSimpleClustersTrackIstResX_3Layer->GetYaxis()->SetTitle("No. Tracks");
+    h_mSimpleClustersTrackIstResX_3Layer->GetYaxis()->SetTitleSize(0.06);
+    h_mSimpleClustersTrackIstResX_3Layer->Draw();
+    TF1 *f_gausX_IST = new TF1("f_gausX_IST",gaussian,-80.0,80.0,4);
+    f_gausX_IST->SetParameter(0,100.0);
+    f_gausX_IST->SetParameter(1,0.0);
+    f_gausX_IST->SetParameter(2,3.0);
+    f_gausX_IST->FixParameter(3,h_mSimpleClustersTrackIstResX_3Layer->GetBinWidth(1));
+    f_gausX_IST->SetRange(-10,10);
+    h_mSimpleClustersTrackIstResX_3Layer->Fit(f_gausX_IST,"R");
+    f_gausX_IST->Draw("l same");
 
-  c_play->cd(3);
-  h_mTrackYResIST_3Layer->SetTitle("Corrected Y-residual IST2");
-  h_mTrackYResIST_3Layer->GetXaxis()->SetTitle("y-residual (mm)");
-  h_mTrackYResIST_3Layer->GetXaxis()->SetTitleSize(0.06);
-  h_mTrackYResIST_3Layer->GetYaxis()->SetTitle("No. Tracks");
-  h_mTrackYResIST_3Layer->GetYaxis()->SetTitleSize(0.06);
-  h_mTrackYResIST_3Layer->Draw();
-  // h_mTrackYResIST_3Layer->Fit("gaus");
-  TF1 *f_gausY_IST = new TF1("f_gausY_IST",gaussian,-80.0,80.0,4);
-  f_gausY_IST->SetParameter(0,100.0);
-  f_gausY_IST->SetParameter(1,0.0);
-  f_gausY_IST->SetParameter(2,3.0);
-  f_gausY_IST->FixParameter(3,h_mTrackYResIST_3Layer->GetBinWidth(1));
-  f_gausY_IST->SetRange(-2.0,2.0);
-  h_mTrackYResIST_3Layer->Fit(f_gausY_IST,"R");
-  f_gausY_IST->Draw("l same");
+    c_play->cd(3);
+    h_mSimpleClustersTrackIstResY_3Layer->SetTitle("Corrected Y-residual IST2");
+    h_mSimpleClustersTrackIstResY_3Layer->GetXaxis()->SetTitle("y-residual (mm)");
+    h_mSimpleClustersTrackIstResY_3Layer->GetXaxis()->SetTitleSize(0.06);
+    h_mSimpleClustersTrackIstResY_3Layer->GetYaxis()->SetTitle("No. Tracks");
+    h_mSimpleClustersTrackIstResY_3Layer->GetYaxis()->SetTitleSize(0.06);
+    h_mSimpleClustersTrackIstResY_3Layer->Draw();
+    // h_mSimpleClustersTrackIstResY_3Layer->Fit("gaus");
+    TF1 *f_gausY_IST = new TF1("f_gausY_IST",gaussian,-80.0,80.0,4);
+    f_gausY_IST->SetParameter(0,100.0);
+    f_gausY_IST->SetParameter(1,0.0);
+    f_gausY_IST->SetParameter(2,3.0);
+    f_gausY_IST->FixParameter(3,h_mSimpleClustersTrackIstResY_3Layer->GetBinWidth(1));
+    f_gausY_IST->SetRange(-2.0,2.0);
+    h_mSimpleClustersTrackIstResY_3Layer->Fit(f_gausY_IST,"R");
+    f_gausY_IST->Draw("l same");
+  }
 
-  c_play->cd(4);
-  h_mTrackXYRes_Clusters_3Layer->SetTitle("Corrected X & Y Residual FST");
-  h_mTrackXYRes_Clusters_3Layer->SetStats(0);
-  h_mTrackXYRes_Clusters_3Layer->GetXaxis()->SetTitle("x-residual (mm)");
-  h_mTrackXYRes_Clusters_3Layer->GetYaxis()->SetTitle("y-residual (mm)");
-  h_mTrackXYRes_Clusters_3Layer->Draw("colz");
+  {
+    c_play->cd(4);
+    h_mSimpleClustersTrackFstResXY_3Layer->SetTitle("Corrected X & Y Residual FST Simple Clusters");
+    h_mSimpleClustersTrackFstResXY_3Layer->SetStats(0);
+    h_mSimpleClustersTrackFstResXY_3Layer->GetXaxis()->SetTitle("x-residual (mm)");
+    h_mSimpleClustersTrackFstResXY_3Layer->GetYaxis()->SetTitle("y-residual (mm)");
+    h_mSimpleClustersTrackFstResXY_3Layer->Draw("colz");
 
-  c_play->cd(5);
-  h_mTrackXRes_Clusters_3Layer->SetTitle("Corrected X-residual FST");
-  h_mTrackXRes_Clusters_3Layer->GetXaxis()->SetTitle("x-residual (mm)");
-  h_mTrackXRes_Clusters_3Layer->GetXaxis()->SetTitleSize(0.06);
-  h_mTrackXRes_Clusters_3Layer->GetYaxis()->SetTitle("No. Tracks");
-  h_mTrackXRes_Clusters_3Layer->GetYaxis()->SetTitleSize(0.06);
-  h_mTrackXRes_Clusters_3Layer->Draw();
-  // h_mTrackXRes_Clusters_3Layer->Fit("gaus");
-  TF1 *f_gausX = new TF1("f_gausX",gaussian,-150.0,150.0,4);
-  f_gausX->SetParameter(0,100.0);
-  f_gausX->SetParameter(1,0.0);
-  f_gausX->SetParameter(2,10.0);
-  f_gausX->FixParameter(3,h_mTrackXRes_Clusters_3Layer->GetBinWidth(1));
-  f_gausX->SetRange(-20,50);
-  h_mTrackXRes_Clusters_3Layer->Fit(f_gausX,"R");
-  f_gausX->Draw("l same");
+    c_play->cd(5);
+    h_mSimpleClustersTrackFstResX_3Layer->SetTitle("Corrected X-residual FST Simple Clusters");
+    h_mSimpleClustersTrackFstResX_3Layer->GetXaxis()->SetTitle("x-residual (mm)");
+    h_mSimpleClustersTrackFstResX_3Layer->GetXaxis()->SetTitleSize(0.06);
+    h_mSimpleClustersTrackFstResX_3Layer->GetYaxis()->SetTitle("No. Tracks");
+    h_mSimpleClustersTrackFstResX_3Layer->GetYaxis()->SetTitleSize(0.06);
+    h_mSimpleClustersTrackFstResX_3Layer->Draw();
+    // h_mSimpleClustersTrackFstResX_3Layer->Fit("gaus");
+    TF1 *f_gausX = new TF1("f_gausX",gaussian,-150.0,150.0,4);
+    f_gausX->SetParameter(0,100.0);
+    f_gausX->SetParameter(1,0.0);
+    f_gausX->SetParameter(2,10.0);
+    f_gausX->FixParameter(3,h_mSimpleClustersTrackFstResX_3Layer->GetBinWidth(1));
+    f_gausX->SetRange(-20,50);
+    h_mSimpleClustersTrackFstResX_3Layer->Fit(f_gausX,"R");
+    f_gausX->Draw("l same");
 
-  c_play->cd(6);
-  h_mTrackYRes_Clusters_3Layer->SetTitle("Corrected Y-residual FST");
-  h_mTrackYRes_Clusters_3Layer->GetXaxis()->SetTitle("y-residual (mm)");
-  h_mTrackYRes_Clusters_3Layer->GetXaxis()->SetTitleSize(0.06);
-  h_mTrackYRes_Clusters_3Layer->GetYaxis()->SetTitle("No. Tracks");
-  h_mTrackYRes_Clusters_3Layer->GetYaxis()->SetTitleSize(0.06);
-  h_mTrackYRes_Clusters_3Layer->Draw();
-  // h_mTrackYRes_Clusters_3Layer->Fit("gaus");
-  TF1 *f_gausY = new TF1("f_gausY",gaussian,-150.0,150.0,4);
-  f_gausY->SetParameter(0,100.0);
-  f_gausY->SetParameter(1,0.0);
-  f_gausY->SetParameter(2,10.0);
-  f_gausY->FixParameter(3,h_mTrackYRes_Clusters_3Layer->GetBinWidth(1));
-  f_gausY->SetRange(-1.5,5);
-  h_mTrackYRes_Clusters_3Layer->Fit(f_gausY,"R");
-  f_gausY->Draw("l same");
+    c_play->cd(6);
+    h_mSimpleClustersTrackFstResY_3Layer->SetTitle("Corrected Y-residual FST Simple Clusters");
+    h_mSimpleClustersTrackFstResY_3Layer->GetXaxis()->SetTitle("y-residual (mm)");
+    h_mSimpleClustersTrackFstResY_3Layer->GetXaxis()->SetTitleSize(0.06);
+    h_mSimpleClustersTrackFstResY_3Layer->GetYaxis()->SetTitle("No. Tracks");
+    h_mSimpleClustersTrackFstResY_3Layer->GetYaxis()->SetTitleSize(0.06);
+    h_mSimpleClustersTrackFstResY_3Layer->Draw();
+    // h_mSimpleClustersTrackFstResY_3Layer->Fit("gaus");
+    TF1 *f_gausY = new TF1("f_gausY",gaussian,-150.0,150.0,4);
+    f_gausY->SetParameter(0,100.0);
+    f_gausY->SetParameter(1,0.0);
+    f_gausY->SetParameter(2,10.0);
+    f_gausY->FixParameter(3,h_mSimpleClustersTrackFstResY_3Layer->GetBinWidth(1));
+    f_gausY->SetRange(-1.5,5);
+    h_mSimpleClustersTrackFstResY_3Layer->Fit(f_gausY,"R");
+    f_gausY->Draw("l same");
 
-  c_play->cd(7);
-  h_mTrackRPhiRes_Clusters_3Layer->SetTitle("Corrected R & #phi Residual FST");
-  h_mTrackRPhiRes_Clusters_3Layer->SetStats(0);
-  h_mTrackRPhiRes_Clusters_3Layer->GetXaxis()->SetTitle("r-residual (mm)");
-  h_mTrackRPhiRes_Clusters_3Layer->GetYaxis()->SetTitle("#phi-residual (rad)");
-  h_mTrackRPhiRes_Clusters_3Layer->Draw("colz");
+    c_play->cd(7);
+    h_mSimpleClustersTrackFstResRPhi_3Layer->SetTitle("Corrected R & #phi Residual FST Simple Clusters");
+    h_mSimpleClustersTrackFstResRPhi_3Layer->SetStats(0);
+    h_mSimpleClustersTrackFstResRPhi_3Layer->GetXaxis()->SetTitle("r-residual (mm)");
+    h_mSimpleClustersTrackFstResRPhi_3Layer->GetYaxis()->SetTitle("#phi-residual (rad)");
+    h_mSimpleClustersTrackFstResRPhi_3Layer->Draw("colz");
 
-  c_play->cd(8);
-  h_mTrackRRes_Clusters_3Layer->SetTitle("Corrected R-residual FST");
-  h_mTrackRRes_Clusters_3Layer->GetXaxis()->SetTitle("r-residual (mm)");
-  h_mTrackRRes_Clusters_3Layer->GetXaxis()->SetTitleSize(0.06);
-  h_mTrackRRes_Clusters_3Layer->GetYaxis()->SetTitle("No. Tracks");
-  h_mTrackRRes_Clusters_3Layer->GetYaxis()->SetTitleSize(0.06);
-  h_mTrackRRes_Clusters_3Layer->Draw();
-  // h_mTrackRRes_Clusters_3Layer->Fit("gaus");
-  TF1 *f_gausR = new TF1("f_gausR",gaussian,-150.0,150.0,4);
-  f_gausR->SetParameter(0,100.0);
-  f_gausR->SetParameter(1,0.0);
-  f_gausR->SetParameter(2,10.0);
-  f_gausR->FixParameter(3,h_mTrackRRes_Clusters_3Layer->GetBinWidth(1));
-  f_gausR->SetRange(-20,50);
-  h_mTrackRRes_Clusters_3Layer->Fit(f_gausR,"R");
-  f_gausR->Draw("l same");
+    c_play->cd(8);
+    h_mSimpleClustersTrackFstResR_3Layer->SetTitle("Corrected R-residual FST Simple Clusters");
+    h_mSimpleClustersTrackFstResR_3Layer->GetXaxis()->SetTitle("r-residual (mm)");
+    h_mSimpleClustersTrackFstResR_3Layer->GetXaxis()->SetTitleSize(0.06);
+    h_mSimpleClustersTrackFstResR_3Layer->GetYaxis()->SetTitle("No. Tracks");
+    h_mSimpleClustersTrackFstResR_3Layer->GetYaxis()->SetTitleSize(0.06);
+    h_mSimpleClustersTrackFstResR_3Layer->Draw();
+    // h_mSimpleClustersTrackFstResR_3Layer->Fit("gaus");
+    TF1 *f_gausR = new TF1("f_gausR",gaussian,-150.0,150.0,4);
+    f_gausR->SetParameter(0,100.0);
+    f_gausR->SetParameter(1,0.0);
+    f_gausR->SetParameter(2,10.0);
+    f_gausR->FixParameter(3,h_mSimpleClustersTrackFstResR_3Layer->GetBinWidth(1));
+    f_gausR->SetRange(-20,50);
+    h_mSimpleClustersTrackFstResR_3Layer->Fit(f_gausR,"R");
+    f_gausR->Draw("l same");
+    // gPad->Update();
+    // TPaveStats *st1 = (TPaveStats*)h_mSimpleClustersTrackFstResR_3Layer->FindObject("stats");
+    // st1->SetOptStat(111111);
+    // st1->SetX1NDC(0.6);
+    // st1->SetX2NDC(0.9);
 
-  c_play->cd(9);
-  h_mTrackPhiRes_Clusters_3Layer->SetTitle("Corrected #phi-residual FST");
-  h_mTrackPhiRes_Clusters_3Layer->GetXaxis()->SetTitle("#phi-residual (rad)");
-  h_mTrackPhiRes_Clusters_3Layer->GetXaxis()->SetTitleSize(0.06);
-  h_mTrackPhiRes_Clusters_3Layer->GetYaxis()->SetTitle("No. Tracks");
-  h_mTrackPhiRes_Clusters_3Layer->GetYaxis()->SetTitleSize(0.06);
-  h_mTrackPhiRes_Clusters_3Layer->Draw();
-  // h_mTrackPhiRes_Clusters_3Layer->Fit("gaus");
-  TF1 *f_gausPhi = new TF1("f_gausPhi",gaussian,-1.0,1.0,4);
-  f_gausPhi->SetParameter(0,100.0);
-  f_gausPhi->SetParameter(1,0.0);
-  f_gausPhi->SetParameter(2,10.0);
-  f_gausPhi->FixParameter(3,h_mTrackPhiRes_Clusters_3Layer->GetBinWidth(1));
-  f_gausPhi->SetRange(-0.01,0.01);
-  h_mTrackPhiRes_Clusters_3Layer->Fit(f_gausPhi,"R");
-  f_gausPhi->Draw("l same");
+    c_play->cd(9);
+    h_mSimpleClustersTrackFstResPhi_3Layer->SetTitle("Corrected #phi-residual FST Simple Clusters");
+    h_mSimpleClustersTrackFstResPhi_3Layer->GetXaxis()->SetTitle("#phi-residual (rad)");
+    h_mSimpleClustersTrackFstResPhi_3Layer->GetXaxis()->SetTitleSize(0.06);
+    h_mSimpleClustersTrackFstResPhi_3Layer->GetYaxis()->SetTitle("No. Tracks");
+    h_mSimpleClustersTrackFstResPhi_3Layer->GetYaxis()->SetTitleSize(0.06);
+    h_mSimpleClustersTrackFstResPhi_3Layer->Draw();
+    // h_mSimpleClustersTrackFstResPhi_3Layer->Fit("gaus");
+    TF1 *f_gausPhi = new TF1("f_gausPhi",gaussian,-1.0,1.0,4);
+    f_gausPhi->SetParameter(0,100.0);
+    f_gausPhi->SetParameter(1,0.0);
+    f_gausPhi->SetParameter(2,10.0);
+    // f_gausPhi->SetParName(0,"No. Tracks");
+    // f_gausPhi->SetParName(1,"Mean");
+    // f_gausPhi->SetParName(2,"#sigma");
+    f_gausPhi->FixParameter(3,h_mSimpleClustersTrackFstResPhi_3Layer->GetBinWidth(1));
+    f_gausPhi->SetRange(-0.01,0.01);
+    h_mSimpleClustersTrackFstResPhi_3Layer->Fit(f_gausPhi,"R");
+    f_gausPhi->Draw("l same");
+    // gPad->Update();
+    // TPaveStats *st2 = (TPaveStats*)h_mSimpleClustersTrackFstResPhi_3Layer->FindObject("stats");
+    // st2->SetOptStat(110011);
+  }
+
+  {
+    c_play->cd(10);
+    h_mScanClustersTrackFstResXY_3Layer->SetTitle("Corrected X & Y Residual FST Scan Clusters");
+    h_mScanClustersTrackFstResXY_3Layer->SetStats(0);
+    h_mScanClustersTrackFstResXY_3Layer->GetXaxis()->SetTitle("x-residual (mm)");
+    h_mScanClustersTrackFstResXY_3Layer->GetYaxis()->SetTitle("y-residual (mm)");
+    h_mScanClustersTrackFstResXY_3Layer->Draw("colz");
+
+    c_play->cd(11);
+    h_mScanClustersTrackFstResX_3Layer->SetTitle("Corrected X-residual FST Scan Clusters");
+    h_mScanClustersTrackFstResX_3Layer->GetXaxis()->SetTitle("x-residual (mm)");
+    h_mScanClustersTrackFstResX_3Layer->GetXaxis()->SetTitleSize(0.06);
+    h_mScanClustersTrackFstResX_3Layer->GetYaxis()->SetTitle("No. Tracks");
+    h_mScanClustersTrackFstResX_3Layer->GetYaxis()->SetTitleSize(0.06);
+    h_mScanClustersTrackFstResX_3Layer->Draw();
+    // h_mScanClustersTrackFstResX_3Layer->Fit("gaus");
+    TF1 *f_gausX = new TF1("f_gausX",gaussian,-150.0,150.0,4);
+    f_gausX->SetParameter(0,100.0);
+    f_gausX->SetParameter(1,0.0);
+    f_gausX->SetParameter(2,10.0);
+    f_gausX->FixParameter(3,h_mScanClustersTrackFstResX_3Layer->GetBinWidth(1));
+    f_gausX->SetRange(-20,50);
+    h_mScanClustersTrackFstResX_3Layer->Fit(f_gausX,"R");
+    f_gausX->Draw("l same");
+
+    c_play->cd(12);
+    h_mScanClustersTrackFstResY_3Layer->SetTitle("Corrected Y-residual FST Scan Clusters");
+    h_mScanClustersTrackFstResY_3Layer->GetXaxis()->SetTitle("y-residual (mm)");
+    h_mScanClustersTrackFstResY_3Layer->GetXaxis()->SetTitleSize(0.06);
+    h_mScanClustersTrackFstResY_3Layer->GetYaxis()->SetTitle("No. Tracks");
+    h_mScanClustersTrackFstResY_3Layer->GetYaxis()->SetTitleSize(0.06);
+    h_mScanClustersTrackFstResY_3Layer->Draw();
+    // h_mScanClustersTrackFstResY_3Layer->Fit("gaus");
+    TF1 *f_gausY = new TF1("f_gausY",gaussian,-150.0,150.0,4);
+    f_gausY->SetParameter(0,100.0);
+    f_gausY->SetParameter(1,0.0);
+    f_gausY->SetParameter(2,10.0);
+    f_gausY->FixParameter(3,h_mScanClustersTrackFstResY_3Layer->GetBinWidth(1));
+    f_gausY->SetRange(-1.5,5);
+    h_mScanClustersTrackFstResY_3Layer->Fit(f_gausY,"R");
+    f_gausY->Draw("l same");
+
+    c_play->cd(13);
+    h_mScanClustersTrackFstResRPhi_3Layer->SetTitle("Corrected R & #phi Residual FST Scan Clusters");
+    h_mScanClustersTrackFstResRPhi_3Layer->SetStats(0);
+    h_mScanClustersTrackFstResRPhi_3Layer->GetXaxis()->SetTitle("r-residual (mm)");
+    h_mScanClustersTrackFstResRPhi_3Layer->GetYaxis()->SetTitle("#phi-residual (rad)");
+    h_mScanClustersTrackFstResRPhi_3Layer->Draw("colz");
+
+    c_play->cd(14);
+    h_mScanClustersTrackFstResR_3Layer->SetTitle("Corrected R-residual FST Scan Clusters");
+    h_mScanClustersTrackFstResR_3Layer->GetXaxis()->SetTitle("r-residual (mm)");
+    h_mScanClustersTrackFstResR_3Layer->GetXaxis()->SetTitleSize(0.06);
+    h_mScanClustersTrackFstResR_3Layer->GetYaxis()->SetTitle("No. Tracks");
+    h_mScanClustersTrackFstResR_3Layer->GetYaxis()->SetTitleSize(0.06);
+    h_mScanClustersTrackFstResR_3Layer->Draw();
+    TF1 *f_gausR = new TF1("f_gausR",gaussian,-150.0,150.0,4);
+    f_gausR->SetParameter(0,100.0);
+    f_gausR->SetParameter(1,0.0);
+    f_gausR->SetParameter(2,10.0);
+    f_gausR->FixParameter(3,h_mScanClustersTrackFstResR_3Layer->GetBinWidth(1));
+    f_gausR->SetRange(-20,50);
+    h_mScanClustersTrackFstResR_3Layer->Fit(f_gausR,"R");
+    f_gausR->Draw("l same");
+
+    c_play->cd(15);
+    h_mScanClustersTrackFstResPhi_3Layer->SetTitle("Corrected #phi-residual FST Scan Clusters");
+    h_mScanClustersTrackFstResPhi_3Layer->GetXaxis()->SetTitle("#phi-residual (rad)");
+    h_mScanClustersTrackFstResPhi_3Layer->GetXaxis()->SetTitleSize(0.06);
+    h_mScanClustersTrackFstResPhi_3Layer->GetYaxis()->SetTitle("No. Tracks");
+    h_mScanClustersTrackFstResPhi_3Layer->GetYaxis()->SetTitleSize(0.06);
+    h_mScanClustersTrackFstResPhi_3Layer->Draw();
+    TF1 *f_gausPhi = new TF1("f_gausPhi",gaussian,-1.0,1.0,4);
+    f_gausPhi->SetParameter(0,100.0);
+    f_gausPhi->SetParameter(1,0.0);
+    f_gausPhi->SetParameter(2,10.0);
+    f_gausPhi->FixParameter(3,h_mScanClustersTrackFstResPhi_3Layer->GetBinWidth(1));
+    f_gausPhi->SetRange(-0.01,0.01);
+    h_mScanClustersTrackFstResPhi_3Layer->Fit(f_gausPhi,"R");
+    f_gausPhi->Draw("l same");
+  }
 
   c_play->SaveAs("./figures/Residual_FSTClusterTracks_3Layer.pdf");
 }
