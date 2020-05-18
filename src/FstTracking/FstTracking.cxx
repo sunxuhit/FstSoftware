@@ -1075,6 +1075,7 @@ void FstTracking::calEfficiency_SimpleClusters(FstEvent *fstEvent)
 	{ // used for efficiency only if the projected position is within FST acceptance
 	  if(clusterVec_ist2.size() > 0)
 	  {
+	    int nMatchedTrack_IST2 = 0;
 	    for(int i_ist2 = 0; i_ist2 < clusterVec_ist2.size(); ++i_ist2)
 	    { // fill residual histograms
 	      double x2_ist = clusterVec_ist2[i_ist2]->getMeanX(); // x for ist2
@@ -1084,31 +1085,32 @@ void FstTracking::calEfficiency_SimpleClusters(FstEvent *fstEvent)
 	      {
 		if( abs(x2_ist-x2_proj) < 6.0 && abs(y2_ist-y2_proj) < 0.6 )
 		{ // IST2 matching cut
-		  for(int i_match = 0; i_match < 8; ++i_match)
+		  nMatchedTrack_IST2++;
+		}
+	      }
+	    }
+	    for(int i_match = 0; i_match < 8; ++i_match)
+	    {
+	      if(nMatchedTrack_IST2 > 0) h_mSimpleClustersTrackIstCounts_3Layer[i_match]->Fill(r_proj,phi_proj);
+	      int nMatchedTrack = 0;
+	      if(clusterVec_fst.size() > 0)
+	      {
+		for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
+		{ // loop over all possible clusters
+		  double r_fst = clusterVec_fst[i_cluster]->getMeanX();
+		  double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
+		  if(i_match == 0)
 		  {
-		    h_mSimpleClustersTrackIstCounts_3Layer[i_match]->Fill(r_proj,phi_proj);
-		    int nMatchedTrack = 0;
-		    if(clusterVec_fst.size() > 0)
-		    {
-		      for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
-		      { // loop over all possible clusters
-			double r_fst = clusterVec_fst[i_cluster]->getMeanX();
-			double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
-			if(i_match == 0)
-			{
-			  nMatchedTrack++;
-			}
-			// if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-			if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-			{
-			  nMatchedTrack++;
-			}
-		      }
-		    }
-		    if(nMatchedTrack > 0) h_mSimpleClustersTrackFstCounts_3Layer[i_match]->Fill(r_proj,phi_proj);
+		    nMatchedTrack++;
+		  }
+		  // if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		  if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		  {
+		    nMatchedTrack++;
 		  }
 		}
 	      }
+	      if(nMatchedTrack_IST2 > 0 && nMatchedTrack > 0) h_mSimpleClustersTrackFstCounts_3Layer[i_match]->Fill(r_proj,phi_proj);
 	    }
 	  }
 	}
@@ -1215,6 +1217,7 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
 	{ // used for efficiency only if the projected position is within FST acceptance
 	  if(clusterVec_ist2.size() > 0)
 	  {
+	    int nMatchedTrack_IST2 = 0;
 	    for(int i_ist2 = 0; i_ist2 < clusterVec_ist2.size(); ++i_ist2)
 	    { // fill residual histograms
 	      double x2_ist = clusterVec_ist2[i_ist2]->getMeanX(); // x for ist2
@@ -1224,31 +1227,32 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
 	      {
 		if( abs(x2_ist-x2_proj) < 6.0 && abs(y2_ist-y2_proj) < 0.6 )
 		{ // IST2 matching cut
-		  for(int i_match = 0; i_match < 8; ++i_match)
+		  nMatchedTrack_IST2++;
+		}
+	      }
+	    }
+	    for(int i_match = 0; i_match < 8; ++i_match)
+	    {
+	      if(nMatchedTrack_IST2 > 0) h_mScanClustersTrackIstCounts_3Layer[i_match]->Fill(r_proj,phi_proj);
+	      int nMatchedTrack = 0;
+	      if(clusterVec_fst.size() > 0)
+	      {
+		for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
+		{ // loop over all possible clusters
+		  double r_fst = clusterVec_fst[i_cluster]->getMeanX();
+		  double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
+		  if(i_match == 0)
 		  {
-		    h_mScanClustersTrackIstCounts_3Layer[i_match]->Fill(r_proj,phi_proj);
-		    int nMatchedTrack = 0;
-		    if(clusterVec_fst.size() > 0)
-		    {
-		      for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
-		      { // loop over all possible clusters
-			double r_fst = clusterVec_fst[i_cluster]->getMeanX();
-			double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
-			if(i_match == 0)
-			{
-			  nMatchedTrack++;
-			}
-			// if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-			if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-			{
-			  nMatchedTrack++;
-			}
-		      }
-		    }
-		    if(nMatchedTrack > 0) h_mScanClustersTrackFstCounts_3Layer[i_match]->Fill(r_proj,phi_proj);
+		    nMatchedTrack++;
+		  }
+		  // if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		  if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		  {
+		    nMatchedTrack++;
 		  }
 		}
 	      }
+	      if(nMatchedTrack_IST2 > 0 && nMatchedTrack > 0) h_mScanClustersTrackFstCounts_3Layer[i_match]->Fill(r_proj,phi_proj);
 	    }
 	  }
 	}
