@@ -223,6 +223,7 @@ void calTrackClusterEfficiency_3Layer(string hv = "HV200V", bool isSavePed = tru
     PlotLine(rMaxFst, rMaxFst, phiMinFst, phiMaxFst, 1, 2, 2);
 
     c_play->cd(8);
+    h_mSimpleClustersTrackFstEffR_3Layer[i_match]->SetStats(0);
     h_mSimpleClustersTrackFstEffR_3Layer[i_match]->GetXaxis()->SetTitle("r_{proj} (mm)");
     h_mSimpleClustersTrackFstEffR_3Layer[i_match]->GetYaxis()->SetRangeUser(0.0,1.05);
     h_mSimpleClustersTrackFstEffR_3Layer[i_match]->SetLineColor(1);
@@ -231,8 +232,11 @@ void calTrackClusterEfficiency_3Layer(string hv = "HV200V", bool isSavePed = tru
     h_mScanClustersTrackFstEffR_3Layer[i_match]->Draw("pE same");
     PlotLine(rMinFst, rMinFst, 0.0, 1.05, 1, 2, 2);
     PlotLine(rMaxFst, rMaxFst, 0.0, 1.05, 1, 2, 2);
+    PlotLine(rMinFst-FST::pitchR, rMaxFst+FST::pitchR, 0.90, 0.90, 4, 1, 2);
+    PlotLine(rMinFst-FST::pitchR, rMaxFst+FST::pitchR, 0.95, 0.95, 4, 1, 2);
 
     c_play->cd(9);
+    h_mSimpleClustersTrackFstEffPhi_3Layer[i_match]->SetStats(0);
     h_mSimpleClustersTrackFstEffPhi_3Layer[i_match]->GetXaxis()->SetTitle("phi_{proj} (rad)");
     h_mSimpleClustersTrackFstEffPhi_3Layer[i_match]->GetXaxis()->SetRangeUser(-0.05,phiMaxFst*1.2);
     h_mSimpleClustersTrackFstEffPhi_3Layer[i_match]->GetYaxis()->SetRangeUser(0.0,1.05);

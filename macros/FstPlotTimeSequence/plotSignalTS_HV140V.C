@@ -32,8 +32,8 @@ float ErrDiv(float x, float y, float dx, float dy)
 
 void plotSignalTS_HV140V()
 {
-  const int numOfTS = 19;
-  string date[numOfTS] = {"0329","0330","0331","0402","0403","0404","0406","0407","0408","0413","0417","0423","0427","0429","0502","0504","0507","0509","0511"};
+  const int numOfTS = 22;
+  string date[numOfTS] = {"0329","0330","0331","0402","0403","0404","0406","0407","0408","0413","0417","0423","0427","0429","0502","0504","0507","0509","0511","0512","0514","0516"};
 
   TH1F *h_mMeanSignalHits_Rstrip[4];
   TH1F *h_mMeanNoiseHits_Rstrip[4];
@@ -60,7 +60,7 @@ void plotSignalTS_HV140V()
   TH1F *h_mNoiseHits_Rstrip[numOfTS][4];
   TH1F *h_mSNRatioHits_Rstrip[numOfTS][4];
   TH1F *h_mMaxTbHits_Rstrip[numOfTS][4];
-  TH1F *h_mSignalClusters_Rstrip[numOfTS][4];
+  TH1F *h_mFstSimpleClustersSignal_Rstrip[numOfTS][4];
   for(int i_ts = 0; i_ts < numOfTS; ++i_ts)
   {
     string inputfile = Form("../../output/timesequence/FstQAStudy_HV140V_Th4.5Tb3_withPed_woCMNCorr_%s2020.root",date[i_ts].c_str());
@@ -78,8 +78,8 @@ void plotSignalTS_HV140V()
       h_mSNRatioHits_Rstrip[i_ts][i_rstrip] = (TH1F*)File_InPut[i_ts]->Get(HistName.c_str());
       HistName = Form("h_mMaxTbHits_Rstrip%d",i_rstrip);
       h_mMaxTbHits_Rstrip[i_ts][i_rstrip] = (TH1F*)File_InPut[i_ts]->Get(HistName.c_str());
-      HistName = Form("h_mSignalClusters_Rstrip%d",i_rstrip);
-      h_mSignalClusters_Rstrip[i_ts][i_rstrip] = (TH1F*)File_InPut[i_ts]->Get(HistName.c_str());
+      HistName = Form("h_mFstSimpleClustersSignal_Rstrip%d",i_rstrip);
+      h_mFstSimpleClustersSignal_Rstrip[i_ts][i_rstrip] = (TH1F*)File_InPut[i_ts]->Get(HistName.c_str());
     }
   }
 
@@ -150,27 +150,27 @@ void plotSignalTS_HV140V()
 	for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
 	{
 	  string title = Form("FST Clusters @ Date %s",date[numOfUsedTS].c_str());
-	  h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->SetStats(0);
-	  h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->SetTitle(title.c_str());
-	  h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->GetXaxis()->SetTitle("ADC");
-	  h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->GetXaxis()->SetTitleSize(0.06);
-	  h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->SetLineColor(i_rstrip+1);
+	  h_mFstSimpleClustersSignal_Rstrip[numOfUsedTS][i_rstrip]->SetStats(0);
+	  h_mFstSimpleClustersSignal_Rstrip[numOfUsedTS][i_rstrip]->SetTitle(title.c_str());
+	  h_mFstSimpleClustersSignal_Rstrip[numOfUsedTS][i_rstrip]->GetXaxis()->SetTitle("ADC");
+	  h_mFstSimpleClustersSignal_Rstrip[numOfUsedTS][i_rstrip]->GetXaxis()->SetTitleSize(0.06);
+	  h_mFstSimpleClustersSignal_Rstrip[numOfUsedTS][i_rstrip]->SetLineColor(i_rstrip+1);
 
-	  if(i_rstrip == 0) h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->Draw();
-	  else h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->Draw("same");
+	  if(i_rstrip == 0) h_mFstSimpleClustersSignal_Rstrip[numOfUsedTS][i_rstrip]->Draw();
+	  else h_mFstSimpleClustersSignal_Rstrip[numOfUsedTS][i_rstrip]->Draw("same");
 
-	  string LegName = Form("R_strip %d: Mean %1.2f",i_rstrip,h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->GetMean());
-	  leg_FST->AddEntry(h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip],LegName.c_str(),"L");
+	  string LegName = Form("R_strip %d: Mean %1.2f",i_rstrip,h_mFstSimpleClustersSignal_Rstrip[numOfUsedTS][i_rstrip]->GetMean());
+	  leg_FST->AddEntry(h_mFstSimpleClustersSignal_Rstrip[numOfUsedTS][i_rstrip],LegName.c_str(),"L");
 
-	  double mean_orig    = h_mSignalClusters_Rstrip[0][i_rstrip]->GetMean();
-	  double err_orig     = h_mSignalClusters_Rstrip[0][i_rstrip]->GetMeanError();
-	  double mean_current = h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->GetMean();
-	  double err_current  = h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->GetMeanError();
+	  double mean_orig    = h_mFstSimpleClustersSignal_Rstrip[0][i_rstrip]->GetMean();
+	  double err_orig     = h_mFstSimpleClustersSignal_Rstrip[0][i_rstrip]->GetMeanError();
+	  double mean_current = h_mFstSimpleClustersSignal_Rstrip[numOfUsedTS][i_rstrip]->GetMean();
+	  double err_current  = h_mFstSimpleClustersSignal_Rstrip[numOfUsedTS][i_rstrip]->GetMeanError();
 	  double ratio = mean_current/mean_orig;
 	  double error = ErrDiv(mean_current, mean_orig, err_current, err_orig);
 	  h_mMeanSignalClusters_Rstrip[i_rstrip]->SetBinContent(numOfUsedTS+1,ratio);
 	  h_mMeanSignalClusters_Rstrip[i_rstrip]->SetBinError(numOfUsedTS+1,error);
-	  // h_mMeanSignalClusters_Rstrip[i_rstrip]->SetBinContent(numOfUsedTS+1,h_mSignalClusters_Rstrip[numOfUsedTS][i_rstrip]->GetMean());
+	  // h_mMeanSignalClusters_Rstrip[i_rstrip]->SetBinContent(numOfUsedTS+1,h_mFstSimpleClustersSignal_Rstrip[numOfUsedTS][i_rstrip]->GetMean());
 	}
 	leg_FST->Draw("same");
       }

@@ -1008,102 +1008,105 @@ void FstTracking::calEfficiency_SimpleClusters(FstEvent *fstEvent)
     }
   }
 
-  // fill Efficiency Histograms with 2-Layer Tracking
-  for(int i_track = 0; i_track < trackClusterVec.size(); ++i_track)
-  {
-    TVector3 pos_ist1 = trackClusterVec[i_track]->getPosOrig(1);
-    double y1_ist = pos_ist1.Y(); // original hit postion on IST1
-    TVector3 pos_ist3 = trackClusterVec[i_track]->getPosOrig(3);
-    double y3_ist = pos_ist3.Y(); // original hit postion on IST3
-
-    TVector3 proj_fst = trackClusterVec[i_track]->getProjection(0);
-    double r_proj   = proj_fst.X(); // get aligned projected position w.r.t. FST
-    double phi_proj = proj_fst.Y(); // r & phi for fst
-
-    if( abs(y1_ist-y3_ist) < 17.0*FST::pitchRow )
+  if(trackClusterVec.size() == 1)
+  { // only event with 1 track is used
+    // fill Efficiency Histograms with 2-Layer Tracking
+    for(int i_track = 0; i_track < trackClusterVec.size(); ++i_track)
     {
-      if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
-      { // used for efficiency only if the projected position is within FST acceptance
-	for(int i_match = 0; i_match < 8; ++i_match)
-	{
-	  h_mSimpleClustersTrackIstCounts_2Layer[i_match]->Fill(r_proj,phi_proj);
-	  int nMatchedTrack = 0;
-	  if(clusterVec_fst.size() > 0)
+      TVector3 pos_ist1 = trackClusterVec[i_track]->getPosOrig(1);
+      double y1_ist = pos_ist1.Y(); // original hit postion on IST1
+      TVector3 pos_ist3 = trackClusterVec[i_track]->getPosOrig(3);
+      double y3_ist = pos_ist3.Y(); // original hit postion on IST3
+
+      TVector3 proj_fst = trackClusterVec[i_track]->getProjection(0);
+      double r_proj   = proj_fst.X(); // get aligned projected position w.r.t. FST
+      double phi_proj = proj_fst.Y(); // r & phi for fst
+
+      if( abs(y1_ist-y3_ist) < 17.0*FST::pitchRow )
+      {
+	if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
+	{ // used for efficiency only if the projected position is within FST acceptance
+	  for(int i_match = 0; i_match < 8; ++i_match)
 	  {
-	    for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
-	    { // loop over all possible clusters
-	      double r_fst = clusterVec_fst[i_cluster]->getMeanX();
-	      double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
-	      if(i_match == 0)
-	      {
-		nMatchedTrack++;
-	      }
-	      // if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-	      if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-	      {
-		nMatchedTrack++;
+	    h_mSimpleClustersTrackIstCounts_2Layer[i_match]->Fill(r_proj,phi_proj);
+	    int nMatchedTrack = 0;
+	    if(clusterVec_fst.size() > 0)
+	    {
+	      for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
+	      { // loop over all possible clusters
+		double r_fst = clusterVec_fst[i_cluster]->getMeanX();
+		double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
+		if(i_match == 0)
+		{
+		  nMatchedTrack++;
+		}
+		// if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		{
+		  nMatchedTrack++;
+		}
 	      }
 	    }
+	    if(nMatchedTrack > 0) h_mSimpleClustersTrackFstCounts_2Layer[i_match]->Fill(r_proj,phi_proj);
 	  }
-	  if(nMatchedTrack > 0) h_mSimpleClustersTrackFstCounts_2Layer[i_match]->Fill(r_proj,phi_proj);
 	}
       }
     }
-  }
 
-  // fill Efficiency Histograms with 3-Layer Tracking
-  for(int i_track = 0; i_track < trackClusterVec.size(); ++i_track)
-  {
-    TVector3 pos_ist1 = trackClusterVec[i_track]->getPosOrig(1);
-    double y1_ist = pos_ist1.Y(); // original hit postion on IST1
-    TVector3 pos_ist3 = trackClusterVec[i_track]->getPosOrig(3);
-    double y3_ist = pos_ist3.Y(); // original hit postion on IST3
-
-    TVector3 proj_fst = trackClusterVec[i_track]->getProjection(0);
-    double r_proj   = proj_fst.X(); // get aligned projected position w.r.t. FST
-    double phi_proj = proj_fst.Y(); // r & phi for fst
-
-    TVector3 proj_ist2 = trackClusterVec[i_track]->getProjection(2);
-    double x2_proj = proj_ist2.X(); // get aligned projected position w.r.t. IST2
-    double y2_proj = proj_ist2.Y(); // x & y for ist2
-
-    if( abs(y1_ist-y3_ist) < 17.0*FST::pitchRow)
+    // fill Efficiency Histograms with 3-Layer Tracking
+    for(int i_track = 0; i_track < trackClusterVec.size(); ++i_track)
     {
-      if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
-      { // used for efficiency only if the projected position is within FST acceptance
-	if(clusterVec_ist2.size() > 0)
-	{
-	  for(int i_ist2 = 0; i_ist2 < clusterVec_ist2.size(); ++i_ist2)
-	  { // fill residual histograms
-	    double x2_ist = clusterVec_ist2[i_ist2]->getMeanX(); // x for ist2
-	    double y2_ist = clusterVec_ist2[i_ist2]->getMeanY(); // y for ist2
+      TVector3 pos_ist1 = trackClusterVec[i_track]->getPosOrig(1);
+      double y1_ist = pos_ist1.Y(); // original hit postion on IST1
+      TVector3 pos_ist3 = trackClusterVec[i_track]->getPosOrig(3);
+      double y3_ist = pos_ist3.Y(); // original hit postion on IST3
 
-	    if( x2_proj >= 20.0*FST::pitchColumn && x2_proj <= 24.0*FST::pitchColumn )
-	    {
-	      if( abs(x2_ist-x2_proj) < 6.0 && abs(y2_ist-y2_proj) < 0.6 )
-	      { // IST2 matching cut
-		for(int i_match = 0; i_match < 8; ++i_match)
-		{
-		  h_mSimpleClustersTrackIstCounts_3Layer[i_match]->Fill(r_proj,phi_proj);
-		  int nMatchedTrack = 0;
-		  if(clusterVec_fst.size() > 0)
+      TVector3 proj_fst = trackClusterVec[i_track]->getProjection(0);
+      double r_proj   = proj_fst.X(); // get aligned projected position w.r.t. FST
+      double phi_proj = proj_fst.Y(); // r & phi for fst
+
+      TVector3 proj_ist2 = trackClusterVec[i_track]->getProjection(2);
+      double x2_proj = proj_ist2.X(); // get aligned projected position w.r.t. IST2
+      double y2_proj = proj_ist2.Y(); // x & y for ist2
+
+      if( abs(y1_ist-y3_ist) < 17.0*FST::pitchRow)
+      {
+	if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
+	{ // used for efficiency only if the projected position is within FST acceptance
+	  if(clusterVec_ist2.size() > 0)
+	  {
+	    for(int i_ist2 = 0; i_ist2 < clusterVec_ist2.size(); ++i_ist2)
+	    { // fill residual histograms
+	      double x2_ist = clusterVec_ist2[i_ist2]->getMeanX(); // x for ist2
+	      double y2_ist = clusterVec_ist2[i_ist2]->getMeanY(); // y for ist2
+
+	      if( x2_proj >= 20.0*FST::pitchColumn && x2_proj <= 24.0*FST::pitchColumn )
+	      {
+		if( abs(x2_ist-x2_proj) < 6.0 && abs(y2_ist-y2_proj) < 0.6 )
+		{ // IST2 matching cut
+		  for(int i_match = 0; i_match < 8; ++i_match)
 		  {
-		    for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
-		    { // loop over all possible clusters
-		      double r_fst = clusterVec_fst[i_cluster]->getMeanX();
-		      double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
-		      if(i_match == 0)
-		      {
-			nMatchedTrack++;
-		      }
-		      // if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-		      if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-		      {
-			nMatchedTrack++;
+		    h_mSimpleClustersTrackIstCounts_3Layer[i_match]->Fill(r_proj,phi_proj);
+		    int nMatchedTrack = 0;
+		    if(clusterVec_fst.size() > 0)
+		    {
+		      for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
+		      { // loop over all possible clusters
+			double r_fst = clusterVec_fst[i_cluster]->getMeanX();
+			double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
+			if(i_match == 0)
+			{
+			  nMatchedTrack++;
+			}
+			// if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+			if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+			{
+			  nMatchedTrack++;
+			}
 		      }
 		    }
+		    if(nMatchedTrack > 0) h_mSimpleClustersTrackFstCounts_3Layer[i_match]->Fill(r_proj,phi_proj);
 		  }
-		  if(nMatchedTrack > 0) h_mSimpleClustersTrackFstCounts_3Layer[i_match]->Fill(r_proj,phi_proj);
 		}
 	      }
 	    }
@@ -1145,102 +1148,105 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
     }
   }
 
-  // fill Efficiency Histograms with 2-Layer Tracking
-  for(int i_track = 0; i_track < trackClusterVec.size(); ++i_track)
-  {
-    TVector3 pos_ist1 = trackClusterVec[i_track]->getPosOrig(1);
-    double y1_ist = pos_ist1.Y(); // original hit postion on IST1
-    TVector3 pos_ist3 = trackClusterVec[i_track]->getPosOrig(3);
-    double y3_ist = pos_ist3.Y(); // original hit postion on IST3
-
-    TVector3 proj_fst = trackClusterVec[i_track]->getProjection(0);
-    double r_proj   = proj_fst.X(); // get aligned projected position w.r.t. FST
-    double phi_proj = proj_fst.Y(); // r & phi for fst
-
-    if( abs(y1_ist-y3_ist) < 17.0*FST::pitchRow )
+  if(trackClusterVec.size() == 1)
+  { // only event with 1 track is used
+    // fill Efficiency Histograms with 2-Layer Tracking
+    for(int i_track = 0; i_track < trackClusterVec.size(); ++i_track)
     {
-      if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
-      { // used for efficiency only if the projected position is within FST acceptance
-	for(int i_match = 0; i_match < 8; ++i_match)
-	{
-	  h_mScanClustersTrackIstCounts_2Layer[i_match]->Fill(r_proj,phi_proj);
-	  int nMatchedTrack = 0;
-	  if(clusterVec_fst.size() > 0)
+      TVector3 pos_ist1 = trackClusterVec[i_track]->getPosOrig(1);
+      double y1_ist = pos_ist1.Y(); // original hit postion on IST1
+      TVector3 pos_ist3 = trackClusterVec[i_track]->getPosOrig(3);
+      double y3_ist = pos_ist3.Y(); // original hit postion on IST3
+
+      TVector3 proj_fst = trackClusterVec[i_track]->getProjection(0);
+      double r_proj   = proj_fst.X(); // get aligned projected position w.r.t. FST
+      double phi_proj = proj_fst.Y(); // r & phi for fst
+
+      if( abs(y1_ist-y3_ist) < 17.0*FST::pitchRow )
+      {
+	if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
+	{ // used for efficiency only if the projected position is within FST acceptance
+	  for(int i_match = 0; i_match < 8; ++i_match)
 	  {
-	    for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
-	    { // loop over all possible clusters
-	      double r_fst = clusterVec_fst[i_cluster]->getMeanX();
-	      double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
-	      if(i_match == 0)
-	      {
-		nMatchedTrack++;
-	      }
-	      // if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-	      if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-	      {
-		nMatchedTrack++;
+	    h_mScanClustersTrackIstCounts_2Layer[i_match]->Fill(r_proj,phi_proj);
+	    int nMatchedTrack = 0;
+	    if(clusterVec_fst.size() > 0)
+	    {
+	      for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
+	      { // loop over all possible clusters
+		double r_fst = clusterVec_fst[i_cluster]->getMeanX();
+		double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
+		if(i_match == 0)
+		{
+		  nMatchedTrack++;
+		}
+		// if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		{
+		  nMatchedTrack++;
+		}
 	      }
 	    }
+	    if(nMatchedTrack > 0) h_mScanClustersTrackFstCounts_2Layer[i_match]->Fill(r_proj,phi_proj);
 	  }
-	  if(nMatchedTrack > 0) h_mScanClustersTrackFstCounts_2Layer[i_match]->Fill(r_proj,phi_proj);
 	}
       }
     }
-  }
 
-  // fill Efficiency Histograms with 3-Layer Tracking
-  for(int i_track = 0; i_track < trackClusterVec.size(); ++i_track)
-  {
-    TVector3 pos_ist1 = trackClusterVec[i_track]->getPosOrig(1);
-    double y1_ist = pos_ist1.Y(); // original hit postion on IST1
-    TVector3 pos_ist3 = trackClusterVec[i_track]->getPosOrig(3);
-    double y3_ist = pos_ist3.Y(); // original hit postion on IST3
-
-    TVector3 proj_fst = trackClusterVec[i_track]->getProjection(0);
-    double r_proj   = proj_fst.X(); // get aligned projected position w.r.t. FST
-    double phi_proj = proj_fst.Y(); // r & phi for fst
-
-    TVector3 proj_ist2 = trackClusterVec[i_track]->getProjection(2);
-    double x2_proj = proj_ist2.X(); // get aligned projected position w.r.t. IST2
-    double y2_proj = proj_ist2.Y(); // x & y for ist2
-
-    if( abs(y1_ist-y3_ist) < 17.0*FST::pitchRow)
+    // fill Efficiency Histograms with 3-Layer Tracking
+    for(int i_track = 0; i_track < trackClusterVec.size(); ++i_track)
     {
-      if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
-      { // used for efficiency only if the projected position is within FST acceptance
-	if(clusterVec_ist2.size() > 0)
-	{
-	  for(int i_ist2 = 0; i_ist2 < clusterVec_ist2.size(); ++i_ist2)
-	  { // fill residual histograms
-	    double x2_ist = clusterVec_ist2[i_ist2]->getMeanX(); // x for ist2
-	    double y2_ist = clusterVec_ist2[i_ist2]->getMeanY(); // y for ist2
+      TVector3 pos_ist1 = trackClusterVec[i_track]->getPosOrig(1);
+      double y1_ist = pos_ist1.Y(); // original hit postion on IST1
+      TVector3 pos_ist3 = trackClusterVec[i_track]->getPosOrig(3);
+      double y3_ist = pos_ist3.Y(); // original hit postion on IST3
 
-	    if( x2_proj >= 20.0*FST::pitchColumn && x2_proj <= 24.0*FST::pitchColumn )
-	    {
-	      if( abs(x2_ist-x2_proj) < 6.0 && abs(y2_ist-y2_proj) < 0.6 )
-	      { // IST2 matching cut
-		for(int i_match = 0; i_match < 8; ++i_match)
-		{
-		  h_mScanClustersTrackIstCounts_3Layer[i_match]->Fill(r_proj,phi_proj);
-		  int nMatchedTrack = 0;
-		  if(clusterVec_fst.size() > 0)
+      TVector3 proj_fst = trackClusterVec[i_track]->getProjection(0);
+      double r_proj   = proj_fst.X(); // get aligned projected position w.r.t. FST
+      double phi_proj = proj_fst.Y(); // r & phi for fst
+
+      TVector3 proj_ist2 = trackClusterVec[i_track]->getProjection(2);
+      double x2_proj = proj_ist2.X(); // get aligned projected position w.r.t. IST2
+      double y2_proj = proj_ist2.Y(); // x & y for ist2
+
+      if( abs(y1_ist-y3_ist) < 17.0*FST::pitchRow)
+      {
+	if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
+	{ // used for efficiency only if the projected position is within FST acceptance
+	  if(clusterVec_ist2.size() > 0)
+	  {
+	    for(int i_ist2 = 0; i_ist2 < clusterVec_ist2.size(); ++i_ist2)
+	    { // fill residual histograms
+	      double x2_ist = clusterVec_ist2[i_ist2]->getMeanX(); // x for ist2
+	      double y2_ist = clusterVec_ist2[i_ist2]->getMeanY(); // y for ist2
+
+	      if( x2_proj >= 20.0*FST::pitchColumn && x2_proj <= 24.0*FST::pitchColumn )
+	      {
+		if( abs(x2_ist-x2_proj) < 6.0 && abs(y2_ist-y2_proj) < 0.6 )
+		{ // IST2 matching cut
+		  for(int i_match = 0; i_match < 8; ++i_match)
 		  {
-		    for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
-		    { // loop over all possible clusters
-		      double r_fst = clusterVec_fst[i_cluster]->getMeanX();
-		      double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
-		      if(i_match == 0)
-		      {
-			nMatchedTrack++;
-		      }
-		      // if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-		      if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-		      {
-			nMatchedTrack++;
+		    h_mScanClustersTrackIstCounts_3Layer[i_match]->Fill(r_proj,phi_proj);
+		    int nMatchedTrack = 0;
+		    if(clusterVec_fst.size() > 0)
+		    {
+		      for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
+		      { // loop over all possible clusters
+			double r_fst = clusterVec_fst[i_cluster]->getMeanX();
+			double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
+			if(i_match == 0)
+			{
+			  nMatchedTrack++;
+			}
+			// if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+			if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+			{
+			  nMatchedTrack++;
+			}
 		      }
 		    }
+		    if(nMatchedTrack > 0) h_mScanClustersTrackFstCounts_3Layer[i_match]->Fill(r_proj,phi_proj);
 		  }
-		  if(nMatchedTrack > 0) h_mScanClustersTrackFstCounts_3Layer[i_match]->Fill(r_proj,phi_proj);
 		}
 	      }
 	    }
