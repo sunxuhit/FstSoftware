@@ -20,5 +20,6 @@ macros/*/figures_woCMNSubtraction/*/*.pdf
 
 # ignore intput and output root file
 data/*/*/*.root
+output/*.root
 output/*/*.root
 output/*/*/*.root

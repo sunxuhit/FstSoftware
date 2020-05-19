@@ -4,15 +4,18 @@
 
 if [ $# -eq 0 ]
 then
-  # echo "apply CMN correction"
-  . ./fstCluster.sh true 4.5
-  . ./fstCluster.sh true 4.0
-  . ./fstCluster.sh true 3.5
-  . ./fstCluster.sh true 3.0
+  # isApplyCMNCorr=true
+  isApplyCMNCorr=false
 
-  # echo "not apply CMN correction"
-  . ./fstCluster.sh false 4.5
-  . ./fstCluster.sh false 4.0
-  . ./fstCluster.sh false 3.5
-  . ./fstCluster.sh false 3.0
+  echo "all statistics for HV140V"
+  . ./fstCluster.sh HV140V ${isApplyCMNCorr} 4.5
+  . ./fstCluster.sh HV140V ${isApplyCMNCorr} 4.0
+  . ./fstCluster.sh HV140V ${isApplyCMNCorr} 3.5
+  . ./fstCluster.sh HV140V ${isApplyCMNCorr} 3.0
+
+  echo "all statistics for HV200V"
+  . ./fstCluster.sh HV200V ${isApplyCMNCorr} 4.5
+  . ./fstCluster.sh HV200V ${isApplyCMNCorr} 4.0
+  . ./fstCluster.sh HV200V ${isApplyCMNCorr} 3.5
+  . ./fstCluster.sh HV200V ${isApplyCMNCorr} 3.0
 fi
