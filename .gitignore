@@ -25,5 +25,6 @@ output/*/*.root
 output/*/*/*.root
 
 # ignore some of list
+list/FST/*.list
 list/FST/configuration/*.list
 list/FST/timesequence/*.list
