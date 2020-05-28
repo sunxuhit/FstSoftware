@@ -20,8 +20,9 @@ class FstRawHit : public TObject
     double mPedRMS[FST::numTBins]; // rms of pedestal for each time bin => noise level
     double mCMNStdDev[FST::numTBins]; // rms of pedestal for each time bin => noise level
     double mRanStdDev[FST::numTBins]; // rms of pedestal for each time bin => noise level
-    double mRawCharge[FST::numTBins]; // FST: adc-ped-cmn | IST: adc-ped
+    double mRawCharge[FST::numTBins]; // FST: adc | IST: adc
     double mCharge[FST::numTBins]; // FST: adc-ped-cmn | IST: adc-ped
+    double mWeight; // weight to account difference in FST RStrip
     int mMaxTb;
     int mHitId; // hit id
     int mDefaultTb;
@@ -46,6 +47,7 @@ class FstRawHit : public TObject
     void setRanStdDev(double ranStdDev, int tb);
     void setRawCharge(double charge, int tb);
     void setCharge(double charge, int tb);
+    void setWeight(double weight);
     void setMaxTb(int maxTb);
     void setHitId(int hitId);
     void setDefaultTb(int tb);
@@ -66,6 +68,7 @@ class FstRawHit : public TObject
     double getRanStdDev(int tb = 0) const;
     double getRawCharge(int tb = 0) const;
     double getCharge(int tb = 0) const;
+    double getWeight() const;
     int getMaxTb() const;
     int getHitId() const;
     int getDefaultTb() const;

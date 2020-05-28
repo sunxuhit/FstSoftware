@@ -599,10 +599,20 @@ int FstClusterMaker::Make()
 		  fstRawHit->setCMNStdDev(mCMNStdDev_Evt[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
 		  fstRawHit->setRanStdDev(mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
 		  fstRawHit->setRawCharge(mRawSig[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
-		  if(getLayer(i_arm,i_port) > 0) fstRawHit->setCharge(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb], i_tb); // IST
-		  if(getLayer(i_arm,i_port) == 0) fstRawHit->setCharge(signalEvt[i_arm][i_port][i_apv][i_ch][i_tb], i_tb); // FST
+		  if(getLayer(i_arm,i_port) > 0) 
+		  {
+		    // fstRawHit->setCharge(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb], i_tb); // IST
+		    fstRawHit->setCharge(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb]/FST::mSigWeight_IST, i_tb); // IST
+		    fstRawHit->setWeight(FST::mSigWeight_IST); // weight for ISt is always 1.0
+		  }
+		  if(getLayer(i_arm,i_port) == 0) 
+		  {
+		    int rstrip = getColumn(i_arm,i_port,i_apv,i_ch);
+		    // fstRawHit->setCharge(signalEvt[i_arm][i_port][i_apv][i_ch][i_tb], i_tb); // FST
+		    fstRawHit->setCharge(signalEvt[i_arm][i_port][i_apv][i_ch][i_tb]/FST::mSigWeight_FST[rstrip], i_tb); // FST
+		    fstRawHit->setWeight(FST::mSigWeight_FST[rstrip]);
+		  }
 		}
-		// fstRawHit->setCharge(maxADC, maxTB);
 		fstRawHit->setMaxTb(maxTB);
 		fstRawHit->setHitId(numOfHits);
 		fstRawHit->setDefaultTb(FST::defaultTimeBin);
@@ -657,7 +667,7 @@ int FstClusterMaker::Make()
 	  mFstRawHit->setRawCharge(rawHitVec_orig[i_hit]->getRawCharge(i_tb), i_tb);
 	  mFstRawHit->setCharge(rawHitVec_orig[i_hit]->getCharge(i_tb), i_tb);
 	}
-	// mFstRawHit->setCharge(rawHitVec_orig[i_hit]->getCharge(rawHitVec_orig[i_hit]->getMaxTb()),rawHitVec_orig[i_hit]->getMaxTb());
+	mFstRawHit->setWeight(rawHitVec_orig[i_hit]->getWeight());
 	mFstRawHit->setMaxTb(rawHitVec_orig[i_hit]->getMaxTb());
 	mFstRawHit->setHitId(rawHitVec_orig[i_hit]->getHitId());
 	mFstRawHit->setDefaultTb(rawHitVec_orig[i_hit]->getDefaultTb());
@@ -710,7 +720,7 @@ int FstClusterMaker::Make()
 	    mFstClusteredRawHit->setPedRMS(rawHitsVec[i_hit]->getPedRMS(i_tb), i_tb);
 	    mFstClusteredRawHit->setCharge(rawHitsVec[i_hit]->getCharge(i_tb), i_tb);
 	  }
-	  // mFstRawHit->setCharge(rawHitVec_orig[i_hit]->getCharge(rawHitVec_orig[i_hit]->getMaxTb()),rawHitVec_orig[i_hit]->getMaxTb());
+	  mFstClusteredRawHit->setWeight(rawHitsVec[i_hit]->getWeight());
 	  mFstClusteredRawHit->setMaxTb(rawHitsVec[i_hit]->getMaxTb());
 	  mFstClusteredRawHit->setHitId(rawHitsVec[i_hit]->getHitId());
 	  mFstClusteredRawHit->setDefaultTb(rawHitsVec[i_hit]->getDefaultTb());
@@ -761,7 +771,7 @@ int FstClusterMaker::Make()
 	    mFstClusteredRawHit->setPedRMS(rawHitsVec[i_hit]->getPedRMS(i_tb), i_tb);
 	    mFstClusteredRawHit->setCharge(rawHitsVec[i_hit]->getCharge(i_tb), i_tb);
 	  }
-	  // mFstRawHit->setCharge(rawHitVec_orig[i_hit]->getCharge(rawHitVec_orig[i_hit]->getMaxTb()),rawHitVec_orig[i_hit]->getMaxTb());
+	  mFstClusteredRawHit->setWeight(rawHitsVec[i_hit]->getWeight());
 	  mFstClusteredRawHit->setMaxTb(rawHitsVec[i_hit]->getMaxTb());
 	  mFstClusteredRawHit->setHitId(rawHitsVec[i_hit]->getHitId());
 	  mFstClusteredRawHit->setDefaultTb(rawHitsVec[i_hit]->getDefaultTb());

@@ -79,6 +79,10 @@ void FstRawHit::setCharge(double charge, int tb)
 {
   mCharge[ (tb < 0 || tb >= FST::numTBins) ? mDefaultTb : tb ] = charge;
 }
+void FstRawHit::setWeight(double weight)
+{
+  mWeight = weight;
+}
 void FstRawHit::setMaxTb(int maxTb)
 {
   mMaxTb = maxTb;
@@ -157,6 +161,10 @@ double FstRawHit::getCharge(int tb) const
 {
   return mCharge[ (tb < 0 || tb >= FST::numTBins) ? mDefaultTb : tb ];
 }
+double FstRawHit::getWeight() const
+{
+  return mWeight;
+}
 int FstRawHit::getMaxTb() const
 {
   return mMaxTb;
@@ -222,6 +230,7 @@ void FstRawHit::Clear()
     mRawCharge[i_tb] = -1.0;
     mCharge[i_tb] = -1.0;
   }
+  mWeight = -1.0;
   mMaxTb = -1;
   mHitId = -1;
   mDefaultTb = FST::defaultTimeBin;

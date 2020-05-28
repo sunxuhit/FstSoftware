@@ -70,6 +70,9 @@ namespace FST
   const double MinNoise = 10.0;
   const double maxAngle = 100.0;
   const double rad2deg = 180.0/3.141593;
+
+  const double mSigWeight_FST[8] = {1.0,1.0,1.0,1.0,1.0,0.571882,0.299947,0.164641};
+  const double mSigWeight_IST = 1.0;
 }
 
 #endif
