@@ -42,6 +42,8 @@ class FstNoiseStudy : public TObject
     bool calPedestal(); // extract pedestal for each ch and fill TGraphs for ped mean & sigma (noise)
     void writePedestal();
 
+    bool getChannelMap();
+
   private:
     std::string mHome, mList;
     std::string mOutPutFile;
@@ -73,6 +75,12 @@ class FstNoiseStudy : public TObject
 
     TGraph *g_mRanSigma[4][FST::numTBins]; // 0 for FST & 1-3 for IST
     TH1F *h_mRanSigma_FST[4][FST::numTBins]; // RStrip & TimeBin
+
+    int mRoChannelMap[128];
+    TGraph *g_mRoPedMean_FST[FST::numTBins]; // i_ro (0-127) & i_tb (0-8)
+    TGraph *g_mRoPedSigma_FST[FST::numTBins];
+    TGraph *g_mRoCMNSigma_FST[FST::numTBins];
+    TGraph *g_mRoRanSigma_FST[FST::numTBins];
 
     // Utility for tracking
     int getLayer(int arm, int port); // return layer based on arm & port

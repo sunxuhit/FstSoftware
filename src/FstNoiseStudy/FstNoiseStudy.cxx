@@ -38,15 +38,21 @@ int FstNoiseStudy::Init()
 
   bool isInPut = initChain(); // initialize input data/ped TChain;
   bool isPed = initPedestal(); // initialize pedestal array;
+  bool isChannelMap = getChannelMap(); // read in channel map
 
   if(!isInPut) 
   {
-    cout << "Failed to initialize input data!" << endl;
+    cout << "Init=> Failed to initialize input data!" << endl;
     return -1;
   }
   if(!isPed) 
   {
-    cout << "Failed to initialize pedestals!" << endl;
+    cout << "Init=> Failed to initialize pedestals!" << endl;
+    return -1;
+  }
+  if(!isChannelMap)
+  {
+    cout << "Init=> Failed to read in channel map!" << endl;
     return -1;
   }
 
@@ -233,6 +239,25 @@ bool FstNoiseStudy::initPedestal()
       HistName = Form("h_mRanSigma_FST_RStrip%d_TimeBin%d",i_rstrip,i_tb);
       h_mRanSigma_FST[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5);
     }
+  }
+
+  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+  {
+    std::string gName = Form("g_mRoPedMean_FST_TimeBin%d",i_tb);
+    g_mRoPedMean_FST[i_tb] = new TGraph();
+    g_mRoPedMean_FST[i_tb]->SetName(gName.c_str());
+
+    gName = Form("g_mRoPedSigma_FST_TimeBin%d",i_tb);
+    g_mRoPedSigma_FST[i_tb] = new TGraph();
+    g_mRoPedSigma_FST[i_tb]->SetName(gName.c_str());
+
+    gName = Form("g_mRoCMNSigma_FST_TimeBin%d",i_tb);
+    g_mRoCMNSigma_FST[i_tb] = new TGraph();
+    g_mRoCMNSigma_FST[i_tb]->SetName(gName.c_str());
+
+    gName = Form("g_mRoRanSigma_FST_TimeBin%d",i_tb);
+    g_mRoRanSigma_FST[i_tb] = new TGraph();
+    g_mRoRanSigma_FST[i_tb]->SetName(gName.c_str());
   }
 
   return clearPedestal();
@@ -426,6 +451,15 @@ bool FstNoiseStudy::calPedestal()
 	      h_mPedMean_FST[col-4][i_tb]->SetBinContent(row+1,mPed[i_arm][i_port][i_apv][i_ch][i_tb]);
 	      h_mPedSigma_FST[col-4][i_tb]->SetBinContent(row+1,mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
 	    }
+	    if(layer == 0)
+	    { // fill noise display w.r.t. readout order
+	      int roChannel = mRoChannelMap[i_ch];
+	      // g_mRoPedMean_FST[i_tb]->SetPoint(i_apv*FST::numROChannels+roChannel*FST::numTBins+i_tb,i_apv*FST::numROChannels+roChannel*FST::numTBins+i_tb,mPed[i_arm][i_port][i_apv][i_ch][i_tb]);
+	      // g_mRoPedSigma_FST[i_tb]->SetPoint(i_apv*FST::numROChannels+roChannel*FST::numTBins+i_tb,i_apv*FST::numROChannels+roChannel*FST::numTBins+i_tb,mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	      g_mRoPedMean_FST[i_tb]->SetPoint(i_apv*FST::numChannels+roChannel,i_apv*FST::numROChannels+roChannel*FST::numTBins+i_tb,mPed[i_arm][i_port][i_apv][i_ch][i_tb]);
+	      g_mRoPedSigma_FST[i_tb]->SetPoint(i_apv*FST::numChannels+roChannel,i_apv*FST::numROChannels+roChannel*FST::numTBins+i_tb,mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	      // cout << "RO Channel: " << i_apv*FST::numROChannels+roChannel*FST::numTBins+i_tb << " for PH Channel: " << i_ch << " and TB: " << i_tb << endl;
+	    }
 	  }
 	}
       }
@@ -574,6 +608,11 @@ bool FstNoiseStudy::calPedestal()
 	      }
 	      g_mCMNSigma[layer][i_tb]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
 	      if(layer == 0 && col > 3) h_mCMNSigma_FST[col-4][i_tb]->SetBinContent(row+1,mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	      if(layer == 0)
+	      { // fill noise display w.r.t. readout order
+		int roChannel = mRoChannelMap[i_ch];
+		g_mRoCMNSigma_FST[i_tb]->SetPoint(i_apv*FST::numChannels+roChannel,i_apv*FST::numROChannels+roChannel*FST::numTBins+i_tb,mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	      }
 	    }
 	  }
 	}
@@ -756,6 +795,11 @@ bool FstNoiseStudy::calPedestal()
 	    int row = this->getRow(i_arm,i_port,i_apv,i_ch);
 	    g_mRanSigma[layer][i_tb]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
 	    if(layer == 0 && col > 3) h_mRanSigma_FST[col-4][i_tb]->SetBinContent(row+1,mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	    if(layer == 0)
+	    { // fill noise display w.r.t. readout order
+	      int roChannel = mRoChannelMap[i_ch];
+	      g_mRoRanSigma_FST[i_tb]->SetPoint(i_apv*FST::numChannels+roChannel,i_apv*FST::numROChannels+roChannel*FST::numTBins+i_tb,mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	    }
 	  }
 	}
       }
@@ -792,8 +836,45 @@ void FstNoiseStudy::writePedestal()
       h_mRanSigma_FST[i_rstrip][i_tb]->Write();
     }
   }
+
+  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+  {
+    g_mRoPedMean_FST[i_tb]->Write();
+    g_mRoPedSigma_FST[i_tb]->Write();
+    g_mRoCMNSigma_FST[i_tb]->Write();
+    g_mRoRanSigma_FST[i_tb]->Write();
+  }
 }
 //--------------pedestal---------------------
+
+//--------------channel map---------------------
+bool FstNoiseStudy::getChannelMap()
+{
+  cout << "FstNoiseStudy::getChannelMap->" << endl;
+  string inputfile = "../../src/FstNoiseStudy/channelMap.txt";
+  cout << "Open channel map inputfile: " << inputfile.c_str() << endl;
+  ifstream file_channelMap (inputfile.c_str());
+  if( !file_channelMap.is_open() )
+  {
+    cout << "Abort. Fail to read in channel map: " << inputfile.c_str() << endl;
+    return false;
+  }
+
+  int readout_channel = -1;
+  int physics_channel = -1;
+
+  cout << "reading in channel map:" << endl;
+  while (file_channelMap >> physics_channel >> readout_channel)
+  {
+    cout << "physics_channel = " << physics_channel << ", readout_channel = " << readout_channel << endl;
+    mRoChannelMap[physics_channel] = readout_channel;
+  }
+  file_channelMap.close();
+
+  return true;
+}
+
+//--------------channel map---------------------
 
 //--------------Utility---------------------
 int FstNoiseStudy::getLayer(int arm, int port)

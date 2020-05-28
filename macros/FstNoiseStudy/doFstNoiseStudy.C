@@ -4,7 +4,7 @@
 
 R__LOAD_LIBRARY(../../lib/libFstNoiseStudy.dylib)
 
-int doFstNoiseStudy(string hv = "HV140V", string mode = "Ped")
+int doFstNoiseStudy(string hv = "HV200V", string mode = "Ped")
 {
   std::cout << "gSystem::Load <- libFstNoiseStudy.dylib" << endl;
 
@@ -19,10 +19,14 @@ int doFstNoiseStudy(string hv = "HV140V", string mode = "Ped")
   fst->set_list(inputlist.c_str());
   fst->set_outputfile(outputfile.c_str());
 
-  fst->Init();
+  int stats = fst->Init();
+  if(stats < 0)
+  {
+    return -1;
+  }
+
   fst->Make();
   fst->Finish();
-
   std::cout << "All done" << endl;
 
   return 1;

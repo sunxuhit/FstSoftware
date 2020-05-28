@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotNoiseQA(string hv = "HV140V", string mode = "Ped")
+void plotNoiseQA(string hv = "HV200V", string mode = "Ped")
 {
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
   gStyle->SetStatW(0.35); gStyle->SetStatH(0.35);
@@ -226,22 +226,41 @@ void plotNoiseQA(string hv = "HV140V", string mode = "Ped")
     c_NoiseSum->Print(outputname.c_str());
   }
 
-  TH1F *h_mMeanDiffSigma_RStrip[4];
+  TH1F *h_mMeanPedSigma_RStrip[4];
+  TH1F *h_mMeanCMNSigma_RStrip[4];
+  TH1F *h_mMeanRanSigma_RStrip[4];
   for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
   {
-    string HistName = Form("h_mMeanDiffSigma_RStrip%d",i_rstrip);
-    h_mMeanDiffSigma_RStrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numTBins,-0.5,FST::numTBins-0.5);
+    string HistName; 
+    HistName = Form("h_mMeanPedSigma_RStrip%d",i_rstrip);
+    h_mMeanPedSigma_RStrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numTBins,-0.5,FST::numTBins-0.5);
+
+    HistName = Form("h_mMeanCMNSigma_RStrip%d",i_rstrip);
+    h_mMeanCMNSigma_RStrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numTBins,-0.5,FST::numTBins-0.5);
+
+    HistName = Form("h_mMeanRanSigma_RStrip%d",i_rstrip);
+    h_mMeanRanSigma_RStrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numTBins,-0.5,FST::numTBins-0.5);
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
     {
-      int counter = 0;
-      double sum = 0.0;
+      int counter_Ped = 0;
+      double sum_Ped = 0.0;
+      int counter_CMN = 0;
+      double sum_CMN = 0.0;
+      int counter_Ran = 0;
+      double sum_Ran = 0.0;
       // for(int i_bin = 0; i_bin < h_mRanSigma_FST[i_rstrip][i_tb]->GetNbinsX(); ++i_bin)
       for(int i_bin = 0; i_bin < 64; ++i_bin)
       {
-	sum += h_mRanSigma_FST[i_rstrip][i_tb]->GetBinContent(i_bin+1);
-	counter++;
+	sum_Ped += h_mPedSigma_FST[i_rstrip][i_tb]->GetBinContent(i_bin+1);
+	counter_Ped++;
+	sum_CMN += h_mCMNSigma_FST[i_rstrip][i_tb]->GetBinContent(i_bin+1);
+	counter_CMN++;
+	sum_Ran += h_mRanSigma_FST[i_rstrip][i_tb]->GetBinContent(i_bin+1);
+	counter_Ran++;
       }
-      h_mMeanDiffSigma_RStrip[i_rstrip]->SetBinContent(i_tb+1,sum/counter);
+      if(counter_Ped > 0) h_mMeanPedSigma_RStrip[i_rstrip]->SetBinContent(i_tb+1,sum_Ped/counter_Ped);
+      if(counter_CMN > 0) h_mMeanCMNSigma_RStrip[i_rstrip]->SetBinContent(i_tb+1,sum_CMN/counter_CMN);
+      if(counter_Ran > 0) h_mMeanRanSigma_RStrip[i_rstrip]->SetBinContent(i_tb+1,sum_Ran/counter_Ran);
     }
   }
   TCanvas *c_NoiseMean = new TCanvas("c_NoiseMean","c_NoiseMean",10,10,800,800);
@@ -254,31 +273,69 @@ void plotNoiseQA(string hv = "HV140V", string mode = "Ped")
     c_NoiseMean->cd(i_pad+1)->SetGrid(0,0);
   }
 
+  c_NoiseMean->cd(1);
   TLegend *leg_mean = new TLegend(0.7,0.2,0.8,0.5);
   leg_mean->SetBorderSize(0);
   leg_mean->SetFillColor(10);
   for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
   {
-    c_NoiseMean->cd(1);
-    h_mMeanDiffSigma_RStrip[i_rstrip]->SetTitle("FST Differential Noise");
-    h_mMeanDiffSigma_RStrip[i_rstrip]->SetStats(0);
-    h_mMeanDiffSigma_RStrip[i_rstrip]->GetXaxis()->SetTitle("Time Bin");
-    h_mMeanDiffSigma_RStrip[i_rstrip]->GetXaxis()->SetTitleSize(0.06);
-    h_mMeanDiffSigma_RStrip[i_rstrip]->GetXaxis()->SetLabelSize(0.06);
-    h_mMeanDiffSigma_RStrip[i_rstrip]->GetYaxis()->SetTitle("<Noise_{Diff}>");
-    h_mMeanDiffSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
-    h_mMeanDiffSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
-    h_mMeanDiffSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(5.0,20.0);
-    h_mMeanDiffSigma_RStrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
-    h_mMeanDiffSigma_RStrip[i_rstrip]->SetLineColor(i_rstrip+1);
+    h_mMeanPedSigma_RStrip[i_rstrip]->SetTitle("FST Total Noise");
+    h_mMeanPedSigma_RStrip[i_rstrip]->SetStats(0);
+    h_mMeanPedSigma_RStrip[i_rstrip]->GetXaxis()->SetTitle("Time Bin");
+    h_mMeanPedSigma_RStrip[i_rstrip]->GetXaxis()->SetTitleSize(0.06);
+    h_mMeanPedSigma_RStrip[i_rstrip]->GetXaxis()->SetLabelSize(0.06);
+    h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetTitle("<Noise_{Total}>");
+    h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
+    h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
+    h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(5.0,30.0);
+    h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
+    h_mMeanPedSigma_RStrip[i_rstrip]->SetLineColor(i_rstrip+1);
 
-    if(i_rstrip == 0) h_mMeanDiffSigma_RStrip[i_rstrip]->Draw();
-    else h_mMeanDiffSigma_RStrip[i_rstrip]->Draw("same");
+    if(i_rstrip == 0) h_mMeanPedSigma_RStrip[i_rstrip]->Draw();
+    else h_mMeanPedSigma_RStrip[i_rstrip]->Draw("same");
 
     string LegName = Form("R_strip %d",i_rstrip);
-    leg_mean->AddEntry(h_mMeanDiffSigma_RStrip[i_rstrip],LegName.c_str(),"L");
+    leg_mean->AddEntry(h_mMeanRanSigma_RStrip[i_rstrip],LegName.c_str(),"L");
   }
   leg_mean->Draw("same");
+
+  c_NoiseMean->cd(2);
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    h_mMeanCMNSigma_RStrip[i_rstrip]->SetTitle("FST Commen Mode Noise");
+    h_mMeanCMNSigma_RStrip[i_rstrip]->SetStats(0);
+    h_mMeanCMNSigma_RStrip[i_rstrip]->GetXaxis()->SetTitle("Time Bin");
+    h_mMeanCMNSigma_RStrip[i_rstrip]->GetXaxis()->SetTitleSize(0.06);
+    h_mMeanCMNSigma_RStrip[i_rstrip]->GetXaxis()->SetLabelSize(0.06);
+    h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetTitle("<Noise_{CMN}>");
+    h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
+    h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
+    h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(5.0,30.0);
+    h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
+    h_mMeanCMNSigma_RStrip[i_rstrip]->SetLineColor(i_rstrip+1);
+
+    if(i_rstrip == 0) h_mMeanCMNSigma_RStrip[i_rstrip]->Draw();
+    else h_mMeanCMNSigma_RStrip[i_rstrip]->Draw("same");
+  }
+
+  c_NoiseMean->cd(3);
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    h_mMeanRanSigma_RStrip[i_rstrip]->SetTitle("FST Differential Noise");
+    h_mMeanRanSigma_RStrip[i_rstrip]->SetStats(0);
+    h_mMeanRanSigma_RStrip[i_rstrip]->GetXaxis()->SetTitle("Time Bin");
+    h_mMeanRanSigma_RStrip[i_rstrip]->GetXaxis()->SetTitleSize(0.06);
+    h_mMeanRanSigma_RStrip[i_rstrip]->GetXaxis()->SetLabelSize(0.06);
+    h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetTitle("<Noise_{Ran}>");
+    h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
+    h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
+    h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(5.0,20.0);
+    h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
+    h_mMeanRanSigma_RStrip[i_rstrip]->SetLineColor(i_rstrip+1);
+
+    if(i_rstrip == 0) h_mMeanRanSigma_RStrip[i_rstrip]->Draw();
+    else h_mMeanRanSigma_RStrip[i_rstrip]->Draw("same");
+  }
   c_NoiseMean->Update();
   c_NoiseMean->Print(outputname.c_str());
 
@@ -399,8 +456,8 @@ void plotNoiseQA(string hv = "HV140V", string mode = "Ped")
 	}
       }
       // cout << "i_layer = " << i_layer << ", i_tb = " << i_tb << ", count_even = " << count_even << ", count_odd = " << count_odd << endl;
-      h_meanRatio_IST[i_layer][0]->SetBinContent(i_tb+1,sum_even/count_even);
-      h_meanRatio_IST[i_layer][1]->SetBinContent(i_tb+1,sum_odd/count_odd);
+      if(count_even > 0) h_meanRatio_IST[i_layer][0]->SetBinContent(i_tb+1,sum_even/count_even);
+      if(count_odd > 0) h_meanRatio_IST[i_layer][1]->SetBinContent(i_tb+1,sum_odd/count_odd);
     }
   }
   
@@ -441,6 +498,233 @@ void plotNoiseQA(string hv = "HV140V", string mode = "Ped")
   }
   c_NoiseMean->Update();
   c_NoiseMean->Print(outputname.c_str());
+  
+  TGraph *g_mRoPedMean_FST[FST::numTBins];
+  TGraph *g_mRoPedSigma_FST[FST::numTBins];
+  TGraph *g_mRoCMNSigma_FST[FST::numTBins];
+  TGraph *g_mRoRanSigma_FST[FST::numTBins];
+  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+  {
+    std::string gName = Form("g_mRoPedMean_FST_TimeBin%d",i_tb);
+    g_mRoPedMean_FST[i_tb] = (TGraph*)File_InPut->Get(gName.c_str());
+
+    gName = Form("g_mRoPedSigma_FST_TimeBin%d",i_tb);
+    g_mRoPedSigma_FST[i_tb] = (TGraph*)File_InPut->Get(gName.c_str());
+
+    gName = Form("g_mRoCMNSigma_FST_TimeBin%d",i_tb);
+    g_mRoCMNSigma_FST[i_tb] = (TGraph*)File_InPut->Get(gName.c_str());
+
+    gName = Form("g_mRoRanSigma_FST_TimeBin%d",i_tb);
+    g_mRoRanSigma_FST[i_tb] = (TGraph*)File_InPut->Get(gName.c_str());
+  }
+  
+  TH1F *h_play_RO = new TH1F("h_play_RO","h_play_RO",14000,-0.5,13999.5);
+  for(int i_bin = 0; i_bin < 14000; ++i_bin)
+  {
+    h_play_RO->SetBinContent(i_bin+1,-1000.0);
+    h_play_RO->SetBinError(i_bin+1,1.0);
+  }
+  h_play_RO->SetStats(0);
+  h_play_RO->GetXaxis()->SetTitle("RO Order");
+  h_play_RO->GetXaxis()->SetTitleSize(0.06);
+  h_play_RO->GetXaxis()->SetRangeUser(4*1152-50,6*1152+50);
+  h_play_RO->GetYaxis()->SetTitleSize(0.06);
+  h_play_RO->GetYaxis()->SetRangeUser(0.0,50);
+
+  TCanvas *c_NoiseRO = new TCanvas("c_NoiseRO","c_NoiseRO",10,10,900,900);
+  c_NoiseRO->Divide(1,4);
+  for(int i_pad = 0; i_pad < 4; ++i_pad)
+  {
+    c_NoiseRO->cd(i_pad+1)->SetLeftMargin(0.10);
+    c_NoiseRO->cd(i_pad+1)->SetBottomMargin(0.15);
+    c_NoiseRO->cd(i_pad+1)->SetTicks(1,1);
+    c_NoiseRO->cd(i_pad+1)->SetGrid(0,0);
+  }
+
+  TLegend *legRO = new TLegend(0.4,0.6,0.85,0.85);
+  legRO->SetBorderSize(0);
+  legRO->SetFillColor(10);
+  legRO->SetNColumns(3);
+
+  c_NoiseRO->cd(1);
+  h_play_RO->SetTitle("FST Pedestal vs. RO Order");
+  h_play_RO->GetYaxis()->SetRangeUser(0.0,1200.0);
+  h_play_RO->GetYaxis()->SetTitle("Pedestal ADC");
+  h_play_RO->DrawCopy("pE");
+  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+  {
+    g_mRoPedMean_FST[i_tb]->SetMarkerStyle(24);
+    g_mRoPedMean_FST[i_tb]->SetMarkerColor(i_tb+1);
+    g_mRoPedMean_FST[i_tb]->SetMarkerSize(1.0);
+    g_mRoPedMean_FST[i_tb]->Draw("P same");
+    string leg_ro = Form("TimeBin %d",i_tb);
+    legRO->AddEntry(g_mRoPedMean_FST[i_tb],leg_ro.c_str(),"P");
+  }
+  PlotLine(5*1152,5*1152,0.0,1200,2,1,2);
+  legRO->Draw("same");
+
+  c_NoiseRO->cd(2);
+  h_play_RO->SetTitle("FST Total Noise vs. RO Order");
+  h_play_RO->GetYaxis()->SetRangeUser(0.0,50.0);
+  h_play_RO->GetYaxis()->SetTitle("Total Noise ADC");
+  h_play_RO->DrawCopy("pE");
+  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+  {
+    g_mRoPedSigma_FST[i_tb]->SetMarkerStyle(24);
+    g_mRoPedSigma_FST[i_tb]->SetMarkerColor(i_tb+1);
+    g_mRoPedSigma_FST[i_tb]->SetMarkerSize(1.0);
+    g_mRoPedSigma_FST[i_tb]->Draw("P same");
+  }
+  PlotLine(5*1152,5*1152,0.0,50.0,2,1,2);
+
+  c_NoiseRO->cd(3);
+  h_play_RO->SetTitle("FST Common Mode Noise vs. RO Order");
+  h_play_RO->GetYaxis()->SetRangeUser(0.0,50.0);
+  h_play_RO->GetYaxis()->SetTitle("Common Mode Noise ADC");
+  h_play_RO->DrawCopy("pE");
+  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+  {
+    g_mRoCMNSigma_FST[i_tb]->SetMarkerStyle(24);
+    g_mRoCMNSigma_FST[i_tb]->SetMarkerColor(i_tb+1);
+    g_mRoCMNSigma_FST[i_tb]->SetMarkerSize(1.0);
+    g_mRoCMNSigma_FST[i_tb]->Draw("P same");
+  }
+  PlotLine(5*1152,5*1152,0.0,50.0,2,1,2);
+
+  c_NoiseRO->cd(4);
+  h_play_RO->SetTitle("FST Random Noise vs. RO Order");
+  h_play_RO->GetYaxis()->SetRangeUser(0.0,50.0);
+  h_play_RO->GetYaxis()->SetTitle("Differential Noise ADC");
+  h_play_RO->DrawCopy("pE");
+  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+  {
+    g_mRoRanSigma_FST[i_tb]->SetMarkerStyle(24);
+    g_mRoRanSigma_FST[i_tb]->SetMarkerColor(i_tb+1);
+    g_mRoRanSigma_FST[i_tb]->SetMarkerSize(1.0);
+    g_mRoRanSigma_FST[i_tb]->Draw("P same");
+  }
+  PlotLine(5*1152,5*1152,0.0,50.0,2,1,2);
+
+  c_NoiseRO->Update();
+  c_NoiseRO->Print(outputname.c_str());
+
+  // for each time bin
+  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+  {
+    c_NoiseRO->cd(1);
+    string titleRO = Form("FST Pedestal vs. RO Order at TB %d",i_tb);
+    h_play_RO->SetTitle(titleRO.c_str());
+    h_play_RO->GetYaxis()->SetRangeUser(0.0,1200.0);
+    h_play_RO->GetYaxis()->SetTitle("Pedestal ADC");
+    h_play_RO->DrawCopy("pE");
+    g_mRoPedMean_FST[i_tb]->SetMarkerStyle(24);
+    g_mRoPedMean_FST[i_tb]->SetMarkerColor(i_tb+1);
+    g_mRoPedMean_FST[i_tb]->SetMarkerSize(1.0);
+    g_mRoPedMean_FST[i_tb]->Draw("P same");
+    PlotLine(5*1152,5*1152,0.0,1200,2,1,2);
+
+    c_NoiseRO->cd(2);
+    titleRO = Form("FST Total Noise vs. RO Order at TB %d",i_tb);
+    h_play_RO->SetTitle(titleRO.c_str());
+    h_play_RO->GetYaxis()->SetRangeUser(0.0,50.0);
+    h_play_RO->GetYaxis()->SetTitle("Total Noise ADC");
+    h_play_RO->DrawCopy("pE");
+    g_mRoPedSigma_FST[i_tb]->SetMarkerStyle(24);
+    g_mRoPedSigma_FST[i_tb]->SetMarkerColor(i_tb+1);
+    g_mRoPedSigma_FST[i_tb]->SetMarkerSize(1.0);
+    g_mRoPedSigma_FST[i_tb]->Draw("P same");
+    PlotLine(5*1152,5*1152,0.0,50.0,2,1,2);
+
+    c_NoiseRO->cd(3);
+    titleRO = Form("FST Common Mode Noise vs. RO Order at TB %d",i_tb);
+    h_play_RO->SetTitle(titleRO.c_str());
+    h_play_RO->GetYaxis()->SetRangeUser(0.0,50.0);
+    h_play_RO->GetYaxis()->SetTitle("Common Mode Noise ADC");
+    h_play_RO->DrawCopy("pE");
+    g_mRoCMNSigma_FST[i_tb]->SetMarkerStyle(24);
+    g_mRoCMNSigma_FST[i_tb]->SetMarkerColor(i_tb+1);
+    g_mRoCMNSigma_FST[i_tb]->SetMarkerSize(1.0);
+    g_mRoCMNSigma_FST[i_tb]->Draw("P same");
+    PlotLine(5*1152,5*1152,0.0,50.0,2,1,2);
+
+    c_NoiseRO->cd(4);
+    titleRO = Form("FST Differential Noise vs. RO Order at TB %d",i_tb);
+    h_play_RO->SetTitle(titleRO.c_str());
+    h_play_RO->GetYaxis()->SetRangeUser(0.0,50.0);
+    h_play_RO->GetYaxis()->SetTitle("Differential Noise ADC");
+    h_play_RO->DrawCopy("pE");
+    g_mRoRanSigma_FST[i_tb]->SetMarkerStyle(24);
+    g_mRoRanSigma_FST[i_tb]->SetMarkerColor(i_tb+1);
+    g_mRoRanSigma_FST[i_tb]->SetMarkerSize(1.0);
+    g_mRoRanSigma_FST[i_tb]->Draw("P same");
+    PlotLine(5*1152,5*1152,0.0,50.0,2,1,2);
+
+    c_NoiseRO->Update();
+    c_NoiseRO->Print(outputname.c_str());
+  }
+
+  // Zoomed in View for all time bins
+  {
+    h_play_RO->GetXaxis()->SetRangeUser(4*1152,4*1152+9*16);
+
+    c_NoiseRO->cd(1);
+    h_play_RO->SetTitle("FST Pedestal vs. RO Order (First 16 channels)");
+    h_play_RO->GetYaxis()->SetRangeUser(0.0,1200.0);
+    h_play_RO->GetYaxis()->SetTitle("Pedestal ADC");
+    h_play_RO->DrawCopy("pE");
+    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+    {
+      g_mRoPedMean_FST[i_tb]->SetMarkerStyle(24);
+      g_mRoPedMean_FST[i_tb]->SetMarkerColor(i_tb+1);
+      g_mRoPedMean_FST[i_tb]->SetMarkerSize(1.0);
+      g_mRoPedMean_FST[i_tb]->Draw("P same");
+      string leg_ro = Form("TimeBin %d",i_tb);
+    }
+    legRO->Draw("same");
+
+    c_NoiseRO->cd(2);
+    h_play_RO->SetTitle("FST Total Noise vs. RO Order (First 16 channels)");
+    h_play_RO->GetYaxis()->SetRangeUser(0.0,50.0);
+    h_play_RO->GetYaxis()->SetTitle("Total Noise ADC");
+    h_play_RO->DrawCopy("pE");
+    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+    {
+      g_mRoPedSigma_FST[i_tb]->SetMarkerStyle(24);
+      g_mRoPedSigma_FST[i_tb]->SetMarkerColor(i_tb+1);
+      g_mRoPedSigma_FST[i_tb]->SetMarkerSize(1.0);
+      g_mRoPedSigma_FST[i_tb]->Draw("P same");
+    }
+
+    c_NoiseRO->cd(3);
+    h_play_RO->SetTitle("FST Common Mode Noise vs. RO Order (First 16 channels)");
+    h_play_RO->GetYaxis()->SetRangeUser(0.0,50.0);
+    h_play_RO->GetYaxis()->SetTitle("Common Mode Noise ADC");
+    h_play_RO->DrawCopy("pE");
+    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+    {
+      g_mRoCMNSigma_FST[i_tb]->SetMarkerStyle(24);
+      g_mRoCMNSigma_FST[i_tb]->SetMarkerColor(i_tb+1);
+      g_mRoCMNSigma_FST[i_tb]->SetMarkerSize(1.0);
+      g_mRoCMNSigma_FST[i_tb]->Draw("P same");
+    }
+
+    c_NoiseRO->cd(4);
+    h_play_RO->SetTitle("FST Random Noise vs. RO Order (First 16 channels)");
+    h_play_RO->GetYaxis()->SetRangeUser(0.0,50.0);
+    h_play_RO->GetYaxis()->SetTitle("Differential Noise ADC");
+    h_play_RO->DrawCopy("pE");
+    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+    {
+      g_mRoRanSigma_FST[i_tb]->SetMarkerStyle(24);
+      g_mRoRanSigma_FST[i_tb]->SetMarkerColor(i_tb+1);
+      g_mRoRanSigma_FST[i_tb]->SetMarkerSize(1.0);
+      g_mRoRanSigma_FST[i_tb]->Draw("P same");
+    }
+  }
+
+  c_NoiseRO->Update();
+  c_NoiseRO->Print(outputname.c_str());
+
 
   string output_stop = Form("./figures/%sNoiseQA.pdf]",mode.c_str());
   c_Noise->Print(output_stop.c_str()); // open pdf file
