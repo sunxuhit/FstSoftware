@@ -15,6 +15,8 @@
 
 using namespace std;
 
+void plotBox(TGraph *g_track);
+
 void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 2)
 {
   // gStyle->SetPalette(kRainBow);
@@ -185,6 +187,7 @@ void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool i
       g_mClusterTracksDisplay->SetMarkerColor(1);
       g_mClusterTracksDisplay->SetMarkerSize(1.0);
       g_mClusterTracksDisplay->Draw("p Same");
+      plotBox(g_mClusterTracksDisplay);
 
       // plot FST acceptance
       PlotLine(rMinFst, rMaxFst, phiMinFst, phiMinFst, 1, 2, 2);
@@ -238,6 +241,7 @@ void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool i
       g_mClusterTracksDisplay->SetMarkerColor(1);
       g_mClusterTracksDisplay->SetMarkerSize(1.0);
       g_mClusterTracksDisplay->Draw("p Same");
+      plotBox(g_mClusterTracksDisplay);
 
       // plot FST acceptance
       PlotLine(rMinFst, rMaxFst, phiMinFst, phiMinFst, 1, 2, 2);
@@ -258,3 +262,40 @@ void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool i
   c_EventDisplay->Print(output_stop.c_str()); // close pdf file
 }
 
+void plotBox(TGraph *g_track)
+{
+  double r_proj, phi_proj;
+  g_track->GetPoint(0,r_proj,phi_proj); // only get r & phi info for first track
+  const double phiMinFst = phi_proj-3.0*FST::pitchPhi;
+  const double phiMaxFst = phi_proj+3.0*FST::pitchPhi;
+
+  const double rMin_match1 = r_proj-1.0*FST::pitchR;
+  const double rMax_match1 = r_proj+1.0*FST::pitchR;
+  TBox *b_match1 = new TBox(rMin_match1,phiMinFst,rMax_match1,phiMaxFst);
+  b_match1->SetFillColor(0);
+  b_match1->SetFillColorAlpha(0,0.1);
+  b_match1->SetLineStyle(1);
+  b_match1->SetLineColor(1);
+  b_match1->SetLineWidth(1);
+  b_match1->Draw("l Same");
+
+  const double rMin_match2 = r_proj-1.5*FST::pitchR;
+  const double rMax_match2 = r_proj+1.5*FST::pitchR;
+  TBox *b_match2 = new TBox(rMin_match2,phiMinFst,rMax_match2,phiMaxFst);
+  b_match2->SetFillColor(0);
+  b_match2->SetFillColorAlpha(0,0.1);
+  b_match2->SetLineStyle(2);
+  b_match2->SetLineColor(2);
+  b_match2->SetLineWidth(1);
+  b_match2->Draw("l Same");
+
+  const double rMin_match3 = r_proj-2.0*FST::pitchR;
+  const double rMax_match3 = r_proj+2.0*FST::pitchR;
+  TBox *b_match3 = new TBox(rMin_match3,phiMinFst,rMax_match3,phiMaxFst);
+  b_match3->SetFillColor(0);
+  b_match3->SetFillColorAlpha(0,0.1);
+  b_match3->SetLineStyle(3);
+  b_match3->SetLineColor(4);
+  b_match3->SetLineWidth(1);
+  b_match3->Draw("l Same");
+}

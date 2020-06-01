@@ -601,15 +601,15 @@ int FstClusterMaker::Make()
 		  fstRawHit->setRawCharge(mRawSig[i_arm][i_port][i_apv][i_ch][i_tb], i_tb);
 		  if(getLayer(i_arm,i_port) > 0) 
 		  {
-		    // fstRawHit->setCharge(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb], i_tb); // IST
-		    fstRawHit->setCharge(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb]/FST::mSigWeight_IST, i_tb); // IST
+		    fstRawHit->setCharge(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb], i_tb); // IST
+		    // fstRawHit->setCharge(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb]/FST::mSigWeight_IST, i_tb); // IST
 		    fstRawHit->setWeight(FST::mSigWeight_IST); // weight for ISt is always 1.0
 		  }
 		  if(getLayer(i_arm,i_port) == 0) 
 		  {
 		    int rstrip = getColumn(i_arm,i_port,i_apv,i_ch);
-		    // fstRawHit->setCharge(signalEvt[i_arm][i_port][i_apv][i_ch][i_tb], i_tb); // FST
-		    fstRawHit->setCharge(signalEvt[i_arm][i_port][i_apv][i_ch][i_tb]/FST::mSigWeight_FST[rstrip], i_tb); // FST
+		    fstRawHit->setCharge(signalEvt[i_arm][i_port][i_apv][i_ch][i_tb], i_tb); // FST
+		    // fstRawHit->setCharge(signalEvt[i_arm][i_port][i_apv][i_ch][i_tb]/FST::mSigWeight_FST[rstrip], i_tb); // FST
 		    fstRawHit->setWeight(FST::mSigWeight_FST[rstrip]);
 		  }
 		}

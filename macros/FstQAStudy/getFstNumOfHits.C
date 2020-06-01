@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void getFstNumOfHits(string hv = "HV200V", bool isSavePed = true, bool isApplyCMNCorr = false, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 3)
+void getFstNumOfHits(string hv = "HV200V", bool isSavePed = true, bool isApplyCMNCorr = false, float nFstHitsCut = 4.0, int numOfUsedTimeBins = 3)
 {
   std::string pedMode = "withPed";
   if(!isSavePed) pedMode = "woPed";
@@ -47,6 +47,7 @@ void getFstNumOfHits(string hv = "HV200V", bool isSavePed = true, bool isApplyCM
   leg->SetFillColor(10);
   for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
   {
+    h_mSignalHits_Rstrip[i_rstrip]->GetXaxis()->SetNdivisions(505);
     h_mSignalHits_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(0.04);
     h_mSignalHits_Rstrip[i_rstrip]->GetXaxis()->SetTitle("ADC");
     h_mSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetLabelSize(0.04);

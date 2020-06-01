@@ -32,8 +32,8 @@ float ErrDiv(float x, float y, float dx, float dy)
 
 void plotSignalTS_HV200V()
 {
-  const int numOfTS = 14;
-  string date[numOfTS] = {"0402","0405","0409","0412","0418","0419","0423","0424","0425","0426","0518","0519","0523","0525"};
+  const int numOfTS = 17;
+  string date[numOfTS] = {"0402","0405","0409","0412","0418","0419","0423","0424","0425","0426","0518","0519","0521","0523","0525","0527","0529"};
 
   TH1F *h_mMeanSignalHits_Rstrip[4];
   TH1F *h_mMeanNoiseHits_Rstrip[4];
@@ -130,7 +130,8 @@ void plotSignalTS_HV200V()
 	  leg_FST->AddEntry(h_mSignalHits_Rstrip[numOfUsedTS][i_rstrip],LegName.c_str(),"L");
 
 	  double mean_orig    = h_mSignalHits_Rstrip[0][i_rstrip]->GetMean();
-	  double err_orig     = h_mSignalHits_Rstrip[0][i_rstrip]->GetMeanError();
+	  // double err_orig     = h_mSignalHits_Rstrip[0][i_rstrip]->GetMeanError();
+	  double err_orig     = 0.0;
 	  double mean_current = h_mSignalHits_Rstrip[numOfUsedTS][i_rstrip]->GetMean();
 	  double err_current  = h_mSignalHits_Rstrip[numOfUsedTS][i_rstrip]->GetMeanError();
 	  double ratio = mean_current/mean_orig;
@@ -163,7 +164,8 @@ void plotSignalTS_HV200V()
 	  leg_FST->AddEntry(h_mFstSimpleClustersSignal_Rstrip[numOfUsedTS][i_rstrip],LegName.c_str(),"L");
 
 	  double mean_orig    = h_mFstSimpleClustersSignal_Rstrip[0][i_rstrip]->GetMean();
-	  double err_orig     = h_mFstSimpleClustersSignal_Rstrip[0][i_rstrip]->GetMeanError();
+	  // double err_orig     = h_mFstSimpleClustersSignal_Rstrip[0][i_rstrip]->GetMeanError();
+	  double err_orig     = 0.0;
 	  double mean_current = h_mFstSimpleClustersSignal_Rstrip[numOfUsedTS][i_rstrip]->GetMean();
 	  double err_current  = h_mFstSimpleClustersSignal_Rstrip[numOfUsedTS][i_rstrip]->GetMeanError();
 	  double ratio = mean_current/mean_orig;
@@ -196,7 +198,8 @@ void plotSignalTS_HV200V()
 	  leg_FST->AddEntry(h_mNoiseHits_Rstrip[numOfUsedTS][i_rstrip],LegName.c_str(),"L");
 
 	  double mean_orig    = h_mNoiseHits_Rstrip[0][i_rstrip]->GetMean();
-	  double err_orig     = h_mNoiseHits_Rstrip[0][i_rstrip]->GetMeanError();
+	  // double err_orig     = h_mNoiseHits_Rstrip[0][i_rstrip]->GetMeanError();
+	  double err_orig     = 0.0;
 	  double mean_current = h_mNoiseHits_Rstrip[numOfUsedTS][i_rstrip]->GetMean();
 	  double err_current  = h_mNoiseHits_Rstrip[numOfUsedTS][i_rstrip]->GetMeanError();
 	  double ratio = mean_current/mean_orig;
@@ -229,7 +232,8 @@ void plotSignalTS_HV200V()
 	  leg_FST->AddEntry(h_mSNRatioHits_Rstrip[numOfUsedTS][i_rstrip],LegName.c_str(),"L");
 
 	  double mean_orig    = h_mSNRatioHits_Rstrip[0][i_rstrip]->GetMean();
-	  double err_orig     = h_mSNRatioHits_Rstrip[0][i_rstrip]->GetMeanError();
+	  // double err_orig     = h_mSNRatioHits_Rstrip[0][i_rstrip]->GetMeanError();
+	  double err_orig     = 0.0;
 	  double mean_current = h_mSNRatioHits_Rstrip[numOfUsedTS][i_rstrip]->GetMean();
 	  double err_current  = h_mSNRatioHits_Rstrip[numOfUsedTS][i_rstrip]->GetMeanError();
 	  double ratio = mean_current/mean_orig;
@@ -261,7 +265,8 @@ void plotSignalTS_HV200V()
 	  leg_FST->AddEntry(h_mMaxTbHits_Rstrip[numOfUsedTS][i_rstrip],LegName.c_str(),"L");
 
 	  double mean_orig    = h_mMaxTbHits_Rstrip[0][i_rstrip]->GetMean();
-	  double err_orig     = h_mMaxTbHits_Rstrip[0][i_rstrip]->GetMeanError();
+	  // double err_orig     = h_mMaxTbHits_Rstrip[0][i_rstrip]->GetMeanError();
+	  double err_orig     = 0.0;
 	  double mean_current = h_mMaxTbHits_Rstrip[numOfUsedTS][i_rstrip]->GetMean();
 	  double err_current  = h_mMaxTbHits_Rstrip[numOfUsedTS][i_rstrip]->GetMeanError();
 	  double ratio = mean_current/mean_orig;
