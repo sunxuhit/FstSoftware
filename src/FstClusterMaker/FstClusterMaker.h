@@ -77,6 +77,7 @@ class FstClusterMaker : public TObject
     std::vector<FstCluster *> findCluster_Simple(std::vector<FstRawHit *> rawHitsVec_orig);
     // cluster with Scan Algorithm
     std::vector<FstCluster *> findCluster_Scan(std::vector<FstRawHit *> rawHitsVec_orig); // only for FST
+    std::vector<FstCluster *> findCluster_ScanRadius(std::vector<FstRawHit *> rawHitsVec_orig); // only for FST
 
     // find track
     std::vector<FstTrack *> findTrack_Hits(std::vector<FstRawHit *> rawHitVec_orig);
