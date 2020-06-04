@@ -730,8 +730,8 @@ int FstClusterMaker::Make()
       }
       mFstEvent->setNumFstClusters_Simple(numOfFstClusters_simple);
 
-      // std::vector<FstCluster *> cluster_scan = findCluster_Scan(rawHitsVec_Used);
-      std::vector<FstCluster *> cluster_scan = findCluster_ScanRadius(rawHitsVec_Used);
+      std::vector<FstCluster *> cluster_scan = findCluster_Scan(rawHitsVec_Used);
+      // std::vector<FstCluster *> cluster_scan = findCluster_ScanRadius(rawHitsVec_Used);
       int nClusters_scan = cluster_scan.size();
       int numOfFstClusters_scan = 0;
       for(int i_cluster = 0; i_cluster < nClusters_scan; ++i_cluster)

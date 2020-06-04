@@ -32,8 +32,8 @@ float ErrDiv(float x, float y, float dx, float dy)
 
 void plotSignalTS_HV200V()
 {
-  const int numOfTS = 17;
-  string date[numOfTS] = {"0402","0405","0409","0412","0418","0419","0423","0424","0425","0426","0518","0519","0521","0523","0525","0527","0529"};
+  const int numOfTS = 19;
+  string date[numOfTS] = {"0402","0405","0409","0412","0418","0419","0423","0424","0425","0426","0518","0519","0521","0523","0525","0527","0529","0601","0602"};
 
   TH1F *h_mMeanSignalHits_Rstrip[4];
   TH1F *h_mMeanNoiseHits_Rstrip[4];
@@ -291,10 +291,12 @@ void plotSignalTS_HV200V()
     c_Signal_TS->cd(i_pad+1)->SetLeftMargin(0.10);
     c_Signal_TS->cd(i_pad+1)->SetRightMargin(0.0);
     c_Signal_TS->cd(i_pad+1)->SetTopMargin(0.05);
+    c_Signal_TS->cd(i_pad+1)->SetBottomMargin(0.20);
     c_Signal_TS->cd(i_pad+1)->SetTicks(1,1);
     c_Signal_TS->cd(i_pad+1)->SetGrid(0,0);
   }
 
+  double labelsize = 0.10;
   c_Signal_TS->cd(1);
   {
     TLegend *leg_FST = new TLegend(0.7,0.6,0.8,0.9);
@@ -308,7 +310,8 @@ void plotSignalTS_HV200V()
       {
 	h_mMeanSignalHits_Rstrip[i_rstrip]->GetXaxis()->SetBinLabel(i_ts+1,date[i_ts].c_str());
       }
-      h_mMeanSignalHits_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(0.14);
+      h_mMeanSignalHits_Rstrip[i_rstrip]->GetXaxis()->LabelsOption("v");
+      h_mMeanSignalHits_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(labelsize);
       h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("#frac{<ADC>_{Hits}}{<ADC>_{Hits @ 0320}}");
       h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
@@ -338,7 +341,8 @@ void plotSignalTS_HV200V()
       {
 	h_mMeanSignalClusters_Rstrip[i_rstrip]->GetXaxis()->SetBinLabel(i_ts+1,date[i_ts].c_str());
       }
-      h_mMeanSignalClusters_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(0.14);
+      h_mMeanSignalClusters_Rstrip[i_rstrip]->GetXaxis()->LabelsOption("v");
+      h_mMeanSignalClusters_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(labelsize);
       h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetTitle("#frac{<ADC>_{Clusters}}{<ADC>_{Clusters @ 0320}}");
       h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
@@ -364,7 +368,8 @@ void plotSignalTS_HV200V()
       {
 	h_mMeanNoiseHits_Rstrip[i_rstrip]->GetXaxis()->SetBinLabel(i_ts+1,date[i_ts].c_str());
       }
-      h_mMeanNoiseHits_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(0.14);
+      h_mMeanNoiseHits_Rstrip[i_rstrip]->GetXaxis()->LabelsOption("v");
+      h_mMeanNoiseHits_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(labelsize);
       h_mMeanNoiseHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("Noise #frac{<ADC>_{Hits}}{<ADC>_{Hits @ 0320}}");
       h_mMeanNoiseHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanNoiseHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
@@ -390,7 +395,8 @@ void plotSignalTS_HV200V()
       {
 	h_mMeanSNRatioHits_Rstrip[i_rstrip]->GetXaxis()->SetBinLabel(i_ts+1,date[i_ts].c_str());
       }
-      h_mMeanSNRatioHits_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(0.14);
+      h_mMeanSNRatioHits_Rstrip[i_rstrip]->GetXaxis()->LabelsOption("v");
+      h_mMeanSNRatioHits_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(labelsize);
       h_mMeanSNRatioHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("#frac{<Signal/Noise>_{Hits}}{<Signal/Noise>_{Hits @ 0320}}");
       h_mMeanSNRatioHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanSNRatioHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
@@ -416,7 +422,8 @@ void plotSignalTS_HV200V()
       {
 	h_mMeanMaxTbHits_Rstrip[i_rstrip]->GetXaxis()->SetBinLabel(i_ts+1,date[i_ts].c_str());
       }
-      h_mMeanMaxTbHits_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(0.14);
+      h_mMeanMaxTbHits_Rstrip[i_rstrip]->GetXaxis()->LabelsOption("v");
+      h_mMeanMaxTbHits_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(labelsize);
       h_mMeanMaxTbHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("#frac{<Max Time Bin>_{Hits}}{<Max Time Bin>_{Hits @ 0320}}");
       h_mMeanMaxTbHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanMaxTbHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);

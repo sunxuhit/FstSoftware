@@ -13,5 +13,5 @@ then
 
   root -l -b -q makeFstCluster_timesequence.C\(\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},3,2.0,\"${date}\"\)
   root -l -b -q makeFstCluster_timesequence.C\(\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,2.0,\"${date}\"\)
-  root -l -b -q makeFstCluster_timesequence.C\(\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},1,2.0,\"${date}\"\)
+  # root -l -b -q makeFstCluster_timesequence.C\(\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},1,2.0,\"${date}\"\)
 fi
