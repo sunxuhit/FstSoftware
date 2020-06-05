@@ -30,10 +30,10 @@ float ErrDiv(float x, float y, float dx, float dy)
   return x/y*ErrorAdd(dx/x,dy/y);
 }
 
-void plotSignalTS_HV200V()
+void plotSignalTS_HV140V_Reco70V()
 {
-  const int numOfTS = 20;
-  string date[numOfTS] = {"0402","0405","0409","0412","0418","0419","0423","0424","0425","0426","0518","0519","0521","0523","0525","0527","0529","0601","0602","0604"};
+  const int numOfTS = 11;
+  string date[numOfTS] = {"0329","0519","0520","0525","0526","0527","0528","0529","0531","0601","0602_0"};
 
   TH1F *h_mMeanSignalHits_Rstrip[4];
   TH1F *h_mMeanNoiseHits_Rstrip[4];
@@ -63,7 +63,7 @@ void plotSignalTS_HV200V()
   TH1F *h_mFstSimpleClustersSignal_Rstrip[numOfTS][4];
   for(int i_ts = 0; i_ts < numOfTS; ++i_ts)
   {
-    string inputfile = Form("../../output/timesequence/FstQAStudy_HV200V_Th4.5Tb3_withPed_woCMNCorr_%s2020.root",date[i_ts].c_str());
+    string inputfile = Form("../../output/timesequence/FstQAStudy_HV140V_Th4.5Tb3_withPed_woCMNCorr_%s2020.root",date[i_ts].c_str());
     cout << "open inputfile: " << inputfile.c_str() << endl;
     File_InPut[i_ts] = TFile::Open(inputfile.c_str());
 
@@ -83,7 +83,7 @@ void plotSignalTS_HV200V()
     }
   }
 
-  string outputname = "./figures/SignalTS_200V.pdf";
+  string outputname = "./figures/SignalTS_140V_Reco70V.pdf";
 
   TCanvas *c_Signal = new TCanvas("c_Signal","c_Signal",10,10,1000,1000);
   c_Signal->Divide(5,5);
@@ -96,7 +96,7 @@ void plotSignalTS_HV200V()
     c_Signal->cd(i_pad+1)->SetGrid(0,0);
   }
 
-  string output_start = "./figures/SignalTS_200V.pdf[";
+  string output_start = "./figures/SignalTS_140V_Reco70V.pdf[";
   c_Signal->Print(output_start.c_str()); // open pdf file
 
   int numOfUsedTS = 0;
@@ -299,9 +299,10 @@ void plotSignalTS_HV200V()
   double labelsize = 0.10;
   c_Signal_TS->cd(1);
   {
-    TLegend *leg_FST = new TLegend(0.7,0.6,0.8,0.9);
+    TLegend *leg_FST = new TLegend(0.7,0.7,0.8,0.9);
     leg_FST->SetBorderSize(0);
     leg_FST->SetFillColor(10);
+    leg_FST->SetNColumns(2);
     for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
     {
       h_mMeanSignalHits_Rstrip[i_rstrip]->SetTitle("");
@@ -312,7 +313,7 @@ void plotSignalTS_HV200V()
       }
       h_mMeanSignalHits_Rstrip[i_rstrip]->GetXaxis()->LabelsOption("v");
       h_mMeanSignalHits_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(labelsize);
-      h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("#frac{<ADC>_{Hits}}{<ADC>_{Hits @ 0320}}");
+      h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("#frac{<ADC>_{Hits}}{<ADC>_{Hits @ 0329}}");
       h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
       // h_mMeanSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(200.0,650.0);
@@ -343,7 +344,7 @@ void plotSignalTS_HV200V()
       }
       h_mMeanSignalClusters_Rstrip[i_rstrip]->GetXaxis()->LabelsOption("v");
       h_mMeanSignalClusters_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(labelsize);
-      h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetTitle("#frac{<ADC>_{Clusters}}{<ADC>_{Clusters @ 0320}}");
+      h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetTitle("#frac{<ADC>_{Clusters}}{<ADC>_{Clusters @ 0329}}");
       h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
       // h_mMeanSignalClusters_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(200.0,650.0);
@@ -370,7 +371,7 @@ void plotSignalTS_HV200V()
       }
       h_mMeanNoiseHits_Rstrip[i_rstrip]->GetXaxis()->LabelsOption("v");
       h_mMeanNoiseHits_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(labelsize);
-      h_mMeanNoiseHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("Noise #frac{<ADC>_{Hits}}{<ADC>_{Hits @ 0320}}");
+      h_mMeanNoiseHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("Noise #frac{<ADC>_{Hits}}{<ADC>_{Hits @ 0329}}");
       h_mMeanNoiseHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanNoiseHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
       // h_mMeanNoiseHits_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(10.0,35.0);
@@ -397,7 +398,7 @@ void plotSignalTS_HV200V()
       }
       h_mMeanSNRatioHits_Rstrip[i_rstrip]->GetXaxis()->LabelsOption("v");
       h_mMeanSNRatioHits_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(labelsize);
-      h_mMeanSNRatioHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("#frac{<Signal/Noise>_{Hits}}{<Signal/Noise>_{Hits @ 0320}}");
+      h_mMeanSNRatioHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("#frac{<Signal/Noise>_{Hits}}{<Signal/Noise>_{Hits @ 0329}}");
       h_mMeanSNRatioHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanSNRatioHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
       // h_mMeanSNRatioHits_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(5.0,30.0);
@@ -424,7 +425,7 @@ void plotSignalTS_HV200V()
       }
       h_mMeanMaxTbHits_Rstrip[i_rstrip]->GetXaxis()->LabelsOption("v");
       h_mMeanMaxTbHits_Rstrip[i_rstrip]->GetXaxis()->SetLabelSize(labelsize);
-      h_mMeanMaxTbHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("#frac{<Max Time Bin>_{Hits}}{<Max Time Bin>_{Hits @ 0320}}");
+      h_mMeanMaxTbHits_Rstrip[i_rstrip]->GetYaxis()->SetTitle("#frac{<Max Time Bin>_{Hits}}{<Max Time Bin>_{Hits @ 0329}}");
       h_mMeanMaxTbHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanMaxTbHits_Rstrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
       // h_mMeanMaxTbHits_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(2.0,5.0);
@@ -442,7 +443,7 @@ void plotSignalTS_HV200V()
   c_Signal_TS->Update();
   c_Signal_TS->Print(outputname.c_str());
 
-  string output_stop = "./figures/SignalTS_200V.pdf]";
+  string output_stop = "./figures/SignalTS_140V_Reco70V.pdf]";
   c_Signal->Print(output_stop.c_str()); // open pdf file
 }
 
