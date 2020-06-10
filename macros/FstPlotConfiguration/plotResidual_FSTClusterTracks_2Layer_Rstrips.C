@@ -47,7 +47,7 @@ void plotResidual_FSTClusterTracks_2Layer_Rstrips(string hv = "HV140V", bool isS
   std::string cmnMode = "withCMNCorr";
   if(!isApplyCMNCorr) cmnMode = "woCMNCorr";
 
-  string inputfile = Form("../../output/rotation90/FstTracking_%s_Th%1.1fTb%d_%s_%s.root",hv.c_str(),nFstHitsCut,numOfUsedTimeBins,pedMode.c_str(),cmnMode.c_str());
+  string inputfile = Form("../../output/configuration/FstTracking_%s_Th%1.1fTb%d_%s_%s.root",hv.c_str(),nFstHitsCut,numOfUsedTimeBins,pedMode.c_str(),cmnMode.c_str());
 
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   // simple clusters
@@ -143,7 +143,6 @@ void plotResidual_FSTClusterTracks_2Layer_Rstrips(string hv = "HV140V", bool isS
     h_mSimpleClustersTrackFstResXY_2Layer->SetStats(0);
     h_mSimpleClustersTrackFstResXY_2Layer->GetXaxis()->SetTitle("x-residual (mm)");
     h_mSimpleClustersTrackFstResXY_2Layer->GetYaxis()->SetTitle("y-residual (mm)");
-    h_mSimpleClustersTrackFstResXY_2Layer->GetYaxis()->SetRangeUser(-25.0,25.0);
     h_mSimpleClustersTrackFstResXY_2Layer->Draw("colz");
 
     c_play->cd(2);
@@ -169,7 +168,6 @@ void plotResidual_FSTClusterTracks_2Layer_Rstrips(string hv = "HV140V", bool isS
     h_mSimpleClustersTrackFstResY_2Layer->GetXaxis()->SetTitleSize(0.06);
     h_mSimpleClustersTrackFstResY_2Layer->GetYaxis()->SetTitle("No. Tracks");
     h_mSimpleClustersTrackFstResY_2Layer->GetYaxis()->SetTitleSize(0.06);
-    h_mSimpleClustersTrackFstResY_2Layer->GetXaxis()->SetRangeUser(-25.0,25.0);
     h_mSimpleClustersTrackFstResY_2Layer->Draw();
     // h_mSimpleClustersTrackFstResY_2Layer->Fit("gaus");
     TF1 *f_gausY = new TF1("f_gausY",gaussian,-150.0,150.0,4);
@@ -177,7 +175,7 @@ void plotResidual_FSTClusterTracks_2Layer_Rstrips(string hv = "HV140V", bool isS
     f_gausY->SetParameter(1,0.0);
     f_gausY->SetParameter(2,10.0);
     f_gausY->FixParameter(3,h_mSimpleClustersTrackFstResY_2Layer->GetBinWidth(1));
-    f_gausY->SetRange(-10,15);
+    f_gausY->SetRange(-1.5,5);
     h_mSimpleClustersTrackFstResY_2Layer->Fit(f_gausY,"R");
     f_gausY->Draw("l same");
 
@@ -216,7 +214,6 @@ void plotResidual_FSTClusterTracks_2Layer_Rstrips(string hv = "HV140V", bool isS
     h_mSimpleClustersTrackFstResPhi_2Layer->GetXaxis()->SetTitleSize(0.06);
     h_mSimpleClustersTrackFstResPhi_2Layer->GetYaxis()->SetTitle("No. Tracks");
     h_mSimpleClustersTrackFstResPhi_2Layer->GetYaxis()->SetTitleSize(0.06);
-    h_mSimpleClustersTrackFstResPhi_2Layer->GetXaxis()->SetRangeUser(-0.15,0.15);
     h_mSimpleClustersTrackFstResPhi_2Layer->Draw();
     // h_mSimpleClustersTrackFstResPhi_2Layer->Fit("gaus");
     TF1 *f_gausPhi = new TF1("f_gausPhi",gaussian,-1.0,1.0,4);
@@ -227,7 +224,7 @@ void plotResidual_FSTClusterTracks_2Layer_Rstrips(string hv = "HV140V", bool isS
     // f_gausPhi->SetParName(1,"Mean");
     // f_gausPhi->SetParName(2,"#sigma");
     f_gausPhi->FixParameter(3,h_mSimpleClustersTrackFstResPhi_2Layer->GetBinWidth(1));
-    f_gausPhi->SetRange(-0.05,0.05);
+    f_gausPhi->SetRange(-0.01,0.01);
     h_mSimpleClustersTrackFstResPhi_2Layer->Fit(f_gausPhi,"R");
     f_gausPhi->Draw("l same");
     // gPad->Update();
@@ -241,7 +238,6 @@ void plotResidual_FSTClusterTracks_2Layer_Rstrips(string hv = "HV140V", bool isS
     h_mScanClustersTrackFstResXY_2Layer->SetStats(0);
     h_mScanClustersTrackFstResXY_2Layer->GetXaxis()->SetTitle("x-residual (mm)");
     h_mScanClustersTrackFstResXY_2Layer->GetYaxis()->SetTitle("y-residual (mm)");
-    h_mScanClustersTrackFstResXY_2Layer->GetYaxis()->SetRangeUser(-25.0,25.0);
     h_mScanClustersTrackFstResXY_2Layer->Draw("colz");
 
     c_play->cd(8);
@@ -267,7 +263,6 @@ void plotResidual_FSTClusterTracks_2Layer_Rstrips(string hv = "HV140V", bool isS
     h_mScanClustersTrackFstResY_2Layer->GetXaxis()->SetTitleSize(0.06);
     h_mScanClustersTrackFstResY_2Layer->GetYaxis()->SetTitle("No. Tracks");
     h_mScanClustersTrackFstResY_2Layer->GetYaxis()->SetTitleSize(0.06);
-    h_mScanClustersTrackFstResY_2Layer->GetXaxis()->SetRangeUser(-25.0,25.0);
     h_mScanClustersTrackFstResY_2Layer->Draw();
     // h_mScanClustersTrackFstResY_2Layer->Fit("gaus");
     TF1 *f_gausY = new TF1("f_gausY",gaussian,-150.0,150.0,4);
@@ -275,7 +270,7 @@ void plotResidual_FSTClusterTracks_2Layer_Rstrips(string hv = "HV140V", bool isS
     f_gausY->SetParameter(1,0.0);
     f_gausY->SetParameter(2,10.0);
     f_gausY->FixParameter(3,h_mScanClustersTrackFstResY_2Layer->GetBinWidth(1));
-    f_gausY->SetRange(-10,15);
+    f_gausY->SetRange(-1.5,5);
     h_mScanClustersTrackFstResY_2Layer->Fit(f_gausY,"R");
     f_gausY->Draw("l same");
 
@@ -308,14 +303,13 @@ void plotResidual_FSTClusterTracks_2Layer_Rstrips(string hv = "HV140V", bool isS
     h_mScanClustersTrackFstResPhi_2Layer->GetXaxis()->SetTitleSize(0.06);
     h_mScanClustersTrackFstResPhi_2Layer->GetYaxis()->SetTitle("No. Tracks");
     h_mScanClustersTrackFstResPhi_2Layer->GetYaxis()->SetTitleSize(0.06);
-    h_mScanClustersTrackFstResPhi_2Layer->GetXaxis()->SetRangeUser(-0.15,0.15);
     h_mScanClustersTrackFstResPhi_2Layer->Draw();
     TF1 *f_gausPhi = new TF1("f_gausPhi",gaussian,-1.0,1.0,4);
     f_gausPhi->SetParameter(0,100.0);
     f_gausPhi->SetParameter(1,0.0);
     f_gausPhi->SetParameter(2,10.0);
     f_gausPhi->FixParameter(3,h_mScanClustersTrackFstResPhi_2Layer->GetBinWidth(1));
-    f_gausPhi->SetRange(-0.05,0.05);
+    f_gausPhi->SetRange(-0.01,0.01);
     h_mScanClustersTrackFstResPhi_2Layer->Fit(f_gausPhi,"R");
     f_gausPhi->Draw("l same");
   }
@@ -338,7 +332,6 @@ void plotResidual_FSTClusterTracks_2Layer_Rstrips(string hv = "HV140V", bool isS
       h_mSimpleClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->SetStats(0);
       h_mSimpleClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->GetXaxis()->SetTitle("x-residual (mm)");
       h_mSimpleClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->GetYaxis()->SetTitle("y-residual (mm)");
-      h_mSimpleClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->GetYaxis()->SetRangeUser(-25.0,25.0);
       h_mSimpleClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->Draw("colz");
       
       c_play->cd(2)->Clear();
@@ -368,7 +361,6 @@ void plotResidual_FSTClusterTracks_2Layer_Rstrips(string hv = "HV140V", bool isS
       h_mSimpleClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->GetXaxis()->SetTitleSize(0.06);
       h_mSimpleClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->GetYaxis()->SetTitle("No. Tracks");
       h_mSimpleClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->GetYaxis()->SetTitleSize(0.06);
-      h_mSimpleClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->GetXaxis()->SetRangeUser(-25.0,25.0);
       h_mSimpleClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->Draw();
       // h_mSimpleClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->Fit("gaus");
       TF1 *f_gausY = new TF1("f_gausY",gaussian,-150.0,150.0,4);
@@ -376,7 +368,7 @@ void plotResidual_FSTClusterTracks_2Layer_Rstrips(string hv = "HV140V", bool isS
       f_gausY->SetParameter(1,0.0);
       f_gausY->SetParameter(2,10.0);
       f_gausY->FixParameter(3,h_mSimpleClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->GetBinWidth(1));
-      f_gausY->SetRange(-10,15);
+      f_gausY->SetRange(-1.5,5);
       h_mSimpleClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->Fit(f_gausY,"R");
       f_gausY->Draw("l same");
       
@@ -421,7 +413,6 @@ void plotResidual_FSTClusterTracks_2Layer_Rstrips(string hv = "HV140V", bool isS
       h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->GetXaxis()->SetTitleSize(0.06);
       h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->GetYaxis()->SetTitle("No. Tracks");
       h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->GetYaxis()->SetTitleSize(0.06);
-      h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->GetXaxis()->SetRangeUser(-0.15,0.15);
       h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->Draw();
       // h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->Fit("gaus");
       TF1 *f_gausPhi = new TF1("f_gausPhi",gaussian,-1.0,1.0,4);
@@ -432,7 +423,7 @@ void plotResidual_FSTClusterTracks_2Layer_Rstrips(string hv = "HV140V", bool isS
       // f_gausPhi->SetParName(1,"Mean");
       // f_gausPhi->SetParName(2,"#sigma");
       f_gausPhi->FixParameter(3,h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->GetBinWidth(1));
-      f_gausPhi->SetRange(-0.05,0.05);
+      f_gausPhi->SetRange(-0.01,0.01);
       h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->Fit(f_gausPhi,"R");
       f_gausPhi->Draw("l same");
       // gPad->Update();
@@ -448,7 +439,6 @@ void plotResidual_FSTClusterTracks_2Layer_Rstrips(string hv = "HV140V", bool isS
       h_mScanClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->SetStats(0);
       h_mScanClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->GetXaxis()->SetTitle("x-residual (mm)");
       h_mScanClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->GetYaxis()->SetTitle("y-residual (mm)");
-      h_mScanClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->GetYaxis()->SetRangeUser(-25.0,25.0);
       h_mScanClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->Draw("colz");
       
       c_play->cd(8)->Clear();
@@ -478,7 +468,6 @@ void plotResidual_FSTClusterTracks_2Layer_Rstrips(string hv = "HV140V", bool isS
       h_mScanClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->GetXaxis()->SetTitleSize(0.06);
       h_mScanClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->GetYaxis()->SetTitle("No. Tracks");
       h_mScanClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->GetYaxis()->SetTitleSize(0.06);
-      h_mScanClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->GetXaxis()->SetRangeUser(-25.0,25.0);
       h_mScanClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->Draw();
       // h_mScanClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->Fit("gaus");
       TF1 *f_gausY = new TF1("f_gausY",gaussian,-150.0,150.0,4);
@@ -486,7 +475,7 @@ void plotResidual_FSTClusterTracks_2Layer_Rstrips(string hv = "HV140V", bool isS
       f_gausY->SetParameter(1,0.0);
       f_gausY->SetParameter(2,10.0);
       f_gausY->FixParameter(3,h_mScanClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->GetBinWidth(1));
-      f_gausY->SetRange(-10,15);
+      f_gausY->SetRange(-1.5,5);
       h_mScanClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->Fit(f_gausY,"R");
       f_gausY->Draw("l same");
       
@@ -525,14 +514,13 @@ void plotResidual_FSTClusterTracks_2Layer_Rstrips(string hv = "HV140V", bool isS
       h_mScanClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->GetXaxis()->SetTitleSize(0.06);
       h_mScanClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->GetYaxis()->SetTitle("No. Tracks");
       h_mScanClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->GetYaxis()->SetTitleSize(0.06);
-      h_mScanClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->GetXaxis()->SetRangeUser(-0.15,0.15);
       h_mScanClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->Draw();
       TF1 *f_gausPhi = new TF1("f_gausPhi",gaussian,-1.0,1.0,4);
       f_gausPhi->SetParameter(0,100.0);
       f_gausPhi->SetParameter(1,0.0);
       f_gausPhi->SetParameter(2,10.0);
       f_gausPhi->FixParameter(3,h_mScanClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->GetBinWidth(1));
-      f_gausPhi->SetRange(-0.05,0.05);
+      f_gausPhi->SetRange(-0.01,0.01);
       h_mScanClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->Fit(f_gausPhi,"R");
       f_gausPhi->Draw("l same");
     }
