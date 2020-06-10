@@ -498,17 +498,31 @@ void FstTracking::calResolution_SimpleClusters(FstEvent *fstEvent)
 	double preDistance_FST = minDistance_FST;
 	for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
 	{ // fill residual histograms with the cluster of minimum distance
-	  double r_fst   = clusterVec_fst[i_cluster]->getMeanX(); // r for fst
-	  double phi_fst = clusterVec_fst[i_cluster]->getMeanY(); // phi for fst
-	  double x0_fst  = r_fst*TMath::Cos(phi_fst);
-	  double y0_fst  = r_fst*TMath::Sin(phi_fst);
+	  int nHit = 0; // number of Hits above threshold in a cluster
+	  int numOfHits = clusterVec_fst[i_cluster]->getNumRawHits();
+	  for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
+	  {
+	    FstRawHit *fstRawHit = clusterVec_fst[i_cluster]->getRawHit(i_hit);
+	    if(fstRawHit->getIsHit())
+	    {
+	      nHit++;
+	    }
+	  }
 
-	  double distance_FST = abs(r_fst-r_proj)/FST::pitchR + abs(phi_fst-phi_proj)/FST::pitchPhi;
-	  if(distance_FST < preDistance_FST)
-	  { 
-	    minDistance_FST = distance_FST;
-	    minClusterId_FST = i_cluster;
-	    preDistance_FST = minDistance_FST;
+	  if(nHit > 0)
+	  {
+	    double r_fst   = clusterVec_fst[i_cluster]->getMeanX(); // r for fst
+	    double phi_fst = clusterVec_fst[i_cluster]->getMeanY(); // phi for fst
+	    double x0_fst  = r_fst*TMath::Cos(phi_fst);
+	    double y0_fst  = r_fst*TMath::Sin(phi_fst);
+
+	    double distance_FST = abs(r_fst-r_proj)/FST::pitchR + abs(phi_fst-phi_proj)/FST::pitchPhi;
+	    if(distance_FST < preDistance_FST)
+	    { 
+	      minDistance_FST = distance_FST;
+	      minClusterId_FST = i_cluster;
+	      preDistance_FST = minDistance_FST;
+	    }
 	  }
 	}
 
@@ -601,17 +615,31 @@ void FstTracking::calResolution_SimpleClusters(FstEvent *fstEvent)
 	    {
 	      for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
 	      { // fill residual histograms
-		double r_fst   = clusterVec_fst[i_cluster]->getMeanX(); // r for fst
-		double phi_fst = clusterVec_fst[i_cluster]->getMeanY(); // phi for fst
-		double x0_fst  = r_fst*TMath::Cos(phi_fst);
-		double y0_fst  = r_fst*TMath::Sin(phi_fst);
+		int nHit = 0; // number of Hits above threshold in a cluster
+		int numOfHits = clusterVec_fst[i_cluster]->getNumRawHits();
+		for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
+		{
+		  FstRawHit *fstRawHit = clusterVec_fst[i_cluster]->getRawHit(i_hit);
+		  if(fstRawHit->getIsHit())
+		  {
+		    nHit++;
+		  }
+		}
 
-		double distance_FST = abs(r_fst-r_proj)/FST::pitchR + abs(phi_fst-phi_proj)/FST::pitchPhi;
-		if(distance_FST < preDistance_FST)
-		{ 
-		  minDistance_FST = distance_FST;
-		  minClusterId_FST = i_cluster;
-		  preDistance_FST = minDistance_FST;
+		if(nHit > 0)
+		{
+		  double r_fst   = clusterVec_fst[i_cluster]->getMeanX(); // r for fst
+		  double phi_fst = clusterVec_fst[i_cluster]->getMeanY(); // phi for fst
+		  double x0_fst  = r_fst*TMath::Cos(phi_fst);
+		  double y0_fst  = r_fst*TMath::Sin(phi_fst);
+
+		  double distance_FST = abs(r_fst-r_proj)/FST::pitchR + abs(phi_fst-phi_proj)/FST::pitchPhi;
+		  if(distance_FST < preDistance_FST)
+		  { 
+		    minDistance_FST = distance_FST;
+		    minClusterId_FST = i_cluster;
+		    preDistance_FST = minDistance_FST;
+		  }
 		}
 	      }
 	    }
@@ -710,17 +738,31 @@ void FstTracking::calResolution_ScanClusters(FstEvent *fstEvent)
 	double preDistance_FST = minDistance_FST;
 	for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
 	{ // fill residual histograms with the cluster of minimum distance
-	  double r_fst   = clusterVec_fst[i_cluster]->getMeanX(); // r for fst
-	  double phi_fst = clusterVec_fst[i_cluster]->getMeanY(); // phi for fst
-	  double x0_fst  = r_fst*TMath::Cos(phi_fst);
-	  double y0_fst  = r_fst*TMath::Sin(phi_fst);
+	  int nHit = 0; // number of Hits above threshold in a cluster
+	  int numOfHits = clusterVec_fst[i_cluster]->getNumRawHits();
+	  for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
+	  {
+	    FstRawHit *fstRawHit = clusterVec_fst[i_cluster]->getRawHit(i_hit);
+	    if(fstRawHit->getIsHit())
+	    {
+	      nHit++;
+	    }
+	  }
 
-	  double distance_FST = abs(r_fst-r_proj)/FST::pitchR + abs(phi_fst-phi_proj)/FST::pitchPhi;
-	  if(distance_FST < preDistance_FST)
-	  { 
-	    minDistance_FST = distance_FST;
-	    minClusterId_FST = i_cluster;
-	    preDistance_FST = minDistance_FST;
+	  if(nHit > 0)
+	  {
+	    double r_fst   = clusterVec_fst[i_cluster]->getMeanX(); // r for fst
+	    double phi_fst = clusterVec_fst[i_cluster]->getMeanY(); // phi for fst
+	    double x0_fst  = r_fst*TMath::Cos(phi_fst);
+	    double y0_fst  = r_fst*TMath::Sin(phi_fst);
+
+	    double distance_FST = abs(r_fst-r_proj)/FST::pitchR + abs(phi_fst-phi_proj)/FST::pitchPhi;
+	    if(distance_FST < preDistance_FST)
+	    { 
+	      minDistance_FST = distance_FST;
+	      minClusterId_FST = i_cluster;
+	      preDistance_FST = minDistance_FST;
+	    }
 	  }
 	}
 
@@ -780,17 +822,31 @@ void FstTracking::calResolution_ScanClusters(FstEvent *fstEvent)
 	    {
 	      for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
 	      { // fill residual histograms
-		double r_fst   = clusterVec_fst[i_cluster]->getMeanX(); // r for fst
-		double phi_fst = clusterVec_fst[i_cluster]->getMeanY(); // phi for fst
-		double x0_fst  = r_fst*TMath::Cos(phi_fst);
-		double y0_fst  = r_fst*TMath::Sin(phi_fst);
+		int nHit = 0; // number of Hits above threshold in a cluster
+		int numOfHits = clusterVec_fst[i_cluster]->getNumRawHits();
+		for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
+		{
+		  FstRawHit *fstRawHit = clusterVec_fst[i_cluster]->getRawHit(i_hit);
+		  if(fstRawHit->getIsHit())
+		  {
+		    nHit++;
+		  }
+		}
 
-		double distance_FST = abs(r_fst-r_proj)/FST::pitchR + abs(phi_fst-phi_proj)/FST::pitchPhi;
-		if(distance_FST < preDistance_FST)
-		{ 
-		  minDistance_FST = distance_FST;
-		  minClusterId_FST = i_cluster;
-		  preDistance_FST = minDistance_FST;
+		if(nHit > 0)
+		{
+		  double r_fst   = clusterVec_fst[i_cluster]->getMeanX(); // r for fst
+		  double phi_fst = clusterVec_fst[i_cluster]->getMeanY(); // phi for fst
+		  double x0_fst  = r_fst*TMath::Cos(phi_fst);
+		  double y0_fst  = r_fst*TMath::Sin(phi_fst);
+
+		  double distance_FST = abs(r_fst-r_proj)/FST::pitchR + abs(phi_fst-phi_proj)/FST::pitchPhi;
+		  if(distance_FST < preDistance_FST)
+		  { 
+		    minDistance_FST = distance_FST;
+		    minClusterId_FST = i_cluster;
+		    preDistance_FST = minDistance_FST;
+		  }
 		}
 	      }
 	    }
@@ -1034,16 +1090,30 @@ void FstTracking::calEfficiency_SimpleClusters(FstEvent *fstEvent)
 	    {
 	      for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
 	      { // loop over all possible clusters
-		double r_fst = clusterVec_fst[i_cluster]->getMeanX();
-		double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
-		if(i_match == 0)
+		int nHit = 0; // number of Hits above threshold in a cluster
+		int numOfHits = clusterVec_fst[i_cluster]->getNumRawHits();
+		for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
 		{
-		  nMatchedTrack++;
+		  FstRawHit *fstRawHit = clusterVec_fst[i_cluster]->getRawHit(i_hit);
+		  if(fstRawHit->getIsHit())
+		  {
+		    nHit++;
+		  }
 		}
-		// if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-		if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+
+		if(nHit > 0)
 		{
-		  nMatchedTrack++;
+		  double r_fst = clusterVec_fst[i_cluster]->getMeanX();
+		  double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
+		  if(i_match == 0)
+		  {
+		    nMatchedTrack++;
+		  }
+		  // if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		  if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		  {
+		    nMatchedTrack++;
+		  }
 		}
 	      }
 	    }
@@ -1097,16 +1167,30 @@ void FstTracking::calEfficiency_SimpleClusters(FstEvent *fstEvent)
 	      {
 		for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
 		{ // loop over all possible clusters
-		  double r_fst = clusterVec_fst[i_cluster]->getMeanX();
-		  double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
-		  if(i_match == 0)
+		  int nHit = 0; // number of Hits above threshold in a cluster
+		  int numOfHits = clusterVec_fst[i_cluster]->getNumRawHits();
+		  for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
 		  {
-		    nMatchedTrack++;
+		    FstRawHit *fstRawHit = clusterVec_fst[i_cluster]->getRawHit(i_hit);
+		    if(fstRawHit->getIsHit())
+		    {
+		      nHit++;
+		    }
 		  }
-		  // if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-		  if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+
+		  if(nHit > 0)
 		  {
-		    nMatchedTrack++;
+		    double r_fst = clusterVec_fst[i_cluster]->getMeanX();
+		    double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
+		    if(i_match == 0)
+		    {
+		      nMatchedTrack++;
+		    }
+		    // if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		    if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		    {
+		      nMatchedTrack++;
+		    }
 		  }
 		}
 	      }
@@ -1176,16 +1260,30 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
 	    {
 	      for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
 	      { // loop over all possible clusters
-		double r_fst = clusterVec_fst[i_cluster]->getMeanX();
-		double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
-		if(i_match == 0)
+		int nHit = 0; // number of Hits above threshold in a cluster
+		int numOfHits = clusterVec_fst[i_cluster]->getNumRawHits();
+		for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
 		{
-		  nMatchedTrack++;
+		  FstRawHit *fstRawHit = clusterVec_fst[i_cluster]->getRawHit(i_hit);
+		  if(fstRawHit->getIsHit())
+		  {
+		    nHit++;
+		  }
 		}
-		// if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-		if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+
+		if(nHit > 0)
 		{
-		  nMatchedTrack++;
+		  double r_fst = clusterVec_fst[i_cluster]->getMeanX();
+		  double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
+		  if(i_match == 0)
+		  {
+		    nMatchedTrack++;
+		  }
+		  // if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		  if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		  {
+		    nMatchedTrack++;
+		  }
 		}
 	      }
 	    }
@@ -1239,16 +1337,30 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
 	      {
 		for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
 		{ // loop over all possible clusters
-		  double r_fst = clusterVec_fst[i_cluster]->getMeanX();
-		  double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
-		  if(i_match == 0)
+		  int nHit = 0; // number of Hits above threshold in a cluster
+		  int numOfHits = clusterVec_fst[i_cluster]->getNumRawHits();
+		  for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
 		  {
-		    nMatchedTrack++;
+		    FstRawHit *fstRawHit = clusterVec_fst[i_cluster]->getRawHit(i_hit);
+		    if(fstRawHit->getIsHit())
+		    {
+		      nHit++;
+		    }
 		  }
-		  // if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-		  if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+
+		  if(nHit > 0)
 		  {
-		    nMatchedTrack++;
+		    double r_fst = clusterVec_fst[i_cluster]->getMeanX();
+		    double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
+		    if(i_match == 0)
+		    {
+		      nMatchedTrack++;
+		    }
+		    // if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		    if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		    {
+		      nMatchedTrack++;
+		    }
 		  }
 		}
 	      }

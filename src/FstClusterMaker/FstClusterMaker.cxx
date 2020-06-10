@@ -335,8 +335,8 @@ int FstClusterMaker::Make()
     // find Hits
     std::vector<FstRawHit *> rawHitVec_orig;
     rawHitVec_orig.clear();
-    std::vector<FstRawHit *> rawHitsVec_Used;
-    rawHitsVec_Used.clear();
+    std::vector<FstRawHit *> rawHitVec_Used;
+    rawHitVec_Used.clear();
     int numOfHits = 0; // Hits & Peds on FST & IST
     int numOfHits_Used = 0; // Hits on FST & IST
     int numOfHits_IST = 0; // Hits on IST
@@ -633,7 +633,7 @@ int FstClusterMaker::Make()
 		// hit container for IST & FST RawHits only
 		if(isHit && !isPed) 
 		{ 
-		  rawHitsVec_Used.push_back(fstRawHit);
+		  rawHitVec_Used.push_back(fstRawHit);
 		  numOfHits_Used++;
 		  if(fstRawHit->getLayer() != 0)
 		  {
@@ -690,7 +690,7 @@ int FstClusterMaker::Make()
       // set up FstCluster with cluster from Hits
       mFstEvent->clearClustersList();
       // std::vector<FstCluster *> cluster_simple = findCluster_Simple(rawHitVec_orig);
-      std::vector<FstCluster *> cluster_simple = findCluster_Simple(rawHitsVec_Used);
+      std::vector<FstCluster *> cluster_simple = findCluster_Simple(rawHitVec_Used);
       int nClusters_simple = cluster_simple.size();
       int numOfFstClusters_simple = 0;
       for(int i_cluster = 0; i_cluster < nClusters_simple; ++i_cluster)
@@ -741,9 +741,12 @@ int FstClusterMaker::Make()
       }
       mFstEvent->setNumFstClusters_Simple(numOfFstClusters_simple);
 
-      // std::vector<FstCluster *> cluster_scan = findCluster_Scan(rawHitsVec_Used);
-      // std::vector<FstCluster *> cluster_scan = findCluster_ScanWeight(rawHitsVec_Used);
-      std::vector<FstCluster *> cluster_scan = findCluster_ScanRadius(rawHitsVec_Used);
+      // std::vector<FstCluster *> cluster_scan = findCluster_Scan(rawHitVec_orig);
+      // std::vector<FstCluster *> cluster_scan = findCluster_ScanWeight(rawHitVec_orig);
+      // std::vector<FstCluster *> cluster_scan = findCluster_ScanRadius(rawHitVec_orig);
+      std::vector<FstCluster *> cluster_scan = findCluster_Scan(rawHitVec_Used);
+      // std::vector<FstCluster *> cluster_scan = findCluster_ScanWeight(rawHitVec_Used);
+      // std::vector<FstCluster *> cluster_scan = findCluster_ScanRadius(rawHitVec_Used);
       int nClusters_scan = cluster_scan.size();
       int numOfFstClusters_scan = 0;
       for(int i_cluster = 0; i_cluster < nClusters_scan; ++i_cluster)
@@ -797,7 +800,7 @@ int FstClusterMaker::Make()
       // set up FstTrack 
       mFstEvent->clearTracksList(); // FstTrack
       // std::vector<FstTrack *> fstTrackVec_Hits = findTrack_Hits(rawHitVec_orig); // find tracks with Hits
-      std::vector<FstTrack *> fstTrackVec_Hits = findTrack_Hits(rawHitsVec_Used); // find tracks with Hits
+      std::vector<FstTrack *> fstTrackVec_Hits = findTrack_Hits(rawHitVec_Used); // find tracks with Hits
       for(int i_track = 0; i_track < fstTrackVec_Hits.size(); ++i_track)
       { // get track from hits
 	// if(mFstEvent->getNumTracks() > 30) continue; // only save first 30 tracks | will drop the event with more than 10 trakcs anyway
@@ -1995,7 +1998,7 @@ std::vector<FstCluster *> FstClusterMaker::findCluster_ScanWeight(std::vector<Fs
 	  std::vector<FstRawHit *> rawHitsTemp = fstClusterTemp->getRawHitVec(); 
 	  for(int i_hit = 0; i_hit < rawHitsTemp.size(); ++i_hit)
 	  {
-	    tempSumAdcWeight += rawHitsTemp[i_hit]->getCharge(maxTb_temp)/rawHitsTemp[i_hit]->getWeight();
+	    tempSumAdcWeight += rawHitsTemp[i_hit]->getCharge(rawHitsTemp[i_hit]->getMaxTb())/rawHitsTemp[i_hit]->getWeight();
 	  }
 	  double weight = currentAdcWeight/tempSumAdcWeight;
 

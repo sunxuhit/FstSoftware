@@ -936,12 +936,26 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
     FstCluster *fstCluster = fstEvent->getCluster(i_cluster);
     if(fstCluster->getLayer() == 0 && fstCluster->getClusterType() == 1) // FST Simple Cluster
     {
-      mNumOfFstSimpleClusters++;
-      double r_fst = fstCluster->getMeanX(); // r for fst
-      double phi_fst = fstCluster->getMeanY(); // phi for fst
-      double adc = fstCluster->getTotCharge();
-      h_mFstSimpleClustersDisplay->Fill(r_fst,phi_fst,adc);
-      g_mFstSimpleClustersDisplay->SetPoint(mNumOfFstSimpleClusters-1,r_fst,phi_fst);
+      int nHit = 0; // number of Hits above threshold in a cluster
+      int numOfHits = fstCluster->getNumRawHits();
+      for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
+      {
+	FstRawHit *fstRawHit = fstCluster->getRawHit(i_hit);
+	if(fstRawHit->getIsHit())
+	{
+	  nHit++;
+	}
+      }
+
+      if(nHit > 0)
+      {
+	mNumOfFstSimpleClusters++;
+	double r_fst = fstCluster->getMeanX(); // r for fst
+	double phi_fst = fstCluster->getMeanY(); // phi for fst
+	double adc = fstCluster->getTotCharge();
+	h_mFstSimpleClustersDisplay->Fill(r_fst,phi_fst,adc);
+	g_mFstSimpleClustersDisplay->SetPoint(mNumOfFstSimpleClusters-1,r_fst,phi_fst);
+      }
     }
     if(fstCluster->getLayer() == 1 && fstCluster->getClusterType() == 1) mNumOfIst1Clusters++;
     if(fstCluster->getLayer() == 2 && fstCluster->getClusterType() == 1) mNumOfIst2Clusters++;
@@ -949,12 +963,26 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
 
     if(fstCluster->getLayer() == 0 && fstCluster->getClusterType() == 2) // FST Scan Cluster
     {
-      mNumOfFstScanClusters++;
-      double r_fst = fstCluster->getMeanX(); // r for fst
-      double phi_fst = fstCluster->getMeanY(); // phi for fst
-      double adc = fstCluster->getTotCharge();
-      h_mFstScanClustersDisplay->Fill(r_fst,phi_fst,adc);
-      g_mFstScanClustersDisplay->SetPoint(mNumOfFstScanClusters-1,r_fst,phi_fst);
+      int nHit = 0; // number of Hits above threshold in a cluster
+      int numOfHits = fstCluster->getNumRawHits();
+      for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
+      {
+	FstRawHit *fstRawHit = fstCluster->getRawHit(i_hit);
+	if(fstRawHit->getIsHit())
+	{
+	  nHit++;
+	}
+      }
+
+      if(nHit > 0)
+      {
+	mNumOfFstScanClusters++;
+	double r_fst = fstCluster->getMeanX(); // r for fst
+	double phi_fst = fstCluster->getMeanY(); // phi for fst
+	double adc = fstCluster->getTotCharge();
+	h_mFstScanClustersDisplay->Fill(r_fst,phi_fst,adc);
+	g_mFstScanClustersDisplay->SetPoint(mNumOfFstScanClusters-1,r_fst,phi_fst);
+      }
     }
   }
   // cout << "mNumOfFstSimpleClusters = " << mNumOfFstSimpleClusters << ", fstEvent->getNumClusters = " << fstEvent->getNumFstClusters() << endl;

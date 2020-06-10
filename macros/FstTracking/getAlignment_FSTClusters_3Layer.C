@@ -25,7 +25,7 @@ tPars updateFitParameters(tPars fitPars, double xCut, double yCut, int nOffset);
 
 R__LOAD_LIBRARY(../../lib/libFstEvent.dylib)
 
-int getAlignment_FSTClusters()
+int getAlignment_FSTClusters_3Layer()
 {
   dVec x0_fst;
   dVec y0_fst;
@@ -50,7 +50,7 @@ int getAlignment_FSTClusters()
   const double y3_shift = 1.0116;
 
   FstEvent *mFstEvent = new FstEvent();
-  std::string inputfile = "../../output/FstClusters_HV140V_woPed.root";
+  std::string inputfile = "../../output/alignment/FstClusters_HV140V_Th4.5Tb3_woPed_withCMNCorr_3Layer.root";
   std::cout << "inputfile = " << inputfile.c_str() << std::endl;
   TFile *mFile_InPut = TFile::Open(inputfile.c_str());
   TTree *mTree_FstEvent = (TTree*)mFile_InPut->Get("mTree_FstEvent");
@@ -69,27 +69,21 @@ int getAlignment_FSTClusters()
 
     std::vector<FstCluster *> clusterVec_fst;
     std::vector<FstCluster *> clusterVec_ist1;
-    std::vector<FstCluster *> clusterVec_ist2;
     std::vector<FstCluster *> clusterVec_ist3;
     clusterVec_fst.clear();
     clusterVec_ist1.clear();
-    clusterVec_ist2.clear();
     clusterVec_ist3.clear();
 
     for(int i_cluster = 0; i_cluster < mFstEvent->getNumClusters(); ++i_cluster)
     { // get Clusters info for IST1 IST2 and IST3
       FstCluster *fstCluster = mFstEvent->getCluster(i_cluster);
-      if(fstCluster->getLayer() == 0)
-      {
+      if(fstCluster->getLayer() == 0 && fstCluster->getClusterType() == 1)
+      { // use Simple cluster
 	clusterVec_fst.push_back(fstCluster);
       }
       if(fstCluster->getLayer() == 1)
       {
 	clusterVec_ist1.push_back(fstCluster);
-      }
-      if(fstCluster->getLayer() == 2)
-      {
-	clusterVec_ist2.push_back(fstCluster);
       }
       if(fstCluster->getLayer() == 3)
       {
