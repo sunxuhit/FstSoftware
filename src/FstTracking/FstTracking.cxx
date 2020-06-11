@@ -406,6 +406,24 @@ void FstTracking::initTracking_Clusters()
   h_mSimpleClustersTrackFstResPhi_2Layer  = new TH1F("h_mSimpleClustersTrackFstResPhi_2Layer","h_mSimpleClustersTrackFstResPhi_2Layer",100,-0.05,0.05);
   h_mSimpleClustersTrackFstResRPhi_2Layer = new TH2F("h_mSimpleClustersTrackFstResRPhi_2Layer","h_mSimpleClustersTrackFstResRPhi_2Layer",50,-160.0,160.0,100,-0.05,0.05);
 
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    string HistName;
+    HistName = Form("h_mSimpleClustersTrackFstResX_2Layer_Rstrip%d",i_rstrip);
+    h_mSimpleClustersTrackFstResX_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+    HistName = Form("h_mSimpleClustersTrackFstResY_2Layer_Rstrip%d",i_rstrip);
+    h_mSimpleClustersTrackFstResY_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-16.0,16.0);
+    HistName = Form("h_mSimpleClustersTrackFstResXY_2Layer_Rstrip%d",i_rstrip);
+    h_mSimpleClustersTrackFstResXY_2Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-16.0,16.0);
+    
+    HistName = Form("h_mSimpleClustersTrackFstResR_2Layer_Rstrip%d",i_rstrip);
+    h_mSimpleClustersTrackFstResR_2Layer_Rstrips[i_rstrip]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+    HistName = Form("h_mSimpleClustersTrackFstResPhi_2Layer_Rstrip%d",i_rstrip);
+    h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.05,0.05);
+    HistName = Form("h_mSimpleClustersTrackFstResRPhi_2Layer_Rstrip%d",i_rstrip);
+    h_mSimpleClustersTrackFstResRPhi_2Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-0.05,0.05);
+  }
+ 
   h_mSimpleClustersTrackIstResX_2Layer    = new TH1F("h_mSimpleClustersTrackIstResX_2Layer","h_mSimpleClustersTrackIstResX_2Layer",15,-20.0,20.0);
   h_mSimpleClustersTrackIstResY_2Layer    = new TH1F("h_mSimpleClustersTrackIstResY_2Layer","h_mSimpleClustersTrackIstResY_2Layer",100,-5.0,5.0);
   h_mSimpleClustersTrackIstResXY_2Layer   = new TH2F("h_mSimpleClustersTrackIstResXY_2Layer","h_mSimpleClustersTrackIstResXY_2Layer",15,-20.0,20.0,100,-5.0,5.0);
@@ -418,6 +436,24 @@ void FstTracking::initTracking_Clusters()
   h_mSimpleClustersTrackFstResPhi_3Layer  = new TH1F("h_mSimpleClustersTrackFstResPhi_3Layer","h_mSimpleClustersTrackFstResPhi_3Layer",100,-0.05,0.05);
   h_mSimpleClustersTrackFstResRPhi_3Layer = new TH2F("h_mSimpleClustersTrackFstResRPhi_3Layer","h_mSimpleClustersTrackFstResRPhi_3Layer",50,-160.0,160.0,100,-0.05,0.05);
 
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    string HistName;
+    HistName = Form("h_mSimpleClustersTrackFstResX_3Layer_Rstrip%d",i_rstrip);
+    h_mSimpleClustersTrackFstResX_3Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+    HistName = Form("h_mSimpleClustersTrackFstResY_3Layer_Rstrip%d",i_rstrip);
+    h_mSimpleClustersTrackFstResY_3Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-16.0,16.0);
+    HistName = Form("h_mSimpleClustersTrackFstResXY_3Layer_Rstrip%d",i_rstrip);
+    h_mSimpleClustersTrackFstResXY_3Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-16.0,16.0);
+    
+    HistName = Form("h_mSimpleClustersTrackFstResR_3Layer_Rstrip%d",i_rstrip);
+    h_mSimpleClustersTrackFstResR_3Layer_Rstrips[i_rstrip]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+    HistName = Form("h_mSimpleClustersTrackFstResPhi_3Layer_Rstrip%d",i_rstrip);
+    h_mSimpleClustersTrackFstResPhi_3Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.05,0.05);
+    HistName = Form("h_mSimpleClustersTrackFstResRPhi_3Layer_Rstrip%d",i_rstrip);
+    h_mSimpleClustersTrackFstResRPhi_3Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-0.05,0.05);
+  }
+ 
   h_mSimpleClustersTrackIstResX_3Layer    = new TH1F("h_mSimpleClustersTrackIstResX_3Layer","h_mSimpleClustersTrackIstResX_3Layer",15,-20.0,20.0);
   h_mSimpleClustersTrackIstResY_3Layer    = new TH1F("h_mSimpleClustersTrackIstResY_3Layer","h_mSimpleClustersTrackIstResY_3Layer",100,-5.0,5.0);
   h_mSimpleClustersTrackIstResXY_3Layer   = new TH2F("h_mSimpleClustersTrackIstResXY_3Layer","h_mSimpleClustersTrackIstResXY_3Layer",15,-20.0,20.0,100,-5.0,5.0);
@@ -431,6 +467,24 @@ void FstTracking::initTracking_Clusters()
   h_mScanClustersTrackFstResPhi_2Layer  = new TH1F("h_mScanClustersTrackFstResPhi_2Layer","h_mScanClustersTrackFstResPhi_2Layer",100,-0.05,0.05);
   h_mScanClustersTrackFstResRPhi_2Layer = new TH2F("h_mScanClustersTrackFstResRPhi_2Layer","h_mScanClustersTrackFstResRPhi_2Layer",50,-160.0,160.0,100,-0.05,0.05);
 
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    string HistName;
+    HistName = Form("h_mScanClustersTrackFstResX_2Layer_Rstrip%d",i_rstrip);
+    h_mScanClustersTrackFstResX_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+    HistName = Form("h_mScanClustersTrackFstResY_2Layer_Rstrip%d",i_rstrip);
+    h_mScanClustersTrackFstResY_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-16.0,16.0);
+    HistName = Form("h_mScanClustersTrackFstResXY_2Layer_Rstrip%d",i_rstrip);
+    h_mScanClustersTrackFstResXY_2Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-16.0,16.0);
+    
+    HistName = Form("h_mScanClustersTrackFstResR_2Layer_Rstrip%d",i_rstrip);
+    h_mScanClustersTrackFstResR_2Layer_Rstrips[i_rstrip]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+    HistName = Form("h_mScanClustersTrackFstResPhi_2Layer_Rstrip%d",i_rstrip);
+    h_mScanClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.05,0.05);
+    HistName = Form("h_mScanClustersTrackFstResRPhi_2Layer_Rstrip%d",i_rstrip);
+    h_mScanClustersTrackFstResRPhi_2Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-0.05,0.05);
+  }
+  
   h_mScanClustersTrackFstResX_3Layer    = new TH1F("h_mScanClustersTrackFstResX_3Layer","h_mScanClustersTrackFstResX_3Layer",50,-160.0,160.0);
   h_mScanClustersTrackFstResY_3Layer    = new TH1F("h_mScanClustersTrackFstResY_3Layer","h_mScanClustersTrackFstResY_3Layer",100,-16.0,16.0);
   h_mScanClustersTrackFstResXY_3Layer   = new TH2F("h_mScanClustersTrackFstResXY_3Layer","h_mScanClustersTrackFstResXY_3Layer",50,-160.0,160.0,100,-16.0,16.0);
@@ -438,6 +492,24 @@ void FstTracking::initTracking_Clusters()
   h_mScanClustersTrackFstResR_3Layer    = new TH1F("h_mScanClustersTrackFstResR_3Layer","h_mScanClustersTrackFstResR_3Layer",50,-160.0,160.0);
   h_mScanClustersTrackFstResPhi_3Layer  = new TH1F("h_mScanClustersTrackFstResPhi_3Layer","h_mScanClustersTrackFstResPhi_3Layer",100,-0.05,0.05);
   h_mScanClustersTrackFstResRPhi_3Layer = new TH2F("h_mScanClustersTrackFstResRPhi_3Layer","h_mScanClustersTrackFstResRPhi_3Layer",50,-160.0,160.0,100,-0.05,0.05);
+
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    string HistName;
+    HistName = Form("h_mScanClustersTrackFstResX_3Layer_Rstrip%d",i_rstrip);
+    h_mScanClustersTrackFstResX_3Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+    HistName = Form("h_mScanClustersTrackFstResY_3Layer_Rstrip%d",i_rstrip);
+    h_mScanClustersTrackFstResY_3Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-16.0,16.0);
+    HistName = Form("h_mScanClustersTrackFstResXY_3Layer_Rstrip%d",i_rstrip);
+    h_mScanClustersTrackFstResXY_3Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-16.0,16.0);
+    
+    HistName = Form("h_mScanClustersTrackFstResR_3Layer_Rstrip%d",i_rstrip);
+    h_mScanClustersTrackFstResR_3Layer_Rstrips[i_rstrip]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+    HistName = Form("h_mScanClustersTrackFstResPhi_3Layer_Rstrip%d",i_rstrip);
+    h_mScanClustersTrackFstResPhi_3Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.05,0.05);
+    HistName = Form("h_mScanClustersTrackFstResRPhi_3Layer_Rstrip%d",i_rstrip);
+    h_mScanClustersTrackFstResRPhi_3Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-0.05,0.05);
+  }
 }
 
 void FstTracking::calResolution_SimpleClusters(FstEvent *fstEvent)
@@ -540,6 +612,21 @@ void FstTracking::calResolution_SimpleClusters(FstEvent *fstEvent)
 	  h_mSimpleClustersTrackFstResR_2Layer->Fill(r_fst-r_proj);
 	  h_mSimpleClustersTrackFstResPhi_2Layer->Fill(phi_fst-phi_proj);
 	  h_mSimpleClustersTrackFstResRPhi_2Layer->Fill(r_fst-r_proj,phi_fst-phi_proj);
+
+	  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+	  {
+	    if(r_proj > FST::rOuter + FST::pitchR*i_rstrip && r_proj <= FST::rOuter + FST::pitchR*(i_rstrip+1))
+	    // check the position of the projected r is within a specific r_strip and fill accordingly
+	    {
+	      h_mSimpleClustersTrackFstResX_2Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj);
+    	      h_mSimpleClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->Fill(y0_fst-y0_proj);
+    	      h_mSimpleClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
+    	      
+    	      h_mSimpleClustersTrackFstResR_2Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj);
+    	      h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->Fill(phi_fst-phi_proj);
+    	      h_mSimpleClustersTrackFstResRPhi_2Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj,phi_fst-phi_proj);
+    	    }
+	  }
 	}
       }
       if(clusterVec_ist2.size() > 0)
@@ -668,6 +755,21 @@ void FstTracking::calResolution_SimpleClusters(FstEvent *fstEvent)
 	  h_mSimpleClustersTrackFstResR_3Layer->Fill(r_fst-r_proj);
 	  h_mSimpleClustersTrackFstResPhi_3Layer->Fill(phi_fst-phi_proj);
 	  h_mSimpleClustersTrackFstResRPhi_3Layer->Fill(r_fst-r_proj,phi_fst-phi_proj);
+
+	  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+	  {
+	    if(r_proj > FST::rOuter + FST::pitchR*i_rstrip && r_proj <= FST::rOuter + FST::pitchR*(i_rstrip+1))
+	    // check the position of the projected r is within a specific r_strip and fill accordingly
+	    {
+	      h_mSimpleClustersTrackFstResX_3Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj);
+    	      h_mSimpleClustersTrackFstResY_3Layer_Rstrips[i_rstrip]->Fill(y0_fst-y0_proj);
+    	      h_mSimpleClustersTrackFstResXY_3Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
+    	      
+    	      h_mSimpleClustersTrackFstResR_3Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj);
+    	      h_mSimpleClustersTrackFstResPhi_3Layer_Rstrips[i_rstrip]->Fill(phi_fst-phi_proj);
+    	      h_mSimpleClustersTrackFstResRPhi_3Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj,phi_fst-phi_proj);
+    	    }
+	  }
 	}
 
 	if(minClusterId_IST > -0.5)
@@ -780,6 +882,21 @@ void FstTracking::calResolution_ScanClusters(FstEvent *fstEvent)
 	  h_mScanClustersTrackFstResR_2Layer->Fill(r_fst-r_proj);
 	  h_mScanClustersTrackFstResPhi_2Layer->Fill(phi_fst-phi_proj);
 	  h_mScanClustersTrackFstResRPhi_2Layer->Fill(r_fst-r_proj,phi_fst-phi_proj);
+
+	  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+	  {
+	    if(r_proj > FST::rOuter + FST::pitchR*i_rstrip && r_proj <= FST::rOuter + FST::pitchR*(i_rstrip+1))
+	    // check the position of the projected r is within a specific r_strip and fill accordingly
+	    {
+	      h_mScanClustersTrackFstResX_2Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj);
+    	      h_mScanClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->Fill(y0_fst-y0_proj);
+    	      h_mScanClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
+    	      
+    	      h_mScanClustersTrackFstResR_2Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj);
+    	      h_mScanClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->Fill(phi_fst-phi_proj);
+    	      h_mScanClustersTrackFstResRPhi_2Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj,phi_fst-phi_proj);
+    	    }
+	  }
 	}
       }
     }
@@ -867,6 +984,21 @@ void FstTracking::calResolution_ScanClusters(FstEvent *fstEvent)
 	  h_mScanClustersTrackFstResR_3Layer->Fill(r_fst-r_proj);
 	  h_mScanClustersTrackFstResPhi_3Layer->Fill(phi_fst-phi_proj);
 	  h_mScanClustersTrackFstResRPhi_3Layer->Fill(r_fst-r_proj,phi_fst-phi_proj);
+
+	  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+	  {
+	    if(r_proj > FST::rOuter + FST::pitchR*i_rstrip && r_proj <= FST::rOuter + FST::pitchR*(i_rstrip+1))
+	    // check the position of the projected r is within a specific r_strip and fill accordingly
+	    {
+	      h_mScanClustersTrackFstResX_3Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj);
+    	      h_mScanClustersTrackFstResY_3Layer_Rstrips[i_rstrip]->Fill(y0_fst-y0_proj);
+    	      h_mScanClustersTrackFstResXY_3Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
+    	      
+    	      h_mScanClustersTrackFstResR_3Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj);
+    	      h_mScanClustersTrackFstResPhi_3Layer_Rstrips[i_rstrip]->Fill(phi_fst-phi_proj);
+    	      h_mScanClustersTrackFstResRPhi_3Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj,phi_fst-phi_proj);
+    	    }
+	  }
 	}
       }
     }
@@ -884,6 +1016,17 @@ void FstTracking::writeTracking_Clusters()
   h_mSimpleClustersTrackFstResPhi_2Layer->Write();
   h_mSimpleClustersTrackFstResRPhi_2Layer->Write();
 
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    h_mSimpleClustersTrackFstResX_2Layer_Rstrips[i_rstrip]->Write();
+    h_mSimpleClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->Write();
+    h_mSimpleClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->Write();
+    	      
+    h_mSimpleClustersTrackFstResR_2Layer_Rstrips[i_rstrip]->Write();
+    h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->Write();
+    h_mSimpleClustersTrackFstResRPhi_2Layer_Rstrips[i_rstrip]->Write();
+  }
+
   h_mSimpleClustersTrackIstResX_2Layer->Write();
   h_mSimpleClustersTrackIstResY_2Layer->Write();
   h_mSimpleClustersTrackIstResXY_2Layer->Write();
@@ -895,6 +1038,17 @@ void FstTracking::writeTracking_Clusters()
   h_mSimpleClustersTrackFstResR_3Layer->Write();
   h_mSimpleClustersTrackFstResPhi_3Layer->Write();
   h_mSimpleClustersTrackFstResRPhi_3Layer->Write();
+
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    h_mSimpleClustersTrackFstResX_3Layer_Rstrips[i_rstrip]->Write();
+    h_mSimpleClustersTrackFstResY_3Layer_Rstrips[i_rstrip]->Write();
+    h_mSimpleClustersTrackFstResXY_3Layer_Rstrips[i_rstrip]->Write();
+    	      
+    h_mSimpleClustersTrackFstResR_3Layer_Rstrips[i_rstrip]->Write();
+    h_mSimpleClustersTrackFstResPhi_3Layer_Rstrips[i_rstrip]->Write();
+    h_mSimpleClustersTrackFstResRPhi_3Layer_Rstrips[i_rstrip]->Write();
+  }
 
   h_mSimpleClustersTrackIstResX_3Layer->Write();
   h_mSimpleClustersTrackIstResY_3Layer->Write();
@@ -909,6 +1063,17 @@ void FstTracking::writeTracking_Clusters()
   h_mScanClustersTrackFstResPhi_2Layer->Write();
   h_mScanClustersTrackFstResRPhi_2Layer->Write();
 
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    h_mScanClustersTrackFstResX_2Layer_Rstrips[i_rstrip]->Write();
+    h_mScanClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->Write();
+    h_mScanClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->Write();
+    	      
+    h_mScanClustersTrackFstResR_2Layer_Rstrips[i_rstrip]->Write();
+    h_mScanClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->Write();
+    h_mScanClustersTrackFstResRPhi_2Layer_Rstrips[i_rstrip]->Write();
+  }
+
   h_mScanClustersTrackFstResX_3Layer->Write();
   h_mScanClustersTrackFstResY_3Layer->Write();
   h_mScanClustersTrackFstResXY_3Layer->Write();
@@ -916,6 +1081,17 @@ void FstTracking::writeTracking_Clusters()
   h_mScanClustersTrackFstResR_3Layer->Write();
   h_mScanClustersTrackFstResPhi_3Layer->Write();
   h_mScanClustersTrackFstResRPhi_3Layer->Write();
+
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    h_mScanClustersTrackFstResX_3Layer_Rstrips[i_rstrip]->Write();
+    h_mScanClustersTrackFstResY_3Layer_Rstrips[i_rstrip]->Write();
+    h_mScanClustersTrackFstResXY_3Layer_Rstrips[i_rstrip]->Write();
+    	      
+    h_mScanClustersTrackFstResR_3Layer_Rstrips[i_rstrip]->Write();
+    h_mScanClustersTrackFstResPhi_3Layer_Rstrips[i_rstrip]->Write();
+    h_mScanClustersTrackFstResRPhi_3Layer_Rstrips[i_rstrip]->Write();
+  }
 }
 //--------------Track Resolution with Clusters---------------------
 

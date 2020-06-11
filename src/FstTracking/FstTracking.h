@@ -97,6 +97,14 @@ class FstTracking : public TObject
     TH1F *h_mSimpleClustersTrackFstResR_2Layer;
     TH1F *h_mSimpleClustersTrackFstResPhi_2Layer;
     TH2F *h_mSimpleClustersTrackFstResRPhi_2Layer; // 2D distribution
+    
+    TH1F *h_mSimpleClustersTrackFstResX_2Layer_Rstrips[4];
+    TH1F *h_mSimpleClustersTrackFstResY_2Layer_Rstrips[4];
+    TH2F *h_mSimpleClustersTrackFstResXY_2Layer_Rstrips[4]; // 2D distribution
+    
+    TH1F *h_mSimpleClustersTrackFstResR_2Layer_Rstrips[4];
+    TH1F *h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[4];
+    TH2F *h_mSimpleClustersTrackFstResRPhi_2Layer_Rstrips[4]; // 2D distribution
 
     TH1F *h_mSimpleClustersTrackIstResX_2Layer;
     TH1F *h_mSimpleClustersTrackIstResY_2Layer;
@@ -110,6 +118,14 @@ class FstTracking : public TObject
     TH1F *h_mSimpleClustersTrackFstResPhi_3Layer;
     TH2F *h_mSimpleClustersTrackFstResRPhi_3Layer; // 2D distribution
 
+    TH1F *h_mSimpleClustersTrackFstResX_3Layer_Rstrips[4];
+    TH1F *h_mSimpleClustersTrackFstResY_3Layer_Rstrips[4];
+    TH2F *h_mSimpleClustersTrackFstResXY_3Layer_Rstrips[4]; // 2D distribution
+    
+    TH1F *h_mSimpleClustersTrackFstResR_3Layer_Rstrips[4];
+    TH1F *h_mSimpleClustersTrackFstResPhi_3Layer_Rstrips[4];
+    TH2F *h_mSimpleClustersTrackFstResRPhi_3Layer_Rstrips[4]; // 2D distribution
+
     TH1F *h_mSimpleClustersTrackIstResX_3Layer;
     TH1F *h_mSimpleClustersTrackIstResY_3Layer;
     TH2F *h_mSimpleClustersTrackIstResXY_3Layer;
@@ -122,6 +138,14 @@ class FstTracking : public TObject
     TH1F *h_mScanClustersTrackFstResR_2Layer;
     TH1F *h_mScanClustersTrackFstResPhi_2Layer;
     TH2F *h_mScanClustersTrackFstResRPhi_2Layer; // 2D distribution
+    
+    TH1F *h_mScanClustersTrackFstResX_2Layer_Rstrips[4];
+    TH1F *h_mScanClustersTrackFstResY_2Layer_Rstrips[4];
+    TH2F *h_mScanClustersTrackFstResXY_2Layer_Rstrips[4]; // 2D distribution
+    
+    TH1F *h_mScanClustersTrackFstResR_2Layer_Rstrips[4];
+    TH1F *h_mScanClustersTrackFstResPhi_2Layer_Rstrips[4];
+    TH2F *h_mScanClustersTrackFstResRPhi_2Layer_Rstrips[4]; // 2D distribution
 
     TH1F *h_mScanClustersTrackFstResX_3Layer;
     TH1F *h_mScanClustersTrackFstResY_3Layer;
@@ -130,6 +154,14 @@ class FstTracking : public TObject
     TH1F *h_mScanClustersTrackFstResR_3Layer;
     TH1F *h_mScanClustersTrackFstResPhi_3Layer;
     TH2F *h_mScanClustersTrackFstResRPhi_3Layer; // 2D distribution
+    
+    TH1F *h_mScanClustersTrackFstResX_3Layer_Rstrips[4];
+    TH1F *h_mScanClustersTrackFstResY_3Layer_Rstrips[4];
+    TH2F *h_mScanClustersTrackFstResXY_3Layer_Rstrips[4]; // 2D distribution
+    
+    TH1F *h_mScanClustersTrackFstResR_3Layer_Rstrips[4];
+    TH1F *h_mScanClustersTrackFstResPhi_3Layer_Rstrips[4];
+    TH2F *h_mScanClustersTrackFstResRPhi_3Layer_Rstrips[4]; // 2D distribution
 
     // Efficiency based on Hits
     // 0: no matching | 1-3 matching within (1-3)*pitchR in r & (1-3)*pitchPhi in phi
