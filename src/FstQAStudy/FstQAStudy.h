@@ -181,6 +181,10 @@ class FstQAStudy : public TObject
 
     TH2F *h_mFstSimpleClustersDisplay;
     TH2F *h_mFstScanClustersDisplay;
+    TH2F *h_mFstScanClustersDisplay_RawHits; // hits & peds in a cluster
+    TH2F *h_mFstScanClustersDisplay_RawPeds;
+    TH2F *h_mFstScanClustersDisplay_MaxTb;
+
     TH2F *h_mHitTracksDisplay;
     TH2F *h_mClusterTracksDisplay;
 

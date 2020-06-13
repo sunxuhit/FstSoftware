@@ -17,7 +17,7 @@ using namespace std;
 
 void plotBox(TGraph *g_track);
 
-void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 2)
+void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 2, float nFstThresholdCut = 3.5)
 {
   // gStyle->SetPalette(kRainBow);
   gStyle->SetPalette(kBlackBody);
@@ -50,6 +50,9 @@ void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool i
 
   TH2F *h_mFstSimpleClustersDisplay     = new TH2F("h_mFstSimpleClustersDisplay","h_mFstSimpleClustersDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
   TH2F *h_mFstScanClustersDisplay = new TH2F("h_mFstScanClustersDisplay","h_mFstScanClustersDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstScanClustersDisplay_RawHits = new TH2F("h_mFstScanClustersDisplay_RawHits","h_mFstScanClustersDisplay_RawHits",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstScanClustersDisplay_RawPeds = new TH2F("h_mFstScanClustersDisplay_RawPeds","h_mFstScanClustersDisplay_RawPeds",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstScanClustersDisplay_MaxTb   = new TH2F("h_mFstScanClustersDisplay_MaxTb","h_mFstScanClustersDisplay_MaxTb",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
   TH2F *h_mHitTracksDisplay       = new TH2F("h_mHitTracksDisplay","h_mHitTracksDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
   TH2F *h_mClusterTracksDisplay   = new TH2F("h_mClusterTracksDisplay","h_mClusterTracksDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
   TGraph *g_mFstSimpleClustersDisplay   = new TGraph();
@@ -62,7 +65,7 @@ void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool i
   std::string cmnMode = "withCMNCorr";
   if(!isApplyCMNCorr) cmnMode = "woCMNCorr";
 
-  string inputfile = Form("../../output/configuration/FstQAStudy_%s_Th%1.1fTb%d_%s_%s.root",hv.c_str(),nFstHitsCut,numOfUsedTimeBins,pedMode.c_str(),cmnMode.c_str());
+  string inputfile = Form("../../output/configuration/FstQAStudy_%s_Th%1.1fTb%dPed%1.1f_%s_%s.root",hv.c_str(),nFstHitsCut,numOfUsedTimeBins,nFstThresholdCut,pedMode.c_str(),cmnMode.c_str());
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TTree *mTree_EventDisplay = (TTree*)File_InPut->Get("mTree_EventDisplay");
   mTree_EventDisplay->SetBranchAddress("mEventId",&mEventId);
@@ -84,6 +87,9 @@ void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool i
   mTree_EventDisplay->SetBranchAddress("mNumOfIst3Clusters",&mNumOfIst3Clusters);
   mTree_EventDisplay->SetBranchAddress("h_mFstSimpleClustersDisplay",&h_mFstSimpleClustersDisplay);
   mTree_EventDisplay->SetBranchAddress("h_mFstScanClustersDisplay",&h_mFstScanClustersDisplay);
+  mTree_EventDisplay->SetBranchAddress("h_mFstScanClustersDisplay_RawHits",&h_mFstScanClustersDisplay_RawHits);
+  mTree_EventDisplay->SetBranchAddress("h_mFstScanClustersDisplay_RawPeds",&h_mFstScanClustersDisplay_RawPeds);
+  mTree_EventDisplay->SetBranchAddress("h_mFstScanClustersDisplay_MaxTb",&h_mFstScanClustersDisplay_MaxTb);
 
   mTree_EventDisplay->SetBranchAddress("mNumOfHitTracks",&mNumOfHitTracks);
   mTree_EventDisplay->SetBranchAddress("h_mHitTracksDisplay",&h_mHitTracksDisplay);
@@ -142,6 +148,7 @@ void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool i
     // if(mNumOfClusterTracks == 1 && mNumOfClusterTracks_2Layer == 1 && mNumOfClusterTracks_3Layer == 1) // 3-Layer Tracking
     {
       c_EventDisplay->cd(1);
+#if 0
       // plot hits
       string Title = Form("Event %d (Threshold %1.1f)", mEventId, nFstHitsCut);
       h_mFstRawHitsDisplay->SetTitle(Title.c_str());
@@ -165,6 +172,31 @@ void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool i
       h_mFstMaxTbDisplay->SetMarkerColor(4);
       h_mFstMaxTbDisplay->SetBarOffset(-3.5);
       h_mFstMaxTbDisplay->Draw("TEXT Same");
+#endif
+
+      // plot hits of cluster
+      string Title = Form("Event %d (Threshold %1.1f)", mEventId, nFstHitsCut);
+      h_mFstScanClustersDisplay_RawHits->SetTitle(Title.c_str());
+      h_mFstScanClustersDisplay_RawHits->SetStats(0);
+      h_mFstScanClustersDisplay_RawHits->GetXaxis()->SetTitle("R");
+      h_mFstScanClustersDisplay_RawHits->GetXaxis()->SetTitleSize(0.06);
+      h_mFstScanClustersDisplay_RawHits->GetXaxis()->SetRangeUser(FST::rMin,FST::rMax);
+      h_mFstScanClustersDisplay_RawHits->GetYaxis()->SetTitle("#phi");
+      h_mFstScanClustersDisplay_RawHits->GetYaxis()->SetRangeUser(phiMinFst-10.0*FST::pitchPhi,FST::phiMax+10.0*FST::pitchPhi);
+      h_mFstScanClustersDisplay_RawHits->GetYaxis()->SetTitleSize(0.06);
+      h_mFstScanClustersDisplay_RawHits->GetZaxis()->SetRangeUser(1.0,2000.0);
+      h_mFstScanClustersDisplay_RawHits->Draw("colz");
+      h_mFstScanClustersDisplay_RawHits->SetBarOffset(1.5);
+      h_mFstScanClustersDisplay_RawHits->SetMarkerColor(1);
+      h_mFstScanClustersDisplay_RawHits->Draw("TEXT Same");
+
+      h_mFstScanClustersDisplay_RawPeds->SetMarkerColor(2);
+      h_mFstScanClustersDisplay_RawPeds->SetBarOffset(-1.5);
+      h_mFstScanClustersDisplay_RawPeds->Draw("TEXT Same");
+
+      h_mFstScanClustersDisplay_MaxTb->SetMarkerColor(4);
+      h_mFstScanClustersDisplay_MaxTb->SetBarOffset(-3.5);
+      h_mFstScanClustersDisplay_MaxTb->Draw("TEXT Same");
 
       // plot clusters
       if(g_mFstSimpleClustersDisplay->GetN() > 0)
@@ -197,7 +229,7 @@ void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool i
 
       c_EventDisplay->cd(2);
       // plot hits
-      Title = Form("Event %d (Threshold: 2.0)", mEventId);
+      Title = Form("Event %d (Threshold: %1.1f)", mEventId, nFstThresholdCut);
       h_mFstRawHitsDisplay_bTh->SetTitle(Title.c_str());
       h_mFstRawHitsDisplay_bTh->SetStats(0);
       h_mFstRawHitsDisplay_bTh->GetXaxis()->SetTitle("R");

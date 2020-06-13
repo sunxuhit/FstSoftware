@@ -16,7 +16,7 @@ int makeFstCluster(string hv = "HV200V", bool isSavePed = true, bool isApplyCMNC
   std::string cmnMode = "withCMNCorr";
   if(!isApplyCMNCorr) cmnMode = "woCMNCorr";
 
-  std::string outputfile = Form("../../output/configuration/FstClusters_%s_Th%1.1fTb%d_%s_%s.root",hv.c_str(),nFstHitsCut,numOfUsedTimeBins,pedMode.c_str(),cmnMode.c_str());
+  std::string outputfile = Form("../../output/configuration/FstClusters_%s_Th%1.1fTb%dPed%1.1f_%s_%s.root",hv.c_str(),nFstHitsCut,numOfUsedTimeBins,nFstThresholdCut,pedMode.c_str(),cmnMode.c_str());
   cout << "output file set to: " << outputfile.c_str() << endl;
 
   FstClusterMaker *fst = new FstClusterMaker();

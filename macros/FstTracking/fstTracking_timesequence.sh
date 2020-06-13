@@ -10,5 +10,5 @@ then
   isApplyCMNCorr=$2
   date=$3
 
-  root -l -b -q doFstTracking_timesequence.C\(\"${hv}\",${isSavePed},${isApplyCMNCorr},4.5,3,\"${date}\"\)
+  root -l -b -q doFstTracking_timesequence.C\(\"${hv}\",${isSavePed},${isApplyCMNCorr},4.5,3,2.0,\"${date}\"\)
 fi

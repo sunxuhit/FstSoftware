@@ -797,16 +797,19 @@ void FstQAStudy::writeSignalQA()
 //--------------Event Display---------------------
 void FstQAStudy::initEventDisplay_TrackClusters()
 {
-  h_mFstRawHitsDisplay     = new TH2F("h_mFstRawHitsDisplay","h_mFstRawHitsDisplay",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstRawPedsDisplay     = new TH2F("h_mFstRawPedsDisplay","h_mFstRawPedsDisplay",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstMaxTbDisplay       = new TH2F("h_mFstMaxTbDisplay","h_mFstMaxTbDisplay",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstRawHitsDisplay_bTh = new TH2F("h_mFstRawHitsDisplay_bTh","h_mFstRawHitsDisplay_bTh",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstRawPedsDisplay_bTh = new TH2F("h_mFstRawPedsDisplay_bTh","h_mFstRawPedsDisplay_bTh",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstMaxTbDisplay_bTh   = new TH2F("h_mFstMaxTbDisplay_bTh","h_mFstMaxTbDisplay_bTh",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstSimpleClustersDisplay    = new TH2F("h_mFstSimpleClustersDisplay","h_mFstSimpleClustersDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstScanClustersDisplay = new TH2F("h_mFstScanClustersDisplay","h_mFstScanClustersDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mHitTracksDisplay      = new TH2F("h_mHitTracksDisplay","h_mHitTracksDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mClusterTracksDisplay = new TH2F("h_mClusterTracksDisplay","h_mClusterTracksDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstRawHitsDisplay              = new TH2F("h_mFstRawHitsDisplay","h_mFstRawHitsDisplay",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstRawPedsDisplay              = new TH2F("h_mFstRawPedsDisplay","h_mFstRawPedsDisplay",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstMaxTbDisplay                = new TH2F("h_mFstMaxTbDisplay","h_mFstMaxTbDisplay",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstRawHitsDisplay_bTh          = new TH2F("h_mFstRawHitsDisplay_bTh","h_mFstRawHitsDisplay_bTh",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstRawPedsDisplay_bTh          = new TH2F("h_mFstRawPedsDisplay_bTh","h_mFstRawPedsDisplay_bTh",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstMaxTbDisplay_bTh            = new TH2F("h_mFstMaxTbDisplay_bTh","h_mFstMaxTbDisplay_bTh",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstSimpleClustersDisplay       = new TH2F("h_mFstSimpleClustersDisplay","h_mFstSimpleClustersDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstScanClustersDisplay         = new TH2F("h_mFstScanClustersDisplay","h_mFstScanClustersDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstScanClustersDisplay_RawHits = new TH2F("h_mFstScanClustersDisplay_RawHits","h_mFstScanClustersDisplay_RawHits",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstScanClustersDisplay_RawPeds = new TH2F("h_mFstScanClustersDisplay_RawPeds","h_mFstScanClustersDisplay_RawPeds",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstScanClustersDisplay_MaxTb   = new TH2F("h_mFstScanClustersDisplay_MaxTb","h_mFstScanClustersDisplay_MaxTb",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mHitTracksDisplay               = new TH2F("h_mHitTracksDisplay","h_mHitTracksDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mClusterTracksDisplay           = new TH2F("h_mClusterTracksDisplay","h_mClusterTracksDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
 
   g_mFstSimpleClustersDisplay = new TGraph();
   g_mFstSimpleClustersDisplay->SetName("g_mFstSimpleClustersDisplay");
@@ -837,6 +840,9 @@ void FstQAStudy::initEventDisplay_TrackClusters()
   mTree_EventDisplay->Branch("mNumOfIst3Clusters",&mNumOfIst3Clusters,"mNumOfIst3Clusters/I");
   mTree_EventDisplay->Branch("h_mFstSimpleClustersDisplay","TH2F",&h_mFstSimpleClustersDisplay);
   mTree_EventDisplay->Branch("h_mFstScanClustersDisplay","TH2F",&h_mFstScanClustersDisplay);
+  mTree_EventDisplay->Branch("h_mFstScanClustersDisplay_RawHits","TH2F",&h_mFstScanClustersDisplay_RawHits);
+  mTree_EventDisplay->Branch("h_mFstScanClustersDisplay_RawPeds","TH2F",&h_mFstScanClustersDisplay_RawPeds);
+  mTree_EventDisplay->Branch("h_mFstScanClustersDisplay_MaxTb","TH2F",&h_mFstScanClustersDisplay_MaxTb);
 
   mTree_EventDisplay->Branch("mNumOfHitTracks",&mNumOfHitTracks,"mNumOfHitTracks/I");
   mTree_EventDisplay->Branch("h_mHitTracksDisplay","TH2F",&h_mHitTracksDisplay);
@@ -885,6 +891,10 @@ void FstQAStudy::clearEventDisplay_TrackClusters()
 
   h_mFstSimpleClustersDisplay->Reset();
   h_mFstScanClustersDisplay->Reset();
+  h_mFstScanClustersDisplay_RawHits->Reset();
+  h_mFstScanClustersDisplay_RawPeds->Reset();
+  h_mFstScanClustersDisplay_MaxTb->Reset();
+
   h_mHitTracksDisplay->Reset();
   h_mClusterTracksDisplay->Reset();
 
@@ -982,6 +992,21 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
 	double adc = fstCluster->getTotCharge();
 	h_mFstScanClustersDisplay->Fill(r_fst,phi_fst,adc);
 	g_mFstScanClustersDisplay->SetPoint(mNumOfFstScanClusters-1,r_fst,phi_fst);
+
+	for(int i_hit = 0; i_hit < fstCluster->getNumRawHits(); ++i_hit)
+	{ // fill hits display for clusters with hit
+	  FstRawHit *fstRawHit = fstCluster->getRawHit(i_hit);
+	  double r_hit = fstRawHit->getPosX(); // r for fst
+	  double phi_hit = fstRawHit->getPosY(); // phi for fst
+	  int maxTb_hit = fstRawHit->getMaxTb();
+	  double adc_hit = fstRawHit->getCharge(maxTb_hit); // adc - pedMean
+	  double ped_hit = fstRawHit->getPedStdDev(maxTb_hit); // pedStdDev
+	  if(mApplyCMNCorr) ped_hit = fstRawHit->getRanStdDev(maxTb_hit); // ranStdDev
+
+	  h_mFstScanClustersDisplay_RawHits->Fill(r_hit,phi_hit,adc_hit);
+	  h_mFstScanClustersDisplay_RawPeds->Fill(r_hit,phi_hit,ped_hit);
+	  h_mFstScanClustersDisplay_MaxTb->Fill(r_hit,phi_hit,maxTb_hit);
+	}
       }
     }
   }
