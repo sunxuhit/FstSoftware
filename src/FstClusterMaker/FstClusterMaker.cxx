@@ -466,7 +466,8 @@ int FstClusterMaker::Make()
 	      }
 
 	      bool isPed = false;
-	      if( !isHit && mSavePed)
+	      // if( !isHit && mSavePed)
+	      if( !isHit )
 	      {
 		maxTB = 0;
 		if( !(i_arm == 1 && i_port == 1) ) // IST Peds always required 3 time bin
@@ -687,9 +688,28 @@ int FstClusterMaker::Make()
       }
       mFstEvent->setNumFstRawHits(numOfFstHits);
 
+      // hit container for clusters
+      std::vector<FstRawHit *> rawHitVec_Cluster;
+      rawHitVec_Cluster.clear();
+      if(mSavePed)
+      { // use seed and hits for FST clusters
+	for(int i_hit = 0; i_hit < rawHitVec_orig.size(); ++i_hit)
+	{
+	  rawHitVec_Cluster.push_back(rawHitVec_orig[i_hit]);
+	}
+      }
+      if(!mSavePed)
+      { // use seed only for FST clusters
+	for(int i_hit = 0; i_hit < rawHitVec_Used.size(); ++i_hit)
+	{
+	  rawHitVec_Cluster.push_back(rawHitVec_Used[i_hit]);
+	}
+      }
+
       // set up FstCluster with cluster from Hits
       mFstEvent->clearClustersList();
-      std::vector<FstCluster *> cluster_simple = findCluster_Simple(rawHitVec_orig);
+      std::vector<FstCluster *> cluster_simple = findCluster_Simple(rawHitVec_Cluster);
+      // std::vector<FstCluster *> cluster_simple = findCluster_Simple(rawHitVec_orig);
       // std::vector<FstCluster *> cluster_simple = findCluster_Simple(rawHitVec_Used);
       int nClusters_simple = cluster_simple.size();
       int numOfFstClusters_simple = 0;
@@ -744,9 +764,12 @@ int FstClusterMaker::Make()
       }
       mFstEvent->setNumFstClusters_Simple(numOfFstClusters_simple);
 
+      // std::vector<FstCluster *> cluster_scan = findCluster_Scan(rawHitVec_Cluster);
+      // std::vector<FstCluster *> cluster_scan = findCluster_ScanWeight(rawHitVec_Cluster);
+      std::vector<FstCluster *> cluster_scan = findCluster_ScanRadius(rawHitVec_Cluster);
       // std::vector<FstCluster *> cluster_scan = findCluster_Scan(rawHitVec_orig);
       // std::vector<FstCluster *> cluster_scan = findCluster_ScanWeight(rawHitVec_orig);
-      std::vector<FstCluster *> cluster_scan = findCluster_ScanRadius(rawHitVec_orig);
+      // std::vector<FstCluster *> cluster_scan = findCluster_ScanRadius(rawHitVec_orig);
       // std::vector<FstCluster *> cluster_scan = findCluster_Scan(rawHitVec_Used);
       // std::vector<FstCluster *> cluster_scan = findCluster_ScanWeight(rawHitVec_Used);
       // std::vector<FstCluster *> cluster_scan = findCluster_ScanRadius(rawHitVec_Used);
@@ -805,7 +828,8 @@ int FstClusterMaker::Make()
 
       // set up FstTrack 
       mFstEvent->clearTracksList(); // FstTrack
-      std::vector<FstTrack *> fstTrackVec_Hits = findTrack_Hits(rawHitVec_orig); // find tracks with Hits
+      std::vector<FstTrack *> fstTrackVec_Hits = findTrack_Hits(rawHitVec_Cluster); // find tracks with Hits
+      // std::vector<FstTrack *> fstTrackVec_Hits = findTrack_Hits(rawHitVec_orig); // find tracks with Hits
       // std::vector<FstTrack *> fstTrackVec_Hits = findTrack_Hits(rawHitVec_Used); // find tracks with Hits
       for(int i_track = 0; i_track < fstTrackVec_Hits.size(); ++i_track)
       { // get track from hits
