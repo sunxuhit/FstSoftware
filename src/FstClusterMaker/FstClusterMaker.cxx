@@ -23,7 +23,7 @@ ClassImp(FstClusterMaker)
 
 //------------------------------------------
 
-FstClusterMaker::FstClusterMaker() : mList("../../list/FST/FstData_HV140.list"), mOutPutFile("./FstData_HV140.root"), mSavePed(true), mApplyCMNCorr(true), mFstHitsCut(4.5), mFstThresholdCut(2.0), mNumOfUsedTimeBins(3)
+FstClusterMaker::FstClusterMaker() : mList("../../list/FST/FstData_HV140.list"), mOutPutFile("./FstData_HV140.root"), mSavePed(true), mApplyCMNCorr(true), mFstHitsCut(4.5), mNumOfUsedTimeBins(3), mFstThresholdCut2(2.5), mFstThresholdCut1(3.5)
 {
   cout << "FstClusterMaker::FstClusterMaker() -------- Constructor!  --------" << endl;
   mHome = getenv("HOME");
@@ -38,7 +38,8 @@ FstClusterMaker::~FstClusterMaker()
 int FstClusterMaker::Init()
 {
   cout << "FstClusterMaker::Init => " << endl;
-  cout << "Configurations: mSavePed: " <<  mSavePed << ", mApplyCMNCorr: " << mApplyCMNCorr << ", mFstHitsCut: " << mFstHitsCut << ", mNumOfUsedTimeBins: " << mNumOfUsedTimeBins << ", mFstThresholdCut: " << mFstThresholdCut << endl;
+  cout << "Configurations: mSavePed: " <<  mSavePed << ", mApplyCMNCorr: " << mApplyCMNCorr << endl;
+  cout << "mFstHitsCut: " << mFstHitsCut << ", mNumOfUsedTimeBins: " << mNumOfUsedTimeBins << ", mFstThresholdCut2: " << mFstThresholdCut2 << ", mFstThresholdCut1: " << mFstThresholdCut1 << endl;
   File_mOutPut = new TFile(mOutPutFile.c_str(),"RECREATE");
 
   bool isInPut = initChain(); // initialize input data/ped TChain;
@@ -428,7 +429,7 @@ int FstClusterMaker::Make()
 			( signalEvt[i_arm][i_port][i_apv][i_ch][i_tb]   > nHitsCut*noiseEvt[i_arm][i_port][i_apv][i_ch][i_tb])
 		      ) 
 		    {
-		      isHit = true; // set isHit to true if 3 consequetive time bins exceed the threshold
+		      isHit = true; // set isHit to true if 2 consequetive time bins exceed the threshold
 		      if(signalEvt[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
 		      { // find time bin with max adc for 0-FST::numTBins-1
 			maxADC = signalEvt[i_arm][i_port][i_apv][i_ch][i_tb];
@@ -453,7 +454,7 @@ int FstClusterMaker::Make()
 			( signalEvt[i_arm][i_port][i_apv][i_ch][i_tb] > nHitsCut*noiseEvt[i_arm][i_port][i_apv][i_ch][i_tb])
 		      ) 
 		    {
-		      isHit = true; // set isHit to true if 3 consequetive time bins exceed the threshold
+		      isHit = true; // set isHit to true if 1 consequetive time bins exceed the threshold
 		      if(signalEvt[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
 		      { // find time bin with max adc for 0-FST::numTBins-1
 			maxADC = signalEvt[i_arm][i_port][i_apv][i_ch][i_tb];
@@ -504,7 +505,49 @@ int FstClusterMaker::Make()
 		  double maxADC = signalEvt[i_arm][i_port][i_apv][i_ch][0]; // init with 1st tb
 		  double preADC = maxADC;
 		  // float nPedsCut = FST::nFstThresholdCut; // 2.0 for FST
-		  float nPedsCut = mFstThresholdCut; // 2.0 for FST
+		  float nPedsCut2 = mFstThresholdCut2; // 2.5 for FST & TimeBin 2
+		  for(int i_tb = 1; i_tb < FST::numTBins; ++i_tb)
+		  { // only if 2 consequetive timebins of a ch exceed the threshold cut is considered as a hit
+		    if( 
+			( signalEvt[i_arm][i_port][i_apv][i_ch][i_tb-1] > nPedsCut2*noiseEvt[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
+			( signalEvt[i_arm][i_port][i_apv][i_ch][i_tb]   > nPedsCut2*noiseEvt[i_arm][i_port][i_apv][i_ch][i_tb])
+		      ) 
+		    {
+		      isPed = true; // set isPed to true if 2 consequetive time bins exceed the threshold
+		      if(signalEvt[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
+		      { // find time bin with max adc for 0-FST::numTBins-1
+			maxADC = signalEvt[i_arm][i_port][i_apv][i_ch][i_tb];
+			maxTB = i_tb;
+			preADC = maxADC;
+		      }
+		      if(signalEvt[i_arm][i_port][i_apv][i_ch][i_tb-1] > preADC)
+		      { // check if i_tb-1 has the max ADC
+			maxADC = signalEvt[i_arm][i_port][i_apv][i_ch][i_tb-1];
+			maxTB = i_tb-1;
+			preADC = maxADC;
+		      }
+		    }
+		  }
+		  if( !isPed )
+		  {
+		    float nPedsCut1 = mFstThresholdCut1; // 3.5 for FST & TimeBin 1
+		    for(int i_tb = 1; i_tb < FST::numTBins; ++i_tb)
+		    { // only if 1 timebin of a ch exceed the threshold cut is considered as a hit
+		      if( 
+			  ( signalEvt[i_arm][i_port][i_apv][i_ch][i_tb] > nPedsCut1*noiseEvt[i_arm][i_port][i_apv][i_ch][i_tb])
+			) 
+		      {
+			isPed = true; // set isPed to true if 1 time bins exceed the threshold
+			if(signalEvt[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
+			{ // find time bin with max adc for 0-FST::numTBins-1
+			  maxADC = signalEvt[i_arm][i_port][i_apv][i_ch][i_tb];
+			  maxTB = i_tb;
+			  preADC = maxADC;
+			}
+		      }
+		    }
+		  }
+#if 0
 		  // if(FST::numOfUsedTimeBins == 3) // FST Peds with 3 Time Bins
 		  if(mNumOfUsedTimeBins == 3) // FST Peds with 3 Time Bins
 		  {
@@ -575,6 +618,7 @@ int FstClusterMaker::Make()
 		      }
 		    }
 		  }
+#endif
 		}
 	      }
 

@@ -1,27 +1,26 @@
 #!/bin/bash
 date
 
-#. ./fstQAStudy.sh isApplyCMNCorr nFstHitsCut nFstThresholdCut
+#. ./fstQAStudy.sh isApplyCMNCorr nFstHitsCut
 
-if [ $# -eq 3 ]
+if [ $# -eq 2 ]
 then
   isSavePed=true
   isApplyCMNCorr=$1
   nFstHitsCut=$2
-  nFstThresholdCut=$3
 
   # HV70V
-  # root -l -b -q doFstQAStudy.C\(\"HV70V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},3,${nFstThresholdCut}\)
-  # root -l -b -q doFstQAStudy.C\(\"HV70V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,${nFstThresholdCut}\)
-  # root -l -b -q doFstQAStudy.C\(\"HV70V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},1,${nFstThresholdCut}\)
+  # root -l -b -q doFstQAStudy.C\(\"HV70V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},3,2.5,3.5\)
+  # root -l -b -q doFstQAStudy.C\(\"HV70V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,2.5,3.5\)
+  # root -l -b -q doFstQAStudy.C\(\"HV70V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},1,2.5,3.5\)
 
   # HV140V
-  # root -l -b -q doFstQAStudy.C\(\"HV140V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},3,${nFstThresholdCut}\)
-  # root -l -b -q doFstQAStudy.C\(\"HV140V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,${nFstThresholdCut}\)
-  # root -l -b -q doFstQAStudy.C\(\"HV140V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},1,${nFstThresholdCut}\)
+  # root -l -b -q doFstQAStudy.C\(\"HV140V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},3,2.5,3.5\)
+  # root -l -b -q doFstQAStudy.C\(\"HV140V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,2.5,3.5\)
+  # root -l -b -q doFstQAStudy.C\(\"HV140V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},1,2.5,3.5\)
 
   # HV200V
-  root -l -b -q doFstQAStudy.C\(\"HV200V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},3,${nFstThresholdCut}\)
-  root -l -b -q doFstQAStudy.C\(\"HV200V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,${nFstThresholdCut}\)
-  # root -l -b -q doFstQAStudy.C\(\"HV200V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},1,${nFstThresholdCut}\)
+  root -l -b -q doFstQAStudy.C\(\"HV200V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},3,2.5,3.5\)
+  root -l -b -q doFstQAStudy.C\(\"HV200V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,2.5,3.5\)
+  # root -l -b -q doFstQAStudy.C\(\"HV200V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},1,2.5,3.5\)
 fi

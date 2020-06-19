@@ -17,7 +17,7 @@ using namespace std;
 
 void plotBox(TGraph *g_track);
 
-void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 2, float nFstThresholdCut = 3.5)
+void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 2, float nFstThresholdCut2 = 2.5, float nFstThresholdCut1 = 3.5)
 {
   // gStyle->SetPalette(kRainBow);
   gStyle->SetPalette(kBlackBody);
@@ -65,7 +65,7 @@ void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool i
   std::string cmnMode = "withCMNCorr";
   if(!isApplyCMNCorr) cmnMode = "woCMNCorr";
 
-  string inputfile = Form("../../output/configuration/FstQAStudy_%s_Th%1.1fTb%dPed%1.1f_%s_%s.root",hv.c_str(),nFstHitsCut,numOfUsedTimeBins,nFstThresholdCut,pedMode.c_str(),cmnMode.c_str());
+  string inputfile = Form("../../output/configuration/FstQAStudy_%s_Th%1.1fTb%dPed%1.1fPed%1.1f_%s_%s.root",hv.c_str(),nFstHitsCut,numOfUsedTimeBins,nFstThresholdCut2,nFstThresholdCut1,pedMode.c_str(),cmnMode.c_str());
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TTree *mTree_EventDisplay = (TTree*)File_InPut->Get("mTree_EventDisplay");
   mTree_EventDisplay->SetBranchAddress("mEventId",&mEventId);
@@ -229,7 +229,7 @@ void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool i
 
       c_EventDisplay->cd(2);
       // plot hits
-      Title = Form("Event %d (Threshold: %1.1f)", mEventId, nFstThresholdCut);
+      Title = Form("Event %d (Threshold (TB2): %1.1f & Threshold (TB1): %1.1f)", mEventId, nFstThresholdCut2,nFstThresholdCut1);
       h_mFstRawHitsDisplay_bTh->SetTitle(Title.c_str());
       h_mFstRawHitsDisplay_bTh->SetStats(0);
       h_mFstRawHitsDisplay_bTh->GetXaxis()->SetTitle("R");

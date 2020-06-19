@@ -43,13 +43,14 @@ class FstClusterMaker : public TObject
     {
       mFstHitsCut = nFstHitsCut;
     }
-    void set_nFstThresholdCut(float nFstThresholdCut)
-    {
-      mFstThresholdCut = nFstThresholdCut;
-    }
     void set_numOfUsedTimeBins(float numOfUsedTimeBins)
     {
       mNumOfUsedTimeBins = numOfUsedTimeBins;
+    }
+    void set_nFstThresholdCut(float nFstThresholdCut2, float nFstThresholdCut1)
+    {
+      mFstThresholdCut2 = nFstThresholdCut2;
+      mFstThresholdCut1 = nFstThresholdCut1;
     }
 
     int Init();
@@ -140,7 +141,8 @@ class FstClusterMaker : public TObject
     bool mApplyCMNCorr;
     float mFstHitsCut;
     int mNumOfUsedTimeBins;
-    float mFstThresholdCut;
+    float mFstThresholdCut2; // hit threshold for TimeBin 2
+    float mFstThresholdCut1; // hit threshold for TimeBin 1
 
     // Utility for tracking
     int getLayer(int arm, int port); // return layer based on arm & port
