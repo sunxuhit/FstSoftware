@@ -752,9 +752,9 @@ int FstClusterMaker::Make()
 
       // set up FstCluster with cluster from Hits
       mFstEvent->clearClustersList();
-      std::vector<FstCluster *> cluster_simple = findCluster_Simple(rawHitVec_Cluster);
+      // std::vector<FstCluster *> cluster_simple = findCluster_Simple(rawHitVec_Cluster);
       // std::vector<FstCluster *> cluster_simple = findCluster_Simple(rawHitVec_orig);
-      // std::vector<FstCluster *> cluster_simple = findCluster_Simple(rawHitVec_Used);
+      std::vector<FstCluster *> cluster_simple = findCluster_Simple(rawHitVec_Used);
       int nClusters_simple = cluster_simple.size();
       int numOfFstClusters_simple = 0;
       for(int i_cluster = 0; i_cluster < nClusters_simple; ++i_cluster)
@@ -811,12 +811,6 @@ int FstClusterMaker::Make()
       // std::vector<FstCluster *> cluster_scan = findCluster_Scan(rawHitVec_Cluster);
       // std::vector<FstCluster *> cluster_scan = findCluster_ScanWeight(rawHitVec_Cluster);
       std::vector<FstCluster *> cluster_scan = findCluster_ScanRadius(rawHitVec_Cluster);
-      // std::vector<FstCluster *> cluster_scan = findCluster_Scan(rawHitVec_orig);
-      // std::vector<FstCluster *> cluster_scan = findCluster_ScanWeight(rawHitVec_orig);
-      // std::vector<FstCluster *> cluster_scan = findCluster_ScanRadius(rawHitVec_orig);
-      // std::vector<FstCluster *> cluster_scan = findCluster_Scan(rawHitVec_Used);
-      // std::vector<FstCluster *> cluster_scan = findCluster_ScanWeight(rawHitVec_Used);
-      // std::vector<FstCluster *> cluster_scan = findCluster_ScanRadius(rawHitVec_Used);
       int nClusters_scan = cluster_scan.size();
       int numOfFstClusters_scan = 0;
       for(int i_cluster = 0; i_cluster < nClusters_scan; ++i_cluster)
@@ -873,8 +867,6 @@ int FstClusterMaker::Make()
       // set up FstTrack 
       mFstEvent->clearTracksList(); // FstTrack
       std::vector<FstTrack *> fstTrackVec_Hits = findTrack_Hits(rawHitVec_Cluster); // find tracks with Hits
-      // std::vector<FstTrack *> fstTrackVec_Hits = findTrack_Hits(rawHitVec_orig); // find tracks with Hits
-      // std::vector<FstTrack *> fstTrackVec_Hits = findTrack_Hits(rawHitVec_Used); // find tracks with Hits
       for(int i_track = 0; i_track < fstTrackVec_Hits.size(); ++i_track)
       { // get track from hits
 	// if(mFstEvent->getNumTracks() > 30) continue; // only save first 30 tracks | will drop the event with more than 10 trakcs anyway
