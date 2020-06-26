@@ -60,6 +60,10 @@ void FstCluster::setClusterType(int type)
 {
   mClusterType = type;
 }
+void FstCluster::setIsSeed(bool isSeed)
+{
+  mIsSeed = isSeed;
+}
 void FstCluster::setNRawHits(int nRawHits)
 {
   mNRawHits = nRawHits;
@@ -122,6 +126,10 @@ int FstCluster::getClusterType() const
 {
   return mClusterType;
 }
+bool FstCluster::getIsSeed() const
+{
+  return mIsSeed;
+}
 int FstCluster::getNRawHits() const
 {
   return mNRawHits;
@@ -160,6 +168,7 @@ void FstCluster::Print() const
   cout << "mTotCharge = " << mTotCharge << endl;
   cout << "mMaxTb =" << mMaxTb << endl;
   cout << "mClusterType =" << mClusterType << endl;
+  cout << "mIsSeed =" << mIsSeed << endl;
   cout << "mNRawHits = " << mNRawHits << endl;
   cout << "mNRawHitsR = " << mNRawHitsR << endl;
   cout << "mNRawHitsPhi = " << mNRawHitsPhi << endl;
@@ -186,6 +195,7 @@ void FstCluster::Clear()
   mTotCharge = -1;
   mMaxTb = -1;
   mClusterType = -1;
+  mIsSeed = false;
   mNRawHits = -1;
   mNRawHitsR = -1;
   mNRawHitsPhi = -1;

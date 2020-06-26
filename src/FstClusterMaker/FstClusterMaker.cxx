@@ -803,6 +803,7 @@ int FstClusterMaker::Make()
 	  mFstClusteredRawHit->setHitId(rawHitsVec[i_hit]->getHitId());
 	  mFstClusteredRawHit->setDefaultTb(rawHitsVec[i_hit]->getDefaultTb());
 	  mFstClusteredRawHit->setIsHit(rawHitsVec[i_hit]->getIsHit());
+	  if( rawHitsVec[i_hit]->getIsHit() ) mFstCluster->setIsSeed(rawHitsVec[i_hit]->getIsHit()); // clusters with seed
 	}
 	if(mFstCluster->getLayer() == 0) numOfFstClusters_simple++;
       }
@@ -859,6 +860,7 @@ int FstClusterMaker::Make()
 	  mFstClusteredRawHit->setHitId(rawHitsVec[i_hit]->getHitId());
 	  mFstClusteredRawHit->setDefaultTb(rawHitsVec[i_hit]->getDefaultTb());
 	  mFstClusteredRawHit->setIsHit(rawHitsVec[i_hit]->getIsHit());
+	  if( rawHitsVec[i_hit]->getIsHit() ) mFstCluster->setIsSeed(rawHitsVec[i_hit]->getIsHit()); // clusters with seed
 	}
 	if(mFstCluster->getLayer() == 0) numOfFstClusters_scan++;
       }

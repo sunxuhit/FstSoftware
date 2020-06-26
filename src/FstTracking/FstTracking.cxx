@@ -570,18 +570,7 @@ void FstTracking::calResolution_SimpleClusters(FstEvent *fstEvent)
 	double preDistance_FST = minDistance_FST;
 	for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
 	{ // fill residual histograms with the cluster of minimum distance
-	  int nHit = 0; // number of Hits above threshold in a cluster
-	  int numOfHits = clusterVec_fst[i_cluster]->getNumRawHits();
-	  for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
-	  {
-	    FstRawHit *fstRawHit = clusterVec_fst[i_cluster]->getRawHit(i_hit);
-	    if(fstRawHit->getIsHit())
-	    {
-	      nHit++;
-	    }
-	  }
-
-	  if(nHit > 0)
+	  if( clusterVec_fst[i_cluster]->getIsSeed() ) // select cluste with seed
 	  {
 	    double r_fst   = clusterVec_fst[i_cluster]->getMeanX(); // r for fst
 	    double phi_fst = clusterVec_fst[i_cluster]->getMeanY(); // phi for fst
@@ -702,18 +691,7 @@ void FstTracking::calResolution_SimpleClusters(FstEvent *fstEvent)
 	    {
 	      for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
 	      { // fill residual histograms
-		int nHit = 0; // number of Hits above threshold in a cluster
-		int numOfHits = clusterVec_fst[i_cluster]->getNumRawHits();
-		for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
-		{
-		  FstRawHit *fstRawHit = clusterVec_fst[i_cluster]->getRawHit(i_hit);
-		  if(fstRawHit->getIsHit())
-		  {
-		    nHit++;
-		  }
-		}
-
-		if(nHit > 0)
+		if( clusterVec_fst[i_cluster]->getIsSeed() ) // select cluste with seed
 		{
 		  double r_fst   = clusterVec_fst[i_cluster]->getMeanX(); // r for fst
 		  double phi_fst = clusterVec_fst[i_cluster]->getMeanY(); // phi for fst
@@ -840,18 +818,7 @@ void FstTracking::calResolution_ScanClusters(FstEvent *fstEvent)
 	double preDistance_FST = minDistance_FST;
 	for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
 	{ // fill residual histograms with the cluster of minimum distance
-	  int nHit = 0; // number of Hits above threshold in a cluster
-	  int numOfHits = clusterVec_fst[i_cluster]->getNumRawHits();
-	  for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
-	  {
-	    FstRawHit *fstRawHit = clusterVec_fst[i_cluster]->getRawHit(i_hit);
-	    if(fstRawHit->getIsHit())
-	    {
-	      nHit++;
-	    }
-	  }
-
-	  if(nHit > 0)
+	  if( clusterVec_fst[i_cluster]->getIsSeed() ) // select cluste with seed
 	  {
 	    double r_fst   = clusterVec_fst[i_cluster]->getMeanX(); // r for fst
 	    double phi_fst = clusterVec_fst[i_cluster]->getMeanY(); // phi for fst
@@ -939,18 +906,7 @@ void FstTracking::calResolution_ScanClusters(FstEvent *fstEvent)
 	    {
 	      for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
 	      { // fill residual histograms
-		int nHit = 0; // number of Hits above threshold in a cluster
-		int numOfHits = clusterVec_fst[i_cluster]->getNumRawHits();
-		for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
-		{
-		  FstRawHit *fstRawHit = clusterVec_fst[i_cluster]->getRawHit(i_hit);
-		  if(fstRawHit->getIsHit())
-		  {
-		    nHit++;
-		  }
-		}
-
-		if(nHit > 0)
+		if( clusterVec_fst[i_cluster]->getIsSeed() ) // select cluste with seed
 		{
 		  double r_fst   = clusterVec_fst[i_cluster]->getMeanX(); // r for fst
 		  double phi_fst = clusterVec_fst[i_cluster]->getMeanY(); // phi for fst
@@ -1266,18 +1222,7 @@ void FstTracking::calEfficiency_SimpleClusters(FstEvent *fstEvent)
 	    {
 	      for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
 	      { // loop over all possible clusters
-		int nHit = 0; // number of Hits above threshold in a cluster
-		int numOfHits = clusterVec_fst[i_cluster]->getNumRawHits();
-		for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
-		{
-		  FstRawHit *fstRawHit = clusterVec_fst[i_cluster]->getRawHit(i_hit);
-		  if(fstRawHit->getIsHit())
-		  {
-		    nHit++;
-		  }
-		}
-
-		if(nHit > 0)
+		if( clusterVec_fst[i_cluster]->getIsSeed() ) // select cluste with seed
 		{
 		  double r_fst = clusterVec_fst[i_cluster]->getMeanX();
 		  double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
@@ -1343,18 +1288,7 @@ void FstTracking::calEfficiency_SimpleClusters(FstEvent *fstEvent)
 	      {
 		for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
 		{ // loop over all possible clusters
-		  int nHit = 0; // number of Hits above threshold in a cluster
-		  int numOfHits = clusterVec_fst[i_cluster]->getNumRawHits();
-		  for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
-		  {
-		    FstRawHit *fstRawHit = clusterVec_fst[i_cluster]->getRawHit(i_hit);
-		    if(fstRawHit->getIsHit())
-		    {
-		      nHit++;
-		    }
-		  }
-
-		  if(nHit > 0)
+		  if( clusterVec_fst[i_cluster]->getIsSeed() ) // select cluste with seed
 		  {
 		    double r_fst = clusterVec_fst[i_cluster]->getMeanX();
 		    double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
@@ -1436,18 +1370,7 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
 	    {
 	      for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
 	      { // loop over all possible clusters
-		int nHit = 0; // number of Hits above threshold in a cluster
-		int numOfHits = clusterVec_fst[i_cluster]->getNumRawHits();
-		for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
-		{
-		  FstRawHit *fstRawHit = clusterVec_fst[i_cluster]->getRawHit(i_hit);
-		  if(fstRawHit->getIsHit())
-		  {
-		    nHit++;
-		  }
-		}
-
-		if(nHit > 0)
+		if( clusterVec_fst[i_cluster]->getIsSeed() ) // select cluste with seed
 		{
 		  double r_fst = clusterVec_fst[i_cluster]->getMeanX();
 		  double phi_fst = clusterVec_fst[i_cluster]->getMeanY();
@@ -1513,18 +1436,7 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
 	      {
 		for(int i_cluster = 0; i_cluster < clusterVec_fst.size(); ++i_cluster)
 		{ // loop over all possible clusters
-		  int nHit = 0; // number of Hits above threshold in a cluster
-		  int numOfHits = clusterVec_fst[i_cluster]->getNumRawHits();
-		  for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
-		  {
-		    FstRawHit *fstRawHit = clusterVec_fst[i_cluster]->getRawHit(i_hit);
-		    if(fstRawHit->getIsHit())
-		    {
-		      nHit++;
-		    }
-		  }
-
-		  if(nHit > 0)
+		  if( clusterVec_fst[i_cluster]->getIsSeed() ) // select cluste with seed
 		  {
 		    double r_fst = clusterVec_fst[i_cluster]->getMeanX();
 		    double phi_fst = clusterVec_fst[i_cluster]->getMeanY();

@@ -946,18 +946,7 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
     FstCluster *fstCluster = fstEvent->getCluster(i_cluster);
     if(fstCluster->getLayer() == 0 && fstCluster->getClusterType() == 1) // FST Simple Cluster
     {
-      int nHit = 0; // number of Hits above threshold in a cluster
-      int numOfHits = fstCluster->getNumRawHits();
-      for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
-      {
-	FstRawHit *fstRawHit = fstCluster->getRawHit(i_hit);
-	if(fstRawHit->getIsHit())
-	{
-	  nHit++;
-	}
-      }
-
-      if(nHit > 0)
+      if( fstCluster->getIsSeed() ) // select cluste with seed
       {
 	mNumOfFstSimpleClusters++;
 	double r_fst = fstCluster->getMeanX(); // r for fst
@@ -973,18 +962,7 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
 
     if(fstCluster->getLayer() == 0 && fstCluster->getClusterType() == 2) // FST Scan Cluster
     {
-      int nHit = 0; // number of Hits above threshold in a cluster
-      int numOfHits = fstCluster->getNumRawHits();
-      for(int i_hit = 0; i_hit < numOfHits; ++i_hit)
-      {
-	FstRawHit *fstRawHit = fstCluster->getRawHit(i_hit);
-	if(fstRawHit->getIsHit())
-	{
-	  nHit++;
-	}
-      }
-
-      if(nHit > 0)
+      if( fstCluster->getIsSeed() ) // select cluste with seed
       {
 	mNumOfFstScanClusters++;
 	double r_fst = fstCluster->getMeanX(); // r for fst

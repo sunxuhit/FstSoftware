@@ -1,5 +1,6 @@
 #include <TCanvas.h>
 #include <TH1F.h>
+#include <TLegend.h>
 
 void plotMcProjection()
 {
@@ -10,6 +11,10 @@ void plotMcProjection()
   TH1F *h_mFstProjResR_2Layer    = (TH1F*)File_InPut->Get("h_mFstProjResR_2Layer");
   TH1F *h_mFstProjResPhi_2Layer  = (TH1F*)File_InPut->Get("h_mFstProjResPhi_2Layer");
   TH2F *h_mFstProjResRPhi_2Layer = (TH2F*)File_InPut->Get("h_mFstProjResRPhi_2Layer");
+
+  TFile *File_InPutData = TFile::Open("../../output/configuration/ScanClusterRadiusPed/Mixed/FstTracking_HV200V_Th4.0Tb2Ped2.5Ped3.5_withPed_withCMNCorr.root");
+  TH1F *h_mSimpleClustersTrackFstResR_2Layer_Rstrip0 = (TH1F*)File_InPutData->Get("h_mSimpleClustersTrackFstResR_2Layer_Rstrip0");
+  TH1F *h_mSimpleClustersTrackFstResPhi_2Layer_Rstrip0 = (TH1F*)File_InPutData->Get("h_mSimpleClustersTrackFstResPhi_2Layer_Rstrip0");
 
   TCanvas *c_Residual = new TCanvas("c_Residual","c_Residual",10,10,1200,800);
   c_Residual->Divide(3,2);
@@ -56,13 +61,29 @@ void plotMcProjection()
   h_mFstProjResR_2Layer->GetXaxis()->SetTitle("r^{FST,proj}_{center} - r^{FST,readout}_{gen} (mm)");
   h_mFstProjResR_2Layer->GetXaxis()->SetTitleSize(0.06);
   h_mFstProjResR_2Layer->GetXaxis()->CenterTitle();
+  double InteR_MC = h_mFstProjResR_2Layer->GetMaximum();
+  double InteR_Data = h_mSimpleClustersTrackFstResR_2Layer_Rstrip0->GetMaximum();
+  h_mFstProjResR_2Layer->Scale(InteR_Data/InteR_MC);
   h_mFstProjResR_2Layer->Draw("hE");
+  h_mSimpleClustersTrackFstResR_2Layer_Rstrip0->SetLineColor(2);
+  h_mSimpleClustersTrackFstResR_2Layer_Rstrip0->Draw("hE same");
+
+  TLegend *leg = new TLegend(0.20,0.6,0.4,0.7);
+  leg->AddEntry(h_mFstProjResR_2Layer,"MC","l");
+  leg->AddEntry(h_mSimpleClustersTrackFstResR_2Layer_Rstrip0,"Data","l");
+  leg->Draw("same");
 
   c_Residual->cd(6);
   h_mFstProjResPhi_2Layer->GetXaxis()->SetTitle("#phi^{FST,proj}_{center} - #phi^{FST,readout}_{gen} (mm)");
   h_mFstProjResPhi_2Layer->GetXaxis()->CenterTitle();
   h_mFstProjResPhi_2Layer->GetXaxis()->SetTitleSize(0.06);
+  double IntePhi_MC = h_mFstProjResPhi_2Layer->GetMaximum();
+  double IntePhi_Data = h_mSimpleClustersTrackFstResPhi_2Layer_Rstrip0->GetMaximum();
+  h_mFstProjResPhi_2Layer->Scale(IntePhi_Data/IntePhi_MC);
   h_mFstProjResPhi_2Layer->Draw("hE");
+  h_mSimpleClustersTrackFstResPhi_2Layer_Rstrip0->SetLineColor(2);
+  h_mSimpleClustersTrackFstResPhi_2Layer_Rstrip0->Draw("hE same");
+  leg->Draw("same");
 
   c_Residual->SaveAs("./figures/c_Residual.eps");
 }

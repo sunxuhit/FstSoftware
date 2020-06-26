@@ -19,6 +19,7 @@ class FstCluster : public TObject
     double mTotCharge; // sum of pedestal subtracted ADC for max time bin of each hit in the cluster
     double mMaxTb;
     int mClusterType; // 0 for ARMDisplay | 1 for Simple | 2 for Scan
+    bool mIsSeed; // true: cluster with seed | false cluster without seed
     int mNRawHits; // number of hits in the cluster
     int mNRawHitsR; // number of hits in the cluster along the R direction
     int mNRawHitsPhi; // number of hits in the cluster along the phi direction
@@ -42,6 +43,7 @@ class FstCluster : public TObject
     void setTotCharge(double charge);
     void setMaxTb(double maxTb);
     void setClusterType(int type);
+    void setIsSeed(bool isSeed);
     void setNRawHits(int nRawHits);
     void setNRawHitsR(int nRawHitsR);
     void setNRawHitsPhi(int nRawHitsPhi);
@@ -58,6 +60,7 @@ class FstCluster : public TObject
     double getTotCharge() const;
     double getMaxTb() const;
     int getClusterType() const;
+    bool getIsSeed() const;
     int getNRawHits() const;
     int getNRawHitsR() const;
     int getNRawHitsPhi() const;
