@@ -3,7 +3,7 @@
 #include <TMath.h>
 #include "../../src/FstUtil/FstCons.h"
 
-void FstMcProjection()
+void FstMcProjection(int numOfTracks = 100000)
 {
   gRandom->SetSeed();
 
@@ -20,7 +20,7 @@ void FstMcProjection()
 
   TH2F *h_mIst3Pixel = new TH2F("h_mIst3Pixel","h_mIst3Pixel",FST::noColumns,0.0,lengthColumn,FST::noRows,0.0,lengthRow);
   TH2F *h_mIst1Pixel = new TH2F("h_mIst1Pixel","h_mIst1Pixel",FST::noColumns,0.0,lengthColumn,FST::noRows,0.0,lengthRow);
-  TH2F *h_mFstPixel  = new TH2F("h_mFstPixel","h_mFstPixel",6,FST::rMin,FST::rMax,FST::numPhiSeg,-1.0*FST::phiMax,1.0*FST::phiMax);
+  TH2F *h_mFstPixel  = new TH2F("h_mFstPixel","h_mFstPixel",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
 
   TH2F *h_mIst3Display = new TH2F("h_mIst3Display","h_mIst3Display",FST::noColumns,0.0,lengthColumn,FST::noRows,0.0,lengthRow);
   TH2F *h_mIst1Display = new TH2F("h_mIst1Display","h_mIst1Display",FST::noColumns,0.0,lengthColumn,FST::noRows,0.0,lengthRow);
@@ -39,7 +39,23 @@ void FstMcProjection()
   TH1F *h_mFstProjResPhi_2Layer  = new TH1F("h_mFstProjResPhi_2Layer","h_mFstProjResPhi_2Layer",80,-4.0*FST::pitchPhi,4.0*FST::pitchPhi);
   TH2F *h_mFstProjResRPhi_2Layer = new TH2F("h_mFstProjResRPhi_2Layer","h_mFstProjResRPhi_2Layer",80,-2.0*FST::pitchR,2.0*FST::pitchR,80,-4.0*FST::pitchPhi,4.0*FST::pitchPhi);
 
-  for(int i_ran =0; i_ran < 500000; ++i_ran)
+  TH1F *h_mFstSimResR_2Layer    = new TH1F("h_mFstSimResR_2Layer","h_mFstSimResR_2Layer",80,-2.0*FST::pitchR,2.0*FST::pitchR);
+  TH1F *h_mFstSimResPhi_2Layer  = new TH1F("h_mFstSimResPhi_2Layer","h_mFstSimResPhi_2Layer",80,-4.0*FST::pitchPhi,4.0*FST::pitchPhi);
+  TH2F *h_mFstSimResRPhi_2Layer = new TH2F("h_mFstSimResRPhi_2Layer","h_mFstSimResRPhi_2Layer",80,-2.0*FST::pitchR,2.0*FST::pitchR,80,-4.0*FST::pitchPhi,4.0*FST::pitchPhi);
+
+  TH2F *h_mIstCounts_2Layer[8];
+  TH2F *h_mFstCounts_2Layer[8];
+  for(int i_match = 0; i_match < 8; ++i_match)
+  {
+    string HistName;
+    // simple clusters
+    HistName = Form("h_mIstCounts_2Layer_SF%d",i_match);
+    h_mIstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin,FST::rMax,90,-1.5*FST::phiMax,1.5*FST::phiMax);
+    HistName = Form("h_mFstCounts_2Layer_SF%d",i_match);
+    h_mFstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin,FST::rMax,90,-1.5*FST::phiMax,1.5*FST::phiMax);
+  }
+
+  for(int i_track =0; i_track < numOfTracks; ++i_track)
   {
     double x3_gen    = gRandom->Rndm()*lengthColumn;
     double y3_gen    = gRandom->Rndm()*lengthRow;
@@ -81,14 +97,22 @@ void FstMcProjection()
     double x0_corr = x3_corr + (x1_corr-x3_corr)*z0_fst/z1_ist;
     double y0_corr = y3_corr + (y1_corr-y3_corr)*z0_fst/z1_ist;
 
+    // real position in r & phi on FST
     double r0_corr     = TMath::Sqrt(x0_corr*x0_corr+y0_corr*y0_corr);
     double phi0_corr   = TMath::ATan2(y0_corr,x0_corr);
-    int binR0          = h_mFstPixel->GetXaxis()->FindBin(r0_corr);
-    int binPhi0        = h_mFstPixel->GetYaxis()->FindBin(phi0_corr);
-    double r0_center   = h_mFstPixel->GetXaxis()->GetBinCenter(binR0);
-    double phi0_center = h_mFstPixel->GetYaxis()->GetBinCenter(binPhi0);
+    double r0_center = -999.0;
+    double phi0_center = -999.0;
+    // check if FST has readout
+    if(r0_corr >= FST::rOuter && r0_corr <= FST::rOuter+4.0*FST::pitchR && phi0_corr >= -FST::phiMax && phi0_corr <= FST::phiMax)
+    {
+      int binR0          = h_mFstPixel->GetXaxis()->FindBin(r0_corr);
+      int binPhi0        = h_mFstPixel->GetYaxis()->FindBin(phi0_corr);
+      // readout position in r & phi on FST
+      r0_center   = h_mFstPixel->GetXaxis()->GetBinCenter(binR0);
+      phi0_center = h_mFstPixel->GetYaxis()->GetBinCenter(binPhi0);
+    }
 
-    // pixel position
+    // projected position from IST pixel
     double x3_CORR = x3_center + FST::x2_shift; // shift into FST coordinate
     double y3_CORR = y3_center + FST::y2_shift;
     double x1_CORR = x1_center + FST::x2_shift; // shift into FST coordinate
@@ -99,12 +123,39 @@ void FstMcProjection()
     double r0_CORR     = TMath::Sqrt(x0_CORR*x0_CORR+y0_CORR*y0_CORR);
     double phi0_CORR   = TMath::ATan2(y0_CORR,x0_CORR);
 
-    if(r0_center >= FST::rOuter && r0_center < FST::rOuter+4.0*FST::pitchR && phi0_corr >= -FST::phiMax && phi0_corr < FST::phiMax)
+    // fill Residual
+    if(r0_center > -100.0 && phi0_center > -100.0)
     {
       h_mFstDisplay->Fill(r0_CORR,phi0_CORR);
       h_mFstProjResR_2Layer->Fill(r0_center-r0_CORR);
       h_mFstProjResPhi_2Layer->Fill(phi0_center-phi0_CORR);
       h_mFstProjResRPhi_2Layer->Fill(r0_center-r0_CORR,phi0_center-phi0_CORR);
+
+      h_mFstSimResR_2Layer->Fill(r0_center-r0_corr);
+      h_mFstSimResPhi_2Layer->Fill(phi0_center-phi0_corr);
+      h_mFstSimResRPhi_2Layer->Fill(r0_center-r0_corr,phi0_center-phi0_corr);
+    }
+
+    // fill Efficiency
+    if(r0_CORR >= FST::rMin && r0_CORR < FST::rMax && phi0_CORR >= -FST::phiMax && phi0_CORR < FST::phiMax)
+    {
+      for(int i_match = 0; i_match < 8; ++i_match)
+      {
+	h_mIstCounts_2Layer[i_match]->Fill(r0_CORR,phi0_CORR);
+	int nMatchedTrack = 0;
+	if(r0_center > -100.0 && phi0_center > -100.0)
+	{
+	  if(i_match == 0)
+	  {
+	    nMatchedTrack++;
+	  }
+	  if( i_match > 0 && abs(r0_center-r0_CORR) <= i_match*0.5*FST::pitchR && abs(phi0_center-phi0_CORR) <= 3.0*FST::pitchPhi)
+	  {
+	    nMatchedTrack++;
+	  }
+	}
+	if(nMatchedTrack > 0) h_mFstCounts_2Layer[i_match]->Fill(r0_CORR,phi0_CORR);
+      }
     }
   }
 
@@ -125,5 +176,15 @@ void FstMcProjection()
   h_mFstProjResR_2Layer->Write();
   h_mFstProjResPhi_2Layer->Write();
   h_mFstProjResRPhi_2Layer->Write();
+
+  h_mFstSimResR_2Layer->Write();
+  h_mFstSimResPhi_2Layer->Write();
+  h_mFstSimResRPhi_2Layer->Write();
+
+  for(int i_match = 0; i_match < 8; ++i_match)
+  {
+    h_mIstCounts_2Layer[i_match]->Write();
+    h_mFstCounts_2Layer[i_match]->Write();
+  }
   File_OutPut->Close();
 }
