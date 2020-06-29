@@ -77,10 +77,10 @@ class FstNoiseStudy : public TObject
     TH1F *h_mRanSigma_FST[4][FST::numTBins]; // RStrip & TimeBin
 
     int mRoChannelMap[128];
-    TGraph *g_mRoPedMean_FST[FST::numTBins]; // i_ro (0-127) & i_tb (0-8)
-    TGraph *g_mRoPedSigma_FST[FST::numTBins];
-    TGraph *g_mRoCMNSigma_FST[FST::numTBins];
-    TGraph *g_mRoRanSigma_FST[FST::numTBins];
+    TGraph *g_mRoPedMean[4][FST::numTBins]; // 0 for FST & 1-3 for IST | i_ro (0-127) & i_tb (0-8)
+    TGraph *g_mRoPedSigma[4][FST::numTBins];
+    TGraph *g_mRoCMNSigma[4][FST::numTBins];
+    TGraph *g_mRoRanSigma[4][FST::numTBins];
 
     // Utility for tracking
     int getLayer(int arm, int port); // return layer based on arm & port
