@@ -1,11 +1,19 @@
 #include <TRandom3.h>
 #include <TStyle.h>
 #include <TMath.h>
+#include <TVector2.h>
 #include "../../src/FstUtil/FstCons.h"
+
+using namespace std;
+
+void genCosmicTrackRandom(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, bool isRot, int nTrack); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
+TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot); // get projected position on FST from IST1 & IST3 | return (r,phi) for FST
+TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST); // get readout position from a real hit | return (x,y) for IST & (r,phi) for FST
+void printAlignmentInfo(bool isRot);
 
 void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
 {
-  gRandom->SetSeed();
+  printAlignmentInfo(isRot);
 
   const float lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
   const float lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
@@ -14,28 +22,6 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
   const double z1_ist = FST::pitchLayer12 + FST::pitchLayer23;
   const double z2_ist = FST::pitchLayer23;
   const double z3_ist = 0.0;
-
-  double x2_shift = 0.0;
-  double y2_shift = 0.0;
-  double phi_rot_ist2 = 0.0;
-
-  // before rotation
-  if( !isRot )
-  {
-    x2_shift = FST::x2_shift;
-    y2_shift = FST::y2_shift;
-    phi_rot_ist2 = 0.0;
-  }
-
-  // after rotation
-  if( isRot )
-  {
-    x2_shift = 214.839;
-    y2_shift = -46.692;
-    phi_rot_ist2 = -1.55329;
-  }
-
-  cout << "isRot = " << isRot << ", x2_shift = " << x2_shift << ", y2_shift = " << y2_shift << ", phi_rot_ist2 = " << phi_rot_ist2 << endl;
 
   std::cout << std::fixed;
   std::cout << std::setprecision(4);
@@ -85,29 +71,39 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
 
   for(int i_track =0; i_track < numOfTracks; ++i_track)
   {
-    double x3_gen = gRandom->Rndm()*lengthColumn;
-    double y3_gen = gRandom->Rndm()*lengthRow;
-    int binX3     = h_mIst3Pixel->GetXaxis()->FindBin(x3_gen);
-    int binY3     = h_mIst3Pixel->GetYaxis()->FindBin(y3_gen);
-    double x3_ro  = h_mIst3Pixel->GetXaxis()->GetBinCenter(binX3);
-    double y3_ro  = h_mIst3Pixel->GetYaxis()->GetBinCenter(binY3);
+    TVector2 vHitRan_IST1, vHitRan_IST3, vHitRan_FST;
+    vHitRan_IST1.Set(-999.0,-999.0);
+    vHitRan_IST3.Set(-999.0,-999.0);
+    vHitRan_FST.Set(-999.0,-999.0);
+
+    // randomly generated cosmic
+    genCosmicTrackRandom(vHitRan_IST1, vHitRan_IST3, vHitRan_FST, isRot, i_track);
+    TVector2 vRoRan_IST3 = getReadOut(vHitRan_IST3, h_mIst3Pixel, false); // RO position at IST3
+    TVector2 vRoRan_IST1 = getReadOut(vHitRan_IST1, h_mIst1Pixel, false); // RO position at IST1
+    TVector2 vRoRan_FST  = getReadOut(vHitRan_FST, h_mFstPixel, true); // RO position at FST
+    TVector2 vRoProj_FST = getProjection(vRoRan_IST1, vRoRan_IST3, isRot); // projected position on FST through the readout position from IST1 & IST3
+
+    double x3_gen = vHitRan_IST3.X();
+    double y3_gen = vHitRan_IST3.Y();
+    double x3_ro  = vRoRan_IST3.X(); 
+    double y3_ro  = vRoRan_IST3.Y();
     h_mIst3Display->Fill(x3_gen,y3_gen);
     h_mIst3ResX_2Layer->Fill(x3_ro-x3_gen);
     h_mIst3ResY_2Layer->Fill(y3_ro-y3_gen);
 
-    double x1_gen = gRandom->Rndm()*lengthColumn;
-    double y1_gen = gRandom->Rndm()*lengthRow;
-    int binX1     = h_mIst1Pixel->GetXaxis()->FindBin(x1_gen);
-    int binY1     = h_mIst1Pixel->GetYaxis()->FindBin(y1_gen);
-    double x1_ro  = h_mIst1Pixel->GetXaxis()->GetBinCenter(binX1);
-    double y1_ro  = h_mIst1Pixel->GetYaxis()->GetBinCenter(binY1);
+    double x1_gen = vHitRan_IST1.X();
+    double y1_gen = vHitRan_IST1.Y();
+    double x1_ro  = vRoRan_IST1.X(); 
+    double y1_ro  = vRoRan_IST1.Y();
     h_mIst1Display->Fill(x1_gen,y1_gen);
     h_mIst1ResX_2Layer->Fill(x1_ro-x1_gen);
     h_mIst1ResY_2Layer->Fill(y1_ro-y1_gen);
 
+    // projected position (w/o alignment) through the randomly generated hit position from IST1 & IST3
     double x0_proj = x3_gen + (x1_gen-x3_gen)*z0_fst/z1_ist;
     double y0_proj = y3_gen + (y1_gen-y3_gen)*z0_fst/z1_ist;
 
+    // projected position (w/o alignment) through the readout position from IST1 & IST3
     double x0_cProj = x3_ro + (x1_ro-x3_ro)*z0_fst/z1_ist;
     double y0_cProj = y3_ro + (y1_ro-y3_ro)*z0_fst/z1_ist;
 
@@ -118,42 +114,19 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
 
     // FST Residual
     // real position
-    double x3_corr = x3_gen*TMath::Cos(phi_rot_ist2) + y3_gen*TMath::Sin(phi_rot_ist2) + x2_shift;
-    double y3_corr = y3_gen*TMath::Cos(phi_rot_ist2) - x3_gen*TMath::Sin(phi_rot_ist2) + y2_shift;
-    double x1_corr = x1_gen*TMath::Cos(phi_rot_ist2) + y1_gen*TMath::Sin(phi_rot_ist2) + x2_shift;
-    double y1_corr = y1_gen*TMath::Cos(phi_rot_ist2) - x1_gen*TMath::Sin(phi_rot_ist2) + y2_shift;
-    double x0_corr = x3_corr + (x1_corr-x3_corr)*z0_fst/z1_ist;
-    double y0_corr = y3_corr + (y1_corr-y3_corr)*z0_fst/z1_ist;
-
-    // real position in r & phi on FST
-    double r0_corr   = TMath::Sqrt(x0_corr*x0_corr+y0_corr*y0_corr);
-    double phi0_corr = TMath::ATan2(y0_corr,x0_corr);
-    double r0_ro     = -999.0;
-    double phi0_ro   = -999.0;
-    double x0_ro     = -999.0;
-    double y0_ro     = -999.0;
-    // check if FST has readout
-    if(r0_corr >= FST::rOuter && r0_corr <= FST::rOuter+4.0*FST::pitchR && phi0_corr >= -FST::phiMax && phi0_corr <= FST::phiMax)
-    {
-      int binR0   = h_mFstPixel->GetXaxis()->FindBin(r0_corr);
-      int binPhi0 = h_mFstPixel->GetYaxis()->FindBin(phi0_corr);
-      // readout position in r & phi on FST
-      r0_ro   = h_mFstPixel->GetXaxis()->GetBinCenter(binR0);
-      phi0_ro = h_mFstPixel->GetYaxis()->GetBinCenter(binPhi0);
-      x0_ro   = r0_ro*TMath::Cos(phi0_ro);
-      y0_ro   = r0_ro*TMath::Sin(phi0_ro);
-    }
+    double r0_corr   = vHitRan_FST.X();
+    double phi0_corr = vHitRan_FST.Y();
+    // read out position
+    double r0_ro     = vRoRan_FST.X();
+    double phi0_ro   = vRoRan_FST.Y();
+    double x0_ro     = r0_ro*TMath::Cos(phi0_ro);
+    double y0_ro     = r0_ro*TMath::Sin(phi0_ro);
 
     // projected position from IST pixel
-    double x3_CORR = x3_ro*TMath::Cos(phi_rot_ist2) + y3_ro*TMath::Sin(phi_rot_ist2) + x2_shift;
-    double y3_CORR = y3_ro*TMath::Cos(phi_rot_ist2) - x3_ro*TMath::Sin(phi_rot_ist2) + y2_shift;
-    double x1_CORR = x1_ro*TMath::Cos(phi_rot_ist2) + y1_ro*TMath::Sin(phi_rot_ist2) + x2_shift;
-    double y1_CORR = y1_ro*TMath::Cos(phi_rot_ist2) - x1_ro*TMath::Sin(phi_rot_ist2) + y2_shift;
-    double x0_CORR = x3_CORR + (x1_CORR-x3_CORR)*z0_fst/z1_ist;
-    double y0_CORR = y3_CORR + (y1_CORR-y3_CORR)*z0_fst/z1_ist;
-
-    double r0_CORR     = TMath::Sqrt(x0_CORR*x0_CORR+y0_CORR*y0_CORR);
-    double phi0_CORR   = TMath::ATan2(y0_CORR,x0_CORR);
+    double r0_CORR   = vRoProj_FST.X();
+    double phi0_CORR = vRoProj_FST.Y();
+    double x0_CORR   = r0_CORR*TMath::Cos(phi0_CORR);
+    double y0_CORR   = r0_CORR*TMath::Sin(phi0_CORR);
 
     // fill Residual
     if(r0_ro > -100.0 && phi0_ro > -100.0)
@@ -231,4 +204,138 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
     h_mFstCounts_2Layer[i_match]->Write();
   }
   File_OutPut->Close();
+}
+
+void genCosmicTrackRandom(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, bool isRot = false, int nTrack = 0)
+{
+  // gRandom->SetSeed();
+
+  const float lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
+  const float lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
+
+  // generated position on IST
+  double x3_gen = gRandom->Rndm()*lengthColumn;
+  double y3_gen = gRandom->Rndm()*lengthRow;
+  vPosIST3.Set(x3_gen,y3_gen);
+
+  double x1_gen = gRandom->Rndm()*lengthColumn;
+  double y1_gen = gRandom->Rndm()*lengthRow;
+  vPosIST1.Set(x1_gen,y1_gen);
+
+  vPosFST = getProjection(vPosIST1,vPosIST3,isRot);
+}
+
+TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot = false)
+{
+  const double z0_fst = FST::pitchLayer03;
+  const double z1_ist = FST::pitchLayer12 + FST::pitchLayer23;
+  const double z2_ist = FST::pitchLayer23;
+  const double z3_ist = 0.0;
+
+  double x2_shift = 0.0;
+  double y2_shift = 0.0;
+  double phi_rot_ist2 = 0.0;
+
+  // before rotation
+  if( !isRot )
+  {
+    x2_shift = FST::x2_shift;
+    y2_shift = FST::y2_shift;
+    phi_rot_ist2 = 0.0;
+  }
+
+  // after rotation
+  if( isRot )
+  {
+    x2_shift = 214.839;
+    y2_shift = -46.692;
+    phi_rot_ist2 = -1.55329;
+  }
+
+  double x3_gen = vPosIST3.X();
+  double y3_gen = vPosIST3.Y();
+
+  double x1_gen = vPosIST1.X();
+  double y1_gen = vPosIST1.Y();
+
+  // FST Residual
+  // real position
+  double x3_corr = x3_gen*TMath::Cos(phi_rot_ist2) + y3_gen*TMath::Sin(phi_rot_ist2) + x2_shift;
+  double y3_corr = y3_gen*TMath::Cos(phi_rot_ist2) - x3_gen*TMath::Sin(phi_rot_ist2) + y2_shift;
+  double x1_corr = x1_gen*TMath::Cos(phi_rot_ist2) + y1_gen*TMath::Sin(phi_rot_ist2) + x2_shift;
+  double y1_corr = y1_gen*TMath::Cos(phi_rot_ist2) - x1_gen*TMath::Sin(phi_rot_ist2) + y2_shift;
+  double x0_corr = x3_corr + (x1_corr-x3_corr)*z0_fst/z1_ist;
+  double y0_corr = y3_corr + (y1_corr-y3_corr)*z0_fst/z1_ist;
+  double r0_corr   = TMath::Sqrt(x0_corr*x0_corr+y0_corr*y0_corr);
+  double phi0_corr = TMath::ATan2(y0_corr,x0_corr);
+  // cout << "x0_corr = " << x0_corr << ", y0_corr = " << y0_corr << endl;
+  // cout << "r0_corr = " << r0_corr << ", phi0_corr = " << phi0_corr << endl;
+
+  TVector2 vPosFST;
+  vPosFST.Set(r0_corr,phi0_corr);
+
+  return vPosFST;
+}
+
+TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST)
+{
+  TVector2 vPosRO;
+  vPosRO.Set(-999.0,-999.0);
+
+  double x_hit = vPosHit.X();
+  double y_hit = vPosHit.Y();
+
+  if( !isFST )
+  {
+    int binX    = h_pixel->GetXaxis()->FindBin(x_hit);
+    int binY    = h_pixel->GetYaxis()->FindBin(y_hit);
+    double x_ro = h_pixel->GetXaxis()->GetBinCenter(binX);
+    double y_ro = h_pixel->GetYaxis()->GetBinCenter(binY);
+    vPosRO.Set(x_ro,y_ro);
+  }
+  if( isFST )
+  {
+    double r_hit   = x_hit;
+    double phi_hit = y_hit;
+    double r_ro    = -999.0;
+    double phi_ro  = -999.0;
+    double x_ro    = -999.0;
+    double y_ro    = -999.0;
+    // check if FST has readout
+    if(r_hit >= FST::rOuter && r_hit <= FST::rOuter+4.0*FST::pitchR && phi_hit >= -FST::phiMax && phi_hit <= FST::phiMax)
+    {
+      int binR   = h_pixel->GetXaxis()->FindBin(r_hit);
+      int binPhi = h_pixel->GetYaxis()->FindBin(phi_hit);
+      r_ro       = h_pixel->GetXaxis()->GetBinCenter(binR);
+      phi_ro     = h_pixel->GetYaxis()->GetBinCenter(binPhi);
+    }
+    vPosRO.Set(r_ro,phi_ro);
+  }
+
+  return vPosRO;
+}
+
+void printAlignmentInfo(bool isRot)
+{
+  double x2_shift = 0.0;
+  double y2_shift = 0.0;
+  double phi_rot_ist2 = 0.0;
+
+  // before rotation
+  if( !isRot )
+  {
+    x2_shift = FST::x2_shift;
+    y2_shift = FST::y2_shift;
+    phi_rot_ist2 = 0.0;
+  }
+
+  // after rotation
+  if( isRot )
+  {
+    x2_shift = 214.839;
+    y2_shift = -46.692;
+    phi_rot_ist2 = -1.55329;
+  }
+
+  cout << "isRot = " << isRot << ", x2_shift = " << x2_shift << ", y2_shift = " << y2_shift << ", phi_rot_ist2 = " << phi_rot_ist2 << endl;
 }
