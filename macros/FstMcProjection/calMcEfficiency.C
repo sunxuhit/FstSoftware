@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void calMcEfficiency()
+void calMcEfficiency(bool isRot = true)
 {
   const double rMaxFst = FST::rOuter + 4.0*FST::pitchR;
   const double rMinFst = FST::rOuter;
@@ -19,7 +19,10 @@ void calMcEfficiency()
 
   const int nMatch = 8;
 
-  TFile *File_InPut = TFile::Open("../../output/simulation/FstMcProjection.root");
+  string mRot = "woRot";
+  if(isRot) mRot = "Rot";
+  string inputname = Form("../../output/simulation/FstMcProjection_%s.root",mRot.c_str());
+  TFile *File_InPut = TFile::Open(inputname.c_str());
   TH2F *h_mIstCounts_2Layer[nMatch];
   TH1F *h_mIstCountsR_2Layer[nMatch];
   TH1F *h_mIstCountsPhi_2Layer[nMatch];
@@ -88,7 +91,7 @@ void calMcEfficiency()
   }
 
 
-  string outputname = "./figures/McEfficiency.pdf";
+  string outputname = Form("./figures/McEfficiency_%s.pdf",mRot.c_str());
   TCanvas *c_play = new TCanvas("c_play","c_play",10,10,900,900);
   c_play->Divide(3,3);
   for(int i_pad = 0; i_pad < 9; ++i_pad)
@@ -99,7 +102,7 @@ void calMcEfficiency()
     c_play->cd(i_pad+1)->SetGrid(0,0);
   }
 
-  string output_start = "./figures/McEfficiency.pdf[";
+  string output_start = Form("./figures/McEfficiency_%s.pdf[",mRot.c_str());
   c_play->Print(output_start.c_str()); // open pdf file
 
   for(int i_match = 0; i_match < nMatch; ++i_match)
@@ -187,6 +190,6 @@ void calMcEfficiency()
     c_play->Print(outputname.c_str());
   }
 
-  string output_stop = "./figures/McEfficiency.pdf]";
+  string output_stop = Form("./figures/McEfficiency_%s.pdf]",mRot.c_str());
   c_play->Print(output_stop.c_str()); // open pdf file
 }

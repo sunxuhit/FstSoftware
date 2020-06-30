@@ -1,9 +1,12 @@
 #include <TCanvas.h>
 #include <TH1F.h>
 
-void plotMcHitsDisplay()
+void plotMcHitsDisplay(bool isRot = true)
 {
-  TFile *File_InPut = TFile::Open("../../output/simulation/FstMcProjection.root");
+  string mRot = "woRot";
+  if(isRot) mRot = "Rot";
+  string inputname = Form("../../output/simulation/FstMcProjection_%s.root",mRot.c_str());
+  TFile *File_InPut = TFile::Open(inputname.c_str());
   TH1F *h_mIst1Display = (TH1F*)File_InPut->Get("h_mIst1Display");
   TH1F *h_mIst3Display = (TH1F*)File_InPut->Get("h_mIst3Display");
   TH1F *h_mFstDisplay  = (TH1F*)File_InPut->Get("h_mFstDisplay");
@@ -46,5 +49,6 @@ void plotMcHitsDisplay()
   h_mFstDisplay->GetYaxis()->CenterTitle();
   h_mFstDisplay->Draw("colz");
 
-  c_HitsDisplay->SaveAs("./figures/c_HitsDisplay.eps");
+  string FigName = Form("./figures/c_HitsDisplay_%s.eps",mRot.c_str());
+  c_HitsDisplay->SaveAs(FigName.c_str());
 }
