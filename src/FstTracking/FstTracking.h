@@ -43,6 +43,11 @@ class FstTracking : public TObject
     void fillTrackingQA_Hits(std::vector<FstRawHit *> rawHitVec_orig);
     void writeTrackingQA_Hits();
 
+    // incident angle
+    void initTrackAngle();
+    void fillTrackAngle(FstEvent *fstEvent);
+    void writeTrackAngle();
+
     // track resolution
     void initTracking_Hits();
     void calResolution_Hits(FstEvent *fstEvent);
@@ -78,6 +83,9 @@ class FstTracking : public TObject
     TH1F *h_mYResidual_Hits;
     TH1F *h_mRResidual_Hits;
     TH1F *h_mPhiResidual_Hits;
+
+    // incident angle
+    TH1F *h_mClustersTrackAngle; // cosmic incident angle on IST
 
     // Tracking
     // hits

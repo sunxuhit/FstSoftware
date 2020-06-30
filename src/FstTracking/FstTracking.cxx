@@ -35,6 +35,7 @@ int FstTracking::Init()
 
   bool isInPut = initChain(); // initialize input data/ped TChain;
   bool isTracking_Hits = initTrackingQA_Hits(); // initialize tracking with Hits
+  initTrackAngle();
   initTracking_Hits();
   initTracking_Clusters();
   initEfficiency_Hits();
@@ -79,6 +80,7 @@ int FstTracking::Make()
       rawHitVec.push_back(fstRawHit);
     }
     fillTrackingQA_Hits(rawHitVec); // do tracking based on the first hit of each layer
+    fillTrackAngle(mFstEvent_InPut);
 
     clusterVec.clear(); // clear the container for clusters
     for(int i_cluster = 0; i_cluster < mFstEvent_InPut->getNumClusters(); ++i_cluster)
@@ -101,6 +103,7 @@ int FstTracking::Make()
 	trackClustersVec.push_back(fstTrack);
       }
     }
+
     calResolution_Hits(mFstEvent_InPut);
     calResolution_SimpleClusters(mFstEvent_InPut);
     calResolution_ScanClusters(mFstEvent_InPut);
@@ -120,6 +123,7 @@ int FstTracking::Finish()
 {
   cout << "FstTracking::Finish => " << endl;
   writeTrackingQA_Hits();
+  writeTrackAngle();
   writeTracking_Hits();
   writeTracking_Clusters();
   writeEfficiency_Hits();
@@ -295,6 +299,63 @@ void FstTracking::writeTrackingQA_Hits()
   h_mPhiResidual_Hits->Write();
 }
 //--------------Track QA with Hits---------------------
+
+//--------------Incident Angle with IST Simple Clusters---------------------
+void FstTracking::initTrackAngle()
+{
+  h_mClustersTrackAngle = new TH1F("h_mClustersTrackAngle","h_mClustersTrackAngle",50,-0.1,TMath::Pi());
+}
+
+void FstTracking::fillTrackAngle(FstEvent *fstEvent)
+{
+  std::vector<FstTrack *> trackClusterVec;
+  trackClusterVec.clear(); // clear the container for clusters
+  for(int i_track = 0; i_track < fstEvent->getNumTracks(); ++i_track)
+  { // get Tracks info
+    FstTrack *fstTrack = fstEvent->getTrack(i_track);
+    if(fstTrack->getTrackType() == 1) // track reconstructed with clusters
+    {
+      trackClusterVec.push_back(fstTrack);
+    }
+  }
+
+  if(trackClusterVec.size() == 1)
+  {
+    for(int i_track = 0; i_track < trackClusterVec.size(); ++i_track)
+    {
+      // original hit postion on IST1 & IST3
+      TVector3 posOrig_ist1 = trackClusterVec[i_track]->getPosOrig(1);
+      double y1Orig_ist = posOrig_ist1.Y(); 
+      TVector3 posOrig_ist3 = trackClusterVec[i_track]->getPosOrig(3);
+      double y3Orig_ist = posOrig_ist3.Y();
+
+      if( abs(y1Orig_ist-y3Orig_ist) < 17.0*FST::pitchRow )
+      {
+	// aligned hit position on IST1 & IST3
+	TVector3 pos_ist1 = trackClusterVec[i_track]->getPosition(1);
+	TVector3 pos_ist3 = trackClusterVec[i_track]->getPosition(3);
+	TVector3 istTrack = pos_ist1-pos_ist3;
+	TVector3 normVec;
+	normVec.SetXYZ(0.0,0.0,pos_ist1.Z()-pos_ist3.Z());
+	double pAngle = istTrack.Angle(normVec);
+	// cout << "pos_ist1.X = " << pos_ist1.X() << ", pos_ist1.Y = " << pos_ist1.Y() << ", pos_ist1.Z = " << pos_ist1.Z() << endl;
+	// cout << "pos_ist3.X = " << pos_ist3.X() << ", pos_ist3.Y = " << pos_ist3.Y() << ", pos_ist3.Z = " << pos_ist3.Z() << endl;
+	// cout << "pos_ist.XDiff = " << pos_ist1.X()-pos_ist3.X() << ", pos_ist.YDiff = " << pos_ist1.Y()-pos_ist3.Y() << ", pos_ist.ZDiff = " << pos_ist1.Z()-pos_ist3.Z() << endl;
+	// cout << "istTrack.X = " << istTrack.X() << ", istTrack.Y = " << istTrack.Y() << ", istTrack.Z = " << istTrack.Z() << ", pAngle = " << pAngle << endl;
+	// cout << endl;
+
+	h_mClustersTrackAngle->Fill(pAngle);
+      }
+    }
+  }
+}
+
+void FstTracking::writeTrackAngle()
+{
+  h_mClustersTrackAngle->Write();
+
+}
+//--------------Incident Angle with IST Simple Clusters---------------------
 
 //--------------Track Resolution with Hits---------------------
 void FstTracking::initTracking_Hits()
