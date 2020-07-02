@@ -91,6 +91,7 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
     TVector2 vHitRo_IST1 = getReadOut(vHitGen_IST1, h_mIst1Pixel, false); // RO position at IST1
 
     if( !(vHitRo_IST1.X() > -100.0 && vHitRo_IST1.Y() > -100.0) ) continue;
+    if( !(vHitRo_IST3.X() > -100.0 && vHitRo_IST3.Y() > -100.0) ) continue;
 
     TVector2 vHitRo_FST  = getReadOut(vHitGen_FST, h_mFstPixel, true); // RO position at FST
     TVector2 vRoProj_FST = getProjection(vHitRo_IST1, vHitRo_IST3, isRot); // projected position on FST through the readout position from IST1 & IST3
