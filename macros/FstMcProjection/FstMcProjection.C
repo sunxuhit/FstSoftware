@@ -90,9 +90,9 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
     vHitGen_FST.Set(-999.0,-999.0);
 
     // randomly generated cosmic
-    // genCosmicTrackRandom(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, isRot);
+    genCosmicTrackRandom(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, isRot);
     // genCosmicTrackAngle(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, h_mClustersTrackAngle, isRot);
-    genCosmicTrackAngle(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, f_mClustersTrackAngle, isRot);
+    // genCosmicTrackAngle(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, f_mClustersTrackAngle, isRot);
     TVector2 vHitRo_IST3 = getReadOut(vHitGen_IST3, h_mIst3Pixel, false); // RO position at IST3
     TVector2 vHitRo_IST1 = getReadOut(vHitGen_IST1, h_mIst1Pixel, false); // RO position at IST1
 
@@ -106,7 +106,8 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
     double y3_gen = vHitGen_IST3.Y();
     double x3_ro  = vHitRo_IST3.X(); 
     double y3_ro  = vHitRo_IST3.Y();
-    h_mIst3Display->Fill(x3_gen,y3_gen);
+    // h_mIst3Display->Fill(x3_gen,y3_gen);
+    h_mIst3Display->Fill(x3_ro,y3_ro);
     h_mIst3ResX_2Layer->Fill(x3_ro-x3_gen);
     h_mIst3ResY_2Layer->Fill(y3_ro-y3_gen);
 
@@ -114,7 +115,8 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
     double y1_gen = vHitGen_IST1.Y();
     double x1_ro  = vHitRo_IST1.X(); 
     double y1_ro  = vHitRo_IST1.Y();
-    h_mIst1Display->Fill(x1_gen,y1_gen);
+    // h_mIst1Display->Fill(x1_gen,y1_gen);
+    h_mIst1Display->Fill(x1_ro,y1_ro);
     h_mIst1ResX_2Layer->Fill(x1_ro-x1_gen);
     h_mIst1ResY_2Layer->Fill(y1_ro-y1_gen);
 
@@ -159,7 +161,8 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
     // fill Residual
     if(r0_ro > -100.0 && phi0_ro > -100.0)
     {
-      h_mFstDisplay->Fill(r0_CORR,phi0_CORR);
+      h_mFstDisplay->Fill(r0_ro,phi0_ro);
+      // h_mFstDisplay->Fill(r0_CORR,phi0_CORR);
       h_mFstProjResR_2Layer->Fill(r0_ro-r0_CORR);
       h_mFstProjResPhi_2Layer->Fill(phi0_ro-phi0_CORR);
       h_mFstProjResRPhi_2Layer->Fill(r0_ro-r0_CORR,phi0_ro-phi0_CORR);
@@ -176,7 +179,8 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
     double phiMatchingCut = 0.01; // before totation
     if(isRot) phiMatchingCut = 0.05;
     // fill Efficiency
-    if(r0_CORR >= FST::rMin && r0_CORR < FST::rMax && phi0_CORR >= -FST::phiMax && phi0_CORR < FST::phiMax)
+    // if(r0_CORR >= FST::rMin && r0_CORR < FST::rMax && phi0_CORR >= -FST::phiMax && phi0_CORR < FST::phiMax)
+    if(r0_CORR >= FST::rMin && r0_CORR < FST::rMax && phi0_CORR >= 0.0 && phi0_CORR < FST::phiMax)
     {
       for(int i_match = 0; i_match < 8; ++i_match)
       {

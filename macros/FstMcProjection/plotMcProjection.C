@@ -138,6 +138,7 @@ void plotMcProjection(bool isRot = true)
   h_mFstProjResRPhi_2Layer->Draw("colz");
 
   c_Residual->cd(8);
+  TLegend *leg = new TLegend(0.60,0.5,0.85,0.7);
   h_mFstProjResR_2Layer->GetXaxis()->SetTitle("r^{FST,proj}_{center} - r^{FST,readout}_{gen} (mm)");
   h_mFstProjResR_2Layer->GetXaxis()->SetTitleSize(0.06);
   h_mFstProjResR_2Layer->GetXaxis()->CenterTitle();
@@ -147,12 +148,14 @@ void plotMcProjection(bool isRot = true)
   h_mFstProjResR_2Layer->SetMarkerColor(1);
   h_mFstProjResR_2Layer->Scale(InteR_Inte/InteR_MC);
   h_mFstProjResR_2Layer->Draw("pE");
-  h_mClustersTrackFstResR_2Layer->SetLineColor(1);
-  h_mClustersTrackFstResR_2Layer->Draw("hE same");
-  TLegend *leg = new TLegend(0.60,0.5,0.85,0.7);
   leg->AddEntry(h_mFstProjResR_2Layer,"MC","p");
-  leg->AddEntry(h_mClustersTrackFstResR_2Layer,"Data","l");
-  leg->Draw("same");
+  if(!isRot)
+  {
+    h_mClustersTrackFstResR_2Layer->SetLineColor(1);
+    h_mClustersTrackFstResR_2Layer->Draw("hE same");
+    leg->AddEntry(h_mClustersTrackFstResR_2Layer,"Data","l");
+    leg->Draw("same");
+  }
 
   c_Residual->cd(9);
   h_mFstProjResPhi_2Layer->GetXaxis()->SetTitle("#phi^{FST,proj}_{center} - #phi^{FST,readout}_{gen} (rad)");
@@ -165,9 +168,12 @@ void plotMcProjection(bool isRot = true)
   h_mFstProjResPhi_2Layer->SetMarkerColor(1);
   h_mFstProjResPhi_2Layer->Scale(IntePhi_Inte/IntePhi_MC);
   h_mFstProjResPhi_2Layer->Draw("pE");
-  h_mClustersTrackFstResPhi_2Layer->SetLineColor(1);
-  h_mClustersTrackFstResPhi_2Layer->Draw("hE same");
-  leg->Draw("same");
+  if(!isRot)
+  {
+    h_mClustersTrackFstResPhi_2Layer->SetLineColor(1);
+    h_mClustersTrackFstResPhi_2Layer->Draw("hE same");
+    leg->Draw("same");
+  }
 
   string FigName = Form("./figures/c_Residual_%s_%s.eps",mRot.c_str(),mode.c_str());
   c_Residual->SaveAs(FigName.c_str());
