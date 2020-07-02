@@ -3,12 +3,15 @@
 #include <TMath.h>
 #include <TVector2.h>
 #include <TVector3.h>
+#include <TH1F.h>
+#include <TF1.h>
 #include "../../src/FstUtil/FstCons.h"
 
 using namespace std;
 
-void genCosmicTrackRandom(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, bool isRot, int nTrack); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
-void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TH1F *h_TrackAngle, bool isRot, int nTrack); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
+void genCosmicTrackRandom(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, bool isRot); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
+void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TH1F *h_TrackAngle, bool isRot); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
+void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TF1 *f_TrackAngle, bool isRot); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
 TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot); // get projected position on FST from IST1 & IST3 | return (r,phi) for FST
 TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST); // get readout position from a real hit | return (x,y) for IST & (r,phi) for FST
 void printAlignmentInfo(bool isRot);
@@ -55,9 +58,9 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
   TH1F *h_mFstProjResPhi_2Layer  = new TH1F("h_mFstProjResPhi_2Layer","h_mFstProjResPhi_2Layer",320,-32.0*FST::pitchPhi,32.0*FST::pitchPhi);
   TH2F *h_mFstProjResRPhi_2Layer = new TH2F("h_mFstProjResRPhi_2Layer","h_mFstProjResRPhi_2Layer",160,-4.0*FST::pitchR,4.0*FST::pitchR,320,-32.0*FST::pitchPhi,32.0*FST::pitchPhi);
 
-  TH1F *h_mFstProjResX_2Layer  = new TH1F("h_mFstProjResX_2Layer","h_mFstProjResX_2Layer",50,-160.0,160.0);
+  TH1F *h_mFstProjResX_2Layer  = new TH1F("h_mFstProjResX_2Layer","h_mFstProjResX_2Layer",51,-51.0,51.0);
   TH1F *h_mFstProjResY_2Layer  = new TH1F("h_mFstProjResY_2Layer","h_mFstProjResY_2Layer",100,-16.0,16.0);
-  TH2F *h_mFstProjResXY_2Layer = new TH2F("h_mFstProjResXY_2Layer","h_mFstProjResXY_2Layer",50,-160.0,160.0,100,-16.0,16.0);
+  TH2F *h_mFstProjResXY_2Layer = new TH2F("h_mFstProjResXY_2Layer","h_mFstProjResXY_2Layer",50,-50.0,50.0,100,-16.0,16.0);
 
   TH1F *h_mFstSimResR_2Layer    = new TH1F("h_mFstSimResR_2Layer","h_mFstSimResR_2Layer",160,-4.0*FST::pitchR,4.0*FST::pitchR);
   TH1F *h_mFstSimResPhi_2Layer  = new TH1F("h_mFstSimResPhi_2Layer","h_mFstSimResPhi_2Layer",320,-32.0*FST::pitchPhi,32.0*FST::pitchPhi);
@@ -76,6 +79,8 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
   }
 
   TH1F *h_mRecoAngle = new TH1F("h_mRecoAngle","h_mRecoAngle",25,0.0,0.5*TMath::Pi());
+  TF1 *f_mClustersTrackAngle = new TF1("f_mClustersTrackAngle","[0]*cos(x)",0.0,0.5*TMath::Pi());
+  f_mClustersTrackAngle->SetParameter(0,1.0);
 
   for(int i_track =0; i_track < numOfTracks; ++i_track)
   {
@@ -85,8 +90,9 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
     vHitGen_FST.Set(-999.0,-999.0);
 
     // randomly generated cosmic
-    // genCosmicTrackRandom(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, isRot, i_track);
-    genCosmicTrackAngle(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, h_mClustersTrackAngle, isRot, i_track);
+    // genCosmicTrackRandom(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, isRot);
+    // genCosmicTrackAngle(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, h_mClustersTrackAngle, isRot);
+    genCosmicTrackAngle(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, f_mClustersTrackAngle, isRot);
     TVector2 vHitRo_IST3 = getReadOut(vHitGen_IST3, h_mIst3Pixel, false); // RO position at IST3
     TVector2 vHitRo_IST1 = getReadOut(vHitGen_IST1, h_mIst1Pixel, false); // RO position at IST1
 
@@ -167,6 +173,8 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
       h_mFstSimResRPhi_2Layer->Fill(r0_ro-r0_corr,phi0_ro-phi0_corr);
     }
 
+    double phiMatchingCut = 0.01; // before totation
+    if(isRot) phiMatchingCut = 0.05;
     // fill Efficiency
     if(r0_CORR >= FST::rMin && r0_CORR < FST::rMax && phi0_CORR >= -FST::phiMax && phi0_CORR < FST::phiMax)
     {
@@ -180,8 +188,7 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
 	  {
 	    nMatchedTrack++;
 	  }
-	  // if( i_match > 0 && abs(r0_ro-r0_CORR) <= i_match*0.5*FST::pitchR && abs(phi0_ro-phi0_CORR) <= 3.0*FST::pitchPhi)
-	  if( i_match > 0 && abs(r0_ro-r0_CORR) <= i_match*0.5*FST::pitchR && abs(phi0_ro-phi0_CORR) <= i_match*1.5*FST::pitchPhi)
+	  if( i_match > 0 && abs(r0_ro-r0_CORR) <= i_match*0.5*FST::pitchR && abs(phi0_ro-phi0_CORR) <= phiMatchingCut)
 	  {
 	    nMatchedTrack++;
 	  }
@@ -230,7 +237,7 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
   File_OutPut->Close();
 }
 
-void genCosmicTrackRandom(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, bool isRot = false, int nTrack = 0)
+void genCosmicTrackRandom(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, bool isRot = false)
 {
   // gRandom->SetSeed();
 
@@ -249,7 +256,7 @@ void genCosmicTrackRandom(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPos
   vPosFST = getProjection(vPosIST1,vPosIST3,isRot);
 }
 
-void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TH1F *h_TrackAngle, bool isRot = false, int nTrack = 0)
+void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TH1F *h_TrackAngle, bool isRot = false)
 {
   const float lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
   const float lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
@@ -259,7 +266,28 @@ void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosF
   double y3_gen = gRandom->Rndm()*lengthRow;
   vPosIST3.Set(x3_gen,y3_gen);
 
+  // double theta = h_TrackAngle->GetRandom(); // random generated theta from input cosmic angle distribution
   double theta = h_TrackAngle->GetRandom(); // random generated theta from input cosmic angle distribution
+  double phi = gRandom->Uniform(-TMath::Pi(),TMath::Pi()); // random generated phi distribution
+  double x1_gen = x3_gen + (FST::pitchLayer12 + FST::pitchLayer23)*TMath::Tan(theta)*TMath::Cos(phi);
+  double y1_gen = y3_gen + (FST::pitchLayer12 + FST::pitchLayer23)*TMath::Tan(theta)*TMath::Sin(phi);
+  vPosIST1.Set(x1_gen,y1_gen);
+
+  vPosFST = getProjection(vPosIST1,vPosIST3,isRot);
+}
+
+void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TF1 *f_TrackAngle, bool isRot = false)
+{
+  const float lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
+  const float lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
+
+  // random generated position on IST
+  double x3_gen = gRandom->Rndm()*lengthColumn;
+  double y3_gen = gRandom->Rndm()*lengthRow;
+  vPosIST3.Set(x3_gen,y3_gen);
+
+  // double theta = h_TrackAngle->GetRandom(); // random generated theta from input cosmic angle distribution
+  double theta = f_TrackAngle->GetRandom(); // random generated theta from input cosmic angle distribution
   double phi = gRandom->Uniform(-TMath::Pi(),TMath::Pi()); // random generated phi distribution
   double x1_gen = x3_gen + (FST::pitchLayer12 + FST::pitchLayer23)*TMath::Tan(theta)*TMath::Cos(phi);
   double y1_gen = y3_gen + (FST::pitchLayer12 + FST::pitchLayer23)*TMath::Tan(theta)*TMath::Sin(phi);
@@ -353,7 +381,8 @@ TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST)
     double x_ro    = -999.0;
     double y_ro    = -999.0;
     // check if FST has readout
-    if(r_hit >= FST::rOuter && r_hit <= FST::rOuter+4.0*FST::pitchR && phi_hit >= -FST::phiMax && phi_hit <= FST::phiMax)
+    // if(r_hit >= FST::rOuter && r_hit <= FST::rOuter+4.0*FST::pitchR && phi_hit >= -FST::phiMax && phi_hit <= FST::phiMax)
+    if(r_hit >= FST::rOuter && r_hit <= FST::rOuter+4.0*FST::pitchR && phi_hit >= 0.0 && phi_hit <= FST::phiMax)
     {
       int binR   = h_pixel->GetXaxis()->FindBin(r_hit);
       int binPhi = h_pixel->GetYaxis()->FindBin(phi_hit);

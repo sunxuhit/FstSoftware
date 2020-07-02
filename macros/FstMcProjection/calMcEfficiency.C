@@ -15,7 +15,8 @@ void calMcEfficiency(bool isRot = true)
   const double rMaxFst = FST::rOuter + 4.0*FST::pitchR;
   const double rMinFst = FST::rOuter;
   const double phiMaxFst = 64.0*FST::pitchPhi;
-  const double phiMinFst = -64.0*FST::pitchPhi;
+  const double phiMinFst = 0.0;
+  // const double phiMinFst = -64.0*FST::pitchPhi;
 
   const int nMatch = 8;
 
