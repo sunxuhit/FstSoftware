@@ -2,11 +2,13 @@
 #include <TStyle.h>
 #include <TMath.h>
 #include <TVector2.h>
+#include <TVector3.h>
 #include "../../src/FstUtil/FstCons.h"
 
 using namespace std;
 
 void genCosmicTrackRandom(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, bool isRot, int nTrack); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
+void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TH1F *h_TrackAngle, bool isRot, int nTrack); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
 TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot); // get projected position on FST from IST1 & IST3 | return (r,phi) for FST
 TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST); // get readout position from a real hit | return (x,y) for IST & (r,phi) for FST
 void printAlignmentInfo(bool isRot);
@@ -14,6 +16,10 @@ void printAlignmentInfo(bool isRot);
 void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
 {
   printAlignmentInfo(isRot);
+
+  // cosmic angle distribution
+  TFile *File_InPut = TFile::Open("../../output/configuration/FstTracking_HV200V_Th4.0Tb2Ped2.5Ped3.5_withPed_withCMNCorr.root");
+  TH1F *h_mClustersTrackAngle = (TH1F*)File_InPut->Get("h_mClustersTrackAngle")->Clone();
 
   const float lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
   const float lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
@@ -69,35 +75,50 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
     h_mFstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin,FST::rMax,90,-1.5*FST::phiMax,1.5*FST::phiMax);
   }
 
+  TH1F *h_mRecoAngle = new TH1F("h_mRecoAngle","h_mRecoAngle",25,0.0,0.5*TMath::Pi());
+
   for(int i_track =0; i_track < numOfTracks; ++i_track)
   {
-    TVector2 vHitRan_IST1, vHitRan_IST3, vHitRan_FST;
-    vHitRan_IST1.Set(-999.0,-999.0);
-    vHitRan_IST3.Set(-999.0,-999.0);
-    vHitRan_FST.Set(-999.0,-999.0);
+    TVector2 vHitGen_IST1, vHitGen_IST3, vHitGen_FST;
+    vHitGen_IST1.Set(-999.0,-999.0);
+    vHitGen_IST3.Set(-999.0,-999.0);
+    vHitGen_FST.Set(-999.0,-999.0);
 
     // randomly generated cosmic
-    genCosmicTrackRandom(vHitRan_IST1, vHitRan_IST3, vHitRan_FST, isRot, i_track);
-    TVector2 vRoRan_IST3 = getReadOut(vHitRan_IST3, h_mIst3Pixel, false); // RO position at IST3
-    TVector2 vRoRan_IST1 = getReadOut(vHitRan_IST1, h_mIst1Pixel, false); // RO position at IST1
-    TVector2 vRoRan_FST  = getReadOut(vHitRan_FST, h_mFstPixel, true); // RO position at FST
-    TVector2 vRoProj_FST = getProjection(vRoRan_IST1, vRoRan_IST3, isRot); // projected position on FST through the readout position from IST1 & IST3
+    // genCosmicTrackRandom(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, isRot, i_track);
+    genCosmicTrackAngle(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, h_mClustersTrackAngle, isRot, i_track);
+    TVector2 vHitRo_IST3 = getReadOut(vHitGen_IST3, h_mIst3Pixel, false); // RO position at IST3
+    TVector2 vHitRo_IST1 = getReadOut(vHitGen_IST1, h_mIst1Pixel, false); // RO position at IST1
 
-    double x3_gen = vHitRan_IST3.X();
-    double y3_gen = vHitRan_IST3.Y();
-    double x3_ro  = vRoRan_IST3.X(); 
-    double y3_ro  = vRoRan_IST3.Y();
+    if( !(vHitRo_IST1.X() > -100.0 && vHitRo_IST1.Y() > -100.0) ) continue;
+
+    TVector2 vHitRo_FST  = getReadOut(vHitGen_FST, h_mFstPixel, true); // RO position at FST
+    TVector2 vRoProj_FST = getProjection(vHitRo_IST1, vHitRo_IST3, isRot); // projected position on FST through the readout position from IST1 & IST3
+
+    double x3_gen = vHitGen_IST3.X();
+    double y3_gen = vHitGen_IST3.Y();
+    double x3_ro  = vHitRo_IST3.X(); 
+    double y3_ro  = vHitRo_IST3.Y();
     h_mIst3Display->Fill(x3_gen,y3_gen);
     h_mIst3ResX_2Layer->Fill(x3_ro-x3_gen);
     h_mIst3ResY_2Layer->Fill(y3_ro-y3_gen);
 
-    double x1_gen = vHitRan_IST1.X();
-    double y1_gen = vHitRan_IST1.Y();
-    double x1_ro  = vRoRan_IST1.X(); 
-    double y1_ro  = vRoRan_IST1.Y();
+    double x1_gen = vHitGen_IST1.X();
+    double y1_gen = vHitGen_IST1.Y();
+    double x1_ro  = vHitRo_IST1.X(); 
+    double y1_ro  = vHitRo_IST1.Y();
     h_mIst1Display->Fill(x1_gen,y1_gen);
     h_mIst1ResX_2Layer->Fill(x1_ro-x1_gen);
     h_mIst1ResY_2Layer->Fill(y1_ro-y1_gen);
+
+    // QA for incident angle
+    TVector3 vPos_IST1, vPos_IST3, normVec;
+    vPos_IST1.SetXYZ(x1_gen,y1_gen,z1_ist);
+    vPos_IST3.SetXYZ(x3_gen,y3_gen,z3_ist);
+    TVector3 istTrack = vPos_IST1 - vPos_IST3;
+    normVec.SetXYZ(0.0,0.0,vPos_IST1.Z()-vPos_IST3.Z());
+    double pAngle = istTrack.Angle(normVec);
+    h_mRecoAngle->Fill(pAngle);
 
     // projected position (w/o alignment) through the randomly generated hit position from IST1 & IST3
     double x0_proj = x3_gen + (x1_gen-x3_gen)*z0_fst/z1_ist;
@@ -114,11 +135,11 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
 
     // FST Residual
     // real position
-    double r0_corr   = vHitRan_FST.X();
-    double phi0_corr = vHitRan_FST.Y();
+    double r0_corr   = vHitGen_FST.X();
+    double phi0_corr = vHitGen_FST.Y();
     // read out position
-    double r0_ro     = vRoRan_FST.X();
-    double phi0_ro   = vRoRan_FST.Y();
+    double r0_ro     = vHitRo_FST.X();
+    double phi0_ro   = vHitRo_FST.Y();
     double x0_ro     = r0_ro*TMath::Cos(phi0_ro);
     double y0_ro     = r0_ro*TMath::Sin(phi0_ro);
 
@@ -203,6 +224,8 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
     h_mIstCounts_2Layer[i_match]->Write();
     h_mFstCounts_2Layer[i_match]->Write();
   }
+
+  h_mRecoAngle->Write();
   File_OutPut->Close();
 }
 
@@ -220,6 +243,25 @@ void genCosmicTrackRandom(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPos
 
   double x1_gen = gRandom->Rndm()*lengthColumn;
   double y1_gen = gRandom->Rndm()*lengthRow;
+  vPosIST1.Set(x1_gen,y1_gen);
+
+  vPosFST = getProjection(vPosIST1,vPosIST3,isRot);
+}
+
+void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TH1F *h_TrackAngle, bool isRot = false, int nTrack = 0)
+{
+  const float lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
+  const float lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
+
+  // random generated position on IST
+  double x3_gen = gRandom->Rndm()*lengthColumn;
+  double y3_gen = gRandom->Rndm()*lengthRow;
+  vPosIST3.Set(x3_gen,y3_gen);
+
+  double theta = h_TrackAngle->GetRandom(); // random generated theta from input cosmic angle distribution
+  double phi = gRandom->Uniform(-TMath::Pi(),TMath::Pi()); // random generated phi distribution
+  double x1_gen = x3_gen + (FST::pitchLayer12 + FST::pitchLayer23)*TMath::Tan(theta)*TMath::Cos(phi);
+  double y1_gen = y3_gen + (FST::pitchLayer12 + FST::pitchLayer23)*TMath::Tan(theta)*TMath::Sin(phi);
   vPosIST1.Set(x1_gen,y1_gen);
 
   vPosFST = getProjection(vPosIST1,vPosIST3,isRot);
@@ -279,6 +321,9 @@ TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot = false)
 
 TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST)
 {
+  const float lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
+  const float lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
+
   TVector2 vPosRO;
   vPosRO.Set(-999.0,-999.0);
 
@@ -287,10 +332,15 @@ TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST)
 
   if( !isFST )
   {
-    int binX    = h_pixel->GetXaxis()->FindBin(x_hit);
-    int binY    = h_pixel->GetYaxis()->FindBin(y_hit);
-    double x_ro = h_pixel->GetXaxis()->GetBinCenter(binX);
-    double y_ro = h_pixel->GetYaxis()->GetBinCenter(binY);
+    double x_ro = -999.0;
+    double y_ro = -999.0;
+    if(x_hit >= 0 && x_hit < lengthColumn && y_hit >=0 && y_hit < lengthRow)
+    {
+      int binX    = h_pixel->GetXaxis()->FindBin(x_hit);
+      int binY    = h_pixel->GetYaxis()->FindBin(y_hit);
+      x_ro = h_pixel->GetXaxis()->GetBinCenter(binX);
+      y_ro = h_pixel->GetYaxis()->GetBinCenter(binY);
+    }
     vPosRO.Set(x_ro,y_ro);
   }
   if( isFST )

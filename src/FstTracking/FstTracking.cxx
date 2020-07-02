@@ -303,7 +303,7 @@ void FstTracking::writeTrackingQA_Hits()
 //--------------Incident Angle with IST Simple Clusters---------------------
 void FstTracking::initTrackAngle()
 {
-  h_mClustersTrackAngle = new TH1F("h_mClustersTrackAngle","h_mClustersTrackAngle",50,-0.1,TMath::Pi());
+  h_mClustersTrackAngle = new TH1F("h_mClustersTrackAngle","h_mClustersTrackAngle",25,0.0,0.5*TMath::Pi());
 }
 
 void FstTracking::fillTrackAngle(FstEvent *fstEvent)
