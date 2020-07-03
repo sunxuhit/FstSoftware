@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void calMcEfficiency(bool isRot = true)
+void calMcEfficiency(bool isRot = true, int rAligned = 0)
 {
   const double rMaxFst = FST::rOuter + 4.0*FST::pitchR;
   const double rMinFst = FST::rOuter;
@@ -20,9 +20,11 @@ void calMcEfficiency(bool isRot = true)
 
   const int nMatch = 8;
 
-  string mRot = "woRot";
-  if(isRot) mRot = "Rot";
-  string inputname = Form("../../output/simulation/FstMcProjection_%s.root",mRot.c_str());
+  string inputname = "../../output/simulation/FstMcProjection_woRot.root";
+  if(isRot) 
+  {
+    inputname = Form("../../output/simulation/FstMcProjection_Rot_AlignedRstrip%d.root",rAligned);
+  }
   TFile *File_InPut = TFile::Open(inputname.c_str());
   TH2F *h_mIstCounts_2Layer[nMatch];
   TH1F *h_mIstCountsR_2Layer[nMatch];
@@ -92,7 +94,8 @@ void calMcEfficiency(bool isRot = true)
   }
 
 
-  string outputname = Form("./figures/McEfficiency_%s.pdf",mRot.c_str());
+  string outputname = "./figures/McEfficiency_woRot.pdf";
+  if(isRot) outputname = Form("./figures/McEfficiency_Rot_AlignedRstrip%d.pdf",rAligned);
   TCanvas *c_play = new TCanvas("c_play","c_play",10,10,900,900);
   c_play->Divide(3,3);
   for(int i_pad = 0; i_pad < 9; ++i_pad)
@@ -103,7 +106,8 @@ void calMcEfficiency(bool isRot = true)
     c_play->cd(i_pad+1)->SetGrid(0,0);
   }
 
-  string output_start = Form("./figures/McEfficiency_%s.pdf[",mRot.c_str());
+  string output_start= "./figures/McEfficiency_woRot.pdf[";
+  if(isRot) output_start = Form("./figures/McEfficiency_Rot_AlignedRstrip%d.pdf[",rAligned);
   c_play->Print(output_start.c_str()); // open pdf file
 
   for(int i_match = 0; i_match < nMatch; ++i_match)
@@ -191,6 +195,7 @@ void calMcEfficiency(bool isRot = true)
     c_play->Print(outputname.c_str());
   }
 
-  string output_stop = Form("./figures/McEfficiency_%s.pdf]",mRot.c_str());
+  string output_stop= "./figures/McEfficiency_woRot.pdf]";
+  if(isRot) output_stop = Form("./figures/McEfficiency_Rot_AlignedRstrip%d.pdf[",rAligned);
   c_play->Print(output_stop.c_str()); // open pdf file
 }

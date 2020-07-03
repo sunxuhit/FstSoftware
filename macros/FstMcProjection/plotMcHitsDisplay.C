@@ -1,11 +1,13 @@
 #include <TCanvas.h>
 #include <TH1F.h>
 
-void plotMcHitsDisplay(bool isRot = true)
+void plotMcHitsDisplay(bool isRot = true, int rAligned = 0)
 {
-  string mRot = "woRot";
-  if(isRot) mRot = "Rot";
-  string inputname = Form("../../output/simulation/FstMcProjection_%s.root",mRot.c_str());
+  string inputname = "../../output/simulation/FstMcProjection_woRot.root";
+  if(isRot) 
+  {
+    inputname = Form("../../output/simulation/FstMcProjection_Rot_AlignedRstrip%d.root",rAligned);
+  }
   TFile *File_InPut = TFile::Open(inputname.c_str());
   TH1F *h_mIst1Display = (TH1F*)File_InPut->Get("h_mIst1Display");
   TH1F *h_mIst3Display = (TH1F*)File_InPut->Get("h_mIst3Display");
@@ -49,6 +51,7 @@ void plotMcHitsDisplay(bool isRot = true)
   h_mFstDisplay->GetYaxis()->CenterTitle();
   h_mFstDisplay->Draw("colz");
 
-  string FigName = Form("./figures/c_HitsDisplay_%s.eps",mRot.c_str());
+  string FigName = "./figures/c_HitsDisplay_woRot.eps";
+  if(isRot) FigName = Form("./figures/c_HitsDisplay_Rot_AlignedRstrip%d.eps",rAligned);
   c_HitsDisplay->SaveAs(FigName.c_str());
 }
