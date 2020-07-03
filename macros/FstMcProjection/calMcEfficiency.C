@@ -196,6 +196,6 @@ void calMcEfficiency(bool isRot = true, int rAligned = 0)
   }
 
   string output_stop= "./figures/McEfficiency_woRot.pdf]";
-  if(isRot) output_stop = Form("./figures/McEfficiency_Rot_AlignedRstrip%d.pdf[",rAligned);
+  if(isRot) output_stop = Form("./figures/McEfficiency_Rot_AlignedRstrip%d.pdf]",rAligned);
   c_play->Print(output_stop.c_str()); // open pdf file
 }

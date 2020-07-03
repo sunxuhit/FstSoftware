@@ -209,7 +209,7 @@ void plotMcProjection(bool isRot = true, int rAligned = 0)
   leg->Draw("same");
 
   string FigName = Form("./figures/c_Residual_woRot_%s.eps",mode.c_str());
-  if(isRot) FigName = Form("./figures/c_Residual_woRot_AlignedRstrip%d_%s.eps",rAligned,mode.c_str());
+  if(isRot) FigName = Form("./figures/c_Residual_Rot_AlignedRstrip%d_%s.eps",rAligned,mode.c_str());
   c_Residual->SaveAs(FigName.c_str());
 
   TCanvas *c_ResDiff = new TCanvas("c_ResDiff","c_ResDiff",10,10,900,1200);
@@ -279,6 +279,6 @@ void plotMcProjection(bool isRot = true, int rAligned = 0)
   }
 
   FigName = Form("./figures/c_ResDiff_woRot_%s.eps",mode.c_str());
-  if(isRot) FigName = Form("./figures/c_ResDiff_woRot_AlignedRstrip%d_%s.eps",rAligned,mode.c_str());
+  if(isRot) FigName = Form("./figures/c_ResDiff_Rot_AlignedRstrip%d_%s.eps",rAligned,mode.c_str());
   c_ResDiff->SaveAs(FigName.c_str());
 }
