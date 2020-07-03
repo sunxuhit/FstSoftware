@@ -13,12 +13,40 @@ void plotMcProjection(bool isRot = true)
   TH1F *h_mIstProjResX_2Layer    = (TH1F*)File_InPut->Get("h_mIstProjResX_2Layer");
   TH1F *h_mIstProjResY_2Layer    = (TH1F*)File_InPut->Get("h_mIstProjResY_2Layer");
   TH2F *h_mIstProjResXY_2Layer   = (TH2F*)File_InPut->Get("h_mIstProjResXY_2Layer");
+
   TH1F *h_mFstProjResX_2Layer    = (TH1F*)File_InPut->Get("h_mFstProjResX_2Layer");
   TH1F *h_mFstProjResY_2Layer    = (TH1F*)File_InPut->Get("h_mFstProjResY_2Layer");
   TH2F *h_mFstProjResXY_2Layer   = (TH2F*)File_InPut->Get("h_mFstProjResXY_2Layer");
+
   TH1F *h_mFstProjResR_2Layer    = (TH1F*)File_InPut->Get("h_mFstProjResR_2Layer");
   TH1F *h_mFstProjResPhi_2Layer  = (TH1F*)File_InPut->Get("h_mFstProjResPhi_2Layer");
   TH2F *h_mFstProjResRPhi_2Layer = (TH2F*)File_InPut->Get("h_mFstProjResRPhi_2Layer");
+
+  TH1F *h_mFstProjResX_2Layer_Rstrips[4];
+  TH1F *h_mFstProjResY_2Layer_Rstrips[4];
+  TH2F *h_mFstProjResXY_2Layer_Rstrips[4]; // 2D distribution
+
+  TH1F *h_mFstProjResR_2Layer_Rstrips[4];
+  TH1F *h_mFstProjResPhi_2Layer_Rstrips[4];
+  TH2F *h_mFstProjResRPhi_2Layer_Rstrips[4]; // 2D distribution
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    string HistName;
+    HistName = Form("h_mFstProjResX_2Layer_Rstrip%d",i_rstrip);
+    h_mFstProjResX_2Layer_Rstrips[i_rstrip]  = (TH1F*)File_InPut->Get(HistName.c_str());
+    HistName = Form("h_mFstProjResY_2Layer_Rstrip%d",i_rstrip);
+    h_mFstProjResY_2Layer_Rstrips[i_rstrip]  = (TH1F*)File_InPut->Get(HistName.c_str());
+    HistName = Form("h_mFstProjResXY_2Layer_Rstrip%d",i_rstrip);
+    h_mFstProjResXY_2Layer_Rstrips[i_rstrip] = (TH2F*)File_InPut->Get(HistName.c_str());
+    
+    HistName = Form("h_mFstProjResR_2Layer_Rstrip%d",i_rstrip);
+    h_mFstProjResR_2Layer_Rstrips[i_rstrip]    = (TH1F*)File_InPut->Get(HistName.c_str());
+    HistName = Form("h_mFstProjResPhi_2Layer_Rstrip%d",i_rstrip);
+    h_mFstProjResPhi_2Layer_Rstrips[i_rstrip]  = (TH1F*)File_InPut->Get(HistName.c_str());
+    HistName = Form("h_mFstProjResRPhi_2Layer_Rstrip%d",i_rstrip);
+    h_mFstProjResRPhi_2Layer_Rstrips[i_rstrip] = (TH2F*)File_InPut->Get(HistName.c_str());
+  }
+
 
   TH1F *h_mFstSimResR_2Layer     = (TH1F*)File_InPut->Get("h_mFstSimResR_2Layer");
   TH1F *h_mFstSimResPhi_2Layer   = (TH1F*)File_InPut->Get("h_mFstSimResPhi_2Layer");
@@ -49,21 +77,23 @@ void plotMcProjection(bool isRot = true)
   }
 
   // calculate scaling factor
-  double InteR_MC = h_mFstProjResR_2Layer->GetMaximum();
-  double InteR_MC_IST = h_mFstSimResR_2Layer->GetMaximum();
-  double InteR_Inte = h_mClustersTrackFstResR_2Layer->GetMaximum();
-  double InteR_Data[4];
+  double NormR_InteMC = h_mFstProjResR_2Layer->GetMaximum();
+  double NormR_InteData = h_mClustersTrackFstResR_2Layer->GetMaximum();
+  double NormR_Data[4];
+  double NormR_MC[4];
   for(int i_rstrp = 0; i_rstrp < 4; ++i_rstrp)
   {
-    InteR_Data[i_rstrp] = h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->GetMaximum();
+    NormR_Data[i_rstrp] = h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->GetMaximum();
+    NormR_MC[i_rstrp] = h_mFstProjResR_2Layer_Rstrips[i_rstrp]->GetMaximum();
   }
-  double IntePhi_MC = h_mFstProjResPhi_2Layer->GetMaximum();
-  double IntePhi_MC_IST = h_mFstSimResPhi_2Layer->GetMaximum();
-  double IntePhi_Inte = h_mClustersTrackFstResPhi_2Layer->GetMaximum();
-  double IntePhi_Data[4];
+  double NormPhi_InteMC = h_mFstProjResPhi_2Layer->GetMaximum();
+  double NormPhi_InteData = h_mClustersTrackFstResPhi_2Layer->GetMaximum();
+  double NormPhi_Data[4];
+  double NormPhi_MC[4];
   for(int i_rstrp = 0; i_rstrp < 4; ++i_rstrp)
   {
-    IntePhi_Data[i_rstrp] = h_mClustersTrackFstResPhi_2Layer_Rstrips[i_rstrp]->GetMaximum();
+    NormPhi_Data[i_rstrp] = h_mClustersTrackFstResPhi_2Layer_Rstrips[i_rstrp]->GetMaximum();
+    NormPhi_MC[i_rstrp] = h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetMaximum();
   }
 
   TCanvas *c_Residual = new TCanvas("c_Residual","c_Residual",10,10,900,900);
@@ -113,19 +143,19 @@ void plotMcProjection(bool isRot = true)
   h_mFstProjResX_2Layer->GetXaxis()->SetTitle("x^{FST,proj}_{center} - x^{FST,readout}_{gen} (mm)");
   h_mFstProjResX_2Layer->GetXaxis()->SetTitleSize(0.06);
   h_mFstProjResX_2Layer->GetXaxis()->CenterTitle();
-  h_mFstProjResX_2Layer->SetMarkerStyle(24);
-  h_mFstProjResX_2Layer->SetMarkerSize(0.8);
-  h_mFstProjResX_2Layer->SetMarkerColor(1);
-  h_mFstProjResX_2Layer->Draw("pE");
+  h_mFstProjResX_2Layer->SetLineStyle(1);
+  h_mFstProjResX_2Layer->SetLineWidth(2);
+  h_mFstProjResX_2Layer->SetLineColor(1);
+  h_mFstProjResX_2Layer->Draw("hE");
 
   c_Residual->cd(6);
   h_mFstProjResY_2Layer->GetXaxis()->SetTitle("y^{FST,proj}_{center} - y^{FST,readout}_{gen} (mm)");
   h_mFstProjResY_2Layer->GetXaxis()->SetTitleSize(0.06);
   h_mFstProjResY_2Layer->GetXaxis()->CenterTitle();
-  h_mFstProjResY_2Layer->SetMarkerStyle(24);
-  h_mFstProjResY_2Layer->SetMarkerSize(0.8);
-  h_mFstProjResY_2Layer->SetMarkerColor(1);
-  h_mFstProjResY_2Layer->Draw("pE");
+  h_mFstProjResY_2Layer->SetLineStyle(1);
+  h_mFstProjResY_2Layer->SetLineWidth(2);
+  h_mFstProjResY_2Layer->SetLineColor(1);
+  h_mFstProjResY_2Layer->Draw("hE");
 
   //FST R-Phi
   c_Residual->cd(7);
@@ -138,24 +168,27 @@ void plotMcProjection(bool isRot = true)
   h_mFstProjResRPhi_2Layer->Draw("colz");
 
   c_Residual->cd(8);
-  TLegend *leg = new TLegend(0.60,0.5,0.85,0.7);
   h_mFstProjResR_2Layer->GetXaxis()->SetTitle("r^{FST,proj}_{center} - r^{FST,readout}_{gen} (mm)");
   h_mFstProjResR_2Layer->GetXaxis()->SetTitleSize(0.06);
   h_mFstProjResR_2Layer->GetXaxis()->CenterTitle();
   h_mFstProjResR_2Layer->GetXaxis()->SetRangeUser(-100.0,100.0);
-  h_mFstProjResR_2Layer->SetMarkerStyle(24);
-  h_mFstProjResR_2Layer->SetMarkerSize(0.8);
-  h_mFstProjResR_2Layer->SetMarkerColor(1);
-  h_mFstProjResR_2Layer->Scale(InteR_Inte/InteR_MC);
-  h_mFstProjResR_2Layer->Draw("pE");
-  leg->AddEntry(h_mFstProjResR_2Layer,"MC","p");
+  h_mFstProjResR_2Layer->SetLineStyle(1);
+  h_mFstProjResR_2Layer->SetLineWidth(2);
+  h_mFstProjResR_2Layer->SetLineColor(1);
+  h_mFstProjResR_2Layer->Scale(NormR_InteData/NormR_InteMC);
+  h_mFstProjResR_2Layer->Draw("h");
   if(!isRot)
   {
+    h_mClustersTrackFstResR_2Layer->SetMarkerStyle(24);
+    h_mClustersTrackFstResR_2Layer->SetMarkerSize(0.8);
+    h_mClustersTrackFstResR_2Layer->SetMarkerColor(1);
     h_mClustersTrackFstResR_2Layer->SetLineColor(1);
-    h_mClustersTrackFstResR_2Layer->Draw("hE same");
-    leg->AddEntry(h_mClustersTrackFstResR_2Layer,"Data","l");
-    leg->Draw("same");
+    h_mClustersTrackFstResR_2Layer->Draw("pE same");
   }
+  TLegend *leg = new TLegend(0.60,0.5,0.85,0.7);
+  if(!isRot) leg->AddEntry(h_mClustersTrackFstResR_2Layer,"Data","p");
+  leg->AddEntry(h_mFstProjResR_2Layer,"MC","l");
+  leg->Draw("same");
 
   c_Residual->cd(9);
   h_mFstProjResPhi_2Layer->GetXaxis()->SetTitle("#phi^{FST,proj}_{center} - #phi^{FST,readout}_{gen} (rad)");
@@ -163,15 +196,18 @@ void plotMcProjection(bool isRot = true)
   h_mFstProjResPhi_2Layer->GetXaxis()->CenterTitle();
   h_mFstProjResPhi_2Layer->GetXaxis()->SetRangeUser(-0.1,0.1);
   if(!isRot) h_mFstProjResPhi_2Layer->GetXaxis()->SetRangeUser(-0.025,0.03);
-  h_mFstProjResPhi_2Layer->SetMarkerStyle(24);
-  h_mFstProjResPhi_2Layer->SetMarkerSize(1.2);
-  h_mFstProjResPhi_2Layer->SetMarkerColor(1);
-  h_mFstProjResPhi_2Layer->Scale(IntePhi_Inte/IntePhi_MC);
-  h_mFstProjResPhi_2Layer->Draw("pE");
+  h_mFstProjResPhi_2Layer->SetLineStyle(1);
+  h_mFstProjResPhi_2Layer->SetLineWidth(2);
+  h_mFstProjResPhi_2Layer->SetLineColor(1);
+  h_mFstProjResPhi_2Layer->Scale(NormPhi_InteData/NormPhi_InteMC);
+  h_mFstProjResPhi_2Layer->Draw("h");
   if(!isRot)
   {
+    h_mClustersTrackFstResPhi_2Layer->SetMarkerStyle(24);
+    h_mClustersTrackFstResPhi_2Layer->SetMarkerSize(0.8);
+    h_mClustersTrackFstResPhi_2Layer->SetMarkerColor(1);
     h_mClustersTrackFstResPhi_2Layer->SetLineColor(1);
-    h_mClustersTrackFstResPhi_2Layer->Draw("hE same");
+    h_mClustersTrackFstResPhi_2Layer->Draw("pE same");
     leg->Draw("same");
   }
 
@@ -192,58 +228,60 @@ void plotMcProjection(bool isRot = true)
   for(int i_rstrp = 0; i_rstrp < 4; ++i_rstrp)
   {
     c_ResDiff->cd(i_rstrp*3+1);
-    h_mFstProjResRPhi_2Layer->GetXaxis()->SetTitle("r^{FST,proj}_{center} - r^{FST,readout}_{gen} (mm)");
-    h_mFstProjResRPhi_2Layer->GetXaxis()->SetTitleSize(0.06);
-    h_mFstProjResRPhi_2Layer->GetXaxis()->CenterTitle();
-    h_mFstProjResRPhi_2Layer->GetYaxis()->SetTitle("#phi^{FST,proj}_{center} - #phi^{FST,readout}_{gen} (rad)");
-    h_mFstProjResRPhi_2Layer->GetYaxis()->SetTitleSize(0.06);
-    h_mFstProjResRPhi_2Layer->GetYaxis()->CenterTitle();
-    h_mFstProjResRPhi_2Layer->Draw("colz");
+    h_mFstProjResRPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitle("r^{FST,proj}_{center} - r^{FST,readout}_{gen} (mm)");
+    h_mFstProjResRPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitleSize(0.06);
+    h_mFstProjResRPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->CenterTitle();
+    h_mFstProjResRPhi_2Layer_Rstrips[i_rstrp]->GetYaxis()->SetTitle("#phi^{FST,proj}_{center} - #phi^{FST,readout}_{gen} (rad)");
+    h_mFstProjResRPhi_2Layer_Rstrips[i_rstrp]->GetYaxis()->SetTitleSize(0.06);
+    h_mFstProjResRPhi_2Layer_Rstrips[i_rstrp]->GetYaxis()->CenterTitle();
+    h_mFstProjResRPhi_2Layer_Rstrips[i_rstrp]->Draw("colz");
 
     c_ResDiff->cd(i_rstrp*3+2);
-    TLegend *leg = new TLegend(0.60,0.5,0.85,0.7);
-    h_mFstProjResR_2Layer->GetXaxis()->SetTitle("r^{FST,proj}_{center} - r^{FST,readout}_{gen} (mm)");
-    h_mFstProjResR_2Layer->GetXaxis()->SetTitleSize(0.06);
-    h_mFstProjResR_2Layer->GetXaxis()->CenterTitle();
-    h_mFstProjResR_2Layer->GetXaxis()->SetRangeUser(-100.0,100.0);
-    h_mFstProjResR_2Layer->GetYaxis()->SetRangeUser(0.0,h_mClustersTrackFstResR_2Layer->GetMaximum()*1.1);
-    h_mFstProjResR_2Layer->SetMarkerStyle(24);
-    h_mFstProjResR_2Layer->SetMarkerSize(0.8);
-    h_mFstProjResR_2Layer->SetMarkerColor(1);
-    h_mFstProjResR_2Layer->Draw("pE");
-    leg->AddEntry(h_mFstProjResR_2Layer,"MC","p");
-    // h_mFstSimResR_2Layer->SetLineStyle(2);
-    // h_mFstSimResR_2Layer->SetLineWidth(2);
-    // h_mFstSimResR_2Layer->SetLineColor(1);
-    // h_mFstSimResR_2Layer->Scale(InteR_Data[0]/InteR_MC_IST);
-    // h_mFstSimResR_2Layer->Draw("l same");
-    // leg->AddEntry(h_mFstSimResR_2Layer,"MC with perfect IST","l");
+    h_mFstProjResR_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitle("r^{FST,proj}_{center} - r^{FST,readout}_{gen} (mm)");
+    h_mFstProjResR_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitleSize(0.06);
+    h_mFstProjResR_2Layer_Rstrips[i_rstrp]->GetXaxis()->CenterTitle();
+    h_mFstProjResR_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetRangeUser(-100.0,100.0);
+    h_mFstProjResR_2Layer_Rstrips[i_rstrp]->Scale(NormR_Data[i_rstrp]/NormR_MC[i_rstrp]);
+    h_mFstProjResR_2Layer_Rstrips[i_rstrp]->GetYaxis()->SetRangeUser(0.0,h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->GetMaximum()*1.1);
+    h_mFstProjResR_2Layer_Rstrips[i_rstrp]->SetLineStyle(1);
+    h_mFstProjResR_2Layer_Rstrips[i_rstrp]->SetLineWidth(2);
+    h_mFstProjResR_2Layer_Rstrips[i_rstrp]->SetLineColor(i_rstrp+1);
+    h_mFstProjResR_2Layer_Rstrips[i_rstrp]->Draw("h");
     if(!isRot) 
     {
+      h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->SetMarkerStyle(24);
+      h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->SetMarkerSize(0.8);
+      h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->SetMarkerColor(i_rstrp+1);
       h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->SetLineColor(i_rstrp+1);
-      h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->Scale(InteR_Inte/InteR_Data[i_rstrp]);
-      h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->Draw("hE same");
-      string legend = Form("%s Rstrip%d",mode.c_str(),i_rstrp);
-      leg->AddEntry(h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp],legend.c_str(),"l");
-      leg->Draw("same");
+      h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->Draw("pE same");
     }
+    TLegend *leg = new TLegend(0.60,0.4,0.85,0.7);
+    string legend = Form("Rstrip %d",i_rstrp); 
+    leg->AddEntry((TObject*)0,legend.c_str(),"");
+    if(!isRot) legend = Form("%s Cluster",mode.c_str());
+    if(!isRot) leg->AddEntry(h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp],legend.c_str(),"p");
+    leg->AddEntry(h_mFstProjResR_2Layer_Rstrips[i_rstrp],"MC","l");
+    leg->Draw("same");
 
     c_ResDiff->cd(i_rstrp*3+3);
-    h_mFstProjResPhi_2Layer->GetXaxis()->SetTitle("#phi^{FST,proj}_{center} - #phi^{FST,readout}_{gen} (rad)");
-    h_mFstProjResPhi_2Layer->GetXaxis()->SetTitleSize(0.06);
-    h_mFstProjResPhi_2Layer->GetXaxis()->CenterTitle();
-    h_mFstProjResPhi_2Layer->GetXaxis()->SetRangeUser(-0.1,0.1);
-    if(!isRot) h_mFstProjResPhi_2Layer->GetXaxis()->SetRangeUser(-0.025,0.03);
-    h_mFstProjResPhi_2Layer->GetYaxis()->SetRangeUser(0.0,h_mClustersTrackFstResPhi_2Layer->GetMaximum()*1.1);
-    h_mFstProjResPhi_2Layer->SetMarkerStyle(24);
-    h_mFstProjResPhi_2Layer->SetMarkerSize(1.2);
-    h_mFstProjResPhi_2Layer->SetMarkerColor(1);
-    h_mFstProjResPhi_2Layer->Draw("pE");
+    h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitle("#phi^{FST,proj}_{center} - #phi^{FST,readout}_{gen} (rad)");
+    h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitleSize(0.06);
+    h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->CenterTitle();
+    h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetRangeUser(-0.1,0.1);
+    if(!isRot) h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetRangeUser(-0.025,0.03);
+    h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->Scale(NormPhi_Data[i_rstrp]/NormPhi_MC[i_rstrp]);
+    h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetYaxis()->SetRangeUser(0.0,h_mClustersTrackFstResPhi_2Layer_Rstrips[i_rstrp]->GetMaximum()*1.1);
+    h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->SetLineStyle(1);
+    h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->SetLineWidth(2);
+    h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->SetLineColor(i_rstrp+1);
+    h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->Draw("h");
     if(!isRot)
     {
+      h_mClustersTrackFstResPhi_2Layer_Rstrips[i_rstrp]->SetMarkerStyle(24);
+      h_mClustersTrackFstResPhi_2Layer_Rstrips[i_rstrp]->SetMarkerSize(0.8);
+      h_mClustersTrackFstResPhi_2Layer_Rstrips[i_rstrp]->SetMarkerColor(i_rstrp+1);
       h_mClustersTrackFstResPhi_2Layer_Rstrips[i_rstrp]->SetLineColor(i_rstrp+1);
-      h_mClustersTrackFstResPhi_2Layer_Rstrips[i_rstrp]->Scale(IntePhi_Inte/IntePhi_Data[i_rstrp]);
-      h_mClustersTrackFstResPhi_2Layer_Rstrips[i_rstrp]->Draw("hE same");
+      h_mClustersTrackFstResPhi_2Layer_Rstrips[i_rstrp]->Draw("pE same");
       leg->Draw("same");
     }
   }

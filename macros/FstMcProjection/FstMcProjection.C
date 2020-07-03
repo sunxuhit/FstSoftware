@@ -32,6 +32,8 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
   const double z2_ist = FST::pitchLayer23;
   const double z3_ist = 0.0;
 
+  const double phiGap = 1.0*TMath::Pi()/180.0;
+
   std::cout << std::fixed;
   std::cout << std::setprecision(4);
 
@@ -54,13 +56,38 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
 
   TH2F *h_mFstDisplay            = new TH2F("h_mFstDisplay","h_mFstDisplay",6,FST::rMin,FST::rMax,FST::numPhiSeg,-1.0*FST::phiMax,1.0*FST::phiMax);
   // FST residual
-  TH1F *h_mFstProjResR_2Layer    = new TH1F("h_mFstProjResR_2Layer","h_mFstProjResR_2Layer",160,-4.0*FST::pitchR,4.0*FST::pitchR);
-  TH1F *h_mFstProjResPhi_2Layer  = new TH1F("h_mFstProjResPhi_2Layer","h_mFstProjResPhi_2Layer",320,-32.0*FST::pitchPhi,32.0*FST::pitchPhi);
-  TH2F *h_mFstProjResRPhi_2Layer = new TH2F("h_mFstProjResRPhi_2Layer","h_mFstProjResRPhi_2Layer",160,-4.0*FST::pitchR,4.0*FST::pitchR,320,-32.0*FST::pitchPhi,32.0*FST::pitchPhi);
-
-  TH1F *h_mFstProjResX_2Layer  = new TH1F("h_mFstProjResX_2Layer","h_mFstProjResX_2Layer",51,-51.0,51.0);
+  TH1F *h_mFstProjResX_2Layer  = new TH1F("h_mFstProjResX_2Layer","h_mFstProjResX_2Layer",50,-160.0,160.0);
   TH1F *h_mFstProjResY_2Layer  = new TH1F("h_mFstProjResY_2Layer","h_mFstProjResY_2Layer",100,-16.0,16.0);
-  TH2F *h_mFstProjResXY_2Layer = new TH2F("h_mFstProjResXY_2Layer","h_mFstProjResXY_2Layer",50,-50.0,50.0,100,-16.0,16.0);
+  TH2F *h_mFstProjResXY_2Layer = new TH2F("h_mFstProjResXY_2Layer","h_mFstProjResXY_2Layer",50,-160.0,160.0,100,-16.0,16.0);
+
+  TH1F *h_mFstProjResR_2Layer    = new TH1F("h_mFstProjResR_2Layer","h_mFstProjResR_2Layer",50,-160.0,160.0);
+  TH1F *h_mFstProjResPhi_2Layer  = new TH1F("h_mFstProjResPhi_2Layer","h_mFstProjResPhi_2Layer",100,-0.05,0.05);
+  TH2F *h_mFstProjResRPhi_2Layer = new TH2F("h_mFstProjResRPhi_2Layer","h_mFstProjResRPhi_2Layer",50,-160.0,160.0,100,-0.05,0.05);
+    
+  TH1F *h_mFstProjResX_2Layer_Rstrips[4];
+  TH1F *h_mFstProjResY_2Layer_Rstrips[4];
+  TH2F *h_mFstProjResXY_2Layer_Rstrips[4]; // 2D distribution
+
+  TH1F *h_mFstProjResR_2Layer_Rstrips[4];
+  TH1F *h_mFstProjResPhi_2Layer_Rstrips[4];
+  TH2F *h_mFstProjResRPhi_2Layer_Rstrips[4]; // 2D distribution
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    string HistName;
+    HistName = Form("h_mFstProjResX_2Layer_Rstrip%d",i_rstrip);
+    h_mFstProjResX_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+    HistName = Form("h_mFstProjResY_2Layer_Rstrip%d",i_rstrip);
+    h_mFstProjResY_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-16.0,16.0);
+    HistName = Form("h_mFstProjResXY_2Layer_Rstrip%d",i_rstrip);
+    h_mFstProjResXY_2Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-16.0,16.0);
+    
+    HistName = Form("h_mFstProjResR_2Layer_Rstrip%d",i_rstrip);
+    h_mFstProjResR_2Layer_Rstrips[i_rstrip]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+    HistName = Form("h_mFstProjResPhi_2Layer_Rstrip%d",i_rstrip);
+    h_mFstProjResPhi_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.05,0.05);
+    HistName = Form("h_mFstProjResRPhi_2Layer_Rstrip%d",i_rstrip);
+    h_mFstProjResRPhi_2Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-0.05,0.05);
+  }
 
   TH1F *h_mFstSimResR_2Layer    = new TH1F("h_mFstSimResR_2Layer","h_mFstSimResR_2Layer",160,-4.0*FST::pitchR,4.0*FST::pitchR);
   TH1F *h_mFstSimResPhi_2Layer  = new TH1F("h_mFstSimResPhi_2Layer","h_mFstSimResPhi_2Layer",320,-32.0*FST::pitchPhi,32.0*FST::pitchPhi);
@@ -82,6 +109,7 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
   TF1 *f_mClustersTrackAngle = new TF1("f_mClustersTrackAngle","[0]*cos(x)",0.0,0.5*TMath::Pi());
   f_mClustersTrackAngle->SetParameter(0,1.0);
 
+  // Cosmic Simulation
   for(int i_track =0; i_track < numOfTracks; ++i_track)
   {
     TVector2 vHitGen_IST1, vHitGen_IST3, vHitGen_FST;
@@ -90,9 +118,9 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
     vHitGen_FST.Set(-999.0,-999.0);
 
     // randomly generated cosmic
-    genCosmicTrackRandom(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, isRot);
+    // genCosmicTrackRandom(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, isRot);
     // genCosmicTrackAngle(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, h_mClustersTrackAngle, isRot);
-    // genCosmicTrackAngle(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, f_mClustersTrackAngle, isRot);
+    genCosmicTrackAngle(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, f_mClustersTrackAngle, isRot);
     TVector2 vHitRo_IST3 = getReadOut(vHitGen_IST3, h_mIst3Pixel, false); // RO position at IST3
     TVector2 vHitRo_IST1 = getReadOut(vHitGen_IST1, h_mIst1Pixel, false); // RO position at IST1
 
@@ -130,22 +158,22 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
     h_mRecoAngle->Fill(pAngle);
 
     // projected position (w/o alignment) through the randomly generated hit position from IST1 & IST3
-    double x0_proj = x3_gen + (x1_gen-x3_gen)*z0_fst/z1_ist;
-    double y0_proj = y3_gen + (y1_gen-y3_gen)*z0_fst/z1_ist;
+    double x0_genIST = x3_gen + (x1_gen-x3_gen)*z0_fst/z1_ist;
+    double y0_genIST = y3_gen + (y1_gen-y3_gen)*z0_fst/z1_ist;
 
     // projected position (w/o alignment) through the readout position from IST1 & IST3
-    double x0_cProj = x3_ro + (x1_ro-x3_ro)*z0_fst/z1_ist;
-    double y0_cProj = y3_ro + (y1_ro-y3_ro)*z0_fst/z1_ist;
+    double x0_roIST = x3_ro + (x1_ro-x3_ro)*z0_fst/z1_ist;
+    double y0_roIST = y3_ro + (y1_ro-y3_ro)*z0_fst/z1_ist;
 
     // IST Projection Error
-    h_mIstProjResX_2Layer->Fill(x0_cProj-x0_proj);
-    h_mIstProjResY_2Layer->Fill(y0_cProj-y0_proj);
-    h_mIstProjResXY_2Layer->Fill(x0_cProj-x0_proj,y0_cProj-y0_proj);
+    h_mIstProjResX_2Layer->Fill(x0_roIST-x0_genIST);
+    h_mIstProjResY_2Layer->Fill(y0_roIST-y0_genIST);
+    h_mIstProjResXY_2Layer->Fill(x0_roIST-x0_genIST,y0_roIST-y0_genIST);
 
     // FST Residual
     // real position
-    double r0_corr   = vHitGen_FST.X();
-    double phi0_corr = vHitGen_FST.Y();
+    double r0_gen   = vHitGen_FST.X();
+    double phi0_gen = vHitGen_FST.Y();
     // read out position
     double r0_ro     = vHitRo_FST.X();
     double phi0_ro   = vHitRo_FST.Y();
@@ -153,38 +181,52 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
     double y0_ro     = r0_ro*TMath::Sin(phi0_ro);
 
     // projected position from IST pixel
-    double r0_CORR   = vRoProj_FST.X();
-    double phi0_CORR = vRoProj_FST.Y();
-    double x0_CORR   = r0_CORR*TMath::Cos(phi0_CORR);
-    double y0_CORR   = r0_CORR*TMath::Sin(phi0_CORR);
+    double r0_proj   = vRoProj_FST.X();
+    double phi0_proj = vRoProj_FST.Y();
+    double x0_proj   = r0_proj*TMath::Cos(phi0_proj);
+    double y0_proj   = r0_proj*TMath::Sin(phi0_proj);
 
     // fill Residual
     if(r0_ro > -100.0 && phi0_ro > -100.0)
     {
       h_mFstDisplay->Fill(r0_ro,phi0_ro);
-      // h_mFstDisplay->Fill(r0_CORR,phi0_CORR);
-      h_mFstProjResR_2Layer->Fill(r0_ro-r0_CORR);
-      h_mFstProjResPhi_2Layer->Fill(phi0_ro-phi0_CORR);
-      h_mFstProjResRPhi_2Layer->Fill(r0_ro-r0_CORR,phi0_ro-phi0_CORR);
+      // h_mFstDisplay->Fill(r0_proj,phi0_proj);
+      h_mFstProjResR_2Layer->Fill(r0_ro-r0_proj);
+      h_mFstProjResPhi_2Layer->Fill(phi0_ro-phi0_proj);
+      h_mFstProjResRPhi_2Layer->Fill(r0_ro-r0_proj,phi0_ro-phi0_proj);
 
-      h_mFstProjResX_2Layer->Fill(x0_ro-x0_CORR);
-      h_mFstProjResY_2Layer->Fill(y0_ro-y0_CORR);
-      h_mFstProjResXY_2Layer->Fill(x0_ro-x0_CORR,y0_ro-y0_CORR);
+      h_mFstProjResX_2Layer->Fill(x0_ro-x0_proj);
+      h_mFstProjResY_2Layer->Fill(y0_ro-y0_proj);
+      h_mFstProjResXY_2Layer->Fill(x0_ro-x0_proj,y0_ro-y0_proj);
 
-      h_mFstSimResR_2Layer->Fill(r0_ro-r0_corr);
-      h_mFstSimResPhi_2Layer->Fill(phi0_ro-phi0_corr);
-      h_mFstSimResRPhi_2Layer->Fill(r0_ro-r0_corr,phi0_ro-phi0_corr);
+      for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+      {
+	if(r0_proj > FST::rOuter + FST::pitchR*i_rstrip && r0_proj <= FST::rOuter + FST::pitchR*(i_rstrip+1))
+	{ // check the position of the projected r is within a specific r_strip and fill accordingly
+	  h_mFstProjResX_2Layer_Rstrips[i_rstrip]->Fill(x0_ro-x0_proj);
+	  h_mFstProjResY_2Layer_Rstrips[i_rstrip]->Fill(y0_ro-y0_proj);
+	  h_mFstProjResXY_2Layer_Rstrips[i_rstrip]->Fill(x0_ro-x0_proj,y0_ro-y0_proj);
+
+	  h_mFstProjResR_2Layer_Rstrips[i_rstrip]->Fill(r0_ro-r0_proj);
+	  h_mFstProjResPhi_2Layer_Rstrips[i_rstrip]->Fill(phi0_ro-phi0_proj);
+	  h_mFstProjResRPhi_2Layer_Rstrips[i_rstrip]->Fill(r0_ro-r0_proj,phi0_ro-phi0_proj);
+	}
+      }
+
+      h_mFstSimResR_2Layer->Fill(r0_ro-r0_gen);
+      h_mFstSimResPhi_2Layer->Fill(phi0_ro-phi0_gen);
+      h_mFstSimResRPhi_2Layer->Fill(r0_ro-r0_gen,phi0_ro-phi0_gen);
     }
 
     double phiMatchingCut = 0.01; // before totation
     if(isRot) phiMatchingCut = 0.05;
     // fill Efficiency
-    // if(r0_CORR >= FST::rMin && r0_CORR < FST::rMax && phi0_CORR >= -FST::phiMax && phi0_CORR < FST::phiMax)
-    if(r0_CORR >= FST::rMin && r0_CORR < FST::rMax && phi0_CORR >= 0.0 && phi0_CORR < FST::phiMax)
+    // if(r0_proj >= FST::rMin && r0_proj < FST::rMax && phi0_proj >= -FST::phiMax && phi0_proj < FST::phiMax)
+    if(r0_proj >= FST::rMin && r0_proj < FST::rMax && phi0_proj >= 0.0 && phi0_proj < FST::phiMax)
     {
       for(int i_match = 0; i_match < 8; ++i_match)
       {
-	h_mIstCounts_2Layer[i_match]->Fill(r0_CORR,phi0_CORR);
+	h_mIstCounts_2Layer[i_match]->Fill(r0_proj,phi0_proj);
 	int nMatchedTrack = 0;
 	if(r0_ro > -100.0 && phi0_ro > -100.0)
 	{
@@ -192,12 +234,12 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
 	  {
 	    nMatchedTrack++;
 	  }
-	  if( i_match > 0 && abs(r0_ro-r0_CORR) <= i_match*0.5*FST::pitchR && abs(phi0_ro-phi0_CORR) <= phiMatchingCut)
+	  if( i_match > 0 && abs(r0_ro-r0_proj) <= i_match*0.5*FST::pitchR && abs(phi0_ro-phi0_proj) <= phiMatchingCut)
 	  {
 	    nMatchedTrack++;
 	  }
 	}
-	if(nMatchedTrack > 0) h_mFstCounts_2Layer[i_match]->Fill(r0_CORR,phi0_CORR);
+	if(nMatchedTrack > 0) h_mFstCounts_2Layer[i_match]->Fill(r0_proj,phi0_proj);
       }
     }
   }
@@ -226,6 +268,17 @@ void FstMcProjection(bool isRot = true, int numOfTracks = 500000)
   h_mFstProjResX_2Layer->Write();
   h_mFstProjResY_2Layer->Write();
   h_mFstProjResXY_2Layer->Write();
+
+  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  {
+    h_mFstProjResX_2Layer_Rstrips[i_rstrip]->Write();
+    h_mFstProjResY_2Layer_Rstrips[i_rstrip]->Write();
+    h_mFstProjResXY_2Layer_Rstrips[i_rstrip]->Write();
+
+    h_mFstProjResR_2Layer_Rstrips[i_rstrip]->Write();
+    h_mFstProjResPhi_2Layer_Rstrips[i_rstrip]->Write();
+    h_mFstProjResRPhi_2Layer_Rstrips[i_rstrip]->Write();
+  }
 
   h_mFstSimResR_2Layer->Write();
   h_mFstSimResPhi_2Layer->Write();
