@@ -242,9 +242,9 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
 	}
       }
 
-      h_mFstSimResR_2Layer->Fill(r0_ro-r0_gen);
-      h_mFstSimResPhi_2Layer->Fill(phi0_ro-phi0_gen);
-      h_mFstSimResRPhi_2Layer->Fill(r0_ro-r0_gen,phi0_ro-phi0_gen);
+      h_mFstSimResR_2Layer->Fill(r0_proj-r0_gen);
+      h_mFstSimResPhi_2Layer->Fill(phi0_proj-phi0_gen);
+      h_mFstSimResRPhi_2Layer->Fill(r0_proj-r0_gen,phi0_proj-phi0_gen);
     }
 
     double phiMatchingCut = 0.01; // before totation

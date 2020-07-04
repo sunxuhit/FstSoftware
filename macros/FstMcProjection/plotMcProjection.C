@@ -4,7 +4,7 @@
 
 using namespace std;
 
-void plotMcProjection(bool isRot = true, int rAligned = 0)
+void plotMcProjection(bool isRot = true, int rAligned = 0, string hv = "HV200V")
 {
   string mode = "Scan";
   // string mode = "Simple";
@@ -56,8 +56,8 @@ void plotMcProjection(bool isRot = true, int rAligned = 0)
   TH1F *h_mFstSimResPhi_2Layer   = (TH1F*)File_InPut->Get("h_mFstSimResPhi_2Layer");
   TH2F *h_mFstSimResRPhi_2Layer  = (TH2F*)File_InPut->Get("h_mFstSimResRPhi_2Layer");
 
-  string inputData = "../../output/simulation/FstTracking_woRot.root";
-  if(isRot) inputData = Form("../../output/simulation/FstTracking_Rot_AlignedRstrip%d.root",rAligned);
+  string inputData = Form("../../output/simulation/FstTracking_woRot_%s.root",hv.c_str());
+  if(isRot) inputData = Form("../../output/simulation/FstTracking_Rot_AlignedRstrip%d_%s.root",rAligned,hv.c_str());
   TFile *File_InPutData = TFile::Open(inputData.c_str());
   TH1F *h_mClustersTrackFstResR_2Layer;
   TH1F *h_mClustersTrackFstResPhi_2Layer;
@@ -112,38 +112,43 @@ void plotMcProjection(bool isRot = true, int rAligned = 0)
 
   // IST
   c_Residual->cd(1);
-  h_mIstProjResXY_2Layer->GetXaxis()->SetTitle("x^{FST,proj}_{center} - x^{FST,proj}_{gen} (mm)");
+  h_mIstProjResXY_2Layer->SetTitle("IST");
+  h_mIstProjResXY_2Layer->GetXaxis()->SetTitle("x^{IST}_{proj} - x^{IST}_{gen} (mm)");
   h_mIstProjResXY_2Layer->GetXaxis()->SetTitleSize(0.06);
   h_mIstProjResXY_2Layer->GetXaxis()->CenterTitle();
-  h_mIstProjResXY_2Layer->GetYaxis()->SetTitle("y^{FST,proj}_{center} - y^{FST,proj}_{gen} (mm)");
+  h_mIstProjResXY_2Layer->GetYaxis()->SetTitle("y^{IST}_{proj} - y^{IST}_{gen} (mm)");
   h_mIstProjResXY_2Layer->GetYaxis()->SetTitleSize(0.06);
   h_mIstProjResXY_2Layer->GetYaxis()->CenterTitle();
   h_mIstProjResXY_2Layer->Draw("colz");
 
   c_Residual->cd(2);
-  h_mIstProjResX_2Layer->GetXaxis()->SetTitle("x^{FST,proj}_{center} - x^{FST,proj}_{gen} (mm)");
+  h_mIstProjResX_2Layer->SetTitle("IST");
+  h_mIstProjResX_2Layer->GetXaxis()->SetTitle("x^{IST}_{proj} - x^{IST}_{gen} (mm)");
   h_mIstProjResX_2Layer->GetXaxis()->SetTitleSize(0.06);
   h_mIstProjResX_2Layer->GetXaxis()->CenterTitle();
   h_mIstProjResX_2Layer->Draw("hE");
 
   c_Residual->cd(3);
-  h_mIstProjResY_2Layer->GetXaxis()->SetTitle("y^{FST,proj}_{center} - y^{FST,proj}_{gen} (mm)");
+  h_mIstProjResY_2Layer->SetTitle("IST");
+  h_mIstProjResY_2Layer->GetXaxis()->SetTitle("y^{IST}_{proj} - y^{IST}_{gen} (mm)");
   h_mIstProjResY_2Layer->GetXaxis()->CenterTitle();
   h_mIstProjResY_2Layer->GetXaxis()->SetTitleSize(0.06);
   h_mIstProjResY_2Layer->Draw("hE");
 
   //FST X-Y
   c_Residual->cd(4);
-  h_mFstProjResXY_2Layer->GetXaxis()->SetTitle("x^{FST,proj}_{center} - x^{FST,readout}_{gen} (mm)");
+  h_mFstProjResXY_2Layer->SetTitle("FST");
+  h_mFstProjResXY_2Layer->GetXaxis()->SetTitle("x_{ro} - x_{proj} (mm)");
   h_mFstProjResXY_2Layer->GetXaxis()->SetTitleSize(0.06);
   h_mFstProjResXY_2Layer->GetXaxis()->CenterTitle();
-  h_mFstProjResXY_2Layer->GetYaxis()->SetTitle("y^{FST,proj}_{center} - y^{FST,readout}_{gen} (rad)");
+  h_mFstProjResXY_2Layer->GetYaxis()->SetTitle("y_{ro} - y_{proj} (mm)");
   h_mFstProjResXY_2Layer->GetYaxis()->SetTitleSize(0.06);
   h_mFstProjResXY_2Layer->GetYaxis()->CenterTitle();
   h_mFstProjResXY_2Layer->Draw("colz");
 
   c_Residual->cd(5);
-  h_mFstProjResX_2Layer->GetXaxis()->SetTitle("x^{FST,proj}_{center} - x^{FST,readout}_{gen} (mm)");
+  h_mFstProjResX_2Layer->SetTitle("FST");
+  h_mFstProjResX_2Layer->GetXaxis()->SetTitle("x_{ro} - x_{proj} (mm)");
   h_mFstProjResX_2Layer->GetXaxis()->SetTitleSize(0.06);
   h_mFstProjResX_2Layer->GetXaxis()->CenterTitle();
   h_mFstProjResX_2Layer->SetLineStyle(1);
@@ -152,7 +157,8 @@ void plotMcProjection(bool isRot = true, int rAligned = 0)
   h_mFstProjResX_2Layer->Draw("hE");
 
   c_Residual->cd(6);
-  h_mFstProjResY_2Layer->GetXaxis()->SetTitle("y^{FST,proj}_{center} - y^{FST,readout}_{gen} (mm)");
+  h_mFstProjResY_2Layer->SetTitle("FST");
+  h_mFstProjResY_2Layer->GetXaxis()->SetTitle("y_{ro} - y_{proj} (mm)");
   h_mFstProjResY_2Layer->GetXaxis()->SetTitleSize(0.06);
   h_mFstProjResY_2Layer->GetXaxis()->CenterTitle();
   h_mFstProjResY_2Layer->SetLineStyle(1);
@@ -162,16 +168,18 @@ void plotMcProjection(bool isRot = true, int rAligned = 0)
 
   //FST R-Phi
   c_Residual->cd(7);
-  h_mFstProjResRPhi_2Layer->GetXaxis()->SetTitle("r^{FST,proj}_{center} - r^{FST,readout}_{gen} (mm)");
+  h_mFstProjResRPhi_2Layer->SetTitle("FST");
+  h_mFstProjResRPhi_2Layer->GetXaxis()->SetTitle("r_{ro} - r_{proj} (mm)");
   h_mFstProjResRPhi_2Layer->GetXaxis()->SetTitleSize(0.06);
   h_mFstProjResRPhi_2Layer->GetXaxis()->CenterTitle();
-  h_mFstProjResRPhi_2Layer->GetYaxis()->SetTitle("#phi^{FST,proj}_{center} - #phi^{FST,readout}_{gen} (rad)");
+  h_mFstProjResRPhi_2Layer->GetYaxis()->SetTitle("#phi_{ro} - #phi_{proj} (rad)");
   h_mFstProjResRPhi_2Layer->GetYaxis()->SetTitleSize(0.06);
   h_mFstProjResRPhi_2Layer->GetYaxis()->CenterTitle();
   h_mFstProjResRPhi_2Layer->Draw("colz");
 
   c_Residual->cd(8);
-  h_mFstProjResR_2Layer->GetXaxis()->SetTitle("r^{FST,proj}_{center} - r^{FST,readout}_{gen} (mm)");
+  h_mFstProjResR_2Layer->SetTitle("FST");
+  h_mFstProjResR_2Layer->GetXaxis()->SetTitle("r_{ro} - r_{proj} (mm)");
   h_mFstProjResR_2Layer->GetXaxis()->SetTitleSize(0.06);
   h_mFstProjResR_2Layer->GetXaxis()->CenterTitle();
   h_mFstProjResR_2Layer->GetXaxis()->SetRangeUser(-100.0,100.0);
@@ -191,7 +199,8 @@ void plotMcProjection(bool isRot = true, int rAligned = 0)
   leg->Draw("same");
 
   c_Residual->cd(9);
-  h_mFstProjResPhi_2Layer->GetXaxis()->SetTitle("#phi^{FST,proj}_{center} - #phi^{FST,readout}_{gen} (rad)");
+  h_mFstProjResPhi_2Layer->SetTitle("FST");
+  h_mFstProjResPhi_2Layer->GetXaxis()->SetTitle("#phi_{ro} - #phi_{proj} (rad)");
   h_mFstProjResPhi_2Layer->GetXaxis()->SetTitleSize(0.06);
   h_mFstProjResPhi_2Layer->GetXaxis()->CenterTitle();
   h_mFstProjResPhi_2Layer->GetXaxis()->SetRangeUser(-0.1,0.1);
@@ -208,8 +217,8 @@ void plotMcProjection(bool isRot = true, int rAligned = 0)
   h_mClustersTrackFstResPhi_2Layer->Draw("pE same");
   leg->Draw("same");
 
-  string FigName = Form("./figures/c_Residual_woRot_%s.eps",mode.c_str());
-  if(isRot) FigName = Form("./figures/c_Residual_Rot_AlignedRstrip%d_%s.eps",rAligned,mode.c_str());
+  string FigName = Form("./figures/c_Residual_woRot_%s_%s.eps",mode.c_str(),hv.c_str());
+  if(isRot) FigName = Form("./figures/c_Residual_Rot_AlignedRstrip%d_%s_%s.eps",rAligned,mode.c_str(),hv.c_str());
   c_Residual->SaveAs(FigName.c_str());
 
   TCanvas *c_ResDiff = new TCanvas("c_ResDiff","c_ResDiff",10,10,900,1200);
@@ -226,16 +235,16 @@ void plotMcProjection(bool isRot = true, int rAligned = 0)
   for(int i_rstrp = 0; i_rstrp < 4; ++i_rstrp)
   {
     c_ResDiff->cd(i_rstrp*3+1);
-    h_mFstProjResRPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitle("r^{FST,proj}_{center} - r^{FST,readout}_{gen} (mm)");
+    h_mFstProjResRPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitle("r_{ro} - r_{proj} (mm)");
     h_mFstProjResRPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitleSize(0.06);
     h_mFstProjResRPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->CenterTitle();
-    h_mFstProjResRPhi_2Layer_Rstrips[i_rstrp]->GetYaxis()->SetTitle("#phi^{FST,proj}_{center} - #phi^{FST,readout}_{gen} (rad)");
+    h_mFstProjResRPhi_2Layer_Rstrips[i_rstrp]->GetYaxis()->SetTitle("#phi_{ro} - #phi_{proj} (rad)");
     h_mFstProjResRPhi_2Layer_Rstrips[i_rstrp]->GetYaxis()->SetTitleSize(0.06);
     h_mFstProjResRPhi_2Layer_Rstrips[i_rstrp]->GetYaxis()->CenterTitle();
     h_mFstProjResRPhi_2Layer_Rstrips[i_rstrp]->Draw("colz");
 
     c_ResDiff->cd(i_rstrp*3+2);
-    h_mFstProjResR_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitle("r^{FST,proj}_{center} - r^{FST,readout}_{gen} (mm)");
+    h_mFstProjResR_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitle("r_{ro} - r_{proj} (mm)");
     h_mFstProjResR_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitleSize(0.06);
     h_mFstProjResR_2Layer_Rstrips[i_rstrp]->GetXaxis()->CenterTitle();
     h_mFstProjResR_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetRangeUser(-100.0,100.0);
@@ -259,7 +268,7 @@ void plotMcProjection(bool isRot = true, int rAligned = 0)
     leg->Draw("same");
 
     c_ResDiff->cd(i_rstrp*3+3);
-    h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitle("#phi^{FST,proj}_{center} - #phi^{FST,readout}_{gen} (rad)");
+    h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitle("#phi_{ro} - #phi_{proj} (rad)");
     h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitleSize(0.06);
     h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->CenterTitle();
     h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetRangeUser(-0.1,0.1);
@@ -278,7 +287,7 @@ void plotMcProjection(bool isRot = true, int rAligned = 0)
     leg->Draw("same");
   }
 
-  FigName = Form("./figures/c_ResDiff_woRot_%s.eps",mode.c_str());
-  if(isRot) FigName = Form("./figures/c_ResDiff_Rot_AlignedRstrip%d_%s.eps",rAligned,mode.c_str());
+  FigName = Form("./figures/c_ResDiff_woRot_%s_%s.eps",mode.c_str(),hv.c_str());
+  if(isRot) FigName = Form("./figures/c_ResDiff_Rot_AlignedRstrip%d_%s_%s.eps",rAligned,mode.c_str(),hv.c_str());
   c_ResDiff->SaveAs(FigName.c_str());
 }
