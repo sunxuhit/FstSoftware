@@ -16,6 +16,13 @@ void calMcEfficiency(bool isRot = true, int rAligned = 0)
   const double rMinFst = FST::rOuter;
   const double phiMaxFst = 64.0*FST::pitchPhi;
   const double phiMinFst = 0.0;
+  double phiMaxProj = 64.0*FST::pitchPhi-0.5*TMath::Pi()/180.0;
+  double phiMinProj = 0.0+0.5*TMath::Pi()/180.0;
+  if(isRot)
+  {
+    phiMaxProj = 64.0*FST::pitchPhi-2.5*TMath::Pi()/180.0;
+    phiMinProj = 0.0+2.5*TMath::Pi()/180.0;
+  }
   // const double phiMinFst = -64.0*FST::pitchPhi;
 
   const int nMatch = 8;
@@ -40,30 +47,26 @@ void calMcEfficiency(bool isRot = true, int rAligned = 0)
     HistName = Form("h_mIstCounts_2Layer_SF%d",i_match);
     h_mIstCounts_2Layer[i_match] = (TH2F*)File_InPut->Get(HistName.c_str());
     h_mIstCounts_2Layer[i_match]->Sumw2();
-    int projIstBinX0 = h_mIstCounts_2Layer[i_match]->GetYaxis()->FindBin(phiMinFst);
-    int projIstBinX1 = h_mIstCounts_2Layer[i_match]->GetYaxis()->FindBin(phiMaxFst);
-    cout << "phiMinFst = " << phiMinFst << ", phiMaxFst = " << phiMaxFst << ", projIstBinX0 = " << projIstBinX0 << ", projIstBinX1 = " << projIstBinX1 << endl;
+    int projIstBinX0 = h_mIstCounts_2Layer[i_match]->GetYaxis()->FindBin(phiMinProj);
+    int projIstBinX1 = h_mIstCounts_2Layer[i_match]->GetYaxis()->FindBin(phiMaxProj);
     HistName = Form("h_mIstCountsR_2Layer_SF%d",i_match);
     h_mIstCountsR_2Layer[i_match] = (TH1F*)h_mIstCounts_2Layer[i_match]->ProjectionX(HistName.c_str(),projIstBinX0,projIstBinX1);
 
     int projIstBinY0 = h_mIstCounts_2Layer[i_match]->GetXaxis()->FindBin(rMinFst+0.4*FST::pitchR);
     int projIstBinY1 = h_mIstCounts_2Layer[i_match]->GetXaxis()->FindBin(rMaxFst-0.4*FST::pitchR);
-    cout << "rMinFst = " << rMinFst << ", rMaxFst = " << rMaxFst << ", projIstBinY0 = " << projIstBinY0 << ", projIstBinY1 = " << projIstBinY1 << endl;
     HistName = Form("h_mIstCountsPhi_2Layer_SF%d",i_match);
     h_mIstCountsPhi_2Layer[i_match] = (TH1F*)h_mIstCounts_2Layer[i_match]->ProjectionY(HistName.c_str(),projIstBinY0,projIstBinY1);
 
     HistName = Form("h_mFstCounts_2Layer_SF%d",i_match);
     h_mFstCounts_2Layer[i_match] = (TH2F*)File_InPut->Get(HistName.c_str());
     h_mFstCounts_2Layer[i_match]->Sumw2();
-    int projFstBinX0 = h_mFstCounts_2Layer[i_match]->GetYaxis()->FindBin(phiMinFst);
-    int projFstBinX1 = h_mFstCounts_2Layer[i_match]->GetYaxis()->FindBin(phiMaxFst);
-    cout << "phiMinFst = " << phiMinFst << ", phiMaxFst = " << phiMaxFst << ", projFstBinX0 = " << projFstBinX0 << ", projFstBinX1 = " << projFstBinX1 << endl;
+    int projFstBinX0 = h_mFstCounts_2Layer[i_match]->GetYaxis()->FindBin(phiMinProj);
+    int projFstBinX1 = h_mFstCounts_2Layer[i_match]->GetYaxis()->FindBin(phiMaxProj);
     HistName = Form("h_mFstCountsR_2Layer_SF%d",i_match);
     h_mFstCountsR_2Layer[i_match] = (TH1F*)h_mFstCounts_2Layer[i_match]->ProjectionX(HistName.c_str(),projFstBinX0,projFstBinX1);
 
     int projFstBinY0 = h_mFstCounts_2Layer[i_match]->GetXaxis()->FindBin(rMinFst+0.4*FST::pitchR);
     int projFstBinY1 = h_mFstCounts_2Layer[i_match]->GetXaxis()->FindBin(rMaxFst-0.4*FST::pitchR);
-    cout << "rMinFst = " << rMinFst << ", rMaxFst = " << rMaxFst << ", projFstBinY0 = " << projFstBinY0 << ", projFstBinY1 = " << projFstBinY1 << endl;
     HistName = Form("h_mFstCountsPhi_2Layer_SF%d",i_match);
     h_mFstCountsPhi_2Layer[i_match] = (TH1F*)h_mFstCounts_2Layer[i_match]->ProjectionY(HistName.c_str(),projFstBinY0,projFstBinY1);
   }

@@ -114,6 +114,8 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
   TH1F *h_mFstSimResPhi_2Layer  = new TH1F("h_mFstSimResPhi_2Layer","h_mFstSimResPhi_2Layer",320,-32.0*FST::pitchPhi,32.0*FST::pitchPhi);
   TH2F *h_mFstSimResRPhi_2Layer = new TH2F("h_mFstSimResRPhi_2Layer","h_mFstSimResRPhi_2Layer",160,-4.0*FST::pitchR,4.0*FST::pitchR,320,-32.0*FST::pitchPhi,32.0*FST::pitchPhi);
 
+  int numBinEffR = 30;
+  if(isRot) numBinEffR = 120;
   TH2F *h_mIstCounts_2Layer[8];
   TH2F *h_mFstCounts_2Layer[8];
   for(int i_match = 0; i_match < 8; ++i_match)
@@ -121,9 +123,9 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
     string HistName;
     // simple clusters
     HistName = Form("h_mIstCounts_2Layer_SF%d",i_match);
-    h_mIstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin,FST::rMax,90,-1.5*FST::phiMax,1.5*FST::phiMax);
+    h_mIstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),numBinEffR,FST::rMin,FST::rMax,90,-1.5*FST::phiMax,1.5*FST::phiMax);
     HistName = Form("h_mFstCounts_2Layer_SF%d",i_match);
-    h_mFstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin,FST::rMax,90,-1.5*FST::phiMax,1.5*FST::phiMax);
+    h_mFstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),numBinEffR,FST::rMin,FST::rMax,90,-1.5*FST::phiMax,1.5*FST::phiMax);
   }
 
   TH1F *h_mRecoAngle = new TH1F("h_mRecoAngle","h_mRecoAngle",25,0.0,0.5*TMath::Pi());
@@ -417,9 +419,9 @@ TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot = false,
   if( isRot && rAligned == 3)
   {
     // Aligned with RStrip3
-    x2_shift = 264.189;
-    y2_shift = -48.1278;
-    phi_rot_ist2 = -1.53174;
+    x2_shift = 264.505;
+    y2_shift = -48.2426;
+    phi_rot_ist2 = -1.5185; 
   }
 
   double x3_gen = vPosIST3.X();
@@ -519,9 +521,9 @@ void printAlignmentInfo(bool isRot, int rAligned = 0)
   if( isRot && rAligned == 3)
   {
     // Aligned with RStrip3
-    x2_shift = 264.189;
-    y2_shift = -48.1278;
-    phi_rot_ist2 = -1.53174;
+    x2_shift = 264.505;
+    y2_shift = -48.2426;
+    phi_rot_ist2 = -1.5185; 
   }
 
   cout << "isRot = " << isRot << ", x2_shift = " << x2_shift << ", y2_shift = " << y2_shift << ", phi_rot_ist2 = " << phi_rot_ist2 << endl;
