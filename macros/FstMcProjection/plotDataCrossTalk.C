@@ -85,6 +85,7 @@ void plotDataCrossTalk(string hv = "HV200V")
     double temptRate = 0.0;
     // cout << "i_rstrp = " << i_rstrp << ", binR_start = " << binR_start << ", binR_stop = " << binR_stop << endl;
     cout << "i_rstrp = " << i_rstrp <<  ", inteR = " << inteR[i_rstrp] << endl;
+    double offset[7] = {0.0,-0.1,0.0,-0.1,0.0,-0.1,0.0};
     for(int i_delta = 0; i_delta < 7; ++i_delta)
     {
       double deltaStart = (i_delta-3.5)*FST::pitchR;
@@ -99,10 +100,15 @@ void plotDataCrossTalk(string hv = "HV200V")
       temptRate += ratio;
       ctRate[i_rstrp][i_delta] = temptRate;
       // cout << "temptRate = " << temptRate << endl;
-      PlotLine(deltaStart, deltaStart, 0.5, h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->GetMaximum(), 1, 2, 2);
+      PlotLine(deltaStart, deltaStart, 0.5, 0.5*h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->GetMaximum(), 1, 2, 2);
+      string percent = Form("%1.1f%%",ratio*100.0);
+      double max = h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->GetMaximum();
+      plotTopLegend((char*)percent.c_str(),deltaStart,(0.6+offset[i_delta])*max,0.04,1,0.0,42,0,1);
     }
     cout << endl;
   }
+
+  c_Residual->SaveAs("./figures/c_CrossTalkRate.eps");
 
   // save ctRate to a text file
   string outputfile = "./crosstalkRate.txt";

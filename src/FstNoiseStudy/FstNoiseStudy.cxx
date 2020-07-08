@@ -222,7 +222,7 @@ bool FstNoiseStudy::initPedestal()
     }
   }
 
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
     {
@@ -449,10 +449,10 @@ bool FstNoiseStudy::calPedestal()
 	    g_mPedMean[layer][i_tb]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mPed[i_arm][i_port][i_apv][i_ch][i_tb]);
 	    g_mPedSigma[layer][i_tb]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
 	    h_mPedDisplay[layer][i_tb]->Fill(col,row,mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
-	    if(layer == 0 && col > 3) 
+	    if(layer == 0 && col > -1) 
 	    { // FST
-	      h_mPedMean_FST[col-4][i_tb]->SetBinContent(row+1,mPed[i_arm][i_port][i_apv][i_ch][i_tb]);
-	      h_mPedSigma_FST[col-4][i_tb]->SetBinContent(row+1,mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	      h_mPedMean_FST[col][i_tb]->SetBinContent(row+1,mPed[i_arm][i_port][i_apv][i_ch][i_tb]);
+	      h_mPedSigma_FST[col][i_tb]->SetBinContent(row+1,mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
 	    }
 
 	    // fill noise display w.r.t. readout order
@@ -607,7 +607,7 @@ bool FstNoiseStudy::calPedestal()
 		mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb] = mCMNMean[i_arm][i_port][i_apv][col][i_tb];
 	      }
 	      g_mCMNSigma[layer][i_tb]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
-	      if(layer == 0 && col > 3) h_mCMNSigma_FST[col-4][i_tb]->SetBinContent(row+1,mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	      if(layer == 0) h_mCMNSigma_FST[col][i_tb]->SetBinContent(row+1,mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
 
 	      // fill noise display w.r.t. readout order
 	      int roChannel = mRoChannelMap[i_ch];
@@ -793,7 +793,7 @@ bool FstNoiseStudy::calPedestal()
 	    int col = this->getColumn(i_arm,i_port,i_apv,i_ch);
 	    int row = this->getRow(i_arm,i_port,i_apv,i_ch);
 	    g_mRanSigma[layer][i_tb]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
-	    if(layer == 0 && col > 3) h_mRanSigma_FST[col-4][i_tb]->SetBinContent(row+1,mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	    if(layer == 0) h_mRanSigma_FST[col][i_tb]->SetBinContent(row+1,mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
 
 	    // fill noise display w.r.t. readout order
 	    int roChannel = mRoChannelMap[i_ch];
@@ -824,7 +824,7 @@ void FstNoiseStudy::writePedestal()
     }
   }
 
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
     {
@@ -894,7 +894,8 @@ int FstNoiseStudy::getSensor(int arm, int port, int apv)
   if(layer == 0)
   { // layer = 0 for FST
     if(apv >= 0 && apv <= 3) return 0; // inner sector
-    if(apv >= 4 && apv <= 7) return 1; // outer sector
+    if(apv >= 4 && apv <= 5) return 1; // 1st half of outer sector
+    if(apv >= 6 && apv <= 7) return 2; // 2nd half of outer sector
   }
   else
   { // layer = 1-3 for IST
@@ -915,7 +916,8 @@ int FstNoiseStudy::getColumn(int arm, int port, int apv, int ch)
   { // layer = 0 for FST
     if(this->getRStrip(apv,ch) >= 0)
     {
-      col = 4*sensor + this->getRStrip(apv,ch);
+      if(sensor == 0) col = this->getRStrip(apv,ch);
+      if(sensor > 0) col = 4 + this->getRStrip(apv,ch);
     }
   }
   else
@@ -948,9 +950,13 @@ int FstNoiseStudy::getRStrip(int apv, int ch)
 {
   int r_strip = -1;
 
-  // only apply to half outer sector for now
-  if(apv == 4) r_strip = ch%4;
-  if(apv == 5) r_strip = 3-ch%4;
+  // inner sector
+  if(apv == 0 || apv == 1) r_strip = ch%4;
+  if(apv == 2 || apv == 3) r_strip = 3-ch%4;
+
+  // outer sector
+  if(apv == 4 || apv == 6) r_strip = ch%4;
+  if(apv == 5 || apv == 7) r_strip = 3-ch%4;
 
   return r_strip;
 }
@@ -1044,7 +1050,7 @@ bool FstNoiseStudy::isBadAPV(int arm, int port, int apv)
   if(arm == 0 && port==1 && (apv <= 9)) bAPV = true;
   // if(arm == 1 && port==0 && (apv == 0||apv == 1)) bAPV = true;
   if(arm == 1 && port==0 && (apv == 0)) bAPV = true;
-  if(arm == 1 && port==1 && (apv == 6||apv == 7)) bAPV = true;
+  if(arm == 1 && port==1 && (apv > 7)) bAPV = true;
 
   return bAPV;
 }

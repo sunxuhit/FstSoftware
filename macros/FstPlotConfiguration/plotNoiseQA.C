@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotNoiseQA(string hv = "HV200V", string mode = "Data")
+void plotNoiseQA(string hv = "HV140V", string mode = "Ped")
 {
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
   gStyle->SetStatW(0.35); gStyle->SetStatH(0.35);
@@ -23,11 +23,21 @@ void plotNoiseQA(string hv = "HV200V", string mode = "Data")
   string inputfile = Form("../../output/noise/Fst%sNoise_%s.root",mode.c_str(),hv.c_str());
   TFile *File_InPut = TFile::Open(inputfile.c_str());
 
-  TH1F *h_mPedMean_FST[4][FST::numTBins]; // for RStrip
-  TH1F *h_mPedSigma_FST[4][FST::numTBins];
-  TH1F *h_mCMNSigma_FST[4][FST::numTBins];
-  TH1F *h_mRanSigma_FST[4][FST::numTBins];
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  TH2F *h_mPedDisplay[4][FST::numTBins];
+  for(int i_layer = 0; i_layer < 4; ++i_layer)
+  {
+    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+    {
+      std::string HistName = Form("h_mPedDisplay_Layer%d_TimeBin%d",i_layer,i_tb);
+      h_mPedDisplay[i_layer][i_tb] = (TH2F*)File_InPut->Get(HistName.c_str());
+    }
+  }
+
+  TH1F *h_mPedMean_FST[FST::numRStrip][FST::numTBins]; // for RStrip
+  TH1F *h_mPedSigma_FST[FST::numRStrip][FST::numTBins];
+  TH1F *h_mCMNSigma_FST[FST::numRStrip][FST::numTBins];
+  TH1F *h_mRanSigma_FST[FST::numRStrip][FST::numTBins];
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
     {
@@ -62,85 +72,124 @@ void plotNoiseQA(string hv = "HV200V", string mode = "Data")
   string output_start = Form("./figures/%sNoiseQA.pdf[",mode.c_str());
   c_Noise->Print(output_start.c_str()); // open pdf file
 
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_layer = 0; i_layer < 4; ++i_layer)
   {
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
     {
-      int i_pad = i_rstrip*9 + i_tb;
+      int i_pad = i_layer*9 + i_tb;
       c_Noise->cd(i_pad+1);
-      string title = Form("RStrip%d & TB%d",i_rstrip,i_tb);
-      h_mPedMean_FST[i_rstrip][i_tb]->SetTitle(title.c_str());
-      h_mPedMean_FST[i_rstrip][i_tb]->SetStats(0);
-      h_mPedMean_FST[i_rstrip][i_tb]->GetXaxis()->SetRangeUser(-0.5,63.5);
-      h_mPedMean_FST[i_rstrip][i_tb]->GetXaxis()->SetLabelSize(0.06);
-      h_mPedMean_FST[i_rstrip][i_tb]->GetYaxis()->SetRangeUser(200,700);
-      h_mPedMean_FST[i_rstrip][i_tb]->GetYaxis()->SetLabelSize(0.06);
-      h_mPedMean_FST[i_rstrip][i_tb]->Draw();
-      PlotLine(31.5, 31.5,200,700,2,1,2);
+      string title = Form("Layer%d & TB%d",i_layer,i_tb);
+      h_mPedDisplay[i_layer][i_tb]->SetTitle(title.c_str());
+      h_mPedDisplay[i_layer][i_tb]->SetStats(0);
+      h_mPedDisplay[i_layer][i_tb]->Draw("colz");
     }
   }
   c_Noise->Update();
   c_Noise->Print(outputname.c_str());
 
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
     {
       int i_pad = i_rstrip*9 + i_tb;
+      if(i_rstrip > 3) i_pad = (i_rstrip-4)*9 + i_tb;
+      c_Noise->cd(i_pad+1);
+      string title = Form("RStrip%d & TB%d",i_rstrip,i_tb);
+      h_mPedMean_FST[i_rstrip][i_tb]->SetTitle(title.c_str());
+      h_mPedMean_FST[i_rstrip][i_tb]->SetStats(0);
+      h_mPedMean_FST[i_rstrip][i_tb]->GetXaxis()->SetRangeUser(-0.5,127.5);
+      h_mPedMean_FST[i_rstrip][i_tb]->GetXaxis()->SetLabelSize(0.06);
+      h_mPedMean_FST[i_rstrip][i_tb]->GetYaxis()->SetRangeUser(200,1000);
+      h_mPedMean_FST[i_rstrip][i_tb]->GetYaxis()->SetLabelSize(0.06);
+      h_mPedMean_FST[i_rstrip][i_tb]->Draw();
+      PlotLine(31.5, 31.5,200,1000,2,1,2);
+      PlotLine(63.5, 63.5,200,1000,2,1,2);
+      PlotLine(95.5, 95.5,200,1000,2,1,2);
+    }
+    if(i_rstrip == 3 || i_rstrip == FST::numRStrip-1)
+    {
+      c_Noise->Update();
+      c_Noise->Print(outputname.c_str());
+    }
+  }
+
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+  {
+    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+    {
+      int i_pad = i_rstrip*9 + i_tb;
+      if(i_rstrip > 3) i_pad = (i_rstrip-4)*9 + i_tb;
       c_Noise->cd(i_pad+1);
       string title = Form("RStrip%d & TB%d",i_rstrip,i_tb);
       h_mPedSigma_FST[i_rstrip][i_tb]->SetTitle(title.c_str());
       h_mPedSigma_FST[i_rstrip][i_tb]->SetStats(0);
-      h_mPedSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetRangeUser(-0.5,63.5);
+      h_mPedSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetRangeUser(-0.5,127.5);
       h_mPedSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetLabelSize(0.06);
       h_mPedSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetRangeUser(0,40);
       h_mPedSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetLabelSize(0.06);
       h_mPedSigma_FST[i_rstrip][i_tb]->Draw();
       PlotLine(31.5, 31.5,0,40,2,1,2);
+      PlotLine(63.5, 63.5,0,40,2,1,2);
+      PlotLine(95.5, 95.5,0,40,2,1,2);
+    }
+    if(i_rstrip == 3 || i_rstrip == FST::numRStrip-1)
+    {
+      c_Noise->Update();
+      c_Noise->Print(outputname.c_str());
     }
   }
-  c_Noise->Update();
-  c_Noise->Print(outputname.c_str());
 
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
     {
       int i_pad = i_rstrip*9 + i_tb;
+      if(i_rstrip > 3) i_pad = (i_rstrip-4)*9 + i_tb;
       c_Noise->cd(i_pad+1);
       string title = Form("RStrip%d & TB%d",i_rstrip,i_tb);
       h_mCMNSigma_FST[i_rstrip][i_tb]->SetTitle(title.c_str());
       h_mCMNSigma_FST[i_rstrip][i_tb]->SetStats(0);
-      h_mCMNSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetRangeUser(-0.5,63.5);
+      h_mCMNSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetRangeUser(-0.5,127.5);
       h_mCMNSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetLabelSize(0.06);
       h_mCMNSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetRangeUser(0,40);
       h_mCMNSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetLabelSize(0.06);
       h_mCMNSigma_FST[i_rstrip][i_tb]->Draw();
       PlotLine(31.5, 31.5,0,40,2,1,2);
+      PlotLine(63.5, 63.5,0,40,2,1,2);
+      PlotLine(95.5, 95.5,0,40,2,1,2);
+    }
+    if(i_rstrip == 3 || i_rstrip == FST::numRStrip-1)
+    {
+      c_Noise->Update();
+      c_Noise->Print(outputname.c_str());
     }
   }
-  c_Noise->Update();
-  c_Noise->Print(outputname.c_str());
 
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
     {
       int i_pad = i_rstrip*9 + i_tb;
+      if(i_rstrip > 3) i_pad = (i_rstrip-4)*9 + i_tb;
       c_Noise->cd(i_pad+1);
       string title = Form("RStrip%d & TB%d",i_rstrip,i_tb);
       h_mRanSigma_FST[i_rstrip][i_tb]->SetTitle(title.c_str());
       h_mRanSigma_FST[i_rstrip][i_tb]->SetStats(0);
-      h_mRanSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetRangeUser(-0.5,63.5);
+      h_mRanSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetRangeUser(-0.5,127.5);
       h_mRanSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetLabelSize(0.06);
       h_mRanSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetRangeUser(0,40);
       h_mRanSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetLabelSize(0.06);
       h_mRanSigma_FST[i_rstrip][i_tb]->Draw();
       PlotLine(31.5, 31.5,0,40,2,1,2);
+      PlotLine(63.5, 63.5,0,40,2,1,2);
+      PlotLine(95.5, 95.5,0,40,2,1,2);
+    }
+    if(i_rstrip == 3 || i_rstrip == FST::numRStrip-1)
+    {
+      c_Noise->Update();
+      c_Noise->Print(outputname.c_str());
     }
   }
-  c_Noise->Update();
-  c_Noise->Print(outputname.c_str());
 
   TGraph *g_mPedSigma[4][FST::numTBins];
   TGraph *g_mCMNSigma[4][FST::numTBins];
@@ -161,7 +210,7 @@ void plotNoiseQA(string hv = "HV200V", string mode = "Data")
     }
   }
 
-  TH1F *h_play = new TH1F("h_play","h_play",2000,-0.5,1999.5);
+  TH1F *h_play = new TH1F("h_play","h_play",2500,-500.5,1999.5);
   for(int i_bin = 0; i_bin < 2000; ++i_bin)
   {
     h_play->SetBinContent(i_bin+1,-1000.0);
@@ -170,7 +219,7 @@ void plotNoiseQA(string hv = "HV200V", string mode = "Data")
   h_play->SetStats(0);
   h_play->GetXaxis()->SetTitle("ch");
   h_play->GetXaxis()->SetTitleSize(0.06);
-  h_play->GetXaxis()->SetRangeUser(4*128-50,6*128+50);
+  h_play->GetXaxis()->SetRangeUser(0*128-50,8*128+50);
   h_play->GetYaxis()->SetTitle("noise adc");
   h_play->GetYaxis()->SetTitleSize(0.06);
   h_play->GetYaxis()->SetRangeUser(0.0,50);
@@ -226,10 +275,10 @@ void plotNoiseQA(string hv = "HV200V", string mode = "Data")
     c_NoiseSum->Print(outputname.c_str());
   }
 
-  TH1F *h_mMeanPedSigma_RStrip[4];
-  TH1F *h_mMeanCMNSigma_RStrip[4];
-  TH1F *h_mMeanRanSigma_RStrip[4];
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  TH1F *h_mMeanPedSigma_RStrip[FST::numRStrip];
+  TH1F *h_mMeanCMNSigma_RStrip[FST::numRStrip];
+  TH1F *h_mMeanRanSigma_RStrip[FST::numRStrip];
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     string HistName; 
     HistName = Form("h_mMeanPedSigma_RStrip%d",i_rstrip);
@@ -248,8 +297,8 @@ void plotNoiseQA(string hv = "HV200V", string mode = "Data")
       double sum_CMN = 0.0;
       int counter_Ran = 0;
       double sum_Ran = 0.0;
-      // for(int i_bin = 0; i_bin < h_mRanSigma_FST[i_rstrip][i_tb]->GetNbinsX(); ++i_bin)
-      for(int i_bin = 0; i_bin < 64; ++i_bin)
+      for(int i_bin = 0; i_bin < FST::numPhiSeg; ++i_bin)
+      // for(int i_bin = 0; i_bin < 64; ++i_bin)
       {
 	sum_Ped += h_mPedSigma_FST[i_rstrip][i_tb]->GetBinContent(i_bin+1);
 	counter_Ped++;
@@ -277,7 +326,7 @@ void plotNoiseQA(string hv = "HV200V", string mode = "Data")
   TLegend *leg_mean = new TLegend(0.7,0.2,0.8,0.5);
   leg_mean->SetBorderSize(0);
   leg_mean->SetFillColor(10);
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     h_mMeanPedSigma_RStrip[i_rstrip]->SetTitle("FST Total Noise");
     h_mMeanPedSigma_RStrip[i_rstrip]->SetStats(0);
@@ -300,7 +349,7 @@ void plotNoiseQA(string hv = "HV200V", string mode = "Data")
   leg_mean->Draw("same");
 
   c_NoiseMean->cd(2);
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     h_mMeanCMNSigma_RStrip[i_rstrip]->SetTitle("FST Commen Mode Noise");
     h_mMeanCMNSigma_RStrip[i_rstrip]->SetStats(0);
@@ -319,7 +368,7 @@ void plotNoiseQA(string hv = "HV200V", string mode = "Data")
   }
 
   c_NoiseMean->cd(3);
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     h_mMeanRanSigma_RStrip[i_rstrip]->SetTitle("FST Differential Noise");
     h_mMeanRanSigma_RStrip[i_rstrip]->SetStats(0);
@@ -339,8 +388,8 @@ void plotNoiseQA(string hv = "HV200V", string mode = "Data")
   c_NoiseMean->Update();
   c_NoiseMean->Print(outputname.c_str());
 
-  TH1F *h_ratio[4][FST::numTBins];
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  TH1F *h_ratio[FST::numRStrip][FST::numTBins];
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
     {
@@ -358,11 +407,12 @@ void plotNoiseQA(string hv = "HV200V", string mode = "Data")
       }
     }
   }
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
     {
       int i_pad = i_rstrip*9 + i_tb;
+      if(i_rstrip > 3) i_pad = (i_rstrip-4)*9 + i_tb;
       c_Noise->cd(i_pad+1);
       string title = Form("Noise_{Diff}/Noise_{total} RStrip%d & TB%d",i_rstrip,i_tb);
       h_ratio[i_rstrip][i_tb]->SetTitle(title.c_str());
@@ -372,14 +422,19 @@ void plotNoiseQA(string hv = "HV200V", string mode = "Data")
       h_ratio[i_rstrip][i_tb]->GetYaxis()->SetLabelSize(0.06);
       h_ratio[i_rstrip][i_tb]->Draw();
       PlotLine(31.5, 31.5,0,1.0,2,1,2);
+      PlotLine(63.5, 63.5,0,1.0,2,1,2);
+      PlotLine(95.5, 95.5,0,1.0,2,1,2);
+    }
+    if(i_rstrip == 3 || i_rstrip == FST::numRStrip-1)
+    {
+      c_Noise->Update();
+      c_Noise->Print(outputname.c_str());
     }
   }
-  c_Noise->Update();
-  c_Noise->Print(outputname.c_str());
 
   // get Ran/Total ratio
-  TH1F *h_meanRatio_Rstrip[4];
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  TH1F *h_meanRatio_Rstrip[FST::numRStrip];
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     string HistName = Form("h_meanRatio_Rstrip%d",i_rstrip);
     h_meanRatio_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numTBins,-0.5,FST::numTBins-0.5);
@@ -387,8 +442,8 @@ void plotNoiseQA(string hv = "HV200V", string mode = "Data")
     {
       int counter = 0;
       double sum = 0.0;
-      // for(int i_bin = 0; i_bin < h_ratio[i_rstrip][i_tb]->GetNbinsX(); ++i_bin)
-      for(int i_bin = 0; i_bin < 64; ++i_bin)
+      for(int i_bin = 0; i_bin < FST::numPhiSeg; ++i_bin)
+      // for(int i_bin = 0; i_bin < 64; ++i_bin)
       {
 	sum += h_ratio[i_rstrip][i_tb]->GetBinContent(i_bin+1);
 	counter++;
@@ -396,7 +451,7 @@ void plotNoiseQA(string hv = "HV200V", string mode = "Data")
       h_meanRatio_Rstrip[i_rstrip]->SetBinContent(i_tb+1,sum/counter);
     }
   }
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     c_NoiseMean->cd(1);
     h_meanRatio_Rstrip[i_rstrip]->SetTitle("FST Noise");
@@ -499,6 +554,8 @@ void plotNoiseQA(string hv = "HV200V", string mode = "Data")
   c_NoiseMean->Update();
   c_NoiseMean->Print(outputname.c_str());
   
+#if 0
+  // noise in RO channel
   TGraph *g_mRoPedMean[4][FST::numTBins];
   TGraph *g_mRoPedSigma[4][FST::numTBins];
   TGraph *g_mRoCMNSigma[4][FST::numTBins];
@@ -737,7 +794,6 @@ void plotNoiseQA(string hv = "HV200V", string mode = "Data")
     }
   }
 
-#if 0
   // Zoomed in View for all time bins
   {
     h_play_RO->GetXaxis()->SetRangeUser(4*1152,4*1152+9*16);
