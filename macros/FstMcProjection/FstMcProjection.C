@@ -9,12 +9,13 @@
 
 using namespace std;
 
+void printAlignmentInfo(bool isRot, int rAligned);
 void genCosmicTrackRandom(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, bool isRot, int rAligned); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
 void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TH1F *h_TrackAngle, bool isRot, int rAligned); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
 void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TF1 *f_TrackAngle, bool isRot, int rAligned); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
 TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot, int rAligned); // get projected position on FST from IST1 & IST3 | return (r,phi) for FST
 TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST); // get readout position from a real hit | return (x,y) for IST & (r,phi) for FST
-void printAlignmentInfo(bool isRot, int rAligned);
+int findCrossTalkBin(double r_hit);
 
 void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 500000)
 {
@@ -24,8 +25,8 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
   TFile *File_InPut = TFile::Open("../../output/configuration/FstTracking_HV200V_Th4.0Tb2Ped2.5Ped3.5_withPed_withCMNCorr.root");
   TH1F *h_mClustersTrackAngle = (TH1F*)File_InPut->Get("h_mClustersTrackAngle")->Clone();
 
-  const float lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
-  const float lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
+  const double lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
+  const double lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
 
   const double z0_fst = FST::pitchLayer03;
   const double z1_ist = FST::pitchLayer12 + FST::pitchLayer23;
@@ -56,13 +57,13 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
 
   // Binning
   int numBinX   = 50;
-  float maxX    = 160.0;
+  double maxX    = 160.0;
   int numBinY   = 100;
-  float maxY    = 16.0;
+  double maxY    = 16.0;
   int numBinR   = 50;
-  float maxR    = 160.0;
+  double maxR    = 160.0;
   int numBinPhi = 100;
-  float maxPhi  = 0.05;
+  double maxPhi  = 0.05;
   if(isRot)
   {
     numBinX   = 160;
@@ -159,7 +160,7 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
     if( !(vHitRo_IST3.X() > -100.0 && vHitRo_IST3.Y() > -100.0) ) continue;
 
     TVector2 vHitRo_FST  = getReadOut(vHitGen_FST, h_mFstPixel, true); // RO position at FST
-    TVector2 vRoProj_FST = getProjection(vHitRo_IST1, vHitRo_IST3, isRot, rAligned); // projected position on FST through the readout position from IST1 & IST3
+    TVector2 vReco_FST = getProjection(vHitRo_IST1, vHitRo_IST3, isRot, rAligned); // projected position on FST through the readout position from IST1 & IST3
 
     double x3_gen = vHitGen_IST3.X();
     double y3_gen = vHitGen_IST3.Y();
@@ -212,52 +213,53 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
     double y0_ro     = r0_ro*TMath::Sin(phi0_ro);
 
     // projected position from IST pixel
-    double r0_proj   = vRoProj_FST.X();
-    double phi0_proj = vRoProj_FST.Y();
-    double x0_proj   = r0_proj*TMath::Cos(phi0_proj);
-    double y0_proj   = r0_proj*TMath::Sin(phi0_proj);
+    double r0_reco   = vReco_FST.X();
+    double phi0_reco = vReco_FST.Y();
+    double x0_reco   = r0_reco*TMath::Cos(phi0_reco);
+    double y0_reco   = r0_reco*TMath::Sin(phi0_reco);
 
     // fill Residual
     if(r0_ro > -100.0 && phi0_ro > -100.0)
     {
       h_mFstDisplay->Fill(r0_ro,phi0_ro);
-      // h_mFstDisplay->Fill(r0_proj,phi0_proj);
-      h_mFstProjResR_2Layer->Fill(r0_ro-r0_proj);
-      h_mFstProjResPhi_2Layer->Fill(phi0_ro-phi0_proj);
-      h_mFstProjResRPhi_2Layer->Fill(r0_ro-r0_proj,phi0_ro-phi0_proj);
+      // h_mFstDisplay->Fill(r0_reco,phi0_reco);
+      h_mFstProjResR_2Layer->Fill(r0_ro-r0_reco);
+      h_mFstProjResPhi_2Layer->Fill(phi0_ro-phi0_reco);
+      h_mFstProjResRPhi_2Layer->Fill(r0_ro-r0_reco,phi0_ro-phi0_reco);
 
-      h_mFstProjResX_2Layer->Fill(x0_ro-x0_proj);
-      h_mFstProjResY_2Layer->Fill(y0_ro-y0_proj);
-      h_mFstProjResXY_2Layer->Fill(x0_ro-x0_proj,y0_ro-y0_proj);
+      h_mFstProjResX_2Layer->Fill(x0_ro-x0_reco);
+      h_mFstProjResY_2Layer->Fill(y0_ro-y0_reco);
+      h_mFstProjResXY_2Layer->Fill(x0_ro-x0_reco,y0_ro-y0_reco);
 
       for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
       {
-	if(r0_proj > FST::rOuter + FST::pitchR*i_rstrip && r0_proj <= FST::rOuter + FST::pitchR*(i_rstrip+1))
+	// if(r0_reco > FST::rOuter + FST::pitchR*i_rstrip && r0_reco <= FST::rOuter + FST::pitchR*(i_rstrip+1))
+	if(r0_gen > FST::rOuter + FST::pitchR*i_rstrip && r0_gen <= FST::rOuter + FST::pitchR*(i_rstrip+1))
 	{ // check the position of the projected r is within a specific r_strip and fill accordingly
-	  h_mFstProjResX_2Layer_Rstrips[i_rstrip]->Fill(x0_ro-x0_proj);
-	  h_mFstProjResY_2Layer_Rstrips[i_rstrip]->Fill(y0_ro-y0_proj);
-	  h_mFstProjResXY_2Layer_Rstrips[i_rstrip]->Fill(x0_ro-x0_proj,y0_ro-y0_proj);
+	  h_mFstProjResX_2Layer_Rstrips[i_rstrip]->Fill(x0_ro-x0_reco);
+	  h_mFstProjResY_2Layer_Rstrips[i_rstrip]->Fill(y0_ro-y0_reco);
+	  h_mFstProjResXY_2Layer_Rstrips[i_rstrip]->Fill(x0_ro-x0_reco,y0_ro-y0_reco);
 
-	  h_mFstProjResR_2Layer_Rstrips[i_rstrip]->Fill(r0_ro-r0_proj);
-	  h_mFstProjResPhi_2Layer_Rstrips[i_rstrip]->Fill(phi0_ro-phi0_proj);
-	  h_mFstProjResRPhi_2Layer_Rstrips[i_rstrip]->Fill(r0_ro-r0_proj,phi0_ro-phi0_proj);
+	  h_mFstProjResR_2Layer_Rstrips[i_rstrip]->Fill(r0_ro-r0_reco);
+	  h_mFstProjResPhi_2Layer_Rstrips[i_rstrip]->Fill(phi0_ro-phi0_reco);
+	  h_mFstProjResRPhi_2Layer_Rstrips[i_rstrip]->Fill(r0_ro-r0_reco,phi0_ro-phi0_reco);
 	}
       }
 
-      h_mFstSimResR_2Layer->Fill(r0_proj-r0_gen);
-      h_mFstSimResPhi_2Layer->Fill(phi0_proj-phi0_gen);
-      h_mFstSimResRPhi_2Layer->Fill(r0_proj-r0_gen,phi0_proj-phi0_gen);
+      h_mFstSimResR_2Layer->Fill(r0_reco-r0_gen);
+      h_mFstSimResPhi_2Layer->Fill(phi0_reco-phi0_gen);
+      h_mFstSimResRPhi_2Layer->Fill(r0_reco-r0_gen,phi0_reco-phi0_gen);
     }
 
     double phiMatchingCut = 0.01; // before totation
     if(isRot) phiMatchingCut = 0.05;
     // fill Efficiency
-    // if(r0_proj >= FST::rMin && r0_proj < FST::rMax && phi0_proj >= -FST::phiMax && phi0_proj < FST::phiMax)
-    if(r0_proj >= FST::rMin && r0_proj < FST::rMax && phi0_proj >= 0.0 && phi0_proj < FST::phiMax)
+    // if(r0_reco >= FST::rMin && r0_reco < FST::rMax && phi0_reco >= -FST::phiMax && phi0_reco < FST::phiMax)
+    if(r0_reco >= FST::rMin && r0_reco < FST::rMax && phi0_reco >= 0.0 && phi0_reco < FST::phiMax)
     {
       for(int i_match = 0; i_match < 8; ++i_match)
       {
-	h_mIstCounts_2Layer[i_match]->Fill(r0_proj,phi0_proj);
+	h_mIstCounts_2Layer[i_match]->Fill(r0_reco,phi0_reco);
 	int nMatchedTrack = 0;
 	if(r0_ro > -100.0 && phi0_ro > -100.0)
 	{
@@ -265,12 +267,12 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
 	  {
 	    nMatchedTrack++;
 	  }
-	  if( i_match > 0 && abs(r0_ro-r0_proj) <= i_match*0.5*FST::pitchR && abs(phi0_ro-phi0_proj) <= phiMatchingCut)
+	  if( i_match > 0 && abs(r0_ro-r0_reco) <= i_match*0.5*FST::pitchR && abs(phi0_ro-phi0_reco) <= phiMatchingCut)
 	  {
 	    nMatchedTrack++;
 	  }
 	}
-	if(nMatchedTrack > 0) h_mFstCounts_2Layer[i_match]->Fill(r0_proj,phi0_proj);
+	if(nMatchedTrack > 0) h_mFstCounts_2Layer[i_match]->Fill(r0_reco,phi0_reco);
       }
     }
   }
@@ -330,12 +332,45 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
   File_OutPut->Close();
 }
 
+void printAlignmentInfo(bool isRot, int rAligned = 0)
+{
+  double x2_shift = 0.0;
+  double y2_shift = 0.0;
+  double phi_rot_ist2 = 0.0;
+
+  // before rotation
+  if( !isRot )
+  {
+    x2_shift = FST::x2_shift;
+    y2_shift = FST::y2_shift;
+    phi_rot_ist2 = 0.0;
+  }
+
+  // after rotation
+  if( isRot && rAligned == 0)
+  {
+    // Aligned with RStrip3
+    x2_shift = 209.361;
+    y2_shift = -48.0745;
+    phi_rot_ist2 = -1.50174;
+  }
+  if( isRot && rAligned == 3)
+  {
+    // Aligned with RStrip3
+    x2_shift = 264.505;
+    y2_shift = -48.2426;
+    phi_rot_ist2 = -1.5185; 
+  }
+
+  cout << "isRot = " << isRot << ", x2_shift = " << x2_shift << ", y2_shift = " << y2_shift << ", phi_rot_ist2 = " << phi_rot_ist2 << endl;
+}
+
 void genCosmicTrackRandom(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, bool isRot = false, int rAligned = 0)
 {
   // gRandom->SetSeed();
 
-  const float lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
-  const float lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
+  const double lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
+  const double lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
 
   // generated position on IST
   double x3_gen = gRandom->Rndm()*lengthColumn;
@@ -351,8 +386,8 @@ void genCosmicTrackRandom(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPos
 
 void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TH1F *h_TrackAngle, bool isRot = false, int rAligned = 0)
 {
-  const float lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
-  const float lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
+  const double lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
+  const double lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
 
   // random generated position on IST
   double x3_gen = gRandom->Rndm()*lengthColumn;
@@ -371,8 +406,8 @@ void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosF
 
 void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TF1 *f_TrackAngle, bool isRot = false, int rAligned = 0)
 {
-  const float lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
-  const float lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
+  const double lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
+  const double lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
 
   // random generated position on IST
   double x3_gen = gRandom->Rndm()*lengthColumn;
@@ -451,8 +486,8 @@ TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot = false,
 
 TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST)
 {
-  const float lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
-  const float lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
+  const double lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
+  const double lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
 
   TVector2 vPosRO;
   vPosRO.Set(-999.0,-999.0);
@@ -479,16 +514,15 @@ TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST)
     double phi_hit = y_hit;
     double r_ro    = -999.0;
     double phi_ro  = -999.0;
-    double x_ro    = -999.0;
-    double y_ro    = -999.0;
     // check if FST has readout
     // if(r_hit >= FST::rOuter && r_hit <= FST::rOuter+4.0*FST::pitchR && phi_hit >= -FST::phiMax && phi_hit <= FST::phiMax)
     if(r_hit >= FST::rOuter && r_hit <= FST::rOuter+4.0*FST::pitchR && phi_hit >= 0.0 && phi_hit <= FST::phiMax)
     {
-      int binR   = h_pixel->GetXaxis()->FindBin(r_hit);
-      int binPhi = h_pixel->GetYaxis()->FindBin(phi_hit);
-      r_ro       = h_pixel->GetXaxis()->GetBinCenter(binR);
-      phi_ro     = h_pixel->GetYaxis()->GetBinCenter(binPhi);
+      int binR      = h_pixel->GetXaxis()->FindBin(r_hit);
+      int deltaBinR = findCrossTalkBin(r_hit);
+      int binPhi    = h_pixel->GetYaxis()->FindBin(phi_hit);
+      r_ro          = h_pixel->GetXaxis()->GetBinCenter(binR+deltaBinR);
+      phi_ro        = h_pixel->GetYaxis()->GetBinCenter(binPhi);
     }
     vPosRO.Set(r_ro,phi_ro);
   }
@@ -496,35 +530,53 @@ TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST)
   return vPosRO;
 }
 
-void printAlignmentInfo(bool isRot, int rAligned = 0)
+int findCrossTalkBin(double r_hit)
 {
-  double x2_shift = 0.0;
-  double y2_shift = 0.0;
-  double phi_rot_ist2 = 0.0;
+  const double ctRate[4][7] = { 
+    {0.0000, 0.0000, 0.0000, 0.9024, 0.9595, 0.9807, 1.0000}, 
+    {0.0000, 0.0000, 0.1489, 0.9124, 0.9737, 1.0000, 1.0000}, 
+    {0.0000, 0.0440, 0.2594, 0.9739, 1.0000, 1.0000, 1.0000}, 
+    {0.0674, 0.2435, 0.3921, 1.0000, 1.0000, 1.0000, 1.0000}
+  };
+  const int deltaBin[7] = {-3, -2, -1, 0, 1, 2, 3};
+  // for(int i_rstrp = 0; i_rstrp < 4; ++i_rstrp)
+  // {
+  //   cout << i_rstrp << "    " << ctRate[i_rstrp][0] << "    " << ctRate[i_rstrp][1] << "    " << ctRate[i_rstrp][2] << "    " << ctRate[i_rstrp][3] << "    " << ctRate[i_rstrp][4] << "    " << ctRate[i_rstrp][5] << "    " << ctRate[i_rstrp][6] << endl;
+  // }
 
-  // before rotation
-  if( !isRot )
+  double ran = gRandom->Uniform(0.0,1.0);
+
+  int rstrip = -999;
+  if(r_hit >= FST::rOuter && r_hit < FST::rOuter+4.0*FST::pitchR)
   {
-    x2_shift = FST::x2_shift;
-    y2_shift = FST::y2_shift;
-    phi_rot_ist2 = 0.0;
+    for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+    {
+      if(r_hit >= FST::rOuter+i_rstrip*FST::pitchR && r_hit < FST::rOuter+(i_rstrip+1)*FST::pitchR)
+      {
+	rstrip = i_rstrip;
+      }
+    }
   }
 
-  // after rotation
-  if( isRot && rAligned == 0)
+  int ctBin = -999;
+  if(rstrip > -100)
   {
-    // Aligned with RStrip3
-    x2_shift = 209.361;
-    y2_shift = -48.0745;
-    phi_rot_ist2 = -1.50174;
-  }
-  if( isRot && rAligned == 3)
-  {
-    // Aligned with RStrip3
-    x2_shift = 264.505;
-    y2_shift = -48.2426;
-    phi_rot_ist2 = -1.5185; 
+    for(int i_delta = 0; i_delta < 7; ++i_delta)
+    {
+      if(ran >= ctRate[rstrip][i_delta] && ran < ctRate[rstrip][i_delta+1])
+      {
+	ctBin = i_delta+1;
+      }
+    }
+    if(ran >= 0.0 && ran < ctRate[rstrip][0])
+    {
+      ctBin = 0;
+    }
   }
 
-  cout << "isRot = " << isRot << ", x2_shift = " << x2_shift << ", y2_shift = " << y2_shift << ", phi_rot_ist2 = " << phi_rot_ist2 << endl;
+  // cout << "rstrip = " << rstrip << ", ran = " << ran << ", ctBin = " << ctBin << endl;
+
+  if(ctBin > -1) return deltaBin[ctBin];
+
+  return ctBin;
 }

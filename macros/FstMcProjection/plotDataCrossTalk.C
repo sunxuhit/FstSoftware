@@ -1,0 +1,162 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+#include <TCanvas.h>
+#include <TH1F.h>
+#include <TLegend.h>
+
+#include "../../src/FstUtil/FstCons.h"
+#include "../FstPlotConfiguration/draw.h"
+
+using namespace std;
+
+void plotDataCrossTalk(string hv = "HV200V")
+{
+  string mode = "Scan";
+  // string mode = "Simple";
+
+  TH1F *h_mClustersTrackFstResR_2Layer_Rstrips[4];
+
+  string inputRot0= Form("../../output/simulation/FstTracking_Rot_AlignedRstrip0_%s.root",hv.c_str());
+  TFile *File_InPutRot0 = TFile::Open(inputRot0.c_str());
+  for(int i_rstrp = 0; i_rstrp < 2; ++i_rstrp)
+  {
+    string HistName;
+    HistName = Form("h_m%sClustersTrackFstResR_2Layer_Rstrip%d",mode.c_str(),i_rstrp);
+    h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp] = (TH1F*)File_InPutRot0->Get(HistName.c_str());
+  }
+  
+  string inputRot3= Form("../../output/simulation/FstTracking_Rot_AlignedRstrip3_%s.root",hv.c_str());
+  TFile *File_InPutRot3 = TFile::Open(inputRot3.c_str());
+  for(int i_rstrp = 2; i_rstrp < 4; ++i_rstrp)
+  {
+    string HistName;
+    HistName = Form("h_m%sClustersTrackFstResR_2Layer_Rstrip%d",mode.c_str(),i_rstrp);
+    h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp] = (TH1F*)File_InPutRot3->Get(HistName.c_str());
+  }
+
+  TH1F *h_mFstRecoResR_2Layer_Rstrips[4];
+  for(int i_rstrp = 0; i_rstrp < 4; ++i_rstrp)
+  {
+    h_mFstRecoResR_2Layer_Rstrips[i_rstrp] = (TH1F*)h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->Clone();
+    h_mFstRecoResR_2Layer_Rstrips[i_rstrp]->Reset();
+  }
+
+  TCanvas *c_Residual = new TCanvas("c_Residual","c_Residual",10,10,1600,400);
+  c_Residual->Divide(4,1);
+  for(int i_pad = 0; i_pad < 4; ++ i_pad)
+  {
+    c_Residual->cd(i_pad+1);
+    c_Residual->cd(i_pad+1)->SetLeftMargin(0.15);
+    c_Residual->cd(i_pad+1)->SetBottomMargin(0.15);
+    c_Residual->cd(i_pad+1)->SetTicks(1,1);
+    c_Residual->cd(i_pad+1)->SetGrid(0,0);
+  }
+
+  // fill the reco histogram
+  for(int i_track = 0; i_track < 10000; ++i_track)
+  {
+    for(int i_rstrp = 0; i_rstrp < 4; ++i_rstrp)
+    {
+      h_mFstRecoResR_2Layer_Rstrips[i_rstrp]->Fill(h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->GetRandom());
+    }
+  }
+
+
+  double inteR[4];
+  double ctRate[4][7];
+  for(int i_rstrp = 0; i_rstrp < 4; ++i_rstrp)
+  {
+    c_Residual->cd(i_rstrp+1);
+    string title = Form("R Residual @ Rstrip%d",i_rstrp);
+    h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->SetTitle(title.c_str());
+    h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitle("r_{ro} - r_{reco} (mm)");
+    h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitleSize(0.06);
+    h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->GetXaxis()->CenterTitle();
+    h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->GetYaxis()->SetTitle("Counts");
+    h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->GetYaxis()->SetTitleSize(0.06);
+    h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->GetYaxis()->CenterTitle();
+    h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->SetLineColor(1);
+    h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->Draw("hE");
+    int binR_start = h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->FindBin(-150.0);
+    int binR_stop  = h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->FindBin(150.0);
+    inteR[i_rstrp] = h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->Integral(binR_start,binR_stop);
+    double temptRate = 0.0;
+    // cout << "i_rstrp = " << i_rstrp << ", binR_start = " << binR_start << ", binR_stop = " << binR_stop << endl;
+    cout << "i_rstrp = " << i_rstrp <<  ", inteR = " << inteR[i_rstrp] << endl;
+    for(int i_delta = 0; i_delta < 7; ++i_delta)
+    {
+      double deltaStart = (i_delta-3.5)*FST::pitchR;
+      double deltaStop  = (i_delta-2.5)*FST::pitchR;
+      int binDelta_start = h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->FindBin(deltaStart);
+      int binDelta_stop  = h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->FindBin(deltaStop);
+      double inteDelta = h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->Integral(binDelta_start,binDelta_stop);
+      double ratio = inteDelta/inteR[i_rstrp];
+      // cout << "i_delta = " << i_delta << ", deltaStart = " << deltaStart << ", deltaStop = " << deltaStop << endl;
+      // cout << "binDelta_start = " << binDelta_start << ", binDelta_stop = " << binDelta_stop << endl;
+      cout << "i_delta = " << i_delta << ", inteDelta = " << inteDelta << ", ratio = " << inteDelta/inteR[i_rstrp] << endl;
+      temptRate += ratio;
+      ctRate[i_rstrp][i_delta] = temptRate;
+      // cout << "temptRate = " << temptRate << endl;
+      PlotLine(deltaStart, deltaStart, 0.5, h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->GetMaximum(), 1, 2, 2);
+    }
+    cout << endl;
+  }
+
+  // save ctRate to a text file
+  string outputfile = "./crosstalkRate.txt";
+  ofstream file_crosstalkRate;
+  file_crosstalkRate.open(outputfile.c_str());
+
+  if (!file_crosstalkRate.is_open())
+  {
+    std::cout << "failed to open " << outputfile.c_str() << endl;
+    return -1;
+  }
+  else
+  {
+
+    for(int i_rstrp = 0; i_rstrp < 4; ++i_rstrp)
+    {
+      file_crosstalkRate << std::fixed << std::setprecision(4) << i_rstrp << "    " << ctRate[i_rstrp][0] << "    " << ctRate[i_rstrp][1] << "    " << ctRate[i_rstrp][2] << "    " << ctRate[i_rstrp][3] << "    " << ctRate[i_rstrp][4] << "    " << ctRate[i_rstrp][5] << "    " << ctRate[i_rstrp][6] << endl;
+    }
+  }
+
+  file_crosstalkRate.close();
+
+
+  TCanvas *c_Reco = new TCanvas("c_Reco","c_Reco",10,500,1600,400);
+  c_Reco->Divide(4,1);
+  for(int i_pad = 0; i_pad < 4; ++ i_pad)
+  {
+    c_Reco->cd(i_pad+1);
+    c_Reco->cd(i_pad+1)->SetLeftMargin(0.15);
+    c_Reco->cd(i_pad+1)->SetBottomMargin(0.15);
+    c_Reco->cd(i_pad+1)->SetTicks(1,1);
+    c_Reco->cd(i_pad+1)->SetGrid(0,0);
+  }
+
+  for(int i_rstrp = 0; i_rstrp < 4; ++i_rstrp)
+  {
+    c_Reco->cd(i_rstrp+1);
+    string title = Form("R Reco @ Rstrip%d",i_rstrp);
+    h_mFstRecoResR_2Layer_Rstrips[i_rstrp]->SetTitle(title.c_str());
+    h_mFstRecoResR_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitle("r_{ro} - r_{reco} (mm)");
+    h_mFstRecoResR_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitleSize(0.06);
+    h_mFstRecoResR_2Layer_Rstrips[i_rstrp]->GetXaxis()->CenterTitle();
+    h_mFstRecoResR_2Layer_Rstrips[i_rstrp]->GetYaxis()->SetTitle("Counts");
+    h_mFstRecoResR_2Layer_Rstrips[i_rstrp]->GetYaxis()->SetTitleSize(0.06);
+    h_mFstRecoResR_2Layer_Rstrips[i_rstrp]->GetYaxis()->CenterTitle();
+    h_mFstRecoResR_2Layer_Rstrips[i_rstrp]->SetLineColor(1);
+    h_mFstRecoResR_2Layer_Rstrips[i_rstrp]->Draw("hE");
+    PlotLine(0.5*FST::pitchR, 0.5*FST::pitchR, 0.5, h_mFstRecoResR_2Layer_Rstrips[i_rstrp]->GetMaximum(), 1, 2, 2);
+    PlotLine(1.5*FST::pitchR, 1.5*FST::pitchR, 0.5, h_mFstRecoResR_2Layer_Rstrips[i_rstrp]->GetMaximum(), 1, 2, 2);
+    PlotLine(2.5*FST::pitchR, 2.5*FST::pitchR, 0.5, h_mFstRecoResR_2Layer_Rstrips[i_rstrp]->GetMaximum(), 1, 2, 2);
+    PlotLine(3.5*FST::pitchR, 3.5*FST::pitchR, 0.5, h_mFstRecoResR_2Layer_Rstrips[i_rstrp]->GetMaximum(), 1, 2, 2);
+    PlotLine(-0.5*FST::pitchR, -0.5*FST::pitchR, 0.5, h_mFstRecoResR_2Layer_Rstrips[i_rstrp]->GetMaximum(), 1, 2, 2);
+    PlotLine(-1.5*FST::pitchR, -1.5*FST::pitchR, 0.5, h_mFstRecoResR_2Layer_Rstrips[i_rstrp]->GetMaximum(), 1, 2, 2);
+    PlotLine(-2.5*FST::pitchR, -2.5*FST::pitchR, 0.5, h_mFstRecoResR_2Layer_Rstrips[i_rstrp]->GetMaximum(), 1, 2, 2);
+    PlotLine(-3.5*FST::pitchR, -3.5*FST::pitchR, 0.5, h_mFstRecoResR_2Layer_Rstrips[i_rstrp]->GetMaximum(), 1, 2, 2);
+  }
+}
