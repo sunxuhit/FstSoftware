@@ -393,7 +393,6 @@ int FstClusterMaker::Make()
 		double preADC = maxADC;
 		// float nHitsCut = FST::nFstHitsCut; // 4.5 for FST
 		float nHitsCut = mFstHitsCut; // 4.5 for FST
-		// if(FST::numOfUsedTimeBins == 3) // FST Hits with 3 Time Bins
 		if(mNumOfUsedTimeBins == 3) // FST Hits with 3 Time Bins
 		{
 		  for(int i_tb = 1; i_tb < FST::numTBins-1; ++i_tb)
@@ -419,7 +418,6 @@ int FstClusterMaker::Make()
 		    }
 		  }
 		}
-		// if(FST::numOfUsedTimeBins == 2) // FST Hits with 2 Time Bins
 		if(mNumOfUsedTimeBins == 2) // FST Hits with 2 Time Bins
 		{
 		  for(int i_tb = 1; i_tb < FST::numTBins; ++i_tb)
@@ -445,7 +443,6 @@ int FstClusterMaker::Make()
 		    }
 		  }
 		}
-		// if(FST::numOfUsedTimeBins == 1) // FST Hits with 1 Time Bin
 		if(mNumOfUsedTimeBins == 1) // FST Hits with 1 Time Bin
 		{
 		  for(int i_tb = 1; i_tb < FST::numTBins; ++i_tb)
@@ -547,78 +544,6 @@ int FstClusterMaker::Make()
 		      }
 		    }
 		  }
-#if 0
-		  // if(FST::numOfUsedTimeBins == 3) // FST Peds with 3 Time Bins
-		  if(mNumOfUsedTimeBins == 3) // FST Peds with 3 Time Bins
-		  {
-		    for(int i_tb = 1; i_tb < FST::numTBins-1; ++i_tb)
-		    { // only if 3 consequetive timebins of a ch exceed the threshold cut is considered as a hit
-		      if( 
-			  ( signalEvt[i_arm][i_port][i_apv][i_ch][i_tb-1] > nPedsCut*noiseEvt[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
-			  ( signalEvt[i_arm][i_port][i_apv][i_ch][i_tb]   > nPedsCut*noiseEvt[i_arm][i_port][i_apv][i_ch][i_tb]) &&
-			  ( signalEvt[i_arm][i_port][i_apv][i_ch][i_tb+1] > nPedsCut*noiseEvt[i_arm][i_port][i_apv][i_ch][i_tb+1])
-			) 
-		      {
-			isPed = true; // set isHit to true if 3 consequetive time bins exceed the threshold
-			if(signalEvt[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
-			{ // find time bin with max adc for 0-FST::numTBins-2
-			  maxADC = signalEvt[i_arm][i_port][i_apv][i_ch][i_tb];
-			  maxTB = i_tb;
-			  preADC = maxADC;
-			}
-			if(i_tb == FST::numTBins-2 && signalEvt[i_arm][i_port][i_apv][i_ch][i_tb+1] > preADC)
-			{ // check if last time bin has the max ADC
-			  maxADC = signalEvt[i_arm][i_port][i_apv][i_ch][i_tb+1];
-			  maxTB = i_tb+1;
-			}
-		      }
-		    }
-		  }
-		  // if(FST::numOfUsedTimeBins == 2) // FST Peds with 2 Time Bins
-		  if(mNumOfUsedTimeBins == 2) // FST Peds with 2 Time Bins
-		  {
-		    for(int i_tb = 1; i_tb < FST::numTBins; ++i_tb)
-		    { // only if 2 consequetive timebins of a ch exceed the threshold cut is considered as a hit
-		      if( 
-			  ( signalEvt[i_arm][i_port][i_apv][i_ch][i_tb-1] > nPedsCut*noiseEvt[i_arm][i_port][i_apv][i_ch][i_tb-1]) &&
-			  ( signalEvt[i_arm][i_port][i_apv][i_ch][i_tb]   > nPedsCut*noiseEvt[i_arm][i_port][i_apv][i_ch][i_tb])
-			) 
-		      {
-			isPed = true; // set isPed to true if 2 consequetive time bins exceed the threshold
-			if(signalEvt[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
-			{ // find time bin with max adc for 0-FST::numTBins-1
-			  maxADC = signalEvt[i_arm][i_port][i_apv][i_ch][i_tb];
-			  maxTB = i_tb;
-			  preADC = maxADC;
-			}
-			if(signalEvt[i_arm][i_port][i_apv][i_ch][i_tb-1] > preADC)
-			{ // check if i_tb-1 has the max ADC
-			  maxADC = signalEvt[i_arm][i_port][i_apv][i_ch][i_tb-1];
-			  maxTB = i_tb-1;
-			  preADC = maxADC;
-			}
-		      }
-		    }
-		  }
-		  if(mNumOfUsedTimeBins == 1) // FST Peds with 1 Time Bin
-		  {
-		    for(int i_tb = 1; i_tb < FST::numTBins; ++i_tb)
-		    { // only if 1 timebin of a ch exceed the threshold cut is considered as a hit
-		      if( 
-			  ( signalEvt[i_arm][i_port][i_apv][i_ch][i_tb] > nPedsCut*noiseEvt[i_arm][i_port][i_apv][i_ch][i_tb])
-			) 
-		      {
-			isPed = true; // set isPed to true if 1 time bins exceed the threshold
-			if(signalEvt[i_arm][i_port][i_apv][i_ch][i_tb] > preADC)
-			{ // find time bin with max adc for 0-FST::numTBins-1
-			  maxADC = signalEvt[i_arm][i_port][i_apv][i_ch][i_tb];
-			  maxTB = i_tb;
-			  preADC = maxADC;
-			}
-		      }
-		    }
-		  }
-#endif
 		}
 	      }
 
@@ -647,14 +572,12 @@ int FstClusterMaker::Make()
 		  if(getLayer(i_arm,i_port) > 0) 
 		  {
 		    fstRawHit->setCharge(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb], i_tb); // IST
-		    // fstRawHit->setCharge(mSigPedCorr[i_arm][i_port][i_apv][i_ch][i_tb]/FST::mSigWeight_IST, i_tb); // IST
 		    fstRawHit->setWeight(FST::mSigWeight_IST); // weight for ISt is always 1.0
 		  }
 		  if(getLayer(i_arm,i_port) == 0) 
 		  {
 		    int rstrip = getColumn(i_arm,i_port,i_apv,i_ch);
 		    fstRawHit->setCharge(signalEvt[i_arm][i_port][i_apv][i_ch][i_tb], i_tb); // FST
-		    // fstRawHit->setCharge(signalEvt[i_arm][i_port][i_apv][i_ch][i_tb]/FST::mSigWeight_FST[rstrip], i_tb); // FST
 		    fstRawHit->setWeight(FST::mSigWeight_FST[rstrip]);
 		  }
 		}
@@ -1012,7 +935,7 @@ bool FstClusterMaker::initPedestal()
     }
   }
 
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
     {
@@ -1217,10 +1140,10 @@ bool FstClusterMaker::calPedestal()
 	    g_mPedMean[layer][i_tb]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mPed[i_arm][i_port][i_apv][i_ch][i_tb]);
 	    g_mPedSigma[layer][i_tb]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
 	    h_mPedDisplay[layer][i_tb]->Fill(col,row,mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
-	    if(layer == 0 && col > 3) 
+	    if(layer == 0 && col > -1) 
 	    { // FST
-	      h_mPedMean_FST[col-4][i_tb]->SetBinContent(row+1,mPed[i_arm][i_port][i_apv][i_ch][i_tb]);
-	      h_mPedSigma_FST[col-4][i_tb]->SetBinContent(row+1,mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	      h_mPedMean_FST[col][i_tb]->SetBinContent(row+1,mPed[i_arm][i_port][i_apv][i_ch][i_tb]);
+	      h_mPedSigma_FST[col][i_tb]->SetBinContent(row+1,mPedStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
 	    }
 	  }
 	}
@@ -1369,7 +1292,7 @@ bool FstClusterMaker::calPedestal()
 		mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb] = mCMNMean[i_arm][i_port][i_apv][col][i_tb];
 	      }
 	      g_mCMNSigma[layer][i_tb]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
-	      if(layer == 0 && col > 3) h_mCMNSigma_FST[col-4][i_tb]->SetBinContent(row+1,mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	      if(layer == 0 && col > -1) h_mCMNSigma_FST[col][i_tb]->SetBinContent(row+1,mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
 	    }
 	  }
 	}
@@ -1551,7 +1474,7 @@ bool FstClusterMaker::calPedestal()
 	    int col = this->getColumn(i_arm,i_port,i_apv,i_ch);
 	    int row = this->getRow(i_arm,i_port,i_apv,i_ch);
 	    g_mRanSigma[layer][i_tb]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
-	    if(layer == 0 && col > 3) h_mRanSigma_FST[col-4][i_tb]->SetBinContent(row+1,mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	    if(layer == 0 && col > -1) h_mRanSigma_FST[col][i_tb]->SetBinContent(row+1,mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
 	  }
 	}
       }
@@ -1578,7 +1501,7 @@ void FstClusterMaker::writePedestal()
     }
   }
 
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
     {
@@ -2662,7 +2585,8 @@ int FstClusterMaker::getSensor(int arm, int port, int apv)
   if(layer == 0)
   { // layer = 0 for FST
     if(apv >= 0 && apv <= 3) return 0; // inner sector
-    if(apv >= 4 && apv <= 7) return 1; // outer sector
+    if(apv >= 4 && apv <= 5) return 1; // 1st half of outer sector
+    if(apv >= 6 && apv <= 7) return 2; // 2nd half of outer sector
   }
   else
   { // layer = 1-3 for IST
@@ -2683,7 +2607,8 @@ int FstClusterMaker::getColumn(int arm, int port, int apv, int ch)
   { // layer = 0 for FST
     if(this->getRStrip(apv,ch) >= 0)
     {
-      col = 4*sensor + this->getRStrip(apv,ch);
+      if(sensor == 0) col = this->getRStrip(apv,ch);
+      if(sensor > 0) col = 4 + this->getRStrip(apv,ch);
     }
   }
   else
@@ -2716,9 +2641,13 @@ int FstClusterMaker::getRStrip(int apv, int ch)
 {
   int r_strip = -1;
 
-  // only apply to half outer sector for now
-  if(apv == 4) r_strip = ch%4;
-  if(apv == 5) r_strip = 3-ch%4;
+  // inner sector
+  if(apv == 0 || apv == 1) r_strip = ch%4;
+  if(apv == 2 || apv == 3) r_strip = 3-ch%4;
+
+  // outer sector
+  if(apv == 4 || apv == 6) r_strip = ch%4;
+  if(apv == 5 || apv == 7) r_strip = 3-ch%4;
 
   return r_strip;
 }
@@ -2739,10 +2668,9 @@ double FstClusterMaker::getPosX(int arm, int port, int apv, int ch)
   int layer = this->getLayer(arm,port);
   if(layer == 0) // FST
   {
-    // double r_fst = FST::rOuter + (this->getColumn(arm,port,apv,ch)-4)*FST::pitchR + 0.5*FST::pitchR;
-    // double phi_fst = (63-this->getRow(arm,port,apv,ch))*FST::pitchPhi + 0.5*FST::pitchPhi;
-    // posX = r_fst*TMath::Cos(phi_fst); // x = r*cos(phi)
-    posX = FST::rOuter + (this->getColumn(arm,port,apv,ch)-4)*FST::pitchR + 0.5*FST::pitchR;
+    int sensor = this->getSensor(arm,port,apv);
+    if(sensor == 0) posX = FST::rInner + (this->getRStrip(apv,ch))*FST::pitchR + 0.5*FST::pitchR;
+    if(sensor > 0)  posX = FST::rOuter + (this->getRStrip(apv,ch))*FST::pitchR + 0.5*FST::pitchR;
   }
   else // IST1-3
   {
@@ -2758,10 +2686,12 @@ double FstClusterMaker::getPosY(int arm, int port, int apv, int ch)
   int layer = this->getLayer(arm,port);
   if(layer == 0) // FST
   {
-    // double r_fst = FST::rOuter + (this->getColumn(arm,port,apv,ch)-4)*FST::pitchR + 0.5*FST::pitchR;
-    // double phi_fst = (63-this->getRow(arm,port,apv,ch))*FST::pitchPhi + 0.5*FST::pitchPhi;
-    // posY = r_fst*TMath::Sin(phi_fst); // y = r*sin(phi)
-    posY = (63-this->getRow(arm,port,apv,ch))*FST::pitchPhi + 0.5*FST::pitchPhi;
+    int sensor = this->getSensor(arm,port,apv);
+    // inner sector face up
+    if(sensor == 0) posY = (this->getPhiSeg(apv,ch)-63)*FST::pitchPhi - 0.5*FST::pitchPhi;
+    // outer sector face down
+    if(sensor == 1) posY = (63-this->getPhiSeg(apv,ch))*FST::pitchPhi + 0.5*FST::pitchPhi + FST::gapPhi; // 1st half
+    if(sensor == 2) posY = (63-this->getPhiSeg(apv,ch))*FST::pitchPhi + 0.5*FST::pitchPhi - FST::gapPhi; // 2nd half
   }
   else // IST1-3
   {
@@ -2771,6 +2701,7 @@ double FstClusterMaker::getPosY(int arm, int port, int apv, int ch)
   return posY;
 }
 
+/*
 double FstClusterMaker::getMeanX(int layer, double meanColumn)
 {
   double meanX = -999.9;
@@ -2803,6 +2734,7 @@ double FstClusterMaker::getMeanY(int layer, double meanRow)
 
   return meanY;
 }
+*/
 
 bool FstClusterMaker::isBadAPV(int arm, int port, int apv)
 {
@@ -2812,7 +2744,7 @@ bool FstClusterMaker::isBadAPV(int arm, int port, int apv)
   if(arm == 0 && port==1 && (apv <= 9)) bAPV = true;
   // if(arm == 1 && port==0 && (apv == 0||apv == 1)) bAPV = true;
   if(arm == 1 && port==0 && (apv == 0)) bAPV = true;
-  if(arm == 1 && port==1 && (apv == 6||apv == 7)) bAPV = true;
+  if(arm == 1 && port==1 && (apv > 7)) bAPV = true;
 
   return bAPV;
 }

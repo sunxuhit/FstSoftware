@@ -10,10 +10,10 @@
 using namespace std;
 
 void printAlignmentInfo(bool isRot, int rAligned);
-void genCosmicTrackRandom(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, bool isRot, int rAligned); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
-void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TH1F *h_TrackAngle, bool isRot, int rAligned); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
-void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TF1 *f_TrackAngle, bool isRot, int rAligned); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
-TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot, int rAligned); // get projected position on FST from IST1 & IST3 | return (r,phi) for FST
+void genCosmicTrackRandom(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, bool isRot, int rAligned, double deltaX, double deltaY); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
+void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TH1F *h_TrackAngle, bool isRot, int rAligned, double deltaX, double deltaY); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
+void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TF1 *f_TrackAngle, bool isRot, int rAligned, double deltaX, double deltaY); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
+TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot, int rAligned, double deltaX, double deltaY); // get projected position on FST from IST1 & IST3 | return (r,phi) for FST
 TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST); // get readout position from a real hit | return (x,y) for IST & (r,phi) for FST
 int findCrossTalkBin(double r_hit);
 
@@ -143,10 +143,13 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
     vHitGen_IST3.Set(-999.0,-999.0);
     vHitGen_FST.Set(-999.0,-999.0);
 
+    double deltaX = -20.0;
+    double deltaY = 0.0;
+
     // randomly generated cosmic
-    // genCosmicTrackRandom(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, isRot, rAligned);
-    // genCosmicTrackAngle(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, h_mClustersTrackAngle, isRot, rAligned);
-    genCosmicTrackAngle(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, f_mClustersTrackAngle, isRot, rAligned);
+    // genCosmicTrackRandom(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, isRot, rAligned, deltaX, deltaY);
+    // genCosmicTrackAngle(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, h_mClustersTrackAngle, isRot, rAligned, deltaX, deltaY);
+    genCosmicTrackAngle(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, f_mClustersTrackAngle, isRot, rAligned, deltaX, deltaY);
     TVector2 vHitRo_IST3 = getReadOut(vHitGen_IST3, h_mIst3Pixel, false); // RO position at IST3
     TVector2 vHitRo_IST1 = getReadOut(vHitGen_IST1, h_mIst1Pixel, false); // RO position at IST1
 
@@ -160,7 +163,7 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
     if( !(vHitRo_IST3.X() > -100.0 && vHitRo_IST3.Y() > -100.0) ) continue;
 
     TVector2 vHitRo_FST  = getReadOut(vHitGen_FST, h_mFstPixel, true); // RO position at FST
-    TVector2 vReco_FST = getProjection(vHitRo_IST1, vHitRo_IST3, isRot, rAligned); // projected position on FST through the readout position from IST1 & IST3
+    TVector2 vReco_FST = getProjection(vHitRo_IST1, vHitRo_IST3, isRot, rAligned, deltaX, deltaY); // projected position on FST through the readout position from IST1 & IST3
 
     double x3_gen = vHitGen_IST3.X();
     double y3_gen = vHitGen_IST3.Y();
@@ -365,7 +368,7 @@ void printAlignmentInfo(bool isRot, int rAligned = 0)
   cout << "isRot = " << isRot << ", x2_shift = " << x2_shift << ", y2_shift = " << y2_shift << ", phi_rot_ist2 = " << phi_rot_ist2 << endl;
 }
 
-void genCosmicTrackRandom(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, bool isRot = false, int rAligned = 0)
+void genCosmicTrackRandom(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, bool isRot = false, int rAligned = 0, double deltaX = 0.0, double deltaY = 0.0)
 {
   // gRandom->SetSeed();
 
@@ -381,10 +384,10 @@ void genCosmicTrackRandom(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPos
   double y1_gen = gRandom->Rndm()*lengthRow;
   vPosIST1.Set(x1_gen,y1_gen);
 
-  vPosFST = getProjection(vPosIST1,vPosIST3,isRot,rAligned);
+  vPosFST = getProjection(vPosIST1,vPosIST3,isRot,rAligned,deltaX,deltaY);
 }
 
-void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TH1F *h_TrackAngle, bool isRot = false, int rAligned = 0)
+void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TH1F *h_TrackAngle, bool isRot = false, int rAligned = 0, double deltaX = 0.0, double deltaY = 0.0)
 {
   const double lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
   const double lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
@@ -401,10 +404,10 @@ void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosF
   double y1_gen = y3_gen + (FST::pitchLayer12 + FST::pitchLayer23)*TMath::Tan(theta)*TMath::Sin(phi);
   vPosIST1.Set(x1_gen,y1_gen);
 
-  vPosFST = getProjection(vPosIST1,vPosIST3,isRot,rAligned);
+  vPosFST = getProjection(vPosIST1,vPosIST3,isRot,rAligned,deltaX,deltaY);
 }
 
-void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TF1 *f_TrackAngle, bool isRot = false, int rAligned = 0)
+void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TF1 *f_TrackAngle, bool isRot = false, int rAligned = 0, double deltaX = 0.0, double deltaY = 0.0)
 {
   const double lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
   const double lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
@@ -421,10 +424,10 @@ void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosF
   double y1_gen = y3_gen + (FST::pitchLayer12 + FST::pitchLayer23)*TMath::Tan(theta)*TMath::Sin(phi);
   vPosIST1.Set(x1_gen,y1_gen);
 
-  vPosFST = getProjection(vPosIST1,vPosIST3,isRot,rAligned);
+  vPosFST = getProjection(vPosIST1,vPosIST3,isRot,rAligned,deltaX,deltaY);
 }
 
-TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot = false, int rAligned = 0)
+TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot = false, int rAligned = 0, double deltaX = 0.0, double deltaY = 0.0)
 {
   const double z0_fst = FST::pitchLayer03;
   const double z1_ist = FST::pitchLayer12 + FST::pitchLayer23;
@@ -438,8 +441,8 @@ TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot = false,
   // before rotation
   if( !isRot )
   {
-    x2_shift = FST::x2_shift;
-    y2_shift = FST::y2_shift;
+    x2_shift = FST::x2_shift + deltaX;
+    y2_shift = FST::y2_shift + deltaY;
     phi_rot_ist2 = 0.0;
   }
 
@@ -447,15 +450,15 @@ TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot = false,
   if( isRot && rAligned == 0)
   {
     // Aligned with RStrip3
-    x2_shift = 209.361;
-    y2_shift = -48.0745;
+    x2_shift = 209.361 + deltaX;
+    y2_shift = -48.0745 + deltaY;
     phi_rot_ist2 = -1.50174;
   }
   if( isRot && rAligned == 3)
   {
     // Aligned with RStrip3
-    x2_shift = 264.505;
-    y2_shift = -48.2426;
+    x2_shift = 264.505 + deltaX;
+    y2_shift = -48.2426 + deltaY;
     phi_rot_ist2 = -1.5185; 
   }
 

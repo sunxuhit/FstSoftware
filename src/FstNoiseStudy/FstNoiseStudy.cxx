@@ -607,7 +607,7 @@ bool FstNoiseStudy::calPedestal()
 		mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb] = mCMNMean[i_arm][i_port][i_apv][col][i_tb];
 	      }
 	      g_mCMNSigma[layer][i_tb]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
-	      if(layer == 0) h_mCMNSigma_FST[col][i_tb]->SetBinContent(row+1,mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	      if(layer == 0 && col > -1) h_mCMNSigma_FST[col][i_tb]->SetBinContent(row+1,mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
 
 	      // fill noise display w.r.t. readout order
 	      int roChannel = mRoChannelMap[i_ch];
@@ -793,7 +793,7 @@ bool FstNoiseStudy::calPedestal()
 	    int col = this->getColumn(i_arm,i_port,i_apv,i_ch);
 	    int row = this->getRow(i_arm,i_port,i_apv,i_ch);
 	    g_mRanSigma[layer][i_tb]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
-	    if(layer == 0) h_mRanSigma_FST[col][i_tb]->SetBinContent(row+1,mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	    if(layer == 0 && col > -1) h_mRanSigma_FST[col][i_tb]->SetBinContent(row+1,mRanStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
 
 	    // fill noise display w.r.t. readout order
 	    int roChannel = mRoChannelMap[i_ch];

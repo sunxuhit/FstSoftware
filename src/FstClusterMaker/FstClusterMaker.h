@@ -100,7 +100,7 @@ class FstClusterMaker : public TObject
     double mPedStdDev[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // std of ped for each time bin
     double mPedRMS[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // rms of ped for each time bin
 
-    // Commen Mode Noise: numRStrip => 0-1 for IST & 4-5 for FST 
+    // Commen Mode Noise: numRStrip => 0-7 for FST & 0-1 for IST
     double mCMNMean[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins]; // CMN for each time bin
     double mCMNStdDev[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // CMN for each time bin
 
@@ -109,17 +109,17 @@ class FstClusterMaker : public TObject
     double mRanStdDev[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // std of adc-ped-cmn for each time bin
 
     // Pedestal Display
+    TH2F *h_mPedDisplay[4][FST::numTBins]; // phi & r_strip
+
     TGraph *g_mPedMean[4][FST::numTBins]; // 0 for FST & 1-3 for IST
     TGraph *g_mPedSigma[4][FST::numTBins];
-    TH2F *h_mPedDisplay[4][FST::numTBins]; // phi & r_strip
-    TH1F *h_mPedMean_FST[4][FST::numTBins]; // for RStrip
-    TH1F *h_mPedSigma_FST[4][FST::numTBins];
-
     TGraph *g_mCMNSigma[4][FST::numTBins]; // 0 for FST & 1-3 for IST
-    TH1F *h_mCMNSigma_FST[4][FST::numTBins]; // RStrip & TimeBin
-
     TGraph *g_mRanSigma[4][FST::numTBins]; // 0 for FST & 1-3 for IST
-    TH1F *h_mRanSigma_FST[4][FST::numTBins]; // RStrip & TimeBin
+
+    TH1F *h_mPedMean_FST[FST::numRStrip][FST::numTBins]; // RStrip & TimeBin
+    TH1F *h_mPedSigma_FST[FST::numRStrip][FST::numTBins];
+    TH1F *h_mCMNSigma_FST[FST::numRStrip][FST::numTBins];
+    TH1F *h_mRanSigma_FST[FST::numRStrip][FST::numTBins];
 
     // Signal
     double mRawSig[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins];
@@ -153,8 +153,8 @@ class FstClusterMaker : public TObject
     int getRStrip(int apv, int ch); // return FST R strip based on apv & ch
     double getPosX(int arm, int port, int apv, int ch); // return FST/IST X based on arm & port & apv & ch
     double getPosY(int arm, int port, int apv, int ch); // return FST/IST Y based on arm & port & apv & ch
-    double getMeanX(int layer, double meanColumn); // return FST/IST meanX based on arm & port
-    double getMeanY(int layer, double meanRow); // return FST/IST meanY based on arm & port
+    // double getMeanX(int layer, double meanColumn); // return FST/IST meanX based on arm & port
+    // double getMeanY(int layer, double meanRow); // return FST/IST meanY based on arm & port
     bool isBadAPV(int arm, int port, int apv);
 
     TChain *mChainInPut; // input TTree

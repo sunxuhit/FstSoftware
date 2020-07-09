@@ -248,7 +248,7 @@ void plotMcProjection(bool isRot = true, int rAligned = 0, string hv = "HV200V")
     h_mFstProjResR_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitleSize(0.06);
     h_mFstProjResR_2Layer_Rstrips[i_rstrp]->GetXaxis()->CenterTitle();
     h_mFstProjResR_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetRangeUser(-100.0,100.0);
-    if(NormR_Data[i_rstrp] > 0) h_mFstProjResR_2Layer_Rstrips[i_rstrp]->Scale(NormR_Data[i_rstrp]/NormR_MC[i_rstrp]);
+    if(NormR_Data[i_rstrp] > 0 && NormR_MC[i_rstrp] > 0) h_mFstProjResR_2Layer_Rstrips[i_rstrp]->Scale(NormR_Data[i_rstrp]/NormR_MC[i_rstrp]);
     h_mFstProjResR_2Layer_Rstrips[i_rstrp]->GetYaxis()->SetRangeUser(0.0,h_mFstProjResR_2Layer_Rstrips[i_rstrp]->GetMaximum()*1.1);
     h_mFstProjResR_2Layer_Rstrips[i_rstrp]->SetLineStyle(1);
     h_mFstProjResR_2Layer_Rstrips[i_rstrp]->SetLineWidth(2);
@@ -273,7 +273,7 @@ void plotMcProjection(bool isRot = true, int rAligned = 0, string hv = "HV200V")
     h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->CenterTitle();
     h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetRangeUser(-0.1,0.1);
     if(!isRot) h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetRangeUser(-0.025,0.03);
-    if(NormPhi_Data[i_rstrp] > 0) h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->Scale(NormPhi_Data[i_rstrp]/NormPhi_MC[i_rstrp]);
+    if(NormPhi_Data[i_rstrp] > 0 && NormPhi_MC[i_rstrp] > 0) h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->Scale(NormPhi_Data[i_rstrp]/NormPhi_MC[i_rstrp]);
     h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetYaxis()->SetRangeUser(0.0,h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetMaximum()*1.1);
     h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->SetLineStyle(1);
     h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->SetLineWidth(2);

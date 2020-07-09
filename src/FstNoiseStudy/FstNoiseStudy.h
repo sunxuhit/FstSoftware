@@ -55,26 +55,26 @@ class FstNoiseStudy : public TObject
     double mPedStdDev[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // std of ped for each time bin
     double mPedRMS[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // rms of ped for each time bin
 
-    // Commen Mode Noise: numRStrip => 0-1 for IST & 4-5 for FST 
+    // Commen Mode Noise: numRStrip => 0-7 for FST & 0-1 for IST
     double mCMNMean[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins]; // CMN for each time bin
     double mCMNStdDev[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // CMN for each time bin
 
     double mCMNMean_Evt[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numRStrip][FST::numTBins]; // CMN for each time bin
     double mCMNStdDev_Evt[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // CMN for each time bin
-    double mRanStdDev[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // std of ped for each time bin
+    double mRanStdDev[FST::numARMs][FST::numPorts][FST::numAPVs][FST::numChannels][FST::numTBins]; // random noise for each time bin
 
     // Pedestal Display
+    TH2F *h_mPedDisplay[4][FST::numTBins]; // phi & r_strip
+
     TGraph *g_mPedMean[4][FST::numTBins]; // 0 for FST & 1-3 for IST
     TGraph *g_mPedSigma[4][FST::numTBins];
-    TH2F *h_mPedDisplay[4][FST::numTBins]; // phi & r_strip
-    TH1F *h_mPedMean_FST[4][FST::numTBins]; // for RStrip
-    TH1F *h_mPedSigma_FST[4][FST::numTBins];
-
     TGraph *g_mCMNSigma[4][FST::numTBins]; // 0 for FST & 1-3 for IST
-    TH1F *h_mCMNSigma_FST[4][FST::numTBins]; // RStrip & TimeBin
-
     TGraph *g_mRanSigma[4][FST::numTBins]; // 0 for FST & 1-3 for IST
-    TH1F *h_mRanSigma_FST[4][FST::numTBins]; // RStrip & TimeBin
+
+    TH1F *h_mPedMean_FST[FST::numRStrip][FST::numTBins]; // RStrip & TimeBin
+    TH1F *h_mPedSigma_FST[FST::numRStrip][FST::numTBins];
+    TH1F *h_mCMNSigma_FST[FST::numRStrip][FST::numTBins];
+    TH1F *h_mRanSigma_FST[FST::numRStrip][FST::numTBins];
 
     int mRoChannelMap[128];
     TGraph *g_mRoPedMean[4][FST::numTBins]; // 0 for FST & 1-3 for IST | i_ro (0-127) & i_tb (0-8)
