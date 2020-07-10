@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void calTrackClusterEfficiency_2Layer(string hv = "HV200V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 2, float nFstThresholdCut2 = 2.5, float nFstThresholdCut1 = 3.5)
+void calTrackClusterEfficiency_2Layer(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, float nFstThresholdCut2 = 2.5, float nFstThresholdCut1 = 3.5)
 {
   const double rMaxFst = FST::rOuter + 4.0*FST::pitchR;
   const double rMinFst = FST::rOuter;

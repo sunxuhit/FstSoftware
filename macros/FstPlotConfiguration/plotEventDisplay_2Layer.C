@@ -17,7 +17,7 @@ using namespace std;
 
 void plotBox(TGraph *g_track);
 
-void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.5, int numOfUsedTimeBins = 2, float nFstThresholdCut2 = 2.5, float nFstThresholdCut1 = 3.5)
+void plotEventDisplay_2Layer(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, float nFstThresholdCut2 = 2.5, float nFstThresholdCut1 = 3.5)
 {
   // gStyle->SetPalette(kRainBow);
   gStyle->SetPalette(kBlackBody);
@@ -41,20 +41,20 @@ void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool i
   int mNumOfClusterTracks_2Layer;
   int mNumOfClusterTracks_3Layer;
 
-  TH2F *h_mFstRawHitsDisplay      = new TH2F("h_mFstRawHitsDisplay","h_mFstRawHitsDisplay",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mFstRawPedsDisplay      = new TH2F("h_mFstRawPedsDisplay","h_mFstRawPedsDisplay",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mFstMaxTbDisplay        = new TH2F("h_mFstMaxTbDisplay","h_mFstMaxTbDisplay",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mFstRawHitsDisplay_bTh  = new TH2F("h_mFstRawHitsDisplay_bTh","h_mFstRawHitsDisplay_bTh",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mFstRawPedsDisplay_bTh  = new TH2F("h_mFstRawPedsDisplay_bTh","h_mFstRawPedsDisplay_bTh",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mFstMaxTbDisplay_bTh    = new TH2F("h_mFstMaxTbDisplay_bTh","h_mFstMaxTbDisplay_bTh",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstRawHitsDisplay      = new TH2F("h_mFstRawHitsDisplay","h_mFstRawHitsDisplay",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstRawPedsDisplay      = new TH2F("h_mFstRawPedsDisplay","h_mFstRawPedsDisplay",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstMaxTbDisplay        = new TH2F("h_mFstMaxTbDisplay","h_mFstMaxTbDisplay",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstRawHitsDisplay_bTh  = new TH2F("h_mFstRawHitsDisplay_bTh","h_mFstRawHitsDisplay_bTh",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstRawPedsDisplay_bTh  = new TH2F("h_mFstRawPedsDisplay_bTh","h_mFstRawPedsDisplay_bTh",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstMaxTbDisplay_bTh    = new TH2F("h_mFstMaxTbDisplay_bTh","h_mFstMaxTbDisplay_bTh",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
 
-  TH2F *h_mFstSimpleClustersDisplay     = new TH2F("h_mFstSimpleClustersDisplay","h_mFstSimpleClustersDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mFstScanClustersDisplay = new TH2F("h_mFstScanClustersDisplay","h_mFstScanClustersDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mFstScanClustersDisplay_RawHits = new TH2F("h_mFstScanClustersDisplay_RawHits","h_mFstScanClustersDisplay_RawHits",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mFstScanClustersDisplay_RawPeds = new TH2F("h_mFstScanClustersDisplay_RawPeds","h_mFstScanClustersDisplay_RawPeds",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mFstScanClustersDisplay_MaxTb   = new TH2F("h_mFstScanClustersDisplay_MaxTb","h_mFstScanClustersDisplay_MaxTb",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mHitTracksDisplay       = new TH2F("h_mHitTracksDisplay","h_mHitTracksDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mClusterTracksDisplay   = new TH2F("h_mClusterTracksDisplay","h_mClusterTracksDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstSimpleClustersDisplay     = new TH2F("h_mFstSimpleClustersDisplay","h_mFstSimpleClustersDisplay",100,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstScanClustersDisplay = new TH2F("h_mFstScanClustersDisplay","h_mFstScanClustersDisplay",100,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstScanClustersDisplay_RawHits = new TH2F("h_mFstScanClustersDisplay_RawHits","h_mFstScanClustersDisplay_RawHits",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstScanClustersDisplay_RawPeds = new TH2F("h_mFstScanClustersDisplay_RawPeds","h_mFstScanClustersDisplay_RawPeds",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstScanClustersDisplay_MaxTb   = new TH2F("h_mFstScanClustersDisplay_MaxTb","h_mFstScanClustersDisplay_MaxTb",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mHitTracksDisplay       = new TH2F("h_mHitTracksDisplay","h_mHitTracksDisplay",100,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mClusterTracksDisplay   = new TH2F("h_mClusterTracksDisplay","h_mClusterTracksDisplay",100,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
   TGraph *g_mFstSimpleClustersDisplay   = new TGraph();
   TGraph *g_mFstScanClustersDisplay = new TGraph();
   TGraph *g_mHitTracksDisplay     = new TGraph();
@@ -110,9 +110,12 @@ void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool i
   mTree_EventDisplay->GetEntry(0);
 
   const double rMaxFst = FST::rOuter + 4.0*FST::pitchR;
-  const double rMinFst = FST::rOuter;
+  const double rMinFst = FST::rInner;
   const double phiMaxFst = 64.0*FST::pitchPhi;
-  const double phiMinFst = 0.0;
+  const double phiMinFst = -64.0*FST::pitchPhi;
+  const double rSensorFst = FST::rInner + 4.0*FST::pitchR;
+  const double phiMinGap = -0.5*FST::gapPhi;
+  const double phiMaxGap = 0.5*FST::gapPhi;
 
   string outputname = "./figures/EventDisplay_2Layer.pdf";
   TCanvas *c_EventDisplay = new TCanvas("c_EventDisplay","c_EventDisplay",10,10,800,400);
@@ -182,7 +185,7 @@ void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool i
       h_mFstScanClustersDisplay_RawHits->GetXaxis()->SetTitleSize(0.06);
       h_mFstScanClustersDisplay_RawHits->GetXaxis()->SetRangeUser(FST::rMin,FST::rMax);
       h_mFstScanClustersDisplay_RawHits->GetYaxis()->SetTitle("#phi");
-      h_mFstScanClustersDisplay_RawHits->GetYaxis()->SetRangeUser(phiMinFst-10.0*FST::pitchPhi,FST::phiMax+10.0*FST::pitchPhi);
+      h_mFstScanClustersDisplay_RawHits->GetYaxis()->SetRangeUser(1.2*phiMinFst,1.2*phiMaxFst);
       h_mFstScanClustersDisplay_RawHits->GetYaxis()->SetTitleSize(0.06);
       h_mFstScanClustersDisplay_RawHits->GetZaxis()->SetRangeUser(1.0,2000.0);
       h_mFstScanClustersDisplay_RawHits->Draw("colz");
@@ -226,6 +229,14 @@ void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool i
       PlotLine(rMinFst, rMaxFst, phiMaxFst, phiMaxFst, 1, 2, 2);
       PlotLine(rMinFst, rMinFst, phiMinFst, phiMaxFst, 1, 2, 2);
       PlotLine(rMaxFst, rMaxFst, phiMinFst, phiMaxFst, 1, 2, 2);
+      // plot sensor acceptance
+      PlotLine(rSensorFst, rSensorFst, phiMinFst, phiMaxFst, 2, 2, 2);
+      PlotLine(rSensorFst, rMaxFst, phiMinGap, phiMinGap, 2, 2, 2);
+      PlotLine(rSensorFst, rMaxFst, phiMaxGap, phiMaxGap, 2, 2, 2);
+      // plot sensor legend
+      plotTopLegend((char*)"Sensor 0",80.0,0.28,0.04,1,0.0,42,0,1);
+      plotTopLegend((char*)"Sensor 1",200.0,0.28,0.04,1,0.0,42,0,1);
+      plotTopLegend((char*)"Sensor 2",200.0,-0.30,0.04,1,0.0,42,0,1);
 
       c_EventDisplay->cd(2);
       // plot hits
@@ -236,7 +247,7 @@ void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool i
       h_mFstRawHitsDisplay_bTh->GetXaxis()->SetTitleSize(0.06);
       h_mFstRawHitsDisplay_bTh->GetXaxis()->SetRangeUser(FST::rMin,FST::rMax);
       h_mFstRawHitsDisplay_bTh->GetYaxis()->SetTitle("#phi");
-      h_mFstRawHitsDisplay_bTh->GetYaxis()->SetRangeUser(phiMinFst-10.0*FST::pitchPhi,FST::phiMax+10.0*FST::pitchPhi);
+      h_mFstRawHitsDisplay_bTh->GetYaxis()->SetRangeUser(1.2*phiMinFst,1.2*FST::phiMax);
       h_mFstRawHitsDisplay_bTh->GetYaxis()->SetTitleSize(0.06);
       h_mFstRawHitsDisplay_bTh->GetZaxis()->SetRangeUser(1.0,2000.0);
       h_mFstRawHitsDisplay_bTh->Draw("colz");
@@ -280,6 +291,14 @@ void plotEventDisplay_2Layer(string hv = "HV200V", bool isSavePed = true, bool i
       PlotLine(rMinFst, rMaxFst, phiMaxFst, phiMaxFst, 1, 2, 2);
       PlotLine(rMinFst, rMinFst, phiMinFst, phiMaxFst, 1, 2, 2);
       PlotLine(rMaxFst, rMaxFst, phiMinFst, phiMaxFst, 1, 2, 2);
+      // plot sensor
+      PlotLine(rSensorFst, rSensorFst, phiMinFst, phiMaxFst, 2, 2, 2);
+      PlotLine(rSensorFst, rMaxFst, phiMinGap, phiMinGap, 2, 2, 2);
+      PlotLine(rSensorFst, rMaxFst, phiMaxGap, phiMaxGap, 2, 2, 2);
+      // plot sensor legend
+      plotTopLegend((char*)"Sensor 0",80.0,0.28,0.04,1,0.0,42,0,1);
+      plotTopLegend((char*)"Sensor 1",200.0,0.28,0.04,1,0.0,42,0,1);
+      plotTopLegend((char*)"Sensor 2",200.0,-0.30,0.04,1,0.0,42,0,1);
 
       c_EventDisplay->Update();
       c_EventDisplay->Print(outputname.c_str()); // print integrated efficiency

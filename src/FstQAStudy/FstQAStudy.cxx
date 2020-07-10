@@ -235,7 +235,7 @@ void FstQAStudy::writeCounts()
 //--------------ADC---------------------
 void FstQAStudy::initAdc_Hits()
 {
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     std::string HistName; 
     HistName = Form("h_mAdcFst_Hits_RStrip%d",i_rstrip);
@@ -266,7 +266,7 @@ void FstQAStudy::fillAdc_Hits(std::vector<FstRawHit *> rawHitVec_orig)
       if(layer == 0)
       { // FST
 	int column = rawHitVec[i_hit]->getColumn(); // R strip
-	h_mAdcFst_Hits[column-4]->Fill(adc);
+	h_mAdcFst_Hits[column]->Fill(adc);
       }
     }
   }
@@ -274,7 +274,7 @@ void FstQAStudy::fillAdc_Hits(std::vector<FstRawHit *> rawHitVec_orig)
 
 void FstQAStudy::writeAdc_Hits()
 {
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     h_mAdcFst_Hits[i_rstrip]->Write();
     h_mAdcIst_Hits[i_rstrip]->Write();
@@ -551,7 +551,7 @@ void FstQAStudy::initSignalQA()
   h_mFstSimpleClustersSignal = new TH1F("h_mFstSimpleClustersSignal","h_mFstSimpleClustersSignal",200,-0.5,1999.5);
   h_mFstScanClustersSignal = new TH1F("h_mFstScanClustersSignal","h_mFstScanClustersSignal",200,-0.5,1999.5);
 
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     string HistName;
     HistName = Form("h_mMaxTbHits_Rstrip%d",i_rstrip);
@@ -585,9 +585,9 @@ void FstQAStudy::initSignalQA()
     }
   }
 
-  for(int i_apv = 0; i_apv < 2; ++i_apv)
+  for(int i_apv = 0; i_apv < FST::numFstAPVs; ++i_apv)
   {
-    for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
     {
       for(int i_phi = 0; i_phi < 2; ++i_phi)
       {
@@ -648,25 +648,22 @@ void FstQAStudy::fillSignalQA(FstEvent *fstEvent)
 	h_mNoiseHits_FST->Fill(noise);
 	h_mSNRatioHits_FST->Fill(signal/noise);
 
-	h_mMaxTbHits_Rstrip[column-4]->Fill(maxTb);
-	h_mSignalHits_Rstrip[column-4]->Fill(signal);
-	h_mNoiseHits_Rstrip[column-4]->Fill(noise);
-	h_mSNRatioHits_Rstrip[column-4]->Fill(signal/noise);
+	h_mMaxTbHits_Rstrip[column]->Fill(maxTb);
+	h_mSignalHits_Rstrip[column]->Fill(signal);
+	h_mNoiseHits_Rstrip[column]->Fill(noise);
+	h_mSNRatioHits_Rstrip[column]->Fill(signal/noise);
 
-	h_mSignalHits_Rstrip_TimeBin[column-4][maxTb]->Fill(signal);
-	h_mNoiseHits_Rstrip_TimeBin[column-4][maxTb]->Fill(noise);
-	h_mSNRatioHits_Rstrip_TimeBin[column-4][maxTb]->Fill(signal/noise);
+	h_mSignalHits_Rstrip_TimeBin[column][maxTb]->Fill(signal);
+	h_mNoiseHits_Rstrip_TimeBin[column][maxTb]->Fill(noise);
+	h_mSNRatioHits_Rstrip_TimeBin[column][maxTb]->Fill(signal/noise);
 
 	int phibin = 0;
 	if(channel > 63) phibin = 1;
 
-	if(apv == 4 || apv == 5)
-	{
-	  h_mMaxTbHits_Apv[apv-4][column-4][phibin]->Fill(maxTb);
-	  h_mSignalHits_Apv[apv-4][column-4][phibin]->Fill(signal);
-	  h_mNoiseHits_Apv[apv-4][column-4][phibin]->Fill(noise);
-	  h_mSNRatioHits_Apv[apv-4][column-4][phibin]->Fill(signal/noise);
-	}
+	h_mMaxTbHits_Apv[apv][column][phibin]->Fill(maxTb);
+	h_mSignalHits_Apv[apv][column][phibin]->Fill(signal);
+	h_mNoiseHits_Apv[apv][column][phibin]->Fill(noise);
+	h_mSNRatioHits_Apv[apv][column][phibin]->Fill(signal/noise);
       }
     }
   }
@@ -694,14 +691,21 @@ void FstQAStudy::fillSignalQA(FstEvent *fstEvent)
       { // Simple Clusters
 	h_mFstSimpleClustersSignal->Fill(signal);
 
-	int column = 0;
-	if(meanColumn > 3.5 && meanColumn <= 4.5) column = 0;
-	if(meanColumn > 4.5 && meanColumn <= 5.5) column = 1;
-	if(meanColumn > 5.5 && meanColumn <= 6.5) column = 2;
-	if(meanColumn > 6.5 && meanColumn <= 7.5) column = 3;
-	h_mFstSimpleClustersMaxTb_Rstrip[column]->Fill(maxTb);
-	h_mFstSimpleClustersSignal_Rstrip[column]->Fill(signal);
-	h_mFstSimpleClustersSignal_Rstrip_TimeBin[column][(int)maxTb]->Fill(signal);
+	int column = -1;
+	if(meanColumn > -0.5 && meanColumn <= 0.5) column = 0;
+	if(meanColumn >  0.5 && meanColumn <= 1.5) column = 1;
+	if(meanColumn >  1.5 && meanColumn <= 2.5) column = 2;
+	if(meanColumn >  2.5 && meanColumn <= 3.5) column = 3;
+	if(meanColumn >  3.5 && meanColumn <= 4.5) column = 4;
+	if(meanColumn >  4.5 && meanColumn <= 5.5) column = 5;
+	if(meanColumn >  5.5 && meanColumn <= 6.5) column = 6;
+	if(meanColumn >  6.5 && meanColumn <= 7.5) column = 7;
+	if(column > -1)
+	{
+	  h_mFstSimpleClustersMaxTb_Rstrip[column]->Fill(maxTb);
+	  h_mFstSimpleClustersSignal_Rstrip[column]->Fill(signal);
+	  h_mFstSimpleClustersSignal_Rstrip_TimeBin[column][(int)maxTb]->Fill(signal);
+	}
 
 	int apv = 0;
 	int phibin = 0;
@@ -709,24 +713,31 @@ void FstQAStudy::fillSignalQA(FstEvent *fstEvent)
 	if(meanRow >= 16.0 && meanRow < 32.0) {apv = 4; phibin = 1;}
 	if(meanRow >= 32.0 && meanRow < 48.0) {apv = 5; phibin = 0;}
 	if(meanRow >= 48.0 && meanRow < 64.0) {apv = 5; phibin = 1;}
-	if(apv == 4 || apv == 5)
+	if(column > -1)
 	{
-	  h_mFstSimpleClustersMaxTb_Apv[apv-4][column][phibin]->Fill(maxTb);
-	  h_mFstSimpleClustersSignal_Apv[apv-4][column][phibin]->Fill(signal);
+	  h_mFstSimpleClustersMaxTb_Apv[apv][column][phibin]->Fill(maxTb);
+	  h_mFstSimpleClustersSignal_Apv[apv][column][phibin]->Fill(signal);
 	}
       }
       if(fstClusterVec[i_cluster]->getClusterType() == 2)
       { // Scan Clusters
 	h_mFstScanClustersSignal->Fill(signal);
 
-	int column = 0;
-	if(meanColumn > 3.5 && meanColumn <= 4.5) column = 0;
-	if(meanColumn > 4.5 && meanColumn <= 5.5) column = 1;
-	if(meanColumn > 5.5 && meanColumn <= 6.5) column = 2;
-	if(meanColumn > 6.5 && meanColumn <= 7.5) column = 3;
-	h_mFstScanClustersMaxTb_Rstrip[column]->Fill(maxTb);
-	h_mFstScanClustersSignal_Rstrip[column]->Fill(signal);
-	h_mFstScanClustersSignal_Rstrip_TimeBin[column][(int)maxTb]->Fill(signal);
+	int column = -1;
+	if(meanColumn > -0.5 && meanColumn <= 0.5) column = 0;
+	if(meanColumn >  0.5 && meanColumn <= 1.5) column = 1;
+	if(meanColumn >  1.5 && meanColumn <= 2.5) column = 2;
+	if(meanColumn >  2.5 && meanColumn <= 3.5) column = 3;
+	if(meanColumn >  3.5 && meanColumn <= 4.5) column = 4;
+	if(meanColumn >  4.5 && meanColumn <= 5.5) column = 5;
+	if(meanColumn >  5.5 && meanColumn <= 6.5) column = 6;
+	if(meanColumn >  6.5 && meanColumn <= 7.5) column = 7;
+	if(column > -1)
+	{
+	  h_mFstScanClustersMaxTb_Rstrip[column]->Fill(maxTb);
+	  h_mFstScanClustersSignal_Rstrip[column]->Fill(signal);
+	  h_mFstScanClustersSignal_Rstrip_TimeBin[column][(int)maxTb]->Fill(signal);
+	}
 
 	int apv = 0;
 	int phibin = 0;
@@ -734,10 +745,10 @@ void FstQAStudy::fillSignalQA(FstEvent *fstEvent)
 	if(meanRow >= 16.0 && meanRow < 32.0) {apv = 4; phibin = 1;}
 	if(meanRow >= 32.0 && meanRow < 48.0) {apv = 5; phibin = 0;}
 	if(meanRow >= 48.0 && meanRow < 64.0) {apv = 5; phibin = 1;}
-	if(apv == 4 || apv == 5)
+	if(column > -1)
 	{
-	  h_mFstScanClustersMaxTb_Apv[apv-4][column][phibin]->Fill(maxTb);
-	  h_mFstScanClustersSignal_Apv[apv-4][column][phibin]->Fill(signal);
+	  h_mFstScanClustersMaxTb_Apv[apv][column][phibin]->Fill(maxTb);
+	  h_mFstScanClustersSignal_Apv[apv][column][phibin]->Fill(signal);
 	}
       }
     }
@@ -754,7 +765,7 @@ void FstQAStudy::writeSignalQA()
   h_mFstSimpleClustersSignal->Write();
   h_mFstScanClustersSignal->Write();
 
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     h_mMaxTbHits_Rstrip[i_rstrip]->Write();
     h_mFstSimpleClustersMaxTb_Rstrip[i_rstrip]->Write();
@@ -774,9 +785,9 @@ void FstQAStudy::writeSignalQA()
     }
   }
 
-  for(int i_apv = 0; i_apv < 2; ++i_apv)
+  for(int i_apv = 0; i_apv < FST::numFstAPVs; ++i_apv)
   {
-    for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
     {
       for(int i_phi = 0; i_phi < 2; ++i_phi)
       {
@@ -797,19 +808,19 @@ void FstQAStudy::writeSignalQA()
 //--------------Event Display---------------------
 void FstQAStudy::initEventDisplay_TrackClusters()
 {
-  h_mFstRawHitsDisplay              = new TH2F("h_mFstRawHitsDisplay","h_mFstRawHitsDisplay",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstRawPedsDisplay              = new TH2F("h_mFstRawPedsDisplay","h_mFstRawPedsDisplay",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstMaxTbDisplay                = new TH2F("h_mFstMaxTbDisplay","h_mFstMaxTbDisplay",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstRawHitsDisplay_bTh          = new TH2F("h_mFstRawHitsDisplay_bTh","h_mFstRawHitsDisplay_bTh",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstRawPedsDisplay_bTh          = new TH2F("h_mFstRawPedsDisplay_bTh","h_mFstRawPedsDisplay_bTh",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstMaxTbDisplay_bTh            = new TH2F("h_mFstMaxTbDisplay_bTh","h_mFstMaxTbDisplay_bTh",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstSimpleClustersDisplay       = new TH2F("h_mFstSimpleClustersDisplay","h_mFstSimpleClustersDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstScanClustersDisplay         = new TH2F("h_mFstScanClustersDisplay","h_mFstScanClustersDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstScanClustersDisplay_RawHits = new TH2F("h_mFstScanClustersDisplay_RawHits","h_mFstScanClustersDisplay_RawHits",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstScanClustersDisplay_RawPeds = new TH2F("h_mFstScanClustersDisplay_RawPeds","h_mFstScanClustersDisplay_RawPeds",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstScanClustersDisplay_MaxTb   = new TH2F("h_mFstScanClustersDisplay_MaxTb","h_mFstScanClustersDisplay_MaxTb",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mHitTracksDisplay               = new TH2F("h_mHitTracksDisplay","h_mHitTracksDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mClusterTracksDisplay           = new TH2F("h_mClusterTracksDisplay","h_mClusterTracksDisplay",60,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstRawHitsDisplay              = new TH2F("h_mFstRawHitsDisplay","h_mFstRawHitsDisplay",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstRawPedsDisplay              = new TH2F("h_mFstRawPedsDisplay","h_mFstRawPedsDisplay",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstMaxTbDisplay                = new TH2F("h_mFstMaxTbDisplay","h_mFstMaxTbDisplay",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstRawHitsDisplay_bTh          = new TH2F("h_mFstRawHitsDisplay_bTh","h_mFstRawHitsDisplay_bTh",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstRawPedsDisplay_bTh          = new TH2F("h_mFstRawPedsDisplay_bTh","h_mFstRawPedsDisplay_bTh",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstMaxTbDisplay_bTh            = new TH2F("h_mFstMaxTbDisplay_bTh","h_mFstMaxTbDisplay_bTh",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstSimpleClustersDisplay       = new TH2F("h_mFstSimpleClustersDisplay","h_mFstSimpleClustersDisplay",100,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstScanClustersDisplay         = new TH2F("h_mFstScanClustersDisplay","h_mFstScanClustersDisplay",100,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstScanClustersDisplay_RawHits = new TH2F("h_mFstScanClustersDisplay_RawHits","h_mFstScanClustersDisplay_RawHits",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstScanClustersDisplay_RawPeds = new TH2F("h_mFstScanClustersDisplay_RawPeds","h_mFstScanClustersDisplay_RawPeds",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mFstScanClustersDisplay_MaxTb   = new TH2F("h_mFstScanClustersDisplay_MaxTb","h_mFstScanClustersDisplay_MaxTb",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mHitTracksDisplay               = new TH2F("h_mHitTracksDisplay","h_mHitTracksDisplay",100,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  h_mClusterTracksDisplay           = new TH2F("h_mClusterTracksDisplay","h_mClusterTracksDisplay",100,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
 
   g_mFstSimpleClustersDisplay = new TGraph();
   g_mFstSimpleClustersDisplay->SetName("g_mFstSimpleClustersDisplay");

@@ -44,14 +44,14 @@ then
   mv ./figures/EventDisplay_2Layer.pdf ${folder}/EventDisplay_2Layer_${hv}_Th${nFstHitsCut}Tb${numOfUsedTimeBins}Ped2.5Ped3.5_${config}.pdf
 
   # echo "Plot Residual of Fst Cluster Tracks from 3-Layer tracking!!"
-  root -l -b -q plotResidual_FSTClusterTracks_3Layer.C\(\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},${numOfUsedTimeBins},2.5,3.5\)
-  mv ./figures/Residual_FSTClusterTracks_3Layer.pdf ${folder}/Residual_FSTClusterTracks_3Layer_${hv}_Th${nFstHitsCut}Tb${numOfUsedTimeBins}Ped2.5Ped3.5_${config}.pdf
+  # root -l -b -q plotResidual_FSTClusterTracks_3Layer.C\(\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},${numOfUsedTimeBins},2.5,3.5\)
+  # mv ./figures/Residual_FSTClusterTracks_3Layer.pdf ${folder}/Residual_FSTClusterTracks_3Layer_${hv}_Th${nFstHitsCut}Tb${numOfUsedTimeBins}Ped2.5Ped3.5_${config}.pdf
 
   # echo "Calculate Efficiency of Fst Cluster Tracks from 3-Layer tracking!!"
-  root -l -b -q calTrackClusterEfficiency_3Layer.C\(\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},${numOfUsedTimeBins},2.5,3.5\)
-  mv ./figures/Efficiency_TrackCluster_3Layer.pdf ${folder}/Efficiency_TrackCluster_3Layer_${hv}_Th${nFstHitsCut}Tb${numOfUsedTimeBins}Ped2.5Ped3.5_${config}.pdf
+  # root -l -b -q calTrackClusterEfficiency_3Layer.C\(\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},${numOfUsedTimeBins},2.5,3.5\)
+  # mv ./figures/Efficiency_TrackCluster_3Layer.pdf ${folder}/Efficiency_TrackCluster_3Layer_${hv}_Th${nFstHitsCut}Tb${numOfUsedTimeBins}Ped2.5Ped3.5_${config}.pdf
 
   # echo "Plot Event Display from 3-Layer tracking!!"
-  root -l -b -q plotEventDisplay_3Layer.C\(\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},${numOfUsedTimeBins},2.5,3.5\)
-  mv ./figures/EventDisplay_3Layer.pdf ${folder}/EventDisplay_3Layer_${hv}_Th${nFstHitsCut}Tb${numOfUsedTimeBins}Ped2.5Ped3.5_${config}.pdf
+  # root -l -b -q plotEventDisplay_3Layer.C\(\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},${numOfUsedTimeBins},2.5,3.5\)
+  # mv ./figures/EventDisplay_3Layer.pdf ${folder}/EventDisplay_3Layer_${hv}_Th${nFstHitsCut}Tb${numOfUsedTimeBins}Ped2.5Ped3.5_${config}.pdf
 fi

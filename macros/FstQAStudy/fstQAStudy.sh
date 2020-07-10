@@ -11,7 +11,7 @@ then
 
   # HV70V
   # root -l -b -q doFstQAStudy.C\(\"HV70V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},3,2.5,3.5\)
-  # root -l -b -q doFstQAStudy.C\(\"HV70V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,2.5,3.5\)
+  root -l -b -q doFstQAStudy.C\(\"HV70V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,2.5,3.5\)
   # root -l -b -q doFstQAStudy.C\(\"HV70V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},1,2.5,3.5\)
 
   # HV140V
@@ -20,7 +20,7 @@ then
   # root -l -b -q doFstQAStudy.C\(\"HV140V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},1,2.5,3.5\)
 
   # HV200V
-  root -l -b -q doFstQAStudy.C\(\"HV200V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},3,2.5,3.5\)
-  root -l -b -q doFstQAStudy.C\(\"HV200V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,2.5,3.5\)
+  # root -l -b -q doFstQAStudy.C\(\"HV200V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},3,2.5,3.5\)
+  # root -l -b -q doFstQAStudy.C\(\"HV200V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,2.5,3.5\)
   # root -l -b -q doFstQAStudy.C\(\"HV200V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},1,2.5,3.5\)
 fi
