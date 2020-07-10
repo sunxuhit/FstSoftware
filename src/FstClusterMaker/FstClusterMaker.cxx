@@ -2690,8 +2690,8 @@ double FstClusterMaker::getPosY(int arm, int port, int apv, int ch)
     // inner sector face up
     if(sensor == 0) posY = (this->getPhiSeg(apv,ch)-63)*FST::pitchPhi - 0.5*FST::pitchPhi;
     // outer sector face down
-    if(sensor == 1) posY = (63-this->getPhiSeg(apv,ch))*FST::pitchPhi + 0.5*FST::pitchPhi + FST::gapPhi; // 1st half
-    if(sensor == 2) posY = (63-this->getPhiSeg(apv,ch))*FST::pitchPhi + 0.5*FST::pitchPhi - FST::gapPhi; // 2nd half
+    if(sensor == 1) posY = (63-this->getPhiSeg(apv,ch))*FST::pitchPhi + 0.5*FST::pitchPhi + 0.5*FST::gapPhi; // 1st half
+    if(sensor == 2) posY = (63-this->getPhiSeg(apv,ch))*FST::pitchPhi + 0.5*FST::pitchPhi - 0.5*FST::gapPhi; // 2nd half
   }
   else // IST1-3
   {

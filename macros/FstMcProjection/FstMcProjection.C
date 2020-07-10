@@ -22,8 +22,8 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
   printAlignmentInfo(isRot,rAligned);
 
   // cosmic angle distribution
-  TFile *File_InPut = TFile::Open("../../output/configuration/FstTracking_HV200V_Th4.0Tb2Ped2.5Ped3.5_withPed_withCMNCorr.root");
-  TH1F *h_mClustersTrackAngle = (TH1F*)File_InPut->Get("h_mClustersTrackAngle")->Clone();
+  // TFile *File_InPut = TFile::Open("../../output/configuration/FstTracking_HV200V_Th4.0Tb2Ped2.5Ped3.5_withPed_withCMNCorr.root");
+  // TH1F *h_mClustersTrackAngle = (TH1F*)File_InPut->Get("h_mClustersTrackAngle")->Clone();
 
   const double lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
   const double lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
@@ -40,7 +40,7 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
 
   TH2F *h_mIst3Pixel = new TH2F("h_mIst3Pixel","h_mIst3Pixel",FST::noColumns,0.0,lengthColumn,FST::noRows,0.0,lengthRow);
   TH2F *h_mIst1Pixel = new TH2F("h_mIst1Pixel","h_mIst1Pixel",FST::noColumns,0.0,lengthColumn,FST::noRows,0.0,lengthRow);
-  TH2F *h_mFstPixel  = new TH2F("h_mFstPixel","h_mFstPixel",6,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstPixel  = new TH2F("h_mFstPixel","h_mFstPixel",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
 
   TH2F *h_mIst3Display = new TH2F("h_mIst3Display","h_mIst3Display",FST::noColumns,0.0,lengthColumn,FST::noRows,0.0,lengthRow);
   TH2F *h_mIst1Display = new TH2F("h_mIst1Display","h_mIst1Display",FST::noColumns,0.0,lengthColumn,FST::noRows,0.0,lengthRow);
@@ -76,7 +76,7 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
     maxPhi    = 0.15;
   }
 
-  TH2F *h_mFstDisplay = new TH2F("h_mFstDisplay","h_mFstDisplay",6,FST::rMin,FST::rMax,FST::numPhiSeg,-1.0*FST::phiMax,1.0*FST::phiMax);
+  TH2F *h_mFstDisplay = new TH2F("h_mFstDisplay","h_mFstDisplay",10,FST::rMin,FST::rMax,FST::numPhiSeg,-1.0*FST::phiMax,1.0*FST::phiMax);
   // FST residual
   TH1F *h_mFstProjResX_2Layer  = new TH1F("h_mFstProjResX_2Layer","h_mFstProjResX_2Layer",numBinX,-maxX,maxX);
   TH1F *h_mFstProjResY_2Layer  = new TH1F("h_mFstProjResY_2Layer","h_mFstProjResY_2Layer",numBinY,-maxY,maxY);
@@ -86,14 +86,14 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
   TH1F *h_mFstProjResPhi_2Layer  = new TH1F("h_mFstProjResPhi_2Layer","h_mFstProjResPhi_2Layer",numBinPhi,-maxPhi,maxPhi);
   TH2F *h_mFstProjResRPhi_2Layer = new TH2F("h_mFstProjResRPhi_2Layer","h_mFstProjResRPhi_2Layer",numBinR,-maxR,maxR,numBinPhi,-maxPhi,maxPhi);
     
-  TH1F *h_mFstProjResX_2Layer_Rstrips[4];
-  TH1F *h_mFstProjResY_2Layer_Rstrips[4];
-  TH2F *h_mFstProjResXY_2Layer_Rstrips[4]; // 2D distribution
+  TH1F *h_mFstProjResX_2Layer_Rstrips[FST::numRStrip];
+  TH1F *h_mFstProjResY_2Layer_Rstrips[FST::numRStrip];
+  TH2F *h_mFstProjResXY_2Layer_Rstrips[FST::numRStrip]; // 2D distribution
 
-  TH1F *h_mFstProjResR_2Layer_Rstrips[4];
-  TH1F *h_mFstProjResPhi_2Layer_Rstrips[4];
-  TH2F *h_mFstProjResRPhi_2Layer_Rstrips[4]; // 2D distribution
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  TH1F *h_mFstProjResR_2Layer_Rstrips[FST::numRStrip];
+  TH1F *h_mFstProjResPhi_2Layer_Rstrips[FST::numRStrip];
+  TH2F *h_mFstProjResRPhi_2Layer_Rstrips[FST::numRStrip]; // 2D distribution
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     string HistName;
     HistName = Form("h_mFstProjResX_2Layer_Rstrip%d",i_rstrip);
@@ -143,7 +143,7 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
     vHitGen_IST3.Set(-999.0,-999.0);
     vHitGen_FST.Set(-999.0,-999.0);
 
-    double deltaX = -20.0;
+    double deltaX = 0.0;
     double deltaY = 0.0;
 
     // randomly generated cosmic
@@ -237,7 +237,8 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
       for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
       {
 	// if(r0_reco > FST::rOuter + FST::pitchR*i_rstrip && r0_reco <= FST::rOuter + FST::pitchR*(i_rstrip+1))
-	if(r0_gen > FST::rOuter + FST::pitchR*i_rstrip && r0_gen <= FST::rOuter + FST::pitchR*(i_rstrip+1))
+	// if(r0_gen > FST::rOuter + FST::pitchR*i_rstrip && r0_gen <= FST::rOuter + FST::pitchR*(i_rstrip+1))
+	if(r0_gen > FST::rInner + FST::pitchR*i_rstrip && r0_gen <= FST::rInner + FST::pitchR*(i_rstrip+1))
 	{ // check the position of the projected r is within a specific r_strip and fill accordingly
 	  h_mFstProjResX_2Layer_Rstrips[i_rstrip]->Fill(x0_ro-x0_reco);
 	  h_mFstProjResY_2Layer_Rstrips[i_rstrip]->Fill(y0_ro-y0_reco);
@@ -443,7 +444,7 @@ TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot = false,
   {
     x2_shift = FST::x2_shift + deltaX;
     y2_shift = FST::y2_shift + deltaY;
-    phi_rot_ist2 = 0.0;
+    phi_rot_ist2 = FST::phi_rot_ist2;
   }
 
   // after rotation
@@ -518,14 +519,16 @@ TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST)
     double r_ro    = -999.0;
     double phi_ro  = -999.0;
     // check if FST has readout
-    // if(r_hit >= FST::rOuter && r_hit <= FST::rOuter+4.0*FST::pitchR && phi_hit >= -FST::phiMax && phi_hit <= FST::phiMax)
-    if(r_hit >= FST::rOuter && r_hit <= FST::rOuter+4.0*FST::pitchR && phi_hit >= 0.0 && phi_hit <= FST::phiMax)
+    // if(r_hit >= FST::rInner && r_hit <= FST::rOuter+4.0*FST::pitchR && phi_hit >= -FST::phiMax && phi_hit <= FST::phiMax)
+    if(r_hit >= FST::rInner && r_hit <= FST::rInner+4.0*FST::pitchR && phi_hit >= -FST::phiMax && phi_hit <= FST::phiMax)
     {
       int binR      = h_pixel->GetXaxis()->FindBin(r_hit);
-      int deltaBinR = findCrossTalkBin(r_hit);
+      // int deltaBinR = findCrossTalkBin(r_hit);
+      int deltaBinR = 0;
       int binPhi    = h_pixel->GetYaxis()->FindBin(phi_hit);
       r_ro          = h_pixel->GetXaxis()->GetBinCenter(binR+deltaBinR);
       phi_ro        = h_pixel->GetYaxis()->GetBinCenter(binPhi);
+      // if(r_hit < FST::rOuter) cout << "r_hit = " << r_hit << ", r_ro = " << r_ro << ", binR = " << binR << ", phi_ro = " << phi_ro << ", binPhi = " << binPhi << endl;
     }
     vPosRO.Set(r_ro,phi_ro);
   }

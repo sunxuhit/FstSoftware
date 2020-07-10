@@ -25,7 +25,7 @@ namespace FST
   const double pitchLayer03 = 134.9375; // mm
 
   const double rMax = rOuter + 5.0*pitchR; // 308.75 mm
-  const double rMin = rOuter - 1.0*pitchR; // 136.25 mm
+  const double rMin = rInner - 1.0*pitchR; // 21.25 mm
   const double phiMax = TMath::Pi()*15.5/180.0; // 64.0*FST::pitchPhi +0.5*gapPhi;
   const double phiMin = 0.5*gapPhi; // 0.5*gapPhi
 
@@ -49,10 +49,12 @@ namespace FST
   const double phi_rot_ist3 = -0.00379431;
   const double x3_shift = 0.45811;
   const double y3_shift = 1.0116;
-  const double phi_rot_ist2 = 0.0438495; // aligned IST2 to FST with 2-layer tracking
-  // const double x2_shift = 134.99;
-  const double x2_shift = 140.99; // x2_shift + 6.0
-  const double y2_shift = -20.7848;
+  // const double phi_rot_ist2 = 0.0438495; // aligned IST2 to FST with 2-layer tracking
+  // const double x2_shift = 140.99; // x2_shift + 6.0
+  // const double y2_shift = -20.7848;
+  const double phi_rot_ist2 = 3.16619; // for Inner sector test
+  const double x2_shift = 214.09; 
+  const double y2_shift = 31.9184;
 
   // const int nPedCuts = 3;
   // const int nHitCuts = 5;

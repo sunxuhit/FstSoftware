@@ -424,7 +424,7 @@ void FstTracking::calResolution_Hits(FstEvent *fstEvent)
 	}
       }
 
-      if(minHitId_FST > -0.5)
+      if(minHitId_FST > -1)
       {
 	double r_fst = fstRawHitVec[minHitId_FST]->getPosX(); // r for fst
 	double phi_fst = fstRawHitVec[minHitId_FST]->getPosY(); // phi for fst
@@ -464,10 +464,10 @@ void FstTracking::initTracking_Clusters()
   h_mSimpleClustersTrackFstResXY_2Layer   = new TH2F("h_mSimpleClustersTrackFstResXY_2Layer","h_mSimpleClustersTrackFstResXY_2Layer",50,-160.0,160.0,100,-16.0,16.0);
 
   h_mSimpleClustersTrackFstResR_2Layer    = new TH1F("h_mSimpleClustersTrackFstResR_2Layer","h_mSimpleClustersTrackFstResR_2Layer",50,-160.0,160.0);
-  h_mSimpleClustersTrackFstResPhi_2Layer  = new TH1F("h_mSimpleClustersTrackFstResPhi_2Layer","h_mSimpleClustersTrackFstResPhi_2Layer",100,-0.05,0.05);
-  h_mSimpleClustersTrackFstResRPhi_2Layer = new TH2F("h_mSimpleClustersTrackFstResRPhi_2Layer","h_mSimpleClustersTrackFstResRPhi_2Layer",50,-160.0,160.0,100,-0.05,0.05);
+  h_mSimpleClustersTrackFstResPhi_2Layer  = new TH1F("h_mSimpleClustersTrackFstResPhi_2Layer","h_mSimpleClustersTrackFstResPhi_2Layer",200,-0.10,0.10);
+  h_mSimpleClustersTrackFstResRPhi_2Layer = new TH2F("h_mSimpleClustersTrackFstResRPhi_2Layer","h_mSimpleClustersTrackFstResRPhi_2Layer",50,-160.0,160.0,200,-0.10,0.10);
 
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     string HistName;
     HistName = Form("h_mSimpleClustersTrackFstResX_2Layer_Rstrip%d",i_rstrip);
@@ -480,9 +480,9 @@ void FstTracking::initTracking_Clusters()
     HistName = Form("h_mSimpleClustersTrackFstResR_2Layer_Rstrip%d",i_rstrip);
     h_mSimpleClustersTrackFstResR_2Layer_Rstrips[i_rstrip]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
     HistName = Form("h_mSimpleClustersTrackFstResPhi_2Layer_Rstrip%d",i_rstrip);
-    h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.05,0.05);
+    h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.10,0.10);
     HistName = Form("h_mSimpleClustersTrackFstResRPhi_2Layer_Rstrip%d",i_rstrip);
-    h_mSimpleClustersTrackFstResRPhi_2Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-0.05,0.05);
+    h_mSimpleClustersTrackFstResRPhi_2Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,200,-0.10,0.10);
   }
  
   h_mSimpleClustersTrackIstResX_2Layer    = new TH1F("h_mSimpleClustersTrackIstResX_2Layer","h_mSimpleClustersTrackIstResX_2Layer",15,-20.0,20.0);
@@ -494,10 +494,10 @@ void FstTracking::initTracking_Clusters()
   h_mSimpleClustersTrackFstResXY_3Layer   = new TH2F("h_mSimpleClustersTrackFstResXY_3Layer","h_mSimpleClustersTrackFstResXY_3Layer",50,-160.0,160.0,100,-16.0,16.0);
 
   h_mSimpleClustersTrackFstResR_3Layer    = new TH1F("h_mSimpleClustersTrackFstResR_3Layer","h_mSimpleClustersTrackFstResR_3Layer",50,-160.0,160.0);
-  h_mSimpleClustersTrackFstResPhi_3Layer  = new TH1F("h_mSimpleClustersTrackFstResPhi_3Layer","h_mSimpleClustersTrackFstResPhi_3Layer",100,-0.05,0.05);
-  h_mSimpleClustersTrackFstResRPhi_3Layer = new TH2F("h_mSimpleClustersTrackFstResRPhi_3Layer","h_mSimpleClustersTrackFstResRPhi_3Layer",50,-160.0,160.0,100,-0.05,0.05);
+  h_mSimpleClustersTrackFstResPhi_3Layer  = new TH1F("h_mSimpleClustersTrackFstResPhi_3Layer","h_mSimpleClustersTrackFstResPhi_3Layer",200,-0.10,0.10);
+  h_mSimpleClustersTrackFstResRPhi_3Layer = new TH2F("h_mSimpleClustersTrackFstResRPhi_3Layer","h_mSimpleClustersTrackFstResRPhi_3Layer",50,-160.0,160.0,200,-0.10,0.10);
 
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     string HistName;
     HistName = Form("h_mSimpleClustersTrackFstResX_3Layer_Rstrip%d",i_rstrip);
@@ -510,9 +510,9 @@ void FstTracking::initTracking_Clusters()
     HistName = Form("h_mSimpleClustersTrackFstResR_3Layer_Rstrip%d",i_rstrip);
     h_mSimpleClustersTrackFstResR_3Layer_Rstrips[i_rstrip]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
     HistName = Form("h_mSimpleClustersTrackFstResPhi_3Layer_Rstrip%d",i_rstrip);
-    h_mSimpleClustersTrackFstResPhi_3Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.05,0.05);
+    h_mSimpleClustersTrackFstResPhi_3Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.10,0.10);
     HistName = Form("h_mSimpleClustersTrackFstResRPhi_3Layer_Rstrip%d",i_rstrip);
-    h_mSimpleClustersTrackFstResRPhi_3Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-0.05,0.05);
+    h_mSimpleClustersTrackFstResRPhi_3Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,200,-0.10,0.10);
   }
  
   h_mSimpleClustersTrackIstResX_3Layer    = new TH1F("h_mSimpleClustersTrackIstResX_3Layer","h_mSimpleClustersTrackIstResX_3Layer",15,-20.0,20.0);
@@ -525,10 +525,10 @@ void FstTracking::initTracking_Clusters()
   h_mScanClustersTrackFstResXY_2Layer   = new TH2F("h_mScanClustersTrackFstResXY_2Layer","h_mScanClustersTrackFstResXY_2Layer",50,-160.0,160.0,100,-16.0,16.0);
 
   h_mScanClustersTrackFstResR_2Layer    = new TH1F("h_mScanClustersTrackFstResR_2Layer","h_mScanClustersTrackFstResR_2Layer",50,-160.0,160.0);
-  h_mScanClustersTrackFstResPhi_2Layer  = new TH1F("h_mScanClustersTrackFstResPhi_2Layer","h_mScanClustersTrackFstResPhi_2Layer",100,-0.05,0.05);
-  h_mScanClustersTrackFstResRPhi_2Layer = new TH2F("h_mScanClustersTrackFstResRPhi_2Layer","h_mScanClustersTrackFstResRPhi_2Layer",50,-160.0,160.0,100,-0.05,0.05);
+  h_mScanClustersTrackFstResPhi_2Layer  = new TH1F("h_mScanClustersTrackFstResPhi_2Layer","h_mScanClustersTrackFstResPhi_2Layer",200,-0.10,0.10);
+  h_mScanClustersTrackFstResRPhi_2Layer = new TH2F("h_mScanClustersTrackFstResRPhi_2Layer","h_mScanClustersTrackFstResRPhi_2Layer",50,-160.0,160.0,200,-0.10,0.10);
 
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     string HistName;
     HistName = Form("h_mScanClustersTrackFstResX_2Layer_Rstrip%d",i_rstrip);
@@ -541,9 +541,9 @@ void FstTracking::initTracking_Clusters()
     HistName = Form("h_mScanClustersTrackFstResR_2Layer_Rstrip%d",i_rstrip);
     h_mScanClustersTrackFstResR_2Layer_Rstrips[i_rstrip]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
     HistName = Form("h_mScanClustersTrackFstResPhi_2Layer_Rstrip%d",i_rstrip);
-    h_mScanClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.05,0.05);
+    h_mScanClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.10,0.10);
     HistName = Form("h_mScanClustersTrackFstResRPhi_2Layer_Rstrip%d",i_rstrip);
-    h_mScanClustersTrackFstResRPhi_2Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-0.05,0.05);
+    h_mScanClustersTrackFstResRPhi_2Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,200,-0.10,0.10);
   }
   
   h_mScanClustersTrackFstResX_3Layer    = new TH1F("h_mScanClustersTrackFstResX_3Layer","h_mScanClustersTrackFstResX_3Layer",50,-160.0,160.0);
@@ -551,10 +551,10 @@ void FstTracking::initTracking_Clusters()
   h_mScanClustersTrackFstResXY_3Layer   = new TH2F("h_mScanClustersTrackFstResXY_3Layer","h_mScanClustersTrackFstResXY_3Layer",50,-160.0,160.0,100,-16.0,16.0);
 
   h_mScanClustersTrackFstResR_3Layer    = new TH1F("h_mScanClustersTrackFstResR_3Layer","h_mScanClustersTrackFstResR_3Layer",50,-160.0,160.0);
-  h_mScanClustersTrackFstResPhi_3Layer  = new TH1F("h_mScanClustersTrackFstResPhi_3Layer","h_mScanClustersTrackFstResPhi_3Layer",100,-0.05,0.05);
-  h_mScanClustersTrackFstResRPhi_3Layer = new TH2F("h_mScanClustersTrackFstResRPhi_3Layer","h_mScanClustersTrackFstResRPhi_3Layer",50,-160.0,160.0,100,-0.05,0.05);
+  h_mScanClustersTrackFstResPhi_3Layer  = new TH1F("h_mScanClustersTrackFstResPhi_3Layer","h_mScanClustersTrackFstResPhi_3Layer",200,-0.10,0.10);
+  h_mScanClustersTrackFstResRPhi_3Layer = new TH2F("h_mScanClustersTrackFstResRPhi_3Layer","h_mScanClustersTrackFstResRPhi_3Layer",50,-160.0,160.0,200,-0.10,0.10);
 
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     string HistName;
     HistName = Form("h_mScanClustersTrackFstResX_3Layer_Rstrip%d",i_rstrip);
@@ -567,9 +567,9 @@ void FstTracking::initTracking_Clusters()
     HistName = Form("h_mScanClustersTrackFstResR_3Layer_Rstrip%d",i_rstrip);
     h_mScanClustersTrackFstResR_3Layer_Rstrips[i_rstrip]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
     HistName = Form("h_mScanClustersTrackFstResPhi_3Layer_Rstrip%d",i_rstrip);
-    h_mScanClustersTrackFstResPhi_3Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.05,0.05);
+    h_mScanClustersTrackFstResPhi_3Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.10,0.10);
     HistName = Form("h_mScanClustersTrackFstResRPhi_3Layer_Rstrip%d",i_rstrip);
-    h_mScanClustersTrackFstResRPhi_3Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-0.05,0.05);
+    h_mScanClustersTrackFstResRPhi_3Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,200,-0.10,0.10);
   }
 }
 
@@ -648,7 +648,7 @@ void FstTracking::calResolution_SimpleClusters(FstEvent *fstEvent)
 	  }
 	}
 
-	if(minClusterId_FST > -0.5)
+	if(minClusterId_FST > -1)
 	{
 	  double r_fst   = clusterVec_fst[minClusterId_FST]->getMeanX(); // r for fst
 	  double phi_fst = clusterVec_fst[minClusterId_FST]->getMeanY(); // phi for fst
@@ -663,9 +663,10 @@ void FstTracking::calResolution_SimpleClusters(FstEvent *fstEvent)
 	  h_mSimpleClustersTrackFstResPhi_2Layer->Fill(phi_fst-phi_proj);
 	  h_mSimpleClustersTrackFstResRPhi_2Layer->Fill(r_fst-r_proj,phi_fst-phi_proj);
 
-	  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+	  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
 	  {
-	    if(r_proj > FST::rOuter + FST::pitchR*i_rstrip && r_proj <= FST::rOuter + FST::pitchR*(i_rstrip+1))
+	    // if(r_proj > FST::rOuter + FST::pitchR*i_rstrip && r_proj <= FST::rOuter + FST::pitchR*(i_rstrip+1))
+	    if(r_proj > FST::rInner + FST::pitchR*i_rstrip && r_proj <= FST::rInner + FST::pitchR*(i_rstrip+1))
 	    // check the position of the projected r is within a specific r_strip and fill accordingly
 	    {
 	      h_mSimpleClustersTrackFstResX_2Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj);
@@ -698,7 +699,7 @@ void FstTracking::calResolution_SimpleClusters(FstEvent *fstEvent)
 	  }
 	}
 
-	if(minClusterId_IST > -0.5)
+	if(minClusterId_IST > -1)
 	{
 	  double x2_ist = clusterVec_ist2[minClusterId_IST]->getMeanX(); // x for ist2
 	  double y2_ist = clusterVec_ist2[minClusterId_IST]->getMeanY(); // y for ist2
@@ -780,7 +781,7 @@ void FstTracking::calResolution_SimpleClusters(FstEvent *fstEvent)
 	  }
 	}
 
-	if(minClusterId_FST > -0.5)
+	if(minClusterId_FST > -1)
 	{
 	  double r_fst   = clusterVec_fst[minClusterId_FST]->getMeanX(); // r for fst
 	  double phi_fst = clusterVec_fst[minClusterId_FST]->getMeanY(); // phi for fst
@@ -795,9 +796,10 @@ void FstTracking::calResolution_SimpleClusters(FstEvent *fstEvent)
 	  h_mSimpleClustersTrackFstResPhi_3Layer->Fill(phi_fst-phi_proj);
 	  h_mSimpleClustersTrackFstResRPhi_3Layer->Fill(r_fst-r_proj,phi_fst-phi_proj);
 
-	  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+	  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
 	  {
-	    if(r_proj > FST::rOuter + FST::pitchR*i_rstrip && r_proj <= FST::rOuter + FST::pitchR*(i_rstrip+1))
+	    // if(r_proj > FST::rOuter + FST::pitchR*i_rstrip && r_proj <= FST::rOuter + FST::pitchR*(i_rstrip+1))
+	    if(r_proj > FST::rInner + FST::pitchR*i_rstrip && r_proj <= FST::rInner + FST::pitchR*(i_rstrip+1))
 	    // check the position of the projected r is within a specific r_strip and fill accordingly
 	    {
 	      h_mSimpleClustersTrackFstResX_3Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj);
@@ -811,7 +813,7 @@ void FstTracking::calResolution_SimpleClusters(FstEvent *fstEvent)
 	  }
 	}
 
-	if(minClusterId_IST > -0.5)
+	if(minClusterId_IST > -1)
 	{
 	  double x2_ist = clusterVec_ist2[minClusterId_IST]->getMeanX(); // x for ist2
 	  double y2_ist = clusterVec_ist2[minClusterId_IST]->getMeanY(); // y for ist2
@@ -896,7 +898,7 @@ void FstTracking::calResolution_ScanClusters(FstEvent *fstEvent)
 	  }
 	}
 
-	if(minClusterId_FST > -0.5)
+	if(minClusterId_FST > -1)
 	{
 	  double r_fst   = clusterVec_fst[minClusterId_FST]->getMeanX(); // r for fst
 	  double phi_fst = clusterVec_fst[minClusterId_FST]->getMeanY(); // phi for fst
@@ -911,9 +913,10 @@ void FstTracking::calResolution_ScanClusters(FstEvent *fstEvent)
 	  h_mScanClustersTrackFstResPhi_2Layer->Fill(phi_fst-phi_proj);
 	  h_mScanClustersTrackFstResRPhi_2Layer->Fill(r_fst-r_proj,phi_fst-phi_proj);
 
-	  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+	  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
 	  {
-	    if(r_proj > FST::rOuter + FST::pitchR*i_rstrip && r_proj <= FST::rOuter + FST::pitchR*(i_rstrip+1))
+	    // if(r_proj > FST::rOuter + FST::pitchR*i_rstrip && r_proj <= FST::rOuter + FST::pitchR*(i_rstrip+1))
+	    if(r_proj > FST::rInner + FST::pitchR*i_rstrip && r_proj <= FST::rInner + FST::pitchR*(i_rstrip+1))
 	    // check the position of the projected r is within a specific r_strip and fill accordingly
 	    {
 	      h_mScanClustersTrackFstResX_2Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj);
@@ -987,7 +990,7 @@ void FstTracking::calResolution_ScanClusters(FstEvent *fstEvent)
 	  }
 	}
 
-	if(minClusterId_FST > -0.5)
+	if(minClusterId_FST > -1)
 	{
 	  double r_fst   = clusterVec_fst[minClusterId_FST]->getMeanX(); // r for fst
 	  double phi_fst = clusterVec_fst[minClusterId_FST]->getMeanY(); // phi for fst
@@ -1002,9 +1005,10 @@ void FstTracking::calResolution_ScanClusters(FstEvent *fstEvent)
 	  h_mScanClustersTrackFstResPhi_3Layer->Fill(phi_fst-phi_proj);
 	  h_mScanClustersTrackFstResRPhi_3Layer->Fill(r_fst-r_proj,phi_fst-phi_proj);
 
-	  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+	  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
 	  {
-	    if(r_proj > FST::rOuter + FST::pitchR*i_rstrip && r_proj <= FST::rOuter + FST::pitchR*(i_rstrip+1))
+	    // if(r_proj > FST::rOuter + FST::pitchR*i_rstrip && r_proj <= FST::rOuter + FST::pitchR*(i_rstrip+1))
+	    if(r_proj > FST::rInner + FST::pitchR*i_rstrip && r_proj <= FST::rInner + FST::pitchR*(i_rstrip+1))
 	    // check the position of the projected r is within a specific r_strip and fill accordingly
 	    {
 	      h_mScanClustersTrackFstResX_3Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj);
@@ -1033,7 +1037,7 @@ void FstTracking::writeTracking_Clusters()
   h_mSimpleClustersTrackFstResPhi_2Layer->Write();
   h_mSimpleClustersTrackFstResRPhi_2Layer->Write();
 
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     h_mSimpleClustersTrackFstResX_2Layer_Rstrips[i_rstrip]->Write();
     h_mSimpleClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->Write();
@@ -1056,7 +1060,7 @@ void FstTracking::writeTracking_Clusters()
   h_mSimpleClustersTrackFstResPhi_3Layer->Write();
   h_mSimpleClustersTrackFstResRPhi_3Layer->Write();
 
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     h_mSimpleClustersTrackFstResX_3Layer_Rstrips[i_rstrip]->Write();
     h_mSimpleClustersTrackFstResY_3Layer_Rstrips[i_rstrip]->Write();
@@ -1080,7 +1084,7 @@ void FstTracking::writeTracking_Clusters()
   h_mScanClustersTrackFstResPhi_2Layer->Write();
   h_mScanClustersTrackFstResRPhi_2Layer->Write();
 
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     h_mScanClustersTrackFstResX_2Layer_Rstrips[i_rstrip]->Write();
     h_mScanClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->Write();
@@ -1099,7 +1103,7 @@ void FstTracking::writeTracking_Clusters()
   h_mScanClustersTrackFstResPhi_3Layer->Write();
   h_mScanClustersTrackFstResRPhi_3Layer->Write();
 
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     h_mScanClustersTrackFstResX_3Layer_Rstrips[i_rstrip]->Write();
     h_mScanClustersTrackFstResY_3Layer_Rstrips[i_rstrip]->Write();
@@ -1119,9 +1123,9 @@ void FstTracking::initEfficiency_Hits()
   {
     string HistName;
     HistName = Form("h_mHitsTrackIstCounts_SF%d",i_match);
-    h_mHitsTrackIstCounts[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin,FST::rMax,30,FST::phiMin,FST::phiMax);
+    h_mHitsTrackIstCounts[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),60,FST::rMin,FST::rMax,60,-FST::phiMax,FST::phiMax);
     HistName = Form("h_mHitsTrackFstCounts_SF%d",i_match);
-    h_mHitsTrackFstCounts[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin,FST::rMax,30,FST::phiMin,FST::phiMax);
+    h_mHitsTrackFstCounts[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),60,FST::rMin,FST::rMax,60,-FST::phiMax,FST::phiMax);
   }
 }
 
@@ -1157,7 +1161,8 @@ void FstTracking::calEfficiency_Hits(FstEvent *fstEvent)
     double r_proj = proj_fst.X();
     double phi_proj = proj_fst.Y();
 
-    if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
+    // if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
+    if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= -FST::phiMax && phi_proj <= FST::phiMax)
     { // used for efficiency only if the projected position is within FST acceptance
       for(int i_match = 0; i_match < 8; ++i_match)
       {
@@ -1204,25 +1209,25 @@ void FstTracking::initEfficiency_Clusters()
     string HistName;
     // simple clusters
     HistName = Form("h_mSimpleClustersTrackIstCounts_2Layer_SF%d",i_match);
-    h_mSimpleClustersTrackIstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin,FST::rMax,30,FST::phiMin,FST::phiMax);
+    h_mSimpleClustersTrackIstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),60,FST::rMin,FST::rMax,60,-FST::phiMax,FST::phiMax);
     HistName = Form("h_mSimpleClustersTrackFstCounts_2Layer_SF%d",i_match);
-    h_mSimpleClustersTrackFstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin,FST::rMax,30,FST::phiMin,FST::phiMax);
+    h_mSimpleClustersTrackFstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),60,FST::rMin,FST::rMax,60,-FST::phiMax,FST::phiMax);
 
     HistName = Form("h_mSimpleClustersTrackIstCounts_3Layer_SF%d",i_match);
-    h_mSimpleClustersTrackIstCounts_3Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin,FST::rMax,30,FST::phiMin,FST::phiMax);
+    h_mSimpleClustersTrackIstCounts_3Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),60,FST::rMin,FST::rMax,60,-FST::phiMax,FST::phiMax);
     HistName = Form("h_mSimpleClustersTrackFstCounts_3Layer_SF%d",i_match);
-    h_mSimpleClustersTrackFstCounts_3Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin,FST::rMax,30,FST::phiMin,FST::phiMax);
+    h_mSimpleClustersTrackFstCounts_3Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),60,FST::rMin,FST::rMax,60,-FST::phiMax,FST::phiMax);
 
     // scan clusters
     HistName = Form("h_mScanClustersTrackIstCounts_2Layer_SF%d",i_match);
-    h_mScanClustersTrackIstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin,FST::rMax,30,FST::phiMin,FST::phiMax);
+    h_mScanClustersTrackIstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),60,FST::rMin,FST::rMax,60,-FST::phiMax,FST::phiMax);
     HistName = Form("h_mScanClustersTrackFstCounts_2Layer_SF%d",i_match);
-    h_mScanClustersTrackFstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin,FST::rMax,30,FST::phiMin,FST::phiMax);
+    h_mScanClustersTrackFstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),60,FST::rMin,FST::rMax,60,-FST::phiMax,FST::phiMax);
 
     HistName = Form("h_mScanClustersTrackIstCounts_3Layer_SF%d",i_match);
-    h_mScanClustersTrackIstCounts_3Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin,FST::rMax,30,FST::phiMin,FST::phiMax);
+    h_mScanClustersTrackIstCounts_3Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),60,FST::rMin,FST::rMax,60,-FST::phiMax,FST::phiMax);
     HistName = Form("h_mScanClustersTrackFstCounts_3Layer_SF%d",i_match);
-    h_mScanClustersTrackFstCounts_3Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin,FST::rMax,30,FST::phiMin,FST::phiMax);
+    h_mScanClustersTrackFstCounts_3Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),60,FST::rMin,FST::rMax,60,-FST::phiMax,FST::phiMax);
   }
 }
 
@@ -1273,7 +1278,8 @@ void FstTracking::calEfficiency_SimpleClusters(FstEvent *fstEvent)
 
       if( abs(y1_ist-y3_ist) < 17.0*FST::pitchRow )
       {
-	if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
+	// if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
+	if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= -FST::phiMax && phi_proj <= FST::phiMax)
 	{ // used for efficiency only if the projected position is within FST acceptance
 	  for(int i_match = 0; i_match < 8; ++i_match)
 	  {
@@ -1323,7 +1329,8 @@ void FstTracking::calEfficiency_SimpleClusters(FstEvent *fstEvent)
 
       if( abs(y1_ist-y3_ist) < 17.0*FST::pitchRow)
       {
-	if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
+	// if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
+	if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= -FST::phiMax && phi_proj <= FST::phiMax)
 	{ // used for efficiency only if the projected position is within FST acceptance
 	  if(clusterVec_ist2.size() > 0)
 	  {
@@ -1421,7 +1428,8 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
 
       if( abs(y1_ist-y3_ist) < 17.0*FST::pitchRow )
       {
-	if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
+	// if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
+	if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= -FST::phiMax && phi_proj <= FST::phiMax)
 	{ // used for efficiency only if the projected position is within FST acceptance
 	  for(int i_match = 0; i_match < 8; ++i_match)
 	  {
@@ -1471,7 +1479,8 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
 
       if( abs(y1_ist-y3_ist) < 17.0*FST::pitchRow)
       {
-	if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
+	// if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
+	if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= -FST::phiMax && phi_proj <= FST::phiMax)
 	{ // used for efficiency only if the projected position is within FST acceptance
 	  if(clusterVec_ist2.size() > 0)
 	  {

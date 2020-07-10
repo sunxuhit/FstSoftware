@@ -25,7 +25,7 @@ tPars updateFitParameters(tPars fitPars, double xCut, double yCut, int nOffset);
 
 R__LOAD_LIBRARY(../../lib/libFstEvent.dylib)
 
-int getAlignment_FSTClusters_3Layer()
+int getAlignment_FSTClusters(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2)
 {
   dVec x0_fst;
   dVec y0_fst;
@@ -49,23 +49,52 @@ int getAlignment_FSTClusters_3Layer()
   const double x3_shift = 0.45811;
   const double y3_shift = 1.0116;
 
-  FstEvent *mFstEvent = new FstEvent();
-  std::string inputfile = "../../output/alignment/FstClusters_HV140V_Th4.5Tb3_woPed_withCMNCorr_3Layer.root";
-  std::cout << "inputfile = " << inputfile.c_str() << std::endl;
-  TFile *mFile_InPut = TFile::Open(inputfile.c_str());
-  TTree *mTree_FstEvent = (TTree*)mFile_InPut->Get("mTree_FstEvent");
-  mTree_FstEvent->SetBranchAddress("FstEvent",&mFstEvent);
+  std::string inputlist = Form("../../list/FST/alignment/FstCluster_Th%1.1fTb%d.list",nFstHitsCut,numOfUsedTimeBins);
+  cout << "input list set to: " << inputlist.c_str() << endl;
+  TChain *mChainInPut = new TChain("mTree_FstEvent");
+  if (!inputlist.empty())   // if input file is ok
+  {
+    cout << "Open input probability file list" << endl;
+    ifstream in(inputlist.c_str());  // input stream
+    if(in)
+    {
+      cout << "input file probability list is ok" << endl;
+      char str[255];       // char array for each file name
+      Long64_t entries_save = 0;
+      while(in)
+      {
+	in.getline(str,255);  // take the lines of the file list
+	if(str[0] != 0)
+	{
+	  string addfile;
+	  addfile = str;
+	  mChainInPut->AddFile(addfile.c_str(),-1,"mTree_FstEvent");
+	  Long64_t file_entries = mChainInPut->GetEntries();
+	  cout << "File added to data chain: " << addfile.c_str() << " with " << (file_entries-entries_save) << " entries" << endl;
+	  entries_save = file_entries;
+	}
+      }
+    }
+    else
+    {
+      cout << "WARNING: input probability file input is problemtic" << endl;
+      return false;
+    }
+  }
 
-  long NumOfEvents = (long)mTree_FstEvent->GetEntries();
+  FstEvent *mFstEvent = new FstEvent();
+  mChainInPut->SetBranchAddress("FstEvent",&mFstEvent);
+  long NumOfEvents = (long)mChainInPut->GetEntries();
   cout << "total number of events: " << NumOfEvents << endl;
+
   // if(NumOfEvents > 1000) NumOfEvents = 1000;
   // NumOfEvents = 500;
-  mTree_FstEvent->GetEntry(0);
+  mChainInPut->GetEntry(0);
 
   for(int i_event = 0; i_event < NumOfEvents; ++i_event)
   {
     if(i_event%1000==0) cout << "processing events:  " << i_event << "/" << NumOfEvents << endl;
-    mTree_FstEvent->GetEntry(i_event);
+    mChainInPut->GetEntry(i_event);
 
     std::vector<FstCluster *> clusterVec_fst;
     std::vector<FstCluster *> clusterVec_ist1;
@@ -77,8 +106,8 @@ int getAlignment_FSTClusters_3Layer()
     for(int i_cluster = 0; i_cluster < mFstEvent->getNumClusters(); ++i_cluster)
     { // get Clusters info for IST1 IST2 and IST3
       FstCluster *fstCluster = mFstEvent->getCluster(i_cluster);
-      if(fstCluster->getLayer() == 0 && fstCluster->getClusterType() == 1)
-      { // use Simple cluster
+      if(fstCluster->getLayer() == 0 && fstCluster->getClusterType() == 2)
+      { // use Scan cluster
 	clusterVec_fst.push_back(fstCluster);
       }
       if(fstCluster->getLayer() == 1)
@@ -136,7 +165,7 @@ int getAlignment_FSTClusters_3Layer()
     }
   }
 
-  mFile_InPut->Close();
+  // mFile_InPut->Close();
 
   cout << "Start Minuit Fit for alignment => " << endl;
 
@@ -262,7 +291,7 @@ tPars minuitAlignment(dVec x0_orig, dVec y0_orig, dVec x1_orig, dVec y1_orig, dV
     double y2_shift     = par[2];
 
     const double x_weight = 1.0;
-    const double y_weight = 25.0;
+    const double y_weight = 10.0;
     double f = 0;
     for (int i_cluster = 0; i_cluster < numOfUsedHits; i_cluster++)
     {
@@ -291,6 +320,7 @@ tPars minuitAlignment(dVec x0_orig, dVec y0_orig, dVec x1_orig, dVec y1_orig, dV
   double pStart[3] = {phi_ist2_temp,x2_shift_temp,y2_shift_temp};
   fitter.SetFCN(fcn, pStart);
   fitter.Config().ParSettings(0).SetName("phi_rot_ist2");
+  fitter.Config().ParSettings(0).SetLimits(0.5*TMath::Pi(),1.5*TMath::Pi());
   fitter.Config().ParSettings(1).SetName("x2_shift");
   fitter.Config().ParSettings(2).SetName("y2_shift");
 
