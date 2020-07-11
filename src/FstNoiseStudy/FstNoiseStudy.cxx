@@ -1046,7 +1046,7 @@ bool FstNoiseStudy::isBadAPV(int arm, int port, int apv)
 {
   bool bAPV = false;
 
-  if(arm == 0 && port==0 && (apv == 5||apv == 6)) bAPV = true;
+  if(arm == 0 && port==0 && (apv == 1 || apv == 5||apv == 6)) bAPV = true;
   if(arm == 0 && port==1 && (apv <= 9)) bAPV = true;
   // if(arm == 1 && port==0 && (apv == 0||apv == 1)) bAPV = true;
   if(arm == 1 && port==0 && (apv == 0)) bAPV = true;

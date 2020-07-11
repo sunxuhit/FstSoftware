@@ -12,10 +12,10 @@ using namespace std;
 
 void calTrackClusterEfficiency_2Layer(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, float nFstThresholdCut2 = 2.5, float nFstThresholdCut1 = 3.5)
 {
-  const double rMaxFst = FST::rOuter + 4.0*FST::pitchR;
-  const double rMinFst = FST::rOuter;
+  const double rMaxFst = FST::rInner + 4.0*FST::pitchR;
+  const double rMinFst = FST::rInner;
   const double phiMaxFst = 64.0*FST::pitchPhi;
-  const double phiMinFst = 0.0;
+  const double phiMinFst = -64.0*FST::pitchPhi;
 
   const int nMatch = 8;
 

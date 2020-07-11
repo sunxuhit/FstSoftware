@@ -31,8 +31,8 @@ then
   # InPutDate_HV200V=../../list/FST/DateHV200V.list
   # for item in `cat $InPutDate_HV200V`
   # do
-  #  . ./fstCluster.sh HV200V $isApplyCMNCorr 4.5 $item 
-  #  . ./fstCluster.sh HV200V $isApplyCMNCorr 4.0 $item 
+   # . ./fstCluster.sh HV200V $isApplyCMNCorr 4.5 $item 
+   # . ./fstCluster.sh HV200V $isApplyCMNCorr 4.0 $item 
    # . ./fstCluster.sh HV200V $isApplyCMNCorr 3.5 $item 
    # . ./fstCluster.sh HV200V $isApplyCMNCorr 3.0 $item 
   # done

@@ -687,7 +687,7 @@ void FstQAStudy::fillSignalQA(FstEvent *fstEvent)
       double meanRow = fstClusterVec[i_cluster]->getMeanRow();
       double signal = fstClusterVec[i_cluster]->getTotCharge();
       double maxTb = fstClusterVec[i_cluster]->getMaxTb();
-      if(fstClusterVec[i_cluster]->getClusterType() == 1)
+      if(fstClusterVec[i_cluster]->getClusterType() == 1 && fstClusterVec[i_cluster]->getIsSeed())
       { // Simple Clusters
 	h_mFstSimpleClustersSignal->Fill(signal);
 
@@ -719,7 +719,7 @@ void FstQAStudy::fillSignalQA(FstEvent *fstEvent)
 	  h_mFstSimpleClustersSignal_Apv[apv][column][phibin]->Fill(signal);
 	}
       }
-      if(fstClusterVec[i_cluster]->getClusterType() == 2)
+      if(fstClusterVec[i_cluster]->getClusterType() == 2 && fstClusterVec[i_cluster]->getIsSeed())
       { // Scan Clusters
 	h_mFstScanClustersSignal->Fill(signal);
 

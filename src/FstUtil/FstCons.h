@@ -22,12 +22,13 @@ namespace FST
   const double rOuter       = 165.0; // mm | smallest radius of outer sector
   const double pitchR       = 28.75; // mm | (280-165)/4.0
   const double pitchPhi     = TMath::Pi()*30.0/180.0/numPhiSeg; // rad | 30 degree with 128 segmentations
-  const double gapPhi       = TMath::Pi()*1.0/180.0; // 1 degree gap between 2 outer sensor
+  // const double gapPhi       = TMath::Pi()*1.0/180.0; // 1 degree gap between 2 outer sensor
+  const double gapPhi       = 0.0;
   const double pitchLayer03 = 134.9375; // mm
 
   const double rMax   = rOuter + 5.0*pitchR; // 308.75 mm
   const double rMin   = rInner - 1.0*pitchR; // 21.25 mm
-  const double phiMax = TMath::Pi()*15.5/180.0; // 64.0*FST::pitchPhi +0.5*gapPhi;
+  const double phiMax = TMath::Pi()*15.0/180.0 + 0.5*gapPhi; // 64.0*FST::pitchPhi +0.5*gapPhi;
   const double phiMin = 0.5*gapPhi; // 0.5*gapPhi
 
   // FST Clustering
@@ -53,9 +54,12 @@ namespace FST
   // const double phi_rot_ist2 = 0.0438495; // aligned IST2 to FST with 2-layer tracking
   // const double x2_shift     = 140.99; // x2_shift + 6.0
   // const double y2_shift     = -20.7848;
-  const double phi_rot_ist2 = 3.16619; // for Inner sector test
-  const double x2_shift     = 214.09;
-  const double y2_shift     = 31.9184;
+  // const double phi_rot_ist2 = 3.16468; // for Inner sector test
+  // const double x2_shift     = 214.621;
+  // const double y2_shift     = 32.1224;
+  const double phi_rot_ist2 = 3.16571; // for Inner sector test
+  const double x2_shift     = 213.28;
+  const double y2_shift     = 32.023;
 
   // Hits Selection
   const float nFstPedsCut      = 3.0; // used for ped

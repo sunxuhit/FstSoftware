@@ -2701,46 +2701,11 @@ double FstClusterMaker::getPosY(int arm, int port, int apv, int ch)
   return posY;
 }
 
-/*
-double FstClusterMaker::getMeanX(int layer, double meanColumn)
-{
-  double meanX = -999.9;
-  if(layer == 0) // FST
-  {
-    // double r_fst = FST::rOuter + (this->getColumn(arm,port,apv,ch)-4)*FST::pitchR + 0.5*FST::pitchR;
-    // double phi_fst = (63-this->getRow(arm,port,apv,ch))*FST::pitchPhi + 0.5*FST::pitchPhi;
-    // posX = r_fst*TMath::Cos(phi_fst); // x = r*cos(phi)
-    meanX = FST::rOuter + (meanColumn-4)*FST::pitchR + 0.5*FST::pitchR;
-  }
-  else // IST1-3
-  {
-    meanX = meanColumn*FST::pitchColumn + 0.5*FST::pitchColumn;
-  }
-
-  return meanX;
-}
-
-double FstClusterMaker::getMeanY(int layer, double meanRow)
-{
-  double meanY = -999.9;
-  if(layer == 0) // FST
-  {
-    meanY = (63-meanRow)*FST::pitchPhi + 0.5*FST::pitchPhi;
-  }
-  else // IST1-3
-  {
-    meanY = (63-meanRow)*FST::pitchRow + 0.5*FST::pitchRow;
-  }
-
-  return meanY;
-}
-*/
-
 bool FstClusterMaker::isBadAPV(int arm, int port, int apv)
 {
   bool bAPV = false;
 
-  if(arm == 0 && port==0 && (apv == 5||apv == 6)) bAPV = true;
+  if(arm == 0 && port==0 && (apv == 1 || apv == 5||apv == 6)) bAPV = true;
   if(arm == 0 && port==1 && (apv <= 9)) bAPV = true;
   // if(arm == 1 && port==0 && (apv == 0||apv == 1)) bAPV = true;
   if(arm == 1 && port==0 && (apv == 0)) bAPV = true;

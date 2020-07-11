@@ -62,15 +62,15 @@ void plotResidual_FSTClusterTracks_2Layer(string hv = "HV70V", bool isSavePed = 
   TH1F *h_mSimpleClustersTrackFstResPhi_2Layer = (TH1F*)File_InPut->Get("h_mSimpleClustersTrackFstResPhi_2Layer");
   TH2F *h_mSimpleClustersTrackFstResRPhi_2Layer = (TH2F*)File_InPut->Get("h_mSimpleClustersTrackFstResRPhi_2Layer");
   
-  TH1F *h_mSimpleClustersTrackFstResX_2Layer_Rstrips[4];
-  TH1F *h_mSimpleClustersTrackFstResY_2Layer_Rstrips[4];
-  TH2F *h_mSimpleClustersTrackFstResXY_2Layer_Rstrips[4]; 
+  TH1F *h_mSimpleClustersTrackFstResX_2Layer_Rstrips[FST::numRStrip];
+  TH1F *h_mSimpleClustersTrackFstResY_2Layer_Rstrips[FST::numRStrip];
+  TH2F *h_mSimpleClustersTrackFstResXY_2Layer_Rstrips[FST::numRStrip]; 
     
-  TH1F *h_mSimpleClustersTrackFstResR_2Layer_Rstrips[4];
-  TH1F *h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[4];
-  TH2F *h_mSimpleClustersTrackFstResRPhi_2Layer_Rstrips[4];
+  TH1F *h_mSimpleClustersTrackFstResR_2Layer_Rstrips[FST::numRStrip];
+  TH1F *h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[FST::numRStrip];
+  TH2F *h_mSimpleClustersTrackFstResRPhi_2Layer_Rstrips[FST::numRStrip];
 
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     string HistName;
     HistName = Form("h_mSimpleClustersTrackFstResX_2Layer_Rstrip%d",i_rstrip);
@@ -97,15 +97,15 @@ void plotResidual_FSTClusterTracks_2Layer(string hv = "HV70V", bool isSavePed = 
   TH1F *h_mScanClustersTrackFstResPhi_2Layer = (TH1F*)File_InPut->Get("h_mScanClustersTrackFstResPhi_2Layer");
   TH2F *h_mScanClustersTrackFstResRPhi_2Layer = (TH2F*)File_InPut->Get("h_mScanClustersTrackFstResRPhi_2Layer");
   
-  TH1F *h_mScanClustersTrackFstResX_2Layer_Rstrips[4];
-  TH1F *h_mScanClustersTrackFstResY_2Layer_Rstrips[4];
-  TH2F *h_mScanClustersTrackFstResXY_2Layer_Rstrips[4]; 
+  TH1F *h_mScanClustersTrackFstResX_2Layer_Rstrips[FST::numRStrip];
+  TH1F *h_mScanClustersTrackFstResY_2Layer_Rstrips[FST::numRStrip];
+  TH2F *h_mScanClustersTrackFstResXY_2Layer_Rstrips[FST::numRStrip]; 
     
-  TH1F *h_mScanClustersTrackFstResR_2Layer_Rstrips[4];
-  TH1F *h_mScanClustersTrackFstResPhi_2Layer_Rstrips[4];
-  TH2F *h_mScanClustersTrackFstResRPhi_2Layer_Rstrips[4];
+  TH1F *h_mScanClustersTrackFstResR_2Layer_Rstrips[FST::numRStrip];
+  TH1F *h_mScanClustersTrackFstResPhi_2Layer_Rstrips[FST::numRStrip];
+  TH2F *h_mScanClustersTrackFstResRPhi_2Layer_Rstrips[FST::numRStrip];
   
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     string HistName;
     HistName = Form("h_mScanClustersTrackFstResX_2Layer_Rstrip%d",i_rstrip);
@@ -267,7 +267,7 @@ void plotResidual_FSTClusterTracks_2Layer(string hv = "HV70V", bool isSavePed = 
     // f_gausPhi->SetParName(1,"Mean");
     // f_gausPhi->SetParName(2,"#sigma");
     f_gausPhi->FixParameter(3,h_mSimpleClustersTrackFstResPhi_2Layer->GetBinWidth(1));
-    f_gausPhi->SetRange(-0.01,0.01);
+    f_gausPhi->SetRange(-0.05,0.05);
     h_mSimpleClustersTrackFstResPhi_2Layer->Fit(f_gausPhi,"R");
     f_gausPhi->Draw("l same");
     // gPad->Update();
@@ -352,7 +352,7 @@ void plotResidual_FSTClusterTracks_2Layer(string hv = "HV70V", bool isSavePed = 
     f_gausPhi->SetParameter(1,0.0);
     f_gausPhi->SetParameter(2,10.0);
     f_gausPhi->FixParameter(3,h_mScanClustersTrackFstResPhi_2Layer->GetBinWidth(1));
-    f_gausPhi->SetRange(-0.01,0.01);
+    f_gausPhi->SetRange(-0.05,0.05);
     h_mScanClustersTrackFstResPhi_2Layer->Fit(f_gausPhi,"R");
     f_gausPhi->Draw("l same");
   }
@@ -370,7 +370,7 @@ void plotResidual_FSTClusterTracks_2Layer(string hv = "HV70V", bool isSavePed = 
     c_RStrip->cd(i_pad+1)->SetGrid(0,0);
   }
 
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   { 
     c_RStrip->cd();
     string TitleName = Form("R Strip %d",i_rstrip);
@@ -477,7 +477,7 @@ void plotResidual_FSTClusterTracks_2Layer(string hv = "HV70V", bool isSavePed = 
       // f_gausPhi->SetParName(1,"Mean");
       // f_gausPhi->SetParName(2,"#sigma");
       f_gausPhi->FixParameter(3,h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->GetBinWidth(1));
-      f_gausPhi->SetRange(-0.01,0.01);
+      f_gausPhi->SetRange(-0.05,0.05);
       h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->Fit(f_gausPhi,"R");
       f_gausPhi->Draw("l same");
       // gPad->Update();
@@ -574,7 +574,7 @@ void plotResidual_FSTClusterTracks_2Layer(string hv = "HV70V", bool isSavePed = 
       f_gausPhi->SetParameter(1,0.0);
       f_gausPhi->SetParameter(2,10.0);
       f_gausPhi->FixParameter(3,h_mScanClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->GetBinWidth(1));
-      f_gausPhi->SetRange(-0.01,0.01);
+      f_gausPhi->SetRange(-0.05,0.05);
       h_mScanClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->Fit(f_gausPhi,"R");
       f_gausPhi->Draw("l same");
     }

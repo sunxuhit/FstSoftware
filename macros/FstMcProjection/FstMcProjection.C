@@ -40,7 +40,7 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
 
   TH2F *h_mIst3Pixel = new TH2F("h_mIst3Pixel","h_mIst3Pixel",FST::noColumns,0.0,lengthColumn,FST::noRows,0.0,lengthRow);
   TH2F *h_mIst1Pixel = new TH2F("h_mIst1Pixel","h_mIst1Pixel",FST::noColumns,0.0,lengthColumn,FST::noRows,0.0,lengthRow);
-  TH2F *h_mFstPixel  = new TH2F("h_mFstPixel","h_mFstPixel",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstPixel  = new TH2F("h_mFstPixel","h_mFstPixel",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*(FST::phiMax-0.5*FST::gapPhi),2.0*(FST::phiMax-0.5*FST::gapPhi));
 
   TH2F *h_mIst3Display = new TH2F("h_mIst3Display","h_mIst3Display",FST::noColumns,0.0,lengthColumn,FST::noRows,0.0,lengthRow);
   TH2F *h_mIst1Display = new TH2F("h_mIst1Display","h_mIst1Display",FST::noColumns,0.0,lengthColumn,FST::noRows,0.0,lengthRow);
@@ -62,8 +62,8 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
   double maxY    = 16.0;
   int numBinR   = 50;
   double maxR    = 160.0;
-  int numBinPhi = 100;
-  double maxPhi  = 0.05;
+  int numBinPhi = 200;
+  double maxPhi  = 0.10;
   if(isRot)
   {
     numBinX   = 160;
@@ -162,7 +162,7 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
     if( !(vHitRo_IST1.X() > -100.0 && vHitRo_IST1.Y() > -100.0) ) continue;
     if( !(vHitRo_IST3.X() > -100.0 && vHitRo_IST3.Y() > -100.0) ) continue;
 
-    TVector2 vHitRo_FST  = getReadOut(vHitGen_FST, h_mFstPixel, true); // RO position at FST
+    TVector2 vHitRo_FST = getReadOut(vHitGen_FST, h_mFstPixel, true); // RO position at FST
     TVector2 vReco_FST = getProjection(vHitRo_IST1, vHitRo_IST3, isRot, rAligned, deltaX, deltaY); // projected position on FST through the readout position from IST1 & IST3
 
     double x3_gen = vHitGen_IST3.X();
@@ -234,7 +234,7 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
       h_mFstProjResY_2Layer->Fill(y0_ro-y0_reco);
       h_mFstProjResXY_2Layer->Fill(x0_ro-x0_reco,y0_ro-y0_reco);
 
-      for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+      for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
       {
 	// if(r0_reco > FST::rOuter + FST::pitchR*i_rstrip && r0_reco <= FST::rOuter + FST::pitchR*(i_rstrip+1))
 	// if(r0_gen > FST::rOuter + FST::pitchR*i_rstrip && r0_gen <= FST::rOuter + FST::pitchR*(i_rstrip+1))
@@ -309,7 +309,7 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
   h_mFstProjResY_2Layer->Write();
   h_mFstProjResXY_2Layer->Write();
 
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     h_mFstProjResX_2Layer_Rstrips[i_rstrip]->Write();
     h_mFstProjResY_2Layer_Rstrips[i_rstrip]->Write();
@@ -347,7 +347,7 @@ void printAlignmentInfo(bool isRot, int rAligned = 0)
   {
     x2_shift = FST::x2_shift;
     y2_shift = FST::y2_shift;
-    phi_rot_ist2 = 0.0;
+    phi_rot_ist2 = FST::phi_rot_ist2;
   }
 
   // after rotation
@@ -519,8 +519,8 @@ TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST)
     double r_ro    = -999.0;
     double phi_ro  = -999.0;
     // check if FST has readout
-    // if(r_hit >= FST::rInner && r_hit <= FST::rOuter+4.0*FST::pitchR && phi_hit >= -FST::phiMax && phi_hit <= FST::phiMax)
-    if(r_hit >= FST::rInner && r_hit <= FST::rInner+4.0*FST::pitchR && phi_hit >= -FST::phiMax && phi_hit <= FST::phiMax)
+    // if(r_hit >= FST::rOuter && r_hit <= FST::rOuter+4.0*FST::pitchR && phi_hit >= 0.0 && phi_hit <= FST::phiMax)
+    if(r_hit >= FST::rInner && r_hit <= FST::rInner+4.0*FST::pitchR && phi_hit >= -FST::phiMax+0.5*FST::gapPhi && phi_hit <= FST::phiMax-0.5*FST::gapPhi)
     {
       int binR      = h_pixel->GetXaxis()->FindBin(r_hit);
       // int deltaBinR = findCrossTalkBin(r_hit);

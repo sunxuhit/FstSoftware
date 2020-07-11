@@ -20,11 +20,11 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
   gStyle->SetStatW(0.25); gStyle->SetStatH(0.55);
 
-  TH1F *h_mMeanSignalHits_Rstrip[4];
-  TH1F *h_mMeanNoiseHits_Rstrip[4];
-  TH1F *h_mMeanSNRatioHits_Rstrip[4];
-  TH1F *h_mMeanSignalClusters_Rstrip[4];
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  TH1F *h_mMeanSignalHits_Rstrip[FST::numRStrip];
+  TH1F *h_mMeanNoiseHits_Rstrip[FST::numRStrip];
+  TH1F *h_mMeanSNRatioHits_Rstrip[FST::numRStrip];
+  TH1F *h_mMeanSignalClusters_Rstrip[FST::numRStrip];
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     string HistName;
     HistName = Form("h_mMeanSignalHits_Rstrip%d",i_rstrip);
@@ -52,17 +52,17 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
   TH1F *h_mFstSimpleClustersSignal = (TH1F*)File_InPut->Get("h_mFstSimpleClustersSignal");
   TH1F *h_mFstScanClustersSignal = (TH1F*)File_InPut->Get("h_mFstScanClustersSignal");
 
-  TH1F *h_mMaxTbHits_Rstrip[4];
-  TH1F *h_mFstSimpleClustersMaxTb_Rstrip[4];
-  TH1F *h_mSignalHits_Rstrip[4];
-  TH1F *h_mNoiseHits_Rstrip[4];
-  TH1F *h_mSNRatioHits_Rstrip[4];
-  TH1F *h_mFstSimpleClustersSignal_Rstrip[4];
-  TH1F *h_mSignalHits_Rstrip_TimeBin[4][FST::numTBins];
-  TH1F *h_mNoiseHits_Rstrip_TimeBin[4][FST::numTBins];
-  TH1F *h_mSNRatioHits_Rstrip_TimeBin[4][FST::numTBins];
-  TH1F *h_mFstSimpleClustersSignal_Rstrip_TimeBin[4][FST::numTBins];
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  TH1F *h_mMaxTbHits_Rstrip[FST::numRStrip];
+  TH1F *h_mFstSimpleClustersMaxTb_Rstrip[FST::numRStrip];
+  TH1F *h_mSignalHits_Rstrip[FST::numRStrip];
+  TH1F *h_mNoiseHits_Rstrip[FST::numRStrip];
+  TH1F *h_mSNRatioHits_Rstrip[FST::numRStrip];
+  TH1F *h_mFstSimpleClustersSignal_Rstrip[FST::numRStrip];
+  TH1F *h_mSignalHits_Rstrip_TimeBin[FST::numRStrip][FST::numTBins];
+  TH1F *h_mNoiseHits_Rstrip_TimeBin[FST::numRStrip][FST::numTBins];
+  TH1F *h_mSNRatioHits_Rstrip_TimeBin[FST::numRStrip][FST::numTBins];
+  TH1F *h_mFstSimpleClustersSignal_Rstrip_TimeBin[FST::numRStrip][FST::numTBins];
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     string HistName;
     HistName = Form("h_mMaxTbHits_Rstrip%d",i_rstrip);
@@ -169,16 +169,17 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
   // ADC & Time Bin
   c_Signal->cd(1);
   {
-    TF1 *f_landau_FST[4];
+    TF1 *f_landau_FST[FST::numRStrip];
     TLegend *leg_FST = new TLegend(0.4,0.6,0.85,0.8);
     leg_FST->SetBorderSize(0);
     leg_FST->SetFillColor(10);
-    for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
     {
       h_mSignalHits_Rstrip[i_rstrip]->SetStats(0);
       h_mSignalHits_Rstrip[i_rstrip]->SetTitle("FST Hits");
       h_mSignalHits_Rstrip[i_rstrip]->GetXaxis()->SetTitle("ADC");
       h_mSignalHits_Rstrip[i_rstrip]->GetXaxis()->SetTitleSize(0.06);
+      h_mSignalHits_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(0.0,0.6*h_mSignalHits_FST->GetMaximum());
       h_mSignalHits_Rstrip[i_rstrip]->SetLineColor(i_rstrip+1);
 
       string FuncName = Form("f_landau_FST_%d",i_rstrip);
@@ -202,16 +203,17 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
 
   c_Signal->cd(2);
   {
-    TF1 *f_landau_FST[4];
+    TF1 *f_landau_FST[FST::numRStrip];
     TLegend *leg_FST = new TLegend(0.4,0.6,0.85,0.8);
     leg_FST->SetBorderSize(0);
     leg_FST->SetFillColor(10);
-    for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
     {
       h_mFstSimpleClustersSignal_Rstrip[i_rstrip]->SetStats(0);
       h_mFstSimpleClustersSignal_Rstrip[i_rstrip]->SetTitle("FST Clusters");
       h_mFstSimpleClustersSignal_Rstrip[i_rstrip]->GetXaxis()->SetTitle("ADC");
       h_mFstSimpleClustersSignal_Rstrip[i_rstrip]->GetXaxis()->SetTitleSize(0.06);
+      h_mFstSimpleClustersSignal_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(0.0,0.6*h_mFstSimpleClustersSignal->GetMaximum());
       h_mFstSimpleClustersSignal_Rstrip[i_rstrip]->SetLineColor(i_rstrip+1);
 
       string FuncName = Form("f_landau_FST_%d",i_rstrip);
@@ -238,12 +240,13 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
     TLegend *leg_FST = new TLegend(0.4,0.6,0.85,0.8);
     leg_FST->SetBorderSize(0);
     leg_FST->SetFillColor(10);
-    for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
     {
       h_mNoiseHits_Rstrip[i_rstrip]->SetStats(0);
       h_mNoiseHits_Rstrip[i_rstrip]->SetTitle("FST Noise");
       h_mNoiseHits_Rstrip[i_rstrip]->GetXaxis()->SetTitle("ADC");
       h_mNoiseHits_Rstrip[i_rstrip]->GetXaxis()->SetTitleSize(0.06);
+      h_mNoiseHits_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(0.0,0.6*h_mNoiseHits_FST->GetMaximum());
       h_mNoiseHits_Rstrip[i_rstrip]->SetLineColor(i_rstrip+1);
 
       if(i_rstrip == 0) h_mNoiseHits_Rstrip[i_rstrip]->Draw();
@@ -260,12 +263,13 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
     TLegend *leg_FST = new TLegend(0.50,0.6,0.90,0.8);
     leg_FST->SetBorderSize(0);
     leg_FST->SetFillColor(10);
-    for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
     {
       h_mSNRatioHits_Rstrip[i_rstrip]->SetStats(0);
       h_mSNRatioHits_Rstrip[i_rstrip]->SetTitle("FST Signal/Noise");
       h_mSNRatioHits_Rstrip[i_rstrip]->GetXaxis()->SetTitle("Signal/Noise");
       h_mSNRatioHits_Rstrip[i_rstrip]->GetXaxis()->SetTitleSize(0.06);
+      h_mSNRatioHits_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(0.0,0.6*h_mSNRatioHits_FST->GetMaximum());
       h_mSNRatioHits_Rstrip[i_rstrip]->SetLineColor(i_rstrip+1);
 
       if(i_rstrip == 0) h_mSNRatioHits_Rstrip[i_rstrip]->Draw();
@@ -282,7 +286,7 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
     TLegend *leg_FST = new TLegend(0.55,0.6,0.8,0.8);
     leg_FST->SetBorderSize(0);
     leg_FST->SetFillColor(10);
-    for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
     {
       h_mMaxTbHits_Rstrip[i_rstrip]->SetStats(0);
       h_mMaxTbHits_Rstrip[i_rstrip]->SetTitle("Max Time Bin Hits");
@@ -304,7 +308,7 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
     TLegend *leg_FST = new TLegend(0.55,0.6,0.8,0.8);
     leg_FST->SetBorderSize(0);
     leg_FST->SetFillColor(10);
-    for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
     {
       h_mFstSimpleClustersMaxTb_Rstrip[i_rstrip]->SetStats(0);
       h_mFstSimpleClustersMaxTb_Rstrip[i_rstrip]->SetTitle("Max Time Bin Clusters");
@@ -340,7 +344,7 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
     TLegend *leg_FST = new TLegend(0.7,0.6,0.8,0.9);
     leg_FST->SetBorderSize(0);
     leg_FST->SetFillColor(10);
-    for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
     {
       h_mMeanSignalHits_Rstrip[i_rstrip]->SetTitle("");
       h_mMeanSignalHits_Rstrip[i_rstrip]->SetStats(0);
@@ -365,7 +369,7 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
 
   c_MeanSignal->cd(2);
   {
-    for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
     {
       h_mMeanSignalClusters_Rstrip[i_rstrip]->SetTitle("");
       h_mMeanSignalClusters_Rstrip[i_rstrip]->SetStats(0);
@@ -386,7 +390,7 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
 
   c_MeanSignal->cd(3);
   {
-    for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
     {
       h_mMeanNoiseHits_Rstrip[i_rstrip]->SetTitle("");
       h_mMeanNoiseHits_Rstrip[i_rstrip]->SetStats(0);
@@ -407,7 +411,7 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
 
   c_MeanSignal->cd(4);
   {
-    for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
     {
       h_mMeanSNRatioHits_Rstrip[i_rstrip]->SetTitle("");
       h_mMeanSNRatioHits_Rstrip[i_rstrip]->SetStats(0);
@@ -442,11 +446,12 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
   }
 
   // Signal
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
     {
       int i_pad = i_rstrip*9 + i_tb;
+      if(i_rstrip > 3) i_pad = (i_rstrip-4)*9 + i_tb;
       c_Signal_TimeBin->cd(i_pad+1);
       string title = Form("RStrip%d & TB%d",i_rstrip,i_tb);
       h_mSignalHits_Rstrip_TimeBin[i_rstrip][i_tb]->SetTitle(title.c_str());
@@ -456,16 +461,20 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
       h_mSignalHits_Rstrip_TimeBin[i_rstrip][i_tb]->Draw();
       if(i_rstrip == 0 && i_tb == 0) plotTopLegend((char*)"Hits",0.3,0.6,0.15,1,0.0,42,1,1);
     }
+    if(i_rstrip == 3 || i_rstrip == FST::numRStrip-1)
+    {
+      c_Signal_TimeBin->Update();
+      c_Signal_TimeBin->Print(outputname.c_str());
+    }
   }
-  c_Signal_TimeBin->Update();
-  c_Signal_TimeBin->Print(outputname.c_str());
 
   // Noise
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
     {
       int i_pad = i_rstrip*9 + i_tb;
+      if(i_rstrip > 3) i_pad = (i_rstrip-4)*9 + i_tb;
       c_Signal_TimeBin->cd(i_pad+1);
       string title = Form("RStrip%d & TB%d",i_rstrip,i_tb);
       h_mNoiseHits_Rstrip_TimeBin[i_rstrip][i_tb]->SetTitle(title.c_str());
@@ -475,16 +484,20 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
       h_mNoiseHits_Rstrip_TimeBin[i_rstrip][i_tb]->GetYaxis()->SetLabelSize(0.06);
       h_mNoiseHits_Rstrip_TimeBin[i_rstrip][i_tb]->Draw();
     }
+    if(i_rstrip == 3 || i_rstrip == FST::numRStrip-1)
+    {
+      c_Signal_TimeBin->Update();
+      c_Signal_TimeBin->Print(outputname.c_str());
+    }
   }
-  c_Signal_TimeBin->Update();
-  c_Signal_TimeBin->Print(outputname.c_str());
 
   // Signal/Noise
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
     {
       int i_pad = i_rstrip*9 + i_tb;
+      if(i_rstrip > 3) i_pad = (i_rstrip-4)*9 + i_tb;
       c_Signal_TimeBin->cd(i_pad+1);
       string title = Form("RStrip%d & TB%d",i_rstrip,i_tb);
       h_mSNRatioHits_Rstrip_TimeBin[i_rstrip][i_tb]->SetTitle(title.c_str());
@@ -493,16 +506,20 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
       h_mSNRatioHits_Rstrip_TimeBin[i_rstrip][i_tb]->GetYaxis()->SetLabelSize(0.06);
       h_mSNRatioHits_Rstrip_TimeBin[i_rstrip][i_tb]->Draw();
     }
+    if(i_rstrip == 3 || i_rstrip == FST::numRStrip-1)
+    {
+      c_Signal_TimeBin->Update();
+      c_Signal_TimeBin->Print(outputname.c_str());
+    }
   }
-  c_Signal_TimeBin->Update();
-  c_Signal_TimeBin->Print(outputname.c_str());
 
   // Signal of Clusters
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
     {
       int i_pad = i_rstrip*9 + i_tb;
+      if(i_rstrip > 3) i_pad = (i_rstrip-4)*9 + i_tb;
       c_Signal_TimeBin->cd(i_pad+1);
       string title = Form("RStrip%d & TB%d",i_rstrip,i_tb);
       h_mFstSimpleClustersSignal_Rstrip_TimeBin[i_rstrip][i_tb]->SetTitle(title.c_str());
@@ -512,9 +529,12 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
       h_mFstSimpleClustersSignal_Rstrip_TimeBin[i_rstrip][i_tb]->Draw();
       if(i_rstrip == 0 && i_tb == 0) plotTopLegend((char*)"Clusters",0.3,0.6,0.15,1,0.0,42,1,1);
     }
+    if(i_rstrip == 3 || i_rstrip == FST::numRStrip-1)
+    {
+      c_Signal_TimeBin->Update();
+      c_Signal_TimeBin->Print(outputname.c_str());
+    }
   }
-  c_Signal_TimeBin->Update();
-  c_Signal_TimeBin->Print(outputname.c_str());
   //--------------------------------------------------
 
   // c_Signal->SaveAs("./figures/SignalQA.pdf");

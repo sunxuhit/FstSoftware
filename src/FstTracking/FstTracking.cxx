@@ -670,13 +670,13 @@ void FstTracking::calResolution_SimpleClusters(FstEvent *fstEvent)
 	    // check the position of the projected r is within a specific r_strip and fill accordingly
 	    {
 	      h_mSimpleClustersTrackFstResX_2Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj);
-    	      h_mSimpleClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->Fill(y0_fst-y0_proj);
-    	      h_mSimpleClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
-    	      
-    	      h_mSimpleClustersTrackFstResR_2Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj);
-    	      h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->Fill(phi_fst-phi_proj);
-    	      h_mSimpleClustersTrackFstResRPhi_2Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj,phi_fst-phi_proj);
-    	    }
+	      h_mSimpleClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->Fill(y0_fst-y0_proj);
+	      h_mSimpleClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
+
+	      h_mSimpleClustersTrackFstResR_2Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj);
+	      h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->Fill(phi_fst-phi_proj);
+	      h_mSimpleClustersTrackFstResRPhi_2Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj,phi_fst-phi_proj);
+	    }
 	  }
 	}
       }
@@ -803,12 +803,12 @@ void FstTracking::calResolution_SimpleClusters(FstEvent *fstEvent)
 	    // check the position of the projected r is within a specific r_strip and fill accordingly
 	    {
 	      h_mSimpleClustersTrackFstResX_3Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj);
-    	      h_mSimpleClustersTrackFstResY_3Layer_Rstrips[i_rstrip]->Fill(y0_fst-y0_proj);
-    	      h_mSimpleClustersTrackFstResXY_3Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
-    	      
-    	      h_mSimpleClustersTrackFstResR_3Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj);
-    	      h_mSimpleClustersTrackFstResPhi_3Layer_Rstrips[i_rstrip]->Fill(phi_fst-phi_proj);
-    	      h_mSimpleClustersTrackFstResRPhi_3Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj,phi_fst-phi_proj);
+	      h_mSimpleClustersTrackFstResY_3Layer_Rstrips[i_rstrip]->Fill(y0_fst-y0_proj);
+	      h_mSimpleClustersTrackFstResXY_3Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
+
+	      h_mSimpleClustersTrackFstResR_3Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj);
+	      h_mSimpleClustersTrackFstResPhi_3Layer_Rstrips[i_rstrip]->Fill(phi_fst-phi_proj);
+	      h_mSimpleClustersTrackFstResRPhi_3Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj,phi_fst-phi_proj);
     	    }
 	  }
 	}
@@ -920,13 +920,13 @@ void FstTracking::calResolution_ScanClusters(FstEvent *fstEvent)
 	    // check the position of the projected r is within a specific r_strip and fill accordingly
 	    {
 	      h_mScanClustersTrackFstResX_2Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj);
-    	      h_mScanClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->Fill(y0_fst-y0_proj);
-    	      h_mScanClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
-    	      
-    	      h_mScanClustersTrackFstResR_2Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj);
-    	      h_mScanClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->Fill(phi_fst-phi_proj);
-    	      h_mScanClustersTrackFstResRPhi_2Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj,phi_fst-phi_proj);
-    	    }
+	      h_mScanClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->Fill(y0_fst-y0_proj);
+	      h_mScanClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
+
+	      h_mScanClustersTrackFstResR_2Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj);
+	      h_mScanClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->Fill(phi_fst-phi_proj);
+	      h_mScanClustersTrackFstResRPhi_2Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj,phi_fst-phi_proj);
+	    }
 	  }
 	}
       }
@@ -1012,12 +1012,12 @@ void FstTracking::calResolution_ScanClusters(FstEvent *fstEvent)
 	    // check the position of the projected r is within a specific r_strip and fill accordingly
 	    {
 	      h_mScanClustersTrackFstResX_3Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj);
-    	      h_mScanClustersTrackFstResY_3Layer_Rstrips[i_rstrip]->Fill(y0_fst-y0_proj);
-    	      h_mScanClustersTrackFstResXY_3Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
-    	      
-    	      h_mScanClustersTrackFstResR_3Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj);
-    	      h_mScanClustersTrackFstResPhi_3Layer_Rstrips[i_rstrip]->Fill(phi_fst-phi_proj);
-    	      h_mScanClustersTrackFstResRPhi_3Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj,phi_fst-phi_proj);
+	      h_mScanClustersTrackFstResY_3Layer_Rstrips[i_rstrip]->Fill(y0_fst-y0_proj);
+	      h_mScanClustersTrackFstResXY_3Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
+
+	      h_mScanClustersTrackFstResR_3Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj);
+	      h_mScanClustersTrackFstResPhi_3Layer_Rstrips[i_rstrip]->Fill(phi_fst-phi_proj);
+	      h_mScanClustersTrackFstResRPhi_3Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj,phi_fst-phi_proj);
     	    }
 	  }
 	}
@@ -1179,7 +1179,8 @@ void FstTracking::calEfficiency_Hits(FstEvent *fstEvent)
 	      nMatchedTrack++;
 	    }
 	    // if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-	    if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+	    // if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+	    if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 9.0*FST::pitchPhi)
 	    {
 	      nMatchedTrack++;
 	    }
@@ -1298,7 +1299,8 @@ void FstTracking::calEfficiency_SimpleClusters(FstEvent *fstEvent)
 		    nMatchedTrack++;
 		  }
 		  // if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-		  if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		  // if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		  if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 9.0*FST::pitchPhi)
 		  {
 		    nMatchedTrack++;
 		  }
@@ -1365,7 +1367,8 @@ void FstTracking::calEfficiency_SimpleClusters(FstEvent *fstEvent)
 		      nMatchedTrack++;
 		    }
 		    // if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-		    if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		    // if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		    if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 9.0*FST::pitchPhi)
 		    {
 		      nMatchedTrack++;
 		    }
@@ -1448,7 +1451,8 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
 		    nMatchedTrack++;
 		  }
 		  // if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-		  if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		  // if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		  if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 9.0*FST::pitchPhi)
 		  {
 		    nMatchedTrack++;
 		  }
@@ -1515,7 +1519,8 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
 		      nMatchedTrack++;
 		    }
 		    // if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-		    if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		    // if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		    if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 9.0*FST::pitchPhi)
 		    {
 		      nMatchedTrack++;
 		    }
