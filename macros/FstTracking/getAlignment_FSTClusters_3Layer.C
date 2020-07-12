@@ -46,7 +46,7 @@ double gaussian(double *var, double *par)
   return y;
 }
 
-int getAlignment_FSTClusters(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2)
+int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2)
 {
   gStyle->SetOptStat(111111);
   gStyle->SetOptFit(1001);
@@ -79,7 +79,7 @@ int getAlignment_FSTClusters(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2)
   const double x3_shift = 0.45811;
   const double y3_shift = 1.0116;
 
-  std::string inputlist = Form("../../list/FST/alignment/FstCluster_Th%1.1fTb%d.list",nFstHitsCut,numOfUsedTimeBins);
+  std::string inputlist = Form("../../list/FST/alignment/FstCluster_Th%1.1fTb%d_Outer.list",nFstHitsCut,numOfUsedTimeBins);
   cout << "input list set to: " << inputlist.c_str() << endl;
   TChain *mChainInPut = new TChain("mTree_FstEvent");
   if (!inputlist.empty())   // if input file is ok
@@ -274,8 +274,8 @@ int getAlignment_FSTClusters(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2)
     c_Residual->cd(i_pad+1)->SetTicks(1,1);
     c_Residual->cd(i_pad+1)->SetGrid(0,0);
   }
-  string outputname = "./figures/Residual_FSTClusters_2Layer.pdf";
-  string output_start = "./figures/Residual_FSTClusters_2Layer.pdf[";
+  string outputname = "./figures/Residual_FSTClusters_3Layer.pdf";
+  string output_start = "./figures/Residual_FSTClusters_3Layer.pdf[";
   c_Residual->Print(output_start.c_str()); // open pdf file
 
   //------------------------------
@@ -719,7 +719,7 @@ int getAlignment_FSTClusters(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2)
 
   cout << "Minuit minimization: phi_rot_ist2 = " << std::get<0>(fitPars) << ", x2_shift = " << std::get<1>(fitPars) << ", y2_shift = " << std::get<2>(fitPars) << endl;
 
-  string output_stop = "./figures/Residual_FSTClusters_2Layer.pdf]"; 
+  string output_stop = "./figures/Residual_FSTClusters_3Layer.pdf]"; 
   c_Residual->Print(output_stop.c_str()); // close pdf file
 
   return 1;
