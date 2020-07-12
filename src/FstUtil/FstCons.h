@@ -54,12 +54,9 @@ namespace FST
   // const double phi_rot_ist2 = 0.0438495; // aligned IST2 to FST with 2-layer tracking
   // const double x2_shift     = 140.99; // x2_shift + 6.0
   // const double y2_shift     = -20.7848;
-  // const double phi_rot_ist2 = 3.16468; // for Inner sector test
-  // const double x2_shift     = 214.621;
-  // const double y2_shift     = 32.1224;
-  const double phi_rot_ist2 = 3.16571; // for Inner sector test
-  const double x2_shift     = 213.28;
-  const double y2_shift     = 32.023;
+  const double phi_rot_ist2 = 3.16437; // for Inner sector test
+  const double x2_shift     = 214.935;
+  const double y2_shift     = 32.1761;
 
   // Hits Selection
   const float nFstPedsCut      = 3.0; // used for ped

@@ -4,6 +4,7 @@
 #include <vector>
 #include <tuple>
 
+#include <TStyle.h>
 #include <TMath.h>
 #include <TCanvas.h>
 #include "Fit/Fitter.h"
@@ -19,16 +20,39 @@
 #include "../../src/FstUtil/FstEvent.h"
 #include "../FstPlotConfiguration/draw.h"
 
+R__LOAD_LIBRARY(../../lib/libFstEvent.dylib)
+
 typedef std::vector<double> dVec;
 typedef std::tuple<double, double, double, double, double, int> tPars; // phi_rot_ist2, x2_shift, y2_shift, xCut, yCut, nOffset
 
 tPars minuitAlignment(dVec x0_orig, dVec y0_orig, dVec x1_orig, dVec y1_orig, dVec x3_orig, dVec y3_orig, tPars cParameters);
 tPars updateFitParameters(tPars fitPars, double xCut, double yCut, int nOffset);
 
-R__LOAD_LIBRARY(../../lib/libFstEvent.dylib)
+double gaussian(double *var, double *par)
+{
+  double residual = var[0];
+
+  double norm  = par[0];
+  double mean  = par[1];
+  double sigma = par[2];
+  double binwidth = par[3];
+
+  double sigmaSquare = sigma*sigma;
+  double Norm = norm/(sqrt(2.0*TMath::Pi())*sigma);
+  double Power = -0.5*(residual-mean)*(residual-mean)/sigmaSquare;
+
+  double y = Norm*exp(Power)*binwidth;
+
+  return y;
+}
 
 int getAlignment_FSTClusters(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2)
 {
+  gStyle->SetOptStat(111111);
+  gStyle->SetOptFit(1001);
+  gStyle->SetStatX(0.95); gStyle->SetStatY(0.90);
+  gStyle->SetStatW(0.20); gStyle->SetStatH(0.20);
+
   dVec r0_fst;
   dVec phi0_fst;
   dVec x0_fst;
@@ -126,46 +150,49 @@ int getAlignment_FSTClusters(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2)
       }
     }
 
-    if(clusterVec_fst.size() > 0) // FST has at least one hit
+    for(int i_ist1 = 0; i_ist1 < clusterVec_ist1.size(); ++i_ist1)
     {
-      for(int i_ist1 = 0; i_ist1 < clusterVec_ist1.size(); ++i_ist1)
+      double x1 = clusterVec_ist1[i_ist1]->getMeanX();
+      double y1 = clusterVec_ist1[i_ist1]->getMeanY();
+      const double z1_ist = FST::pitchLayer12 + FST::pitchLayer23;
+      double row1 = clusterVec_ist1[i_ist1]->getMeanRow();
+
+      double x1_corr = x1*TMath::Cos(phi_rot_ist1) + y1*TMath::Sin(phi_rot_ist1) + x1_shift;
+      double y1_corr = y1*TMath::Cos(phi_rot_ist1) - x1*TMath::Sin(phi_rot_ist1) + y1_shift;
+
+      for(int i_ist3 = 0; i_ist3 < clusterVec_ist3.size(); ++i_ist3)
       {
-	double x1 = clusterVec_ist1[i_ist1]->getMeanX();
-	double y1 = clusterVec_ist1[i_ist1]->getMeanY();
-	const double z1_ist = FST::pitchLayer12 + FST::pitchLayer23;
-	double row1 = clusterVec_ist1[i_ist1]->getMeanRow();
+	double x3 = clusterVec_ist3[i_ist3]->getMeanX();
+	double y3 = clusterVec_ist3[i_ist3]->getMeanY();
+	const double z3_ist = 0.0;
+	double row3 = clusterVec_ist3[i_ist3]->getMeanRow();
 
-	double x1_corr = x1*TMath::Cos(phi_rot_ist1) + y1*TMath::Sin(phi_rot_ist1) + x1_shift;
-	double y1_corr = y1*TMath::Cos(phi_rot_ist1) - x1*TMath::Sin(phi_rot_ist1) + y1_shift;
+	double x3_corr = x3*TMath::Cos(phi_rot_ist3) + y3*TMath::Sin(phi_rot_ist3) + x3_shift;
+	double y3_corr = y3*TMath::Cos(phi_rot_ist3) - x3*TMath::Sin(phi_rot_ist3) + y3_shift;
 
-	for(int i_ist3 = 0; i_ist3 < clusterVec_ist3.size(); ++i_ist3)
+	if( abs(row3-row1) < 17)
 	{
-	  double x3 = clusterVec_ist3[i_ist3]->getMeanX();
-	  double y3 = clusterVec_ist3[i_ist3]->getMeanY();
-	  const double z3_ist = 0.0;
-	  double row3 = clusterVec_ist3[i_ist3]->getMeanRow();
-
-	  double x3_corr = x3*TMath::Cos(phi_rot_ist3) + y3*TMath::Sin(phi_rot_ist3) + x3_shift;
-	  double y3_corr = y3*TMath::Cos(phi_rot_ist3) - x3*TMath::Sin(phi_rot_ist3) + y3_shift;
-
-	  if( abs(row3-row1) < 17)
+	  if(clusterVec_fst.size() > 0) // FST has at least one hit
 	  {
 	    for(int i_fst = 0; i_fst < clusterVec_fst.size(); ++i_fst)
 	    {
 	      double r0 = clusterVec_fst[i_fst]->getMeanX();
 	      double phi0 = clusterVec_fst[i_fst]->getMeanY();
-	      if(r0 > FST::rInner && r0 < FST::rInner+4.0*FST::pitchR)
+	      if(r0 > FST::rInner+0.0*FST::pitchR && r0 < FST::rInner+4.0*FST::pitchR)
 	      {
-		double x0 = r0*TMath::Cos(phi0);
-		double y0 = r0*TMath::Sin(phi0);
-		r0_fst.push_back(r0);
-		phi0_fst.push_back(phi0);
-		x0_fst.push_back(x0);
-		y0_fst.push_back(y0);
-		x1_ist.push_back(x1_corr); // aligned w.r.t. IST2
-		y1_ist.push_back(y1_corr);
-		x3_ist.push_back(x3_corr);
-		y3_ist.push_back(y3_corr);
+		// if(clusterVec_fst[i_fst]->getMeanRow() > 63.5 && clusterVec_fst[i_fst]->getMeanRow() < 95.5)
+		{
+		  double x0 = r0*TMath::Cos(phi0);
+		  double y0 = r0*TMath::Sin(phi0);
+		  r0_fst.push_back(r0);
+		  phi0_fst.push_back(phi0);
+		  x0_fst.push_back(x0);
+		  y0_fst.push_back(y0);
+		  x1_ist.push_back(x1_corr); // aligned w.r.t. IST2
+		  y1_ist.push_back(y1_corr);
+		  x3_ist.push_back(x3_corr);
+		  y3_ist.push_back(y3_corr);
+		}
 	      }
 	    }
 	  }
@@ -178,37 +205,65 @@ int getAlignment_FSTClusters(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2)
 
   cout << "Start Minuit Fit for alignment => " << endl;
   TH1F *h_mXResidual      = new TH1F("h_mXResidual","h_mXResidual",50,-160,160.0);
-  TH1F *h_mYResidual      = new TH1F("h_mYResidual","h_mYResidual",100,-16.0,16.0);
+  TH1F *h_mYResidual      = new TH1F("h_mYResidual","h_mYResidual",200,-100.0,100.0);
   TH1F *h_mRResidual      = new TH1F("h_mRResidual","h_mRResidual",50,-160.0,160.0);
-  TH1F *h_mPhiResidual    = new TH1F("h_mPhiResidual","h_mPhiResidual",200,-0.1,0.1);
+  TH1F *h_mPhiResidual    = new TH1F("h_mPhiResidual","h_mPhiResidual",360,-0.5*TMath::Pi(),0.5*TMath::Pi());
+
   TH1F *h_mXCutResidual   = new TH1F("h_mXCutResidual","h_mXCutResidual",50,-160,160.0);
-  TH1F *h_mYCutResidual   = new TH1F("h_mYCutResidual","h_mYCutResidual",100,-16.0,16.0);
+  TH1F *h_mYCutResidual   = new TH1F("h_mYCutResidual","h_mYCutResidual",200,-100.0,100.0);
   TH1F *h_mRCutResidual   = new TH1F("h_mRCutResidual","h_mRCutResidual",50,-160.0,160.0);
-  TH1F *h_mPhiCutResidual = new TH1F("h_mPhiCutResidual","h_mPhiCutResidual",200,-0.1,0.1);
+  TH1F *h_mPhiCutResidual = new TH1F("h_mPhiCutResidual","h_mPhiCutResidual",360,-0.5*TMath::Pi(),0.5*TMath::Pi());
 
   h_mXResidual->SetTitle("Corrected X-residual FST Scan Clusters");
   h_mXResidual->GetXaxis()->SetTitle("x-residual (mm)");
   h_mXResidual->GetXaxis()->SetTitleSize(0.06);
   h_mXResidual->GetYaxis()->SetTitle("No. Tracks");
   h_mXResidual->GetYaxis()->SetTitleSize(0.06);
+  h_mXResidual->SetLineColor(1);
+  h_mXResidual->SetLineWidth(1);
+  h_mXCutResidual->SetMarkerStyle(24);
+  h_mXCutResidual->SetMarkerColor(2);
+  h_mXCutResidual->SetMarkerSize(0.9);
 
   h_mYResidual->SetTitle("Corrected Y-residual FST Scan Clusters");
   h_mYResidual->GetXaxis()->SetTitle("Y-residual (mm)");
   h_mYResidual->GetXaxis()->SetTitleSize(0.06);
   h_mYResidual->GetYaxis()->SetTitle("No. Tracks");
   h_mYResidual->GetYaxis()->SetTitleSize(0.06);
+  h_mYResidual->SetLineColor(1);
+  h_mYResidual->SetLineWidth(1);
+  h_mYCutResidual->SetMarkerStyle(24);
+  h_mYCutResidual->SetMarkerColor(2);
+  h_mYCutResidual->SetMarkerSize(0.9);
 
   h_mRResidual->SetTitle("Corrected R-residual FST Scan Clusters");
   h_mRResidual->GetXaxis()->SetTitle("r-residual (mm)");
   h_mRResidual->GetXaxis()->SetTitleSize(0.06);
   h_mRResidual->GetYaxis()->SetTitle("No. Tracks");
   h_mRResidual->GetYaxis()->SetTitleSize(0.06);
+  h_mRResidual->SetLineColor(1);
+  h_mRResidual->SetLineWidth(1);
+  h_mRCutResidual->SetMarkerStyle(24);
+  h_mRCutResidual->SetMarkerColor(2);
+  h_mRCutResidual->SetMarkerSize(0.9);
 
   h_mPhiResidual->SetTitle("Corrected #phi-residual FST Scan Clusters");
   h_mPhiResidual->GetXaxis()->SetTitle("#phi-residual (rad)");
   h_mPhiResidual->GetXaxis()->SetTitleSize(0.06);
+  h_mPhiResidual->GetXaxis()->SetRangeUser(-0.5*TMath::Pi(),0.2*TMath::Pi());
   h_mPhiResidual->GetYaxis()->SetTitle("No. Tracks");
   h_mPhiResidual->GetYaxis()->SetTitleSize(0.06);
+  h_mPhiResidual->SetLineColor(1);
+  h_mPhiResidual->SetLineWidth(1);
+  h_mPhiCutResidual->SetMarkerStyle(24);
+  h_mPhiCutResidual->SetMarkerColor(2);
+  h_mPhiCutResidual->SetMarkerSize(0.9);
+
+  TLegend *leg = new TLegend(0.18,0.75,0.5,0.85);
+  leg->SetBorderSize(0);
+  leg->SetFillColor(10);
+  leg->AddEntry(h_mXResidual,"Current Pars","l");
+  leg->AddEntry(h_mXCutResidual,"Next Fit","p");
 
   TCanvas *c_Residual = new TCanvas("c_Residual","c_Residual",10,10,800,800);
   c_Residual->Divide(2,2);
@@ -286,32 +341,16 @@ int getAlignment_FSTClusters(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2)
     canvas_title->SetBorderSize(1);
     canvas_title->Draw();
     c_Residual->cd(1);
-    h_mXResidual->SetLineColor(1);
-    h_mXResidual->SetMarkerColor(1);
-    h_mXResidual->SetMarkerStyle(20);
-    h_mXResidual->SetMarkerSize(0.8);
-    h_mXResidual->DrawCopy("pE");
+    h_mXResidual->DrawCopy("hE");
 
     c_Residual->cd(2);
-    h_mYResidual->SetLineColor(1);
-    h_mYResidual->SetMarkerColor(1);
-    h_mYResidual->SetMarkerStyle(20);
-    h_mYResidual->SetMarkerSize(0.8);
-    h_mYResidual->DrawCopy("pE");
+    h_mYResidual->DrawCopy("hE");
 
     c_Residual->cd(3);
-    h_mRResidual->SetLineColor(1);
-    h_mRResidual->SetMarkerColor(1);
-    h_mRResidual->SetMarkerStyle(20);
-    h_mRResidual->SetMarkerSize(0.8);
-    h_mRResidual->DrawCopy("pE");
+    h_mRResidual->DrawCopy("hE");
 
     c_Residual->cd(4);
-    h_mPhiResidual->SetLineColor(1);
-    h_mPhiResidual->SetMarkerColor(1);
-    h_mPhiResidual->SetMarkerStyle(20);
-    h_mPhiResidual->SetMarkerSize(0.8);
-    h_mPhiResidual->DrawCopy("pE");
+    h_mPhiResidual->DrawCopy("hE");
     c_Residual->Update();
     c_Residual->Print(outputname.c_str());
   }
@@ -376,57 +415,26 @@ int getAlignment_FSTClusters(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2)
       canvas_title->SetBorderSize(1);
       canvas_title->Draw();
       c_Residual->cd(1);
-      h_mXResidual->SetLineColor(1);
-      h_mXResidual->SetMarkerColor(1);
-      h_mXResidual->SetMarkerStyle(20);
-      h_mXResidual->SetMarkerSize(0.8);
-      h_mXResidual->DrawCopy("pE");
-      h_mXCutResidual->SetMarkerStyle(24);
-      h_mXCutResidual->SetMarkerColor(2);
-      h_mXCutResidual->SetMarkerSize(1.0);
+      h_mXResidual->DrawCopy("h");
       h_mXCutResidual->DrawCopy("p same");
       PlotLine(xCut_temp, xCut_temp, 0.0, 0.8*h_mXResidual->GetMaximum(), 4, 2, 2);
       PlotLine(-xCut_temp, -xCut_temp, 0., 0.8*h_mXResidual->GetMaximum(), 4, 2, 2);
-      TLegend *leg = new TLegend(0.18,0.75,0.5,0.85);
-      leg->SetBorderSize(0);
-      leg->SetFillColor(10);
-      leg->AddEntry(h_mXResidual,"Current Pars","p");
-      leg->AddEntry(h_mXCutResidual,"Next Fit","p");
       leg->Draw("same");
 
       c_Residual->cd(2);
-      h_mYResidual->SetLineColor(1);
-      h_mYResidual->SetMarkerColor(1);
-      h_mYResidual->SetMarkerStyle(20);
-      h_mYResidual->SetMarkerSize(0.8);
-      h_mYResidual->DrawCopy("pE");
-      h_mYCutResidual->SetMarkerStyle(24);
-      h_mYCutResidual->SetMarkerColor(2);
-      h_mYCutResidual->SetMarkerSize(1.0);
+      h_mYResidual->GetXaxis()->SetRangeUser(-15.0,15.0);
+      h_mYResidual->DrawCopy("h");
       h_mYCutResidual->DrawCopy("p same");
       PlotLine(yCut_temp, yCut_temp, 0.0, 0.8*h_mYResidual->GetMaximum(), 4, 2, 2);
       PlotLine(-yCut_temp, -yCut_temp, 0.0, 0.8*h_mYResidual->GetMaximum(), 4, 2, 2);
 
       c_Residual->cd(3);
-      h_mRResidual->SetLineColor(1);
-      h_mRResidual->SetMarkerColor(1);
-      h_mRResidual->SetMarkerStyle(20);
-      h_mRResidual->SetMarkerSize(0.8);
-      h_mRResidual->DrawCopy("pE");
-      h_mRCutResidual->SetMarkerStyle(24);
-      h_mRCutResidual->SetMarkerColor(2);
-      h_mRCutResidual->SetMarkerSize(1.0);
+      h_mPhiResidual->GetXaxis()->SetRangeUser(-0.1,0.1);
+      h_mRResidual->DrawCopy("h");
       h_mRCutResidual->DrawCopy("p same");
 
       c_Residual->cd(4);
-      h_mPhiResidual->SetLineColor(1);
-      h_mPhiResidual->SetMarkerColor(1);
-      h_mPhiResidual->SetMarkerStyle(20);
-      h_mPhiResidual->SetMarkerSize(0.8);
-      h_mPhiResidual->DrawCopy("pE");
-      h_mPhiCutResidual->SetMarkerStyle(24);
-      h_mPhiCutResidual->SetMarkerColor(2);
-      h_mPhiCutResidual->SetMarkerSize(1.0);
+      h_mPhiResidual->DrawCopy("h");
       h_mPhiCutResidual->DrawCopy("p same");
       c_Residual->Update();
       c_Residual->Print(outputname.c_str());
@@ -501,57 +509,24 @@ int getAlignment_FSTClusters(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2)
       canvas_title->SetBorderSize(1);
       canvas_title->Draw();
       c_Residual->cd(1);
-      h_mXResidual->SetLineColor(1);
-      h_mXResidual->SetMarkerColor(1);
-      h_mXResidual->SetMarkerStyle(20);
-      h_mXResidual->SetMarkerSize(0.8);
-      h_mXResidual->DrawCopy("pE");
-      h_mXCutResidual->SetMarkerStyle(24);
-      h_mXCutResidual->SetMarkerColor(2);
-      h_mXCutResidual->SetMarkerSize(1.0);
+      h_mXResidual->DrawCopy("h");
       h_mXCutResidual->DrawCopy("p same");
       PlotLine(xCut_temp, xCut_temp, 0.0, 0.8*h_mXResidual->GetMaximum(), 4, 2, 2);
       PlotLine(-xCut_temp, -xCut_temp, 0., 0.8*h_mXResidual->GetMaximum(), 4, 2, 2);
-      TLegend *leg = new TLegend(0.18,0.75,0.5,0.85);
-      leg->SetBorderSize(0);
-      leg->SetFillColor(10);
-      leg->AddEntry(h_mXResidual,"Current Pars","p");
-      leg->AddEntry(h_mXCutResidual,"Next Fit","p");
       leg->Draw("same");
 
       c_Residual->cd(2);
-      h_mYResidual->SetLineColor(1);
-      h_mYResidual->SetMarkerColor(1);
-      h_mYResidual->SetMarkerStyle(20);
-      h_mYResidual->SetMarkerSize(0.8);
-      h_mYResidual->DrawCopy("pE");
-      h_mYCutResidual->SetMarkerStyle(24);
-      h_mYCutResidual->SetMarkerColor(2);
-      h_mYCutResidual->SetMarkerSize(1.0);
+      h_mYResidual->DrawCopy("h");
       h_mYCutResidual->DrawCopy("p same");
       PlotLine(yCut_temp, yCut_temp, 0.0, 0.8*h_mYResidual->GetMaximum(), 4, 2, 2);
       PlotLine(-yCut_temp, -yCut_temp, 0.0, 0.8*h_mYResidual->GetMaximum(), 4, 2, 2);
 
       c_Residual->cd(3);
-      h_mRResidual->SetLineColor(1);
-      h_mRResidual->SetMarkerColor(1);
-      h_mRResidual->SetMarkerStyle(20);
-      h_mRResidual->SetMarkerSize(0.8);
-      h_mRResidual->DrawCopy("pE");
-      h_mRCutResidual->SetMarkerStyle(24);
-      h_mRCutResidual->SetMarkerColor(2);
-      h_mRCutResidual->SetMarkerSize(1.0);
+      h_mRResidual->DrawCopy("h");
       h_mRCutResidual->DrawCopy("p same");
 
       c_Residual->cd(4);
-      h_mPhiResidual->SetLineColor(1);
-      h_mPhiResidual->SetMarkerColor(1);
-      h_mPhiResidual->SetMarkerStyle(20);
-      h_mPhiResidual->SetMarkerSize(0.8);
-      h_mPhiResidual->DrawCopy("pE");
-      h_mPhiCutResidual->SetMarkerStyle(24);
-      h_mPhiCutResidual->SetMarkerColor(2);
-      h_mPhiCutResidual->SetMarkerSize(1.0);
+      h_mPhiResidual->DrawCopy("h");
       h_mPhiCutResidual->DrawCopy("p same");
       c_Residual->Update();
       c_Residual->Print(outputname.c_str());
@@ -624,57 +599,24 @@ int getAlignment_FSTClusters(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2)
       canvas_title->SetBorderSize(1);
       canvas_title->Draw();
       c_Residual->cd(1);
-      h_mXResidual->SetLineColor(1);
-      h_mXResidual->SetMarkerColor(1);
-      h_mXResidual->SetMarkerStyle(20);
-      h_mXResidual->SetMarkerSize(0.8);
-      h_mXResidual->DrawCopy("pE");
-      h_mXCutResidual->SetMarkerStyle(24);
-      h_mXCutResidual->SetMarkerColor(2);
-      h_mXCutResidual->SetMarkerSize(1.0);
+      h_mXResidual->DrawCopy("h");
       h_mXCutResidual->DrawCopy("p same");
       PlotLine(xCut_temp, xCut_temp, 0.0, 0.8*h_mXResidual->GetMaximum(), 4, 2, 2);
       PlotLine(-xCut_temp, -xCut_temp, 0., 0.8*h_mXResidual->GetMaximum(), 4, 2, 2);
-      TLegend *leg = new TLegend(0.18,0.75,0.5,0.85);
-      leg->SetBorderSize(0);
-      leg->SetFillColor(10);
-      leg->AddEntry(h_mXResidual,"Current Pars","p");
-      leg->AddEntry(h_mXCutResidual,"Next Fit","p");
       leg->Draw("same");
 
       c_Residual->cd(2);
-      h_mYResidual->SetLineColor(1);
-      h_mYResidual->SetMarkerColor(1);
-      h_mYResidual->SetMarkerStyle(20);
-      h_mYResidual->SetMarkerSize(0.8);
-      h_mYResidual->DrawCopy("pE");
-      h_mYCutResidual->SetMarkerStyle(24);
-      h_mYCutResidual->SetMarkerColor(2);
-      h_mYCutResidual->SetMarkerSize(1.0);
+      h_mYResidual->DrawCopy("h");
       h_mYCutResidual->DrawCopy("p same");
       PlotLine(yCut_temp, yCut_temp, 0.0, 0.8*h_mYResidual->GetMaximum(), 4, 2, 2);
       PlotLine(-yCut_temp, -yCut_temp, 0.0, 0.8*h_mYResidual->GetMaximum(), 4, 2, 2);
 
       c_Residual->cd(3);
-      h_mRResidual->SetLineColor(1);
-      h_mRResidual->SetMarkerColor(1);
-      h_mRResidual->SetMarkerStyle(20);
-      h_mRResidual->SetMarkerSize(0.8);
-      h_mRResidual->DrawCopy("pE");
-      h_mRCutResidual->SetMarkerStyle(24);
-      h_mRCutResidual->SetMarkerColor(2);
-      h_mRCutResidual->SetMarkerSize(1.0);
+      h_mRResidual->DrawCopy("h");
       h_mRCutResidual->DrawCopy("p same");
 
       c_Residual->cd(4);
-      h_mPhiResidual->SetLineColor(1);
-      h_mPhiResidual->SetMarkerColor(1);
-      h_mPhiResidual->SetMarkerStyle(20);
-      h_mPhiResidual->SetMarkerSize(0.8);
-      h_mPhiResidual->DrawCopy("pE");
-      h_mPhiCutResidual->SetMarkerStyle(24);
-      h_mPhiCutResidual->SetMarkerColor(2);
-      h_mPhiCutResidual->SetMarkerSize(1.0);
+      h_mPhiResidual->DrawCopy("h");
       h_mPhiCutResidual->DrawCopy("p same");
       c_Residual->Update();
       c_Residual->Print(outputname.c_str());
@@ -744,32 +686,33 @@ int getAlignment_FSTClusters(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2)
     canvas_title->SetBorderSize(1);
     canvas_title->Draw();
     c_Residual->cd(1);
-    h_mXResidual->SetLineColor(1);
-    h_mXResidual->SetMarkerColor(1);
-    h_mXResidual->SetMarkerStyle(20);
-    h_mXResidual->SetMarkerSize(0.8);
-    h_mXResidual->DrawCopy("pE");
+    h_mXResidual->DrawCopy("hE");
 
     c_Residual->cd(2);
-    h_mYResidual->SetLineColor(1);
-    h_mYResidual->SetMarkerColor(1);
-    h_mYResidual->SetMarkerStyle(20);
-    h_mYResidual->SetMarkerSize(0.8);
-    h_mYResidual->DrawCopy("pE");
+    h_mYResidual->DrawCopy("hE");
 
     c_Residual->cd(3);
-    h_mRResidual->SetLineColor(1);
-    h_mRResidual->SetMarkerColor(1);
-    h_mRResidual->SetMarkerStyle(20);
-    h_mRResidual->SetMarkerSize(0.8);
-    h_mRResidual->DrawCopy("pE");
+    h_mRResidual->DrawCopy("hE");
+    TF1 *f_gausR = new TF1("f_gausR",gaussian,-150.0,150.0,4);
+    f_gausR->SetParameter(0,100.0);
+    f_gausR->SetParameter(1,0.0);
+    f_gausR->SetParameter(2,10.0);
+    f_gausR->FixParameter(3,h_mRResidual->GetBinWidth(1));
+    f_gausR->SetRange(-20,50);
+    h_mRResidual->Fit(f_gausR,"R");
+    f_gausR->Draw("l same");
 
     c_Residual->cd(4);
-    h_mPhiResidual->SetLineColor(1);
-    h_mPhiResidual->SetMarkerColor(1);
-    h_mPhiResidual->SetMarkerStyle(20);
-    h_mPhiResidual->SetMarkerSize(0.8);
-    h_mPhiResidual->DrawCopy("pE");
+    h_mPhiResidual->DrawCopy("hE");
+    TF1 *f_gausPhi = new TF1("f_gausPhi",gaussian,-1.0,1.0,4);
+    f_gausPhi->SetParameter(0,100.0);
+    f_gausPhi->SetParameter(1,0.0);
+    f_gausPhi->SetParameter(2,10.0);
+    f_gausPhi->FixParameter(3,h_mPhiResidual->GetBinWidth(1));
+    f_gausPhi->SetRange(-0.05,0.05);
+    h_mPhiResidual->Fit(f_gausPhi,"R");
+    f_gausPhi->Draw("l same");
+
     c_Residual->Update();
     c_Residual->Print(outputname.c_str());
   }
