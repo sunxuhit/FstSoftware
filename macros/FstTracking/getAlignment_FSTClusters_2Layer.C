@@ -47,7 +47,7 @@ double gaussian(double *var, double *par)
   return y;
 }
 
-int getAlignment_FSTClusters_2Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2)
+int getAlignment_FSTClusters_2Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, bool isInner = true)
 {
   gStyle->SetOptStat(111111);
   gStyle->SetOptFit(1001);
@@ -73,7 +73,9 @@ int getAlignment_FSTClusters_2Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
   x3_ist.clear();
   y3_ist.clear();
 
-  std::string inputlist = Form("../../list/FST/alignment/FstCluster_Th%1.1fTb%d_Outer.list",nFstHitsCut,numOfUsedTimeBins);
+  string mSector = "Inner";
+  if(!isInner) mSector = "Outer";
+  std::string inputlist = Form("../../list/FST/alignment/FstCluster_Th%1.1fTb%d_%s.list",nFstHitsCut,numOfUsedTimeBins,mSector.c_str());
   cout << "input list set to: " << inputlist.c_str() << endl;
   TChain *mChainInPut = new TChain("mTree_FstEvent");
   if (!inputlist.empty())   // if input file is ok
@@ -164,21 +166,22 @@ int getAlignment_FSTClusters_2Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
 	    {
 	      double r0 = clusterVec_fst[i_fst]->getMeanX();
 	      double phi0 = clusterVec_fst[i_fst]->getMeanY();
-	      // if(r0 > FST::rInner+0.0*FST::pitchR && r0 < FST::rInner+4.0*FST::pitchR)
+	      double rMinTest = FST::rInner;
+	      double rMaxTest = FST::rInner + 4.0*FST::pitchR;
+	      if(!isInner) rMinTest = FST::rOuter;
+	      if(!isInner) rMaxTest = FST::rOuter + 4.0*FST::pitchR;
+	      if(r0 > rMinTest && r0 < rMaxTest)
 	      {
-		// if(clusterVec_fst[i_fst]->getMeanRow() > 63.5 && clusterVec_fst[i_fst]->getMeanRow() < 95.5)
-		{
-		  double x0 = r0*TMath::Cos(phi0);
-		  double y0 = r0*TMath::Sin(phi0);
-		  r0_fst.push_back(r0);
-		  phi0_fst.push_back(phi0);
-		  x0_fst.push_back(x0);
-		  y0_fst.push_back(y0);
-		  x1_ist.push_back(x1); // aligned w.r.t. IST2
-		  y1_ist.push_back(y1);
-		  x3_ist.push_back(x3);
-		  y3_ist.push_back(y3);
-		}
+		double x0 = r0*TMath::Cos(phi0);
+		double y0 = r0*TMath::Sin(phi0);
+		r0_fst.push_back(r0);
+		phi0_fst.push_back(phi0);
+		x0_fst.push_back(x0);
+		y0_fst.push_back(y0);
+		x1_ist.push_back(x1); // aligned w.r.t. IST2
+		y1_ist.push_back(y1);
+		x3_ist.push_back(x3);
+		y3_ist.push_back(y3);
 	      }
 	    }
 	  }
@@ -190,19 +193,44 @@ int getAlignment_FSTClusters_2Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
   // mFile_InPut->Close();
 
   cout << "Start Minuit Fit for alignment => " << endl;
-  TH1F *h_mXResidual      = new TH1F("h_mXResidual","h_mXResidual",50,-160,160.0);
-  // TH1F *h_mYResidual      = new TH1F("h_mYResidual","h_mYResidual",200,-100.0,100.0);
-  TH1F *h_mYResidual      = new TH1F("h_mYResidual","h_mYResidual",100,-16.0,16.0);
-  TH1F *h_mRResidual      = new TH1F("h_mRResidual","h_mRResidual",50,-160.0,160.0);
-  // TH1F *h_mPhiResidual    = new TH1F("h_mPhiResidual","h_mPhiResidual",360,-0.5*TMath::Pi(),0.5*TMath::Pi());
-  TH1F *h_mPhiResidual    = new TH1F("h_mPhiResidual","h_mPhiResidual",100,-0.05,0.05);
+  // -------------------------------------
+  // for plotting
+  int numBinX   = 50;
+  double maxX   = 160.0;
+  double minX   = -160.0;
+  int numBinY   = 200;
+  double maxY   = 100.0;
+  double minY   = -100.0;
+  int numBinR   = 50;
+  double maxR   = 160.0;
+  double minR   = -160.0;
+  int numBinPhi = 1570;
+  double maxPhi = 0.5*TMath::Pi();
+  double minPhi = -0.5*TMath::Pi();
+  if(!isInner)
+  {
+    numBinX   = 75;
+    maxX      = 320.0;
+    minX      = -160.0;
+    numBinY   = 625;
+    maxY      = 100.0;
+    minY      = -100.0;
+    numBinR   = 75;
+    maxR      = 320.0;
+    minR      = -160.0;
+    numBinPhi = 1570;
+    maxPhi    = 0.5*TMath::Pi();
+    minPhi    = -0.5*TMath::Pi();
+  }
+  TH1F *h_mXResidual      = new TH1F("h_mXResidual","h_mXResidual",numBinX,minX,maxX);
+  TH1F *h_mYResidual      = new TH1F("h_mYResidual","h_mYResidual",numBinY,minY,maxY);
+  TH1F *h_mRResidual      = new TH1F("h_mRResidual","h_mRResidual",numBinR,minR,maxR);
+  TH1F *h_mPhiResidual    = new TH1F("h_mPhiResidual","h_mPhiResidual",numBinPhi,minPhi,maxPhi);
 
-  TH1F *h_mXCutResidual   = new TH1F("h_mXCutResidual","h_mXCutResidual",50,-160,160.0);
-  // TH1F *h_mYCutResidual   = new TH1F("h_mYCutResidual","h_mYCutResidual",200,-100.0,100.0);
-  TH1F *h_mYCutResidual   = new TH1F("h_mYCutResidual","h_mYCutResidual",100,-16.0,16.0);
-  TH1F *h_mRCutResidual   = new TH1F("h_mRCutResidual","h_mRCutResidual",50,-160.0,160.0);
-  // TH1F *h_mPhiCutResidual = new TH1F("h_mPhiCutResidual","h_mPhiCutResidual",360,-0.5*TMath::Pi(),0.5*TMath::Pi());
-  TH1F *h_mPhiCutResidual = new TH1F("h_mPhiCutResidual","h_mPhiCutResidual",100,-0.05,0.05);
+  TH1F *h_mXCutResidual      = new TH1F("h_mXCutResidual","h_mXCutResidual",numBinX,minX,maxX);
+  TH1F *h_mYCutResidual      = new TH1F("h_mYCutResidual","h_mYCutResidual",numBinY,minY,maxY);
+  TH1F *h_mRCutResidual      = new TH1F("h_mRCutResidual","h_mRCutResidual",numBinR,minR,maxR);
+  TH1F *h_mPhiCutResidual    = new TH1F("h_mPhiCutResidual","h_mPhiCutResidual",numBinPhi,minPhi,maxPhi);
 
   h_mXResidual->SetTitle("Corrected X-residual FST Scan Clusters");
   h_mXResidual->GetXaxis()->SetTitle("x-residual (mm)");
@@ -264,8 +292,8 @@ int getAlignment_FSTClusters_2Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
     c_Residual->cd(i_pad+1)->SetTicks(1,1);
     c_Residual->cd(i_pad+1)->SetGrid(0,0);
   }
-  string outputname = "./figures/Residual_FSTClusters_2Layer.pdf";
-  string output_start = "./figures/Residual_FSTClusters_2Layer.pdf[";
+  string outputname = Form("./figures/%sResidual_FSTClusters_2Layer.pdf",mSector.c_str());
+  string output_start = Form("./figures/Residual_FSTClusters_2Layer.pdf[",mSector.c_str());
   c_Residual->Print(output_start.c_str()); // open pdf file
 
   //------------------------------
@@ -696,10 +724,26 @@ int getAlignment_FSTClusters_2Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
     canvas_title->Draw();
     c_Residual->cd(1);
     h_mXResidual->DrawCopy("h");
+    TF1 *f_gausX = new TF1("f_gausX",gaussian,-150.0,150.0,4);
+    f_gausX->SetParameter(0,100.0);
+    f_gausX->SetParameter(1,0.0);
+    f_gausX->SetParameter(2,10.0);
+    f_gausX->FixParameter(3,h_mXResidual->GetBinWidth(1));
+    f_gausX->SetRange(-30,30);
+    h_mXResidual->Fit(f_gausX,"R");
+    f_gausX->Draw("l same");
 
     c_Residual->cd(2);
     h_mYResidual->GetXaxis()->SetRangeUser(-15.0,15.0);
     h_mYResidual->DrawCopy("h");
+    TF1 *f_gausY = new TF1("f_gausY",gaussian,-150.0,150.0,4);
+    f_gausY->SetParameter(0,100.0);
+    f_gausY->SetParameter(1,0.0);
+    f_gausY->SetParameter(2,10.0);
+    f_gausY->FixParameter(3,h_mYResidual->GetBinWidth(1));
+    f_gausY->SetRange(-4.0,4.0);
+    h_mYResidual->Fit(f_gausY,"R");
+    f_gausY->Draw("l same");
 
     c_Residual->cd(3);
     h_mPhiResidual->GetXaxis()->SetRangeUser(-0.1,0.1);
@@ -709,7 +753,7 @@ int getAlignment_FSTClusters_2Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
     f_gausR->SetParameter(1,0.0);
     f_gausR->SetParameter(2,10.0);
     f_gausR->FixParameter(3,h_mRResidual->GetBinWidth(1));
-    f_gausR->SetRange(-20,50);
+    f_gausR->SetRange(-30,30);
     h_mRResidual->Fit(f_gausR,"R");
     f_gausR->Draw("l same");
 
@@ -720,7 +764,7 @@ int getAlignment_FSTClusters_2Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
     f_gausPhi->SetParameter(1,0.0);
     f_gausPhi->SetParameter(2,10.0);
     f_gausPhi->FixParameter(3,h_mPhiResidual->GetBinWidth(1));
-    f_gausPhi->SetRange(-0.05,0.05);
+    f_gausPhi->SetRange(-0.03,0.03);
     h_mPhiResidual->Fit(f_gausPhi,"R");
     f_gausPhi->Draw("l same");
 
@@ -731,7 +775,7 @@ int getAlignment_FSTClusters_2Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
   cout << "Minuit minimization: phi_rot_ist1 = " << std::get<0>(fitPars) << ", x1_shift = " << std::get<1>(fitPars) << ", y1_shift = " << std::get<2>(fitPars) << endl;
   cout << "Minuit minimization: phi_rot_ist3 = " << std::get<3>(fitPars) << ", x3_shift = " << std::get<4>(fitPars) << ", y3_shift = " << std::get<5>(fitPars) << endl;
 
-  string output_stop = "./figures/Residual_FSTClusters_2Layer.pdf]"; 
+  string output_stop = Form("./figures/%sResidual_FSTClusters_2Layer.pdf]",mSector.c_str()); 
   c_Residual->Print(output_stop.c_str()); // close pdf file
 
   return 1;
@@ -771,9 +815,9 @@ tPars minuitAlignment(dVec x0_orig, dVec y0_orig, dVec x1_orig, dVec y1_orig, dV
     y3_temp.push_back(y3_orig[i_cluster]);
   }
 
-  const double pitchLayer03 = 134.9375; // mm
-  const double pitchLayer12 = 34.925; //mm, distances between the 1st & 2nd Layer => Added by Xu Sun @ 02/13/2020
-  const double pitchLayer23 = 30.1625; //mm, distances between the 2nd & 3rd Layer
+  // const double pitchLayer03 = 134.9375; // mm
+  // const double pitchLayer12 = 34.925; //mm, distances between the 1st & 2nd Layer => Added by Xu Sun @ 02/13/2020
+  // const double pitchLayer23 = 30.1625; //mm, distances between the 2nd & 3rd Layer
 
   // reject offset trakcs
   const double phi_ist1_temp = std::get<0>(cParameters); // aligment parameters from previous iteration
@@ -795,8 +839,8 @@ tPars minuitAlignment(dVec x0_orig, dVec y0_orig, dVec x1_orig, dVec y1_orig, dV
     double x3_corr_temp = x3_temp[i_cluster]*TMath::Cos(phi_ist3_temp) + y3_temp[i_cluster]*TMath::Sin(phi_ist3_temp) + x3_shift_temp;
     double y3_corr_temp = y3_temp[i_cluster]*TMath::Cos(phi_ist3_temp) - x3_temp[i_cluster]*TMath::Sin(phi_ist3_temp) + y3_shift_temp;
 
-    double x0_proj_temp = x3_corr_temp + (x1_corr_temp-x3_corr_temp)*pitchLayer03/(pitchLayer12+pitchLayer23);
-    double y0_proj_temp = y3_corr_temp + (y1_corr_temp-y3_corr_temp)*pitchLayer03/(pitchLayer12+pitchLayer23);
+    double x0_proj_temp = x3_corr_temp + (x1_corr_temp-x3_corr_temp)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
+    double y0_proj_temp = y3_corr_temp + (y1_corr_temp-y3_corr_temp)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
 
     double dx = x0_temp[i_cluster] - x0_proj_temp;
     double dy = y0_temp[i_cluster] - y0_proj_temp;
@@ -836,8 +880,8 @@ tPars minuitAlignment(dVec x0_orig, dVec y0_orig, dVec x1_orig, dVec y1_orig, dV
       double x3_corr = x3_fit[i_cluster]*TMath::Cos(phi_rot_ist3) + y3_fit[i_cluster]*TMath::Sin(phi_rot_ist3) + x3_shift;
       double y3_corr = y3_fit[i_cluster]*TMath::Cos(phi_rot_ist3) - x3_fit[i_cluster]*TMath::Sin(phi_rot_ist3) + y3_shift;
 
-      double x0_proj = x3_corr + (x1_corr-x3_corr)*pitchLayer03/(pitchLayer12+pitchLayer23);
-      double y0_proj = y3_corr + (y1_corr-y3_corr)*pitchLayer03/(pitchLayer12+pitchLayer23);
+      double x0_proj = x3_corr + (x1_corr-x3_corr)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
+      double y0_proj = y3_corr + (y1_corr-y3_corr)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
 
       double dx = x0_fit[i_cluster] - x0_proj;
       double dy = y0_fit[i_cluster] - y0_proj;
@@ -891,8 +935,8 @@ tPars minuitAlignment(dVec x0_orig, dVec y0_orig, dVec x1_orig, dVec y1_orig, dV
     double x3_corr_MF = x3_fit[i_cluster]*TMath::Cos(phi_rot_ist3_MF) + y3_fit[i_cluster]*TMath::Sin(phi_rot_ist3_MF) + x3_shift_MF;
     double y3_corr_MF = y3_fit[i_cluster]*TMath::Cos(phi_rot_ist3_MF) - x3_fit[i_cluster]*TMath::Sin(phi_rot_ist3_MF) + y3_shift_MF;
 
-    double x0_proj_MF = x3_corr_MF + (x1_corr_MF-x3_corr_MF)*pitchLayer03/(pitchLayer12+pitchLayer23);
-    double y0_proj_MF = y3_corr_MF + (y1_corr_MF-y3_corr_MF)*pitchLayer03/(pitchLayer12+pitchLayer23);
+    double x0_proj_MF = x3_corr_MF + (x1_corr_MF-x3_corr_MF)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
+    double y0_proj_MF = y3_corr_MF + (y1_corr_MF-y3_corr_MF)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
 
     double dx = x0_fit[i_cluster] - x0_proj_MF;
     double dy = y0_fit[i_cluster] - y0_proj_MF;
