@@ -360,13 +360,23 @@ void FstTracking::writeTrackAngle()
 //--------------Track Resolution with Hits---------------------
 void FstTracking::initTracking_Hits()
 {
-  h_mHitsTrackFstResX    = new TH1F("h_mHitsTrackFstResX","h_mHitsTrackFstResX",100,-80.0,80.0);
-  h_mHitsTrackFstResY    = new TH1F("h_mHitsTrackFstResY","h_mHitsTrackFstResY",100,-16.0,16.0);
-  h_mHitsTrackFstResXY   = new TH2F("h_mHitsTrackFstResXY","h_mHitsTrackFstResXY",100,-80.0,80.0,100,-16.0,16.0);
+  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
+  {
+    string HistName;
+    HistName = Form("h_mHitsTrackFstResX_Sensor%d",i_sensor);
+    h_mHitsTrackFstResX[i_sensor]    = new TH1F(HistName.c_str(),HistName.c_str(),100,-80.0,80.0);
+    HistName = Form("h_mHitsTrackFstResY_Sensor%d",i_sensor);
+    h_mHitsTrackFstResY[i_sensor]    = new TH1F(HistName.c_str(),HistName.c_str(),100,-16.0,16.0);
+    HistName = Form("h_mHitsTrackFstResXY_Sensor%d",i_sensor);
+    h_mHitsTrackFstResXY[i_sensor]   = new TH2F(HistName.c_str(),HistName.c_str(),100,-80.0,80.0,100,-16.0,16.0);
 
-  h_mHitsTrackFstResR    = new TH1F("h_mHitsTrackFstResR","h_mHitsTrackFstResR",100,-80.0,80.0);
-  h_mHitsTrackFstResPhi  = new TH1F("h_mHitsTrackFstResPhi","h_mHitsTrackFstResPhi",100,-0.05,0.05);
-  h_mHitsTrackFstResRPhi = new TH2F("h_mHitsTrackFstResRPhi","h_mHitsTrackFstResRPhi",100,-80.0,80.0,100,-0.05,0.05);
+    HistName = Form("h_mHitsTrackFstResR_Sensor%d",i_sensor);
+    h_mHitsTrackFstResR[i_sensor]    = new TH1F(HistName.c_str(),HistName.c_str(),100,-80.0,80.0);
+    HistName = Form("h_mHitsTrackFstResPhi_Sensor%d",i_sensor);
+    h_mHitsTrackFstResPhi[i_sensor]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.05,0.05);
+    HistName = Form("h_mHitsTrackFstResRPhi_Sensor%d",i_sensor);
+    h_mHitsTrackFstResRPhi[i_sensor] = new TH2F(HistName.c_str(),HistName.c_str(),100,-80.0,80.0,100,-0.05,0.05);
+  }
 }
 
 void FstTracking::calResolution_Hits(FstEvent *fstEvent)
@@ -426,18 +436,19 @@ void FstTracking::calResolution_Hits(FstEvent *fstEvent)
 
       if(minHitId_FST > -1)
       {
+	int sensorId = fstRawHitVec[minHitId_FST]->getSensor();
 	double r_fst = fstRawHitVec[minHitId_FST]->getPosX(); // r for fst
 	double phi_fst = fstRawHitVec[minHitId_FST]->getPosY(); // phi for fst
 	double x0_fst = r_fst*TMath::Cos(phi_fst);
 	double y0_fst = r_fst*TMath::Sin(phi_fst);
 
-	h_mHitsTrackFstResX->Fill(x0_fst-x0_proj);
-	h_mHitsTrackFstResY->Fill(y0_fst-y0_proj);
-	h_mHitsTrackFstResXY->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
+	h_mHitsTrackFstResX[sensorId]->Fill(x0_fst-x0_proj);
+	h_mHitsTrackFstResY[sensorId]->Fill(y0_fst-y0_proj);
+	h_mHitsTrackFstResXY[sensorId]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
 
-	h_mHitsTrackFstResR->Fill(r_fst-r_proj);
-	h_mHitsTrackFstResPhi->Fill(phi_fst-phi_proj);
-	h_mHitsTrackFstResRPhi->Fill(r_fst-r_proj,phi_fst-phi_proj);
+	h_mHitsTrackFstResR[sensorId]->Fill(r_fst-r_proj);
+	h_mHitsTrackFstResPhi[sensorId]->Fill(phi_fst-phi_proj);
+	h_mHitsTrackFstResRPhi[sensorId]->Fill(r_fst-r_proj,phi_fst-phi_proj);
       }
     }
   }
@@ -445,131 +456,195 @@ void FstTracking::calResolution_Hits(FstEvent *fstEvent)
 
 void FstTracking::writeTracking_Hits()
 {
-  h_mHitsTrackFstResX->Write();
-  h_mHitsTrackFstResY->Write();
-  h_mHitsTrackFstResXY->Write();
+  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
+  {
+    h_mHitsTrackFstResX[i_sensor]->Write();
+    h_mHitsTrackFstResY[i_sensor]->Write();
+    h_mHitsTrackFstResXY[i_sensor]->Write();
 
-  h_mHitsTrackFstResR->Write();
-  h_mHitsTrackFstResPhi->Write();
-  h_mHitsTrackFstResRPhi->Write();
+    h_mHitsTrackFstResR[i_sensor]->Write();
+    h_mHitsTrackFstResPhi[i_sensor]->Write();
+    h_mHitsTrackFstResRPhi[i_sensor]->Write();
+  }
 }
 //--------------Track Resolution with Hits---------------------
 
 //--------------Track Resolution with Clusters---------------------
 void FstTracking::initTracking_Clusters()
 {
-  // simple clusters
-  h_mSimpleClustersTrackFstResX_2Layer    = new TH1F("h_mSimpleClustersTrackFstResX_2Layer","h_mSimpleClustersTrackFstResX_2Layer",50,-160.0,160.0);
-  h_mSimpleClustersTrackFstResY_2Layer    = new TH1F("h_mSimpleClustersTrackFstResY_2Layer","h_mSimpleClustersTrackFstResY_2Layer",100,-16.0,16.0);
-  h_mSimpleClustersTrackFstResXY_2Layer   = new TH2F("h_mSimpleClustersTrackFstResXY_2Layer","h_mSimpleClustersTrackFstResXY_2Layer",50,-160.0,160.0,100,-16.0,16.0);
-
-  h_mSimpleClustersTrackFstResR_2Layer    = new TH1F("h_mSimpleClustersTrackFstResR_2Layer","h_mSimpleClustersTrackFstResR_2Layer",50,-160.0,160.0);
-  h_mSimpleClustersTrackFstResPhi_2Layer  = new TH1F("h_mSimpleClustersTrackFstResPhi_2Layer","h_mSimpleClustersTrackFstResPhi_2Layer",200,-0.10,0.10);
-  h_mSimpleClustersTrackFstResRPhi_2Layer = new TH2F("h_mSimpleClustersTrackFstResRPhi_2Layer","h_mSimpleClustersTrackFstResRPhi_2Layer",50,-160.0,160.0,200,-0.10,0.10);
-
-  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
-  {
-    string HistName;
-    HistName = Form("h_mSimpleClustersTrackFstResX_2Layer_Rstrip%d",i_rstrip);
-    h_mSimpleClustersTrackFstResX_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
-    HistName = Form("h_mSimpleClustersTrackFstResY_2Layer_Rstrip%d",i_rstrip);
-    h_mSimpleClustersTrackFstResY_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-16.0,16.0);
-    HistName = Form("h_mSimpleClustersTrackFstResXY_2Layer_Rstrip%d",i_rstrip);
-    h_mSimpleClustersTrackFstResXY_2Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-16.0,16.0);
-    
-    HistName = Form("h_mSimpleClustersTrackFstResR_2Layer_Rstrip%d",i_rstrip);
-    h_mSimpleClustersTrackFstResR_2Layer_Rstrips[i_rstrip]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
-    HistName = Form("h_mSimpleClustersTrackFstResPhi_2Layer_Rstrip%d",i_rstrip);
-    h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.10,0.10);
-    HistName = Form("h_mSimpleClustersTrackFstResRPhi_2Layer_Rstrip%d",i_rstrip);
-    h_mSimpleClustersTrackFstResRPhi_2Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,200,-0.10,0.10);
-  }
- 
+  // IST simple clusters
   h_mSimpleClustersTrackIstResX_2Layer    = new TH1F("h_mSimpleClustersTrackIstResX_2Layer","h_mSimpleClustersTrackIstResX_2Layer",15,-20.0,20.0);
   h_mSimpleClustersTrackIstResY_2Layer    = new TH1F("h_mSimpleClustersTrackIstResY_2Layer","h_mSimpleClustersTrackIstResY_2Layer",100,-5.0,5.0);
   h_mSimpleClustersTrackIstResXY_2Layer   = new TH2F("h_mSimpleClustersTrackIstResXY_2Layer","h_mSimpleClustersTrackIstResXY_2Layer",15,-20.0,20.0,100,-5.0,5.0);
 
-  h_mSimpleClustersTrackFstResX_3Layer    = new TH1F("h_mSimpleClustersTrackFstResX_3Layer","h_mSimpleClustersTrackFstResX_3Layer",50,-160.0,160.0);
-  h_mSimpleClustersTrackFstResY_3Layer    = new TH1F("h_mSimpleClustersTrackFstResY_3Layer","h_mSimpleClustersTrackFstResY_3Layer",100,-16.0,16.0);
-  h_mSimpleClustersTrackFstResXY_3Layer   = new TH2F("h_mSimpleClustersTrackFstResXY_3Layer","h_mSimpleClustersTrackFstResXY_3Layer",50,-160.0,160.0,100,-16.0,16.0);
-
-  h_mSimpleClustersTrackFstResR_3Layer    = new TH1F("h_mSimpleClustersTrackFstResR_3Layer","h_mSimpleClustersTrackFstResR_3Layer",50,-160.0,160.0);
-  h_mSimpleClustersTrackFstResPhi_3Layer  = new TH1F("h_mSimpleClustersTrackFstResPhi_3Layer","h_mSimpleClustersTrackFstResPhi_3Layer",200,-0.10,0.10);
-  h_mSimpleClustersTrackFstResRPhi_3Layer = new TH2F("h_mSimpleClustersTrackFstResRPhi_3Layer","h_mSimpleClustersTrackFstResRPhi_3Layer",50,-160.0,160.0,200,-0.10,0.10);
-
-  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
-  {
-    string HistName;
-    HistName = Form("h_mSimpleClustersTrackFstResX_3Layer_Rstrip%d",i_rstrip);
-    h_mSimpleClustersTrackFstResX_3Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
-    HistName = Form("h_mSimpleClustersTrackFstResY_3Layer_Rstrip%d",i_rstrip);
-    h_mSimpleClustersTrackFstResY_3Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-16.0,16.0);
-    HistName = Form("h_mSimpleClustersTrackFstResXY_3Layer_Rstrip%d",i_rstrip);
-    h_mSimpleClustersTrackFstResXY_3Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-16.0,16.0);
-    
-    HistName = Form("h_mSimpleClustersTrackFstResR_3Layer_Rstrip%d",i_rstrip);
-    h_mSimpleClustersTrackFstResR_3Layer_Rstrips[i_rstrip]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
-    HistName = Form("h_mSimpleClustersTrackFstResPhi_3Layer_Rstrip%d",i_rstrip);
-    h_mSimpleClustersTrackFstResPhi_3Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.10,0.10);
-    HistName = Form("h_mSimpleClustersTrackFstResRPhi_3Layer_Rstrip%d",i_rstrip);
-    h_mSimpleClustersTrackFstResRPhi_3Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,200,-0.10,0.10);
-  }
- 
   h_mSimpleClustersTrackIstResX_3Layer    = new TH1F("h_mSimpleClustersTrackIstResX_3Layer","h_mSimpleClustersTrackIstResX_3Layer",15,-20.0,20.0);
   h_mSimpleClustersTrackIstResY_3Layer    = new TH1F("h_mSimpleClustersTrackIstResY_3Layer","h_mSimpleClustersTrackIstResY_3Layer",100,-5.0,5.0);
   h_mSimpleClustersTrackIstResXY_3Layer   = new TH2F("h_mSimpleClustersTrackIstResXY_3Layer","h_mSimpleClustersTrackIstResXY_3Layer",15,-20.0,20.0,100,-5.0,5.0);
 
-  // scan clusters
-  h_mScanClustersTrackFstResX_2Layer    = new TH1F("h_mScanClustersTrackFstResX_2Layer","h_mScanClustersTrackFstResX_2Layer",50,-160.0,160.0);
-  h_mScanClustersTrackFstResY_2Layer    = new TH1F("h_mScanClustersTrackFstResY_2Layer","h_mScanClustersTrackFstResY_2Layer",100,-16.0,16.0);
-  h_mScanClustersTrackFstResXY_2Layer   = new TH2F("h_mScanClustersTrackFstResXY_2Layer","h_mScanClustersTrackFstResXY_2Layer",50,-160.0,160.0,100,-16.0,16.0);
-
-  h_mScanClustersTrackFstResR_2Layer    = new TH1F("h_mScanClustersTrackFstResR_2Layer","h_mScanClustersTrackFstResR_2Layer",50,-160.0,160.0);
-  h_mScanClustersTrackFstResPhi_2Layer  = new TH1F("h_mScanClustersTrackFstResPhi_2Layer","h_mScanClustersTrackFstResPhi_2Layer",200,-0.10,0.10);
-  h_mScanClustersTrackFstResRPhi_2Layer = new TH2F("h_mScanClustersTrackFstResRPhi_2Layer","h_mScanClustersTrackFstResRPhi_2Layer",50,-160.0,160.0,200,-0.10,0.10);
-
-  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+  // FST simple clusters
+  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
   {
     string HistName;
-    HistName = Form("h_mScanClustersTrackFstResX_2Layer_Rstrip%d",i_rstrip);
-    h_mScanClustersTrackFstResX_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
-    HistName = Form("h_mScanClustersTrackFstResY_2Layer_Rstrip%d",i_rstrip);
-    h_mScanClustersTrackFstResY_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-16.0,16.0);
-    HistName = Form("h_mScanClustersTrackFstResXY_2Layer_Rstrip%d",i_rstrip);
-    h_mScanClustersTrackFstResXY_2Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-16.0,16.0);
-    
-    HistName = Form("h_mScanClustersTrackFstResR_2Layer_Rstrip%d",i_rstrip);
-    h_mScanClustersTrackFstResR_2Layer_Rstrips[i_rstrip]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
-    HistName = Form("h_mScanClustersTrackFstResPhi_2Layer_Rstrip%d",i_rstrip);
-    h_mScanClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.10,0.10);
-    HistName = Form("h_mScanClustersTrackFstResRPhi_2Layer_Rstrip%d",i_rstrip);
-    h_mScanClustersTrackFstResRPhi_2Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,200,-0.10,0.10);
+    HistName = Form("h_mSimpleClustersTrackFstResX_2Layer_Sensor%d",i_sensor);
+    h_mSimpleClustersTrackFstResX_2Layer[i_sensor]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+    HistName = Form("h_mSimpleClustersTrackFstResY_2Layer_Sensor%d",i_sensor);
+    h_mSimpleClustersTrackFstResY_2Layer[i_sensor]    = new TH1F(HistName.c_str(),HistName.c_str(),100,-16.0,16.0);
+    HistName = Form("h_mSimpleClustersTrackFstResXY_2Layer_Sensor%d",i_sensor);
+    h_mSimpleClustersTrackFstResXY_2Layer[i_sensor]   = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-16.0,16.0);
+
+    HistName = Form("h_mSimpleClustersTrackFstResR_2Layer_Sensor%d",i_sensor);
+    h_mSimpleClustersTrackFstResR_2Layer[i_sensor]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+    HistName = Form("h_mSimpleClustersTrackFstResPhi_2Layer_Sensor%d",i_sensor);
+    h_mSimpleClustersTrackFstResPhi_2Layer[i_sensor]  = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.10,0.10);
+    HistName = Form("h_mSimpleClustersTrackFstResRPhi_2Layer_Sensor%d",i_sensor);
+    h_mSimpleClustersTrackFstResRPhi_2Layer[i_sensor] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,200,-0.10,0.10);
+
+    for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
+    {
+      HistName = Form("h_mSimpleClustersTrackFstResX_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // X Residual
+      if(i_sensor > 0) HistName = Form("h_mSimpleClustersTrackFstResX_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mSimpleClustersTrackFstResX_2Layer_Rstrips[i_sensor][i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+      HistName = Form("h_mSimpleClustersTrackFstResY_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // Y Residual
+      if(i_sensor > 0) HistName = Form("h_mSimpleClustersTrackFstResY_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mSimpleClustersTrackFstResY_2Layer_Rstrips[i_sensor][i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-16.0,16.0);
+      HistName = Form("h_mSimpleClustersTrackFstResXY_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // XY Residual
+      if(i_sensor > 0) HistName = Form("h_mSimpleClustersTrackFstResXY_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mSimpleClustersTrackFstResXY_2Layer_Rstrips[i_sensor][i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-16.0,16.0);
+
+      HistName = Form("h_mSimpleClustersTrackFstResR_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // R Residual
+      if(i_sensor > 0) HistName = Form("h_mSimpleClustersTrackFstResR_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mSimpleClustersTrackFstResR_2Layer_Rstrips[i_sensor][i_rstrip]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+      HistName = Form("h_mSimpleClustersTrackFstResPhi_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // Phi Residual
+      if(i_sensor > 0) HistName = Form("h_mSimpleClustersTrackFstResPhi_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_sensor][i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.10,0.10);
+      HistName = Form("h_mSimpleClustersTrackFstResRPhi_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // RPhi Residual
+      if(i_sensor > 0) HistName = Form("h_mSimpleClustersTrackFstResRPhi_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mSimpleClustersTrackFstResRPhi_2Layer_Rstrips[i_sensor][i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,200,-0.10,0.10);
+    }
   }
-  
-  h_mScanClustersTrackFstResX_3Layer    = new TH1F("h_mScanClustersTrackFstResX_3Layer","h_mScanClustersTrackFstResX_3Layer",50,-160.0,160.0);
-  h_mScanClustersTrackFstResY_3Layer    = new TH1F("h_mScanClustersTrackFstResY_3Layer","h_mScanClustersTrackFstResY_3Layer",100,-16.0,16.0);
-  h_mScanClustersTrackFstResXY_3Layer   = new TH2F("h_mScanClustersTrackFstResXY_3Layer","h_mScanClustersTrackFstResXY_3Layer",50,-160.0,160.0,100,-16.0,16.0);
 
-  h_mScanClustersTrackFstResR_3Layer    = new TH1F("h_mScanClustersTrackFstResR_3Layer","h_mScanClustersTrackFstResR_3Layer",50,-160.0,160.0);
-  h_mScanClustersTrackFstResPhi_3Layer  = new TH1F("h_mScanClustersTrackFstResPhi_3Layer","h_mScanClustersTrackFstResPhi_3Layer",200,-0.10,0.10);
-  h_mScanClustersTrackFstResRPhi_3Layer = new TH2F("h_mScanClustersTrackFstResRPhi_3Layer","h_mScanClustersTrackFstResRPhi_3Layer",50,-160.0,160.0,200,-0.10,0.10);
-
-  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
   {
     string HistName;
-    HistName = Form("h_mScanClustersTrackFstResX_3Layer_Rstrip%d",i_rstrip);
-    h_mScanClustersTrackFstResX_3Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
-    HistName = Form("h_mScanClustersTrackFstResY_3Layer_Rstrip%d",i_rstrip);
-    h_mScanClustersTrackFstResY_3Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-16.0,16.0);
-    HistName = Form("h_mScanClustersTrackFstResXY_3Layer_Rstrip%d",i_rstrip);
-    h_mScanClustersTrackFstResXY_3Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-16.0,16.0);
-    
-    HistName = Form("h_mScanClustersTrackFstResR_3Layer_Rstrip%d",i_rstrip);
-    h_mScanClustersTrackFstResR_3Layer_Rstrips[i_rstrip]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
-    HistName = Form("h_mScanClustersTrackFstResPhi_3Layer_Rstrip%d",i_rstrip);
-    h_mScanClustersTrackFstResPhi_3Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.10,0.10);
-    HistName = Form("h_mScanClustersTrackFstResRPhi_3Layer_Rstrip%d",i_rstrip);
-    h_mScanClustersTrackFstResRPhi_3Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,200,-0.10,0.10);
+    HistName = Form("h_mSimpleClustersTrackFstResX_3Layer_Sensor%d",i_sensor);
+    h_mSimpleClustersTrackFstResX_3Layer[i_sensor]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+    HistName = Form("h_mSimpleClustersTrackFstResY_3Layer_Sensor%d",i_sensor);
+    h_mSimpleClustersTrackFstResY_3Layer[i_sensor]    = new TH1F(HistName.c_str(),HistName.c_str(),100,-16.0,16.0);
+    HistName = Form("h_mSimpleClustersTrackFstResXY_3Layer_Sensor%d",i_sensor);
+    h_mSimpleClustersTrackFstResXY_3Layer[i_sensor]   = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-16.0,16.0);
+
+    HistName = Form("h_mSimpleClustersTrackFstResR_3Layer_Sensor%d",i_sensor);
+    h_mSimpleClustersTrackFstResR_3Layer[i_sensor]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+    HistName = Form("h_mSimpleClustersTrackFstResPhi_3Layer_Sensor%d",i_sensor);
+    h_mSimpleClustersTrackFstResPhi_3Layer[i_sensor]  = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.10,0.10);
+    HistName = Form("h_mSimpleClustersTrackFstResRPhi_3Layer_Sensor%d",i_sensor);
+    h_mSimpleClustersTrackFstResRPhi_3Layer[i_sensor] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,200,-0.10,0.10);
+
+    for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
+    {
+      HistName = Form("h_mSimpleClustersTrackFstResX_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // X Residual
+      if(i_sensor > 0) HistName = Form("h_mSimpleClustersTrackFstResX_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mSimpleClustersTrackFstResX_3Layer_Rstrips[i_sensor][i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+      HistName = Form("h_mSimpleClustersTrackFstResY_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // Y Residual
+      if(i_sensor > 0) HistName = Form("h_mSimpleClustersTrackFstResY_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mSimpleClustersTrackFstResY_3Layer_Rstrips[i_sensor][i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-16.0,16.0);
+      HistName = Form("h_mSimpleClustersTrackFstResXY_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // XY Residual
+      if(i_sensor > 0) HistName = Form("h_mSimpleClustersTrackFstResXY_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mSimpleClustersTrackFstResXY_3Layer_Rstrips[i_sensor][i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-16.0,16.0);
+
+      HistName = Form("h_mSimpleClustersTrackFstResR_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // R Residual
+      if(i_sensor > 0) HistName = Form("h_mSimpleClustersTrackFstResR_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mSimpleClustersTrackFstResR_3Layer_Rstrips[i_sensor][i_rstrip]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+      HistName = Form("h_mSimpleClustersTrackFstResPhi_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // Phi Residual
+      if(i_sensor > 0) HistName = Form("h_mSimpleClustersTrackFstResPhi_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mSimpleClustersTrackFstResPhi_3Layer_Rstrips[i_sensor][i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.10,0.10);
+      HistName = Form("h_mSimpleClustersTrackFstResRPhi_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // RPhi Residual
+      if(i_sensor > 0) HistName = Form("h_mSimpleClustersTrackFstResRPhi_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mSimpleClustersTrackFstResRPhi_3Layer_Rstrips[i_sensor][i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,200,-0.10,0.10);
+    }
+  }
+ 
+  // FST scan clusters
+  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
+  {
+    string HistName;
+    HistName = Form("h_mScanClustersTrackFstResX_2Layer_Sensor%d",i_sensor);
+    h_mScanClustersTrackFstResX_2Layer[i_sensor]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+    HistName = Form("h_mScanClustersTrackFstResY_2Layer_Sensor%d",i_sensor);
+    h_mScanClustersTrackFstResY_2Layer[i_sensor]    = new TH1F(HistName.c_str(),HistName.c_str(),100,-16.0,16.0);
+    HistName = Form("h_mScanClustersTrackFstResXY_2Layer_Sensor%d",i_sensor);
+    h_mScanClustersTrackFstResXY_2Layer[i_sensor]   = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-16.0,16.0);
+
+    HistName = Form("h_mScanClustersTrackFstResR_2Layer_Sensor%d",i_sensor);
+    h_mScanClustersTrackFstResR_2Layer[i_sensor]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+    HistName = Form("h_mScanClustersTrackFstResPhi_2Layer_Sensor%d",i_sensor);
+    h_mScanClustersTrackFstResPhi_2Layer[i_sensor]  = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.10,0.10);
+    HistName = Form("h_mScanClustersTrackFstResRPhi_2Layer_Sensor%d",i_sensor);
+    h_mScanClustersTrackFstResRPhi_2Layer[i_sensor] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,200,-0.10,0.10);
+
+    for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
+    {
+      HistName = Form("h_mScanClustersTrackFstResX_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // X Residual
+      if(i_sensor > 0) HistName = Form("h_mScanClustersTrackFstResX_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mScanClustersTrackFstResX_2Layer_Rstrips[i_sensor][i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+      HistName = Form("h_mScanClustersTrackFstResY_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // Y Residual
+      if(i_sensor > 0) HistName = Form("h_mScanClustersTrackFstResY_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mScanClustersTrackFstResY_2Layer_Rstrips[i_sensor][i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-16.0,16.0);
+      HistName = Form("h_mScanClustersTrackFstResXY_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // XY Residual
+      if(i_sensor > 0) HistName = Form("h_mScanClustersTrackFstResXY_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mScanClustersTrackFstResXY_2Layer_Rstrips[i_sensor][i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-16.0,16.0);
+
+      HistName = Form("h_mScanClustersTrackFstResR_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // R Residual
+      if(i_sensor > 0) HistName = Form("h_mScanClustersTrackFstResR_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mScanClustersTrackFstResR_2Layer_Rstrips[i_sensor][i_rstrip]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+      HistName = Form("h_mScanClustersTrackFstResPhi_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // Phi Residual
+      if(i_sensor > 0) HistName = Form("h_mScanClustersTrackFstResPhi_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mScanClustersTrackFstResPhi_2Layer_Rstrips[i_sensor][i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.10,0.10);
+      HistName = Form("h_mScanClustersTrackFstResRPhi_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // RPhi Residual
+      if(i_sensor > 0) HistName = Form("h_mScanClustersTrackFstResRPhi_2Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mScanClustersTrackFstResRPhi_2Layer_Rstrips[i_sensor][i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,200,-0.10,0.10);
+    }
+  }
+
+  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
+  {
+    string HistName;
+    HistName = Form("h_mScanClustersTrackFstResX_3Layer_Sensor%d",i_sensor);
+    h_mScanClustersTrackFstResX_3Layer[i_sensor]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+    HistName = Form("h_mScanClustersTrackFstResY_3Layer_Sensor%d",i_sensor);
+    h_mScanClustersTrackFstResY_3Layer[i_sensor]    = new TH1F(HistName.c_str(),HistName.c_str(),100,-16.0,16.0);
+    HistName = Form("h_mScanClustersTrackFstResXY_3Layer_Sensor%d",i_sensor);
+    h_mScanClustersTrackFstResXY_3Layer[i_sensor]   = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-16.0,16.0);
+
+    HistName = Form("h_mScanClustersTrackFstResR_3Layer_Sensor%d",i_sensor);
+    h_mScanClustersTrackFstResR_3Layer[i_sensor]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+    HistName = Form("h_mScanClustersTrackFstResPhi_3Layer_Sensor%d",i_sensor);
+    h_mScanClustersTrackFstResPhi_3Layer[i_sensor]  = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.10,0.10);
+    HistName = Form("h_mScanClustersTrackFstResRPhi_3Layer_Sensor%d",i_sensor);
+    h_mScanClustersTrackFstResRPhi_3Layer[i_sensor] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,200,-0.10,0.10);
+
+    for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
+    {
+      HistName = Form("h_mScanClustersTrackFstResX_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // X Residual
+      if(i_sensor > 0) HistName = Form("h_mScanClustersTrackFstResX_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mScanClustersTrackFstResX_3Layer_Rstrips[i_sensor][i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+      HistName = Form("h_mScanClustersTrackFstResY_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // Y Residual
+      if(i_sensor > 0) HistName = Form("h_mScanClustersTrackFstResY_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mScanClustersTrackFstResY_3Layer_Rstrips[i_sensor][i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),100,-16.0,16.0);
+      HistName = Form("h_mScanClustersTrackFstResXY_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // XY Residual
+      if(i_sensor > 0) HistName = Form("h_mScanClustersTrackFstResXY_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mScanClustersTrackFstResXY_3Layer_Rstrips[i_sensor][i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,100,-16.0,16.0);
+
+      HistName = Form("h_mScanClustersTrackFstResR_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // R Residual
+      if(i_sensor > 0) HistName = Form("h_mScanClustersTrackFstResR_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mScanClustersTrackFstResR_3Layer_Rstrips[i_sensor][i_rstrip]    = new TH1F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0);
+      HistName = Form("h_mScanClustersTrackFstResPhi_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // Phi Residual
+      if(i_sensor > 0) HistName = Form("h_mScanClustersTrackFstResPhi_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mScanClustersTrackFstResPhi_3Layer_Rstrips[i_sensor][i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.10,0.10);
+      HistName = Form("h_mScanClustersTrackFstResRPhi_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip); // RPhi Residual
+      if(i_sensor > 0) HistName = Form("h_mScanClustersTrackFstResRPhi_3Layer_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mScanClustersTrackFstResRPhi_3Layer_Rstrips[i_sensor][i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),50,-160.0,160.0,200,-0.10,0.10);
+    }
   }
 }
 
@@ -650,32 +725,36 @@ void FstTracking::calResolution_SimpleClusters(FstEvent *fstEvent)
 
 	if(minClusterId_FST > -1)
 	{
+	  int sensorId   = clusterVec_fst[minClusterId_FST]->getSensor(); // sensor Id for the cluster
 	  double r_fst   = clusterVec_fst[minClusterId_FST]->getMeanX(); // r for fst
 	  double phi_fst = clusterVec_fst[minClusterId_FST]->getMeanY(); // phi for fst
 	  double x0_fst  = r_fst*TMath::Cos(phi_fst);
 	  double y0_fst  = r_fst*TMath::Sin(phi_fst);
 
-	  h_mSimpleClustersTrackFstResX_2Layer->Fill(x0_fst-x0_proj);
-	  h_mSimpleClustersTrackFstResY_2Layer->Fill(y0_fst-y0_proj);
-	  h_mSimpleClustersTrackFstResXY_2Layer->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
+	  h_mSimpleClustersTrackFstResX_2Layer[sensorId]->Fill(x0_fst-x0_proj);
+	  h_mSimpleClustersTrackFstResY_2Layer[sensorId]->Fill(y0_fst-y0_proj);
+	  h_mSimpleClustersTrackFstResXY_2Layer[sensorId]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
 
-	  h_mSimpleClustersTrackFstResR_2Layer->Fill(r_fst-r_proj);
-	  h_mSimpleClustersTrackFstResPhi_2Layer->Fill(phi_fst-phi_proj);
-	  h_mSimpleClustersTrackFstResRPhi_2Layer->Fill(r_fst-r_proj,phi_fst-phi_proj);
+	  h_mSimpleClustersTrackFstResR_2Layer[sensorId]->Fill(r_fst-r_proj);
+	  h_mSimpleClustersTrackFstResPhi_2Layer[sensorId]->Fill(phi_fst-phi_proj);
+	  h_mSimpleClustersTrackFstResRPhi_2Layer[sensorId]->Fill(r_fst-r_proj,phi_fst-phi_proj);
 
-	  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+	  for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
 	  {
-	    // if(r_proj > FST::rOuter + FST::pitchR*i_rstrip && r_proj <= FST::rOuter + FST::pitchR*(i_rstrip+1))
-	    if(r_proj > FST::rInner + FST::pitchR*i_rstrip && r_proj <= FST::rInner + FST::pitchR*(i_rstrip+1))
+	    double rStart = FST::rInner + i_rstrip*FST::pitchR;
+	    double rStop  = FST::rInner + (i_rstrip+1)*FST::pitchR;
+	    if(sensorId > 0) rStart = FST::rOuter + i_rstrip*FST::pitchR;
+	    if(sensorId > 0) rStop  = FST::rOuter + (i_rstrip+1)*FST::pitchR;
+	    if(r_proj > rStart && r_proj <= rStop)
 	    // check the position of the projected r is within a specific r_strip and fill accordingly
 	    {
-	      h_mSimpleClustersTrackFstResX_2Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj);
-	      h_mSimpleClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->Fill(y0_fst-y0_proj);
-	      h_mSimpleClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
+	      h_mSimpleClustersTrackFstResX_2Layer_Rstrips[sensorId][i_rstrip]->Fill(x0_fst-x0_proj);
+	      h_mSimpleClustersTrackFstResY_2Layer_Rstrips[sensorId][i_rstrip]->Fill(y0_fst-y0_proj);
+	      h_mSimpleClustersTrackFstResXY_2Layer_Rstrips[sensorId][i_rstrip]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
 
-	      h_mSimpleClustersTrackFstResR_2Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj);
-	      h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->Fill(phi_fst-phi_proj);
-	      h_mSimpleClustersTrackFstResRPhi_2Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj,phi_fst-phi_proj);
+	      h_mSimpleClustersTrackFstResR_2Layer_Rstrips[sensorId][i_rstrip]->Fill(r_fst-r_proj);
+	      h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[sensorId][i_rstrip]->Fill(phi_fst-phi_proj);
+	      h_mSimpleClustersTrackFstResRPhi_2Layer_Rstrips[sensorId][i_rstrip]->Fill(r_fst-r_proj,phi_fst-phi_proj);
 	    }
 	  }
 	}
@@ -783,33 +862,37 @@ void FstTracking::calResolution_SimpleClusters(FstEvent *fstEvent)
 
 	if(minClusterId_FST > -1)
 	{
+	  int sensorId   = clusterVec_fst[minClusterId_FST]->getSensor(); // sensor Id for the cluster
 	  double r_fst   = clusterVec_fst[minClusterId_FST]->getMeanX(); // r for fst
 	  double phi_fst = clusterVec_fst[minClusterId_FST]->getMeanY(); // phi for fst
 	  double x0_fst  = r_fst*TMath::Cos(phi_fst);
 	  double y0_fst  = r_fst*TMath::Sin(phi_fst);
 
-	  h_mSimpleClustersTrackFstResX_3Layer->Fill(x0_fst-x0_proj);
-	  h_mSimpleClustersTrackFstResY_3Layer->Fill(y0_fst-y0_proj);
-	  h_mSimpleClustersTrackFstResXY_3Layer->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
+	  h_mSimpleClustersTrackFstResX_3Layer[sensorId]->Fill(x0_fst-x0_proj);
+	  h_mSimpleClustersTrackFstResY_3Layer[sensorId]->Fill(y0_fst-y0_proj);
+	  h_mSimpleClustersTrackFstResXY_3Layer[sensorId]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
 
-	  h_mSimpleClustersTrackFstResR_3Layer->Fill(r_fst-r_proj);
-	  h_mSimpleClustersTrackFstResPhi_3Layer->Fill(phi_fst-phi_proj);
-	  h_mSimpleClustersTrackFstResRPhi_3Layer->Fill(r_fst-r_proj,phi_fst-phi_proj);
+	  h_mSimpleClustersTrackFstResR_3Layer[sensorId]->Fill(r_fst-r_proj);
+	  h_mSimpleClustersTrackFstResPhi_3Layer[sensorId]->Fill(phi_fst-phi_proj);
+	  h_mSimpleClustersTrackFstResRPhi_3Layer[sensorId]->Fill(r_fst-r_proj,phi_fst-phi_proj);
 
-	  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+	  for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
 	  {
-	    // if(r_proj > FST::rOuter + FST::pitchR*i_rstrip && r_proj <= FST::rOuter + FST::pitchR*(i_rstrip+1))
-	    if(r_proj > FST::rInner + FST::pitchR*i_rstrip && r_proj <= FST::rInner + FST::pitchR*(i_rstrip+1))
+	    double rStart = FST::rInner + i_rstrip*FST::pitchR;
+	    double rStop  = FST::rInner + (i_rstrip+1)*FST::pitchR;
+	    if(sensorId > 0) rStart = FST::rOuter + i_rstrip*FST::pitchR;
+	    if(sensorId > 0) rStop  = FST::rOuter + (i_rstrip+1)*FST::pitchR;
+	    if(r_proj > rStart && r_proj <= rStop)
 	    // check the position of the projected r is within a specific r_strip and fill accordingly
 	    {
-	      h_mSimpleClustersTrackFstResX_3Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj);
-	      h_mSimpleClustersTrackFstResY_3Layer_Rstrips[i_rstrip]->Fill(y0_fst-y0_proj);
-	      h_mSimpleClustersTrackFstResXY_3Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
+	      h_mSimpleClustersTrackFstResX_3Layer_Rstrips[sensorId][i_rstrip]->Fill(x0_fst-x0_proj);
+	      h_mSimpleClustersTrackFstResY_3Layer_Rstrips[sensorId][i_rstrip]->Fill(y0_fst-y0_proj);
+	      h_mSimpleClustersTrackFstResXY_3Layer_Rstrips[sensorId][i_rstrip]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
 
-	      h_mSimpleClustersTrackFstResR_3Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj);
-	      h_mSimpleClustersTrackFstResPhi_3Layer_Rstrips[i_rstrip]->Fill(phi_fst-phi_proj);
-	      h_mSimpleClustersTrackFstResRPhi_3Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj,phi_fst-phi_proj);
-    	    }
+	      h_mSimpleClustersTrackFstResR_3Layer_Rstrips[sensorId][i_rstrip]->Fill(r_fst-r_proj);
+	      h_mSimpleClustersTrackFstResPhi_3Layer_Rstrips[sensorId][i_rstrip]->Fill(phi_fst-phi_proj);
+	      h_mSimpleClustersTrackFstResRPhi_3Layer_Rstrips[sensorId][i_rstrip]->Fill(r_fst-r_proj,phi_fst-phi_proj);
+	    }
 	  }
 	}
 
@@ -900,32 +983,36 @@ void FstTracking::calResolution_ScanClusters(FstEvent *fstEvent)
 
 	if(minClusterId_FST > -1)
 	{
+	  int sensorId   = clusterVec_fst[minClusterId_FST]->getSensor(); // sensor Id for the cluster
 	  double r_fst   = clusterVec_fst[minClusterId_FST]->getMeanX(); // r for fst
 	  double phi_fst = clusterVec_fst[minClusterId_FST]->getMeanY(); // phi for fst
 	  double x0_fst  = r_fst*TMath::Cos(phi_fst);
 	  double y0_fst  = r_fst*TMath::Sin(phi_fst);
 
-	  h_mScanClustersTrackFstResX_2Layer->Fill(x0_fst-x0_proj);
-	  h_mScanClustersTrackFstResY_2Layer->Fill(y0_fst-y0_proj);
-	  h_mScanClustersTrackFstResXY_2Layer->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
+	  h_mScanClustersTrackFstResX_2Layer[sensorId]->Fill(x0_fst-x0_proj);
+	  h_mScanClustersTrackFstResY_2Layer[sensorId]->Fill(y0_fst-y0_proj);
+	  h_mScanClustersTrackFstResXY_2Layer[sensorId]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
 
-	  h_mScanClustersTrackFstResR_2Layer->Fill(r_fst-r_proj);
-	  h_mScanClustersTrackFstResPhi_2Layer->Fill(phi_fst-phi_proj);
-	  h_mScanClustersTrackFstResRPhi_2Layer->Fill(r_fst-r_proj,phi_fst-phi_proj);
+	  h_mScanClustersTrackFstResR_2Layer[sensorId]->Fill(r_fst-r_proj);
+	  h_mScanClustersTrackFstResPhi_2Layer[sensorId]->Fill(phi_fst-phi_proj);
+	  h_mScanClustersTrackFstResRPhi_2Layer[sensorId]->Fill(r_fst-r_proj,phi_fst-phi_proj);
 
-	  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+	  for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
 	  {
-	    // if(r_proj > FST::rOuter + FST::pitchR*i_rstrip && r_proj <= FST::rOuter + FST::pitchR*(i_rstrip+1))
-	    if(r_proj > FST::rInner + FST::pitchR*i_rstrip && r_proj <= FST::rInner + FST::pitchR*(i_rstrip+1))
+	    double rStart = FST::rInner + i_rstrip*FST::pitchR;
+	    double rStop  = FST::rInner + (i_rstrip+1)*FST::pitchR;
+	    if(sensorId > 0) rStart = FST::rOuter + i_rstrip*FST::pitchR;
+	    if(sensorId > 0) rStop  = FST::rOuter + (i_rstrip+1)*FST::pitchR;
+	    if(r_proj > rStart && r_proj <= rStop)
 	    // check the position of the projected r is within a specific r_strip and fill accordingly
 	    {
-	      h_mScanClustersTrackFstResX_2Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj);
-	      h_mScanClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->Fill(y0_fst-y0_proj);
-	      h_mScanClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
+	      h_mScanClustersTrackFstResX_2Layer_Rstrips[sensorId][i_rstrip]->Fill(x0_fst-x0_proj);
+	      h_mScanClustersTrackFstResY_2Layer_Rstrips[sensorId][i_rstrip]->Fill(y0_fst-y0_proj);
+	      h_mScanClustersTrackFstResXY_2Layer_Rstrips[sensorId][i_rstrip]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
 
-	      h_mScanClustersTrackFstResR_2Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj);
-	      h_mScanClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->Fill(phi_fst-phi_proj);
-	      h_mScanClustersTrackFstResRPhi_2Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj,phi_fst-phi_proj);
+	      h_mScanClustersTrackFstResR_2Layer_Rstrips[sensorId][i_rstrip]->Fill(r_fst-r_proj);
+	      h_mScanClustersTrackFstResPhi_2Layer_Rstrips[sensorId][i_rstrip]->Fill(phi_fst-phi_proj);
+	      h_mScanClustersTrackFstResRPhi_2Layer_Rstrips[sensorId][i_rstrip]->Fill(r_fst-r_proj,phi_fst-phi_proj);
 	    }
 	  }
 	}
@@ -992,33 +1079,37 @@ void FstTracking::calResolution_ScanClusters(FstEvent *fstEvent)
 
 	if(minClusterId_FST > -1)
 	{
+	  int sensorId   = clusterVec_fst[minClusterId_FST]->getSensor(); // sensor Id for the cluster
 	  double r_fst   = clusterVec_fst[minClusterId_FST]->getMeanX(); // r for fst
 	  double phi_fst = clusterVec_fst[minClusterId_FST]->getMeanY(); // phi for fst
 	  double x0_fst  = r_fst*TMath::Cos(phi_fst);
 	  double y0_fst  = r_fst*TMath::Sin(phi_fst);
 
-	  h_mScanClustersTrackFstResX_3Layer->Fill(x0_fst-x0_proj);
-	  h_mScanClustersTrackFstResY_3Layer->Fill(y0_fst-y0_proj);
-	  h_mScanClustersTrackFstResXY_3Layer->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
+	  h_mScanClustersTrackFstResX_3Layer[sensorId]->Fill(x0_fst-x0_proj);
+	  h_mScanClustersTrackFstResY_3Layer[sensorId]->Fill(y0_fst-y0_proj);
+	  h_mScanClustersTrackFstResXY_3Layer[sensorId]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
 
-	  h_mScanClustersTrackFstResR_3Layer->Fill(r_fst-r_proj);
-	  h_mScanClustersTrackFstResPhi_3Layer->Fill(phi_fst-phi_proj);
-	  h_mScanClustersTrackFstResRPhi_3Layer->Fill(r_fst-r_proj,phi_fst-phi_proj);
+	  h_mScanClustersTrackFstResR_3Layer[sensorId]->Fill(r_fst-r_proj);
+	  h_mScanClustersTrackFstResPhi_3Layer[sensorId]->Fill(phi_fst-phi_proj);
+	  h_mScanClustersTrackFstResRPhi_3Layer[sensorId]->Fill(r_fst-r_proj,phi_fst-phi_proj);
 
-	  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+	  for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
 	  {
-	    // if(r_proj > FST::rOuter + FST::pitchR*i_rstrip && r_proj <= FST::rOuter + FST::pitchR*(i_rstrip+1))
-	    if(r_proj > FST::rInner + FST::pitchR*i_rstrip && r_proj <= FST::rInner + FST::pitchR*(i_rstrip+1))
+	    double rStart = FST::rInner + i_rstrip*FST::pitchR;
+	    double rStop  = FST::rInner + (i_rstrip+1)*FST::pitchR;
+	    if(sensorId > 0) rStart = FST::rOuter + i_rstrip*FST::pitchR;
+	    if(sensorId > 0) rStop  = FST::rOuter + (i_rstrip+1)*FST::pitchR;
+	    if(r_proj > rStart && r_proj <= rStop)
 	    // check the position of the projected r is within a specific r_strip and fill accordingly
 	    {
-	      h_mScanClustersTrackFstResX_3Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj);
-	      h_mScanClustersTrackFstResY_3Layer_Rstrips[i_rstrip]->Fill(y0_fst-y0_proj);
-	      h_mScanClustersTrackFstResXY_3Layer_Rstrips[i_rstrip]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
+	      h_mScanClustersTrackFstResX_3Layer_Rstrips[sensorId][i_rstrip]->Fill(x0_fst-x0_proj);
+	      h_mScanClustersTrackFstResY_3Layer_Rstrips[sensorId][i_rstrip]->Fill(y0_fst-y0_proj);
+	      h_mScanClustersTrackFstResXY_3Layer_Rstrips[sensorId][i_rstrip]->Fill(x0_fst-x0_proj,y0_fst-y0_proj);
 
-	      h_mScanClustersTrackFstResR_3Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj);
-	      h_mScanClustersTrackFstResPhi_3Layer_Rstrips[i_rstrip]->Fill(phi_fst-phi_proj);
-	      h_mScanClustersTrackFstResRPhi_3Layer_Rstrips[i_rstrip]->Fill(r_fst-r_proj,phi_fst-phi_proj);
-    	    }
+	      h_mScanClustersTrackFstResR_3Layer_Rstrips[sensorId][i_rstrip]->Fill(r_fst-r_proj);
+	      h_mScanClustersTrackFstResPhi_3Layer_Rstrips[sensorId][i_rstrip]->Fill(phi_fst-phi_proj);
+	      h_mScanClustersTrackFstResRPhi_3Layer_Rstrips[sensorId][i_rstrip]->Fill(r_fst-r_proj,phi_fst-phi_proj);
+	    }
 	  }
 	}
       }
@@ -1028,90 +1119,103 @@ void FstTracking::calResolution_ScanClusters(FstEvent *fstEvent)
 
 void FstTracking::writeTracking_Clusters()
 {
-  // simple clusters
-  h_mSimpleClustersTrackFstResX_2Layer->Write();
-  h_mSimpleClustersTrackFstResY_2Layer->Write();
-  h_mSimpleClustersTrackFstResXY_2Layer->Write();
-
-  h_mSimpleClustersTrackFstResR_2Layer->Write();
-  h_mSimpleClustersTrackFstResPhi_2Layer->Write();
-  h_mSimpleClustersTrackFstResRPhi_2Layer->Write();
-
-  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
-  {
-    h_mSimpleClustersTrackFstResX_2Layer_Rstrips[i_rstrip]->Write();
-    h_mSimpleClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->Write();
-    h_mSimpleClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->Write();
-    	      
-    h_mSimpleClustersTrackFstResR_2Layer_Rstrips[i_rstrip]->Write();
-    h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->Write();
-    h_mSimpleClustersTrackFstResRPhi_2Layer_Rstrips[i_rstrip]->Write();
-  }
-
+  // IST simple clusters
   h_mSimpleClustersTrackIstResX_2Layer->Write();
   h_mSimpleClustersTrackIstResY_2Layer->Write();
   h_mSimpleClustersTrackIstResXY_2Layer->Write();
-
-  h_mSimpleClustersTrackFstResX_3Layer->Write();
-  h_mSimpleClustersTrackFstResY_3Layer->Write();
-  h_mSimpleClustersTrackFstResXY_3Layer->Write();
-
-  h_mSimpleClustersTrackFstResR_3Layer->Write();
-  h_mSimpleClustersTrackFstResPhi_3Layer->Write();
-  h_mSimpleClustersTrackFstResRPhi_3Layer->Write();
-
-  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
-  {
-    h_mSimpleClustersTrackFstResX_3Layer_Rstrips[i_rstrip]->Write();
-    h_mSimpleClustersTrackFstResY_3Layer_Rstrips[i_rstrip]->Write();
-    h_mSimpleClustersTrackFstResXY_3Layer_Rstrips[i_rstrip]->Write();
-    	      
-    h_mSimpleClustersTrackFstResR_3Layer_Rstrips[i_rstrip]->Write();
-    h_mSimpleClustersTrackFstResPhi_3Layer_Rstrips[i_rstrip]->Write();
-    h_mSimpleClustersTrackFstResRPhi_3Layer_Rstrips[i_rstrip]->Write();
-  }
 
   h_mSimpleClustersTrackIstResX_3Layer->Write();
   h_mSimpleClustersTrackIstResY_3Layer->Write();
   h_mSimpleClustersTrackIstResXY_3Layer->Write();
 
-  // simple clusters
-  h_mScanClustersTrackFstResX_2Layer->Write();
-  h_mScanClustersTrackFstResY_2Layer->Write();
-  h_mScanClustersTrackFstResXY_2Layer->Write();
-
-  h_mScanClustersTrackFstResR_2Layer->Write();
-  h_mScanClustersTrackFstResPhi_2Layer->Write();
-  h_mScanClustersTrackFstResRPhi_2Layer->Write();
-
-  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+  // FST simple clusters
+  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
   {
-    h_mScanClustersTrackFstResX_2Layer_Rstrips[i_rstrip]->Write();
-    h_mScanClustersTrackFstResY_2Layer_Rstrips[i_rstrip]->Write();
-    h_mScanClustersTrackFstResXY_2Layer_Rstrips[i_rstrip]->Write();
-    	      
-    h_mScanClustersTrackFstResR_2Layer_Rstrips[i_rstrip]->Write();
-    h_mScanClustersTrackFstResPhi_2Layer_Rstrips[i_rstrip]->Write();
-    h_mScanClustersTrackFstResRPhi_2Layer_Rstrips[i_rstrip]->Write();
+    h_mSimpleClustersTrackFstResX_2Layer[i_sensor]->Write();
+    h_mSimpleClustersTrackFstResY_2Layer[i_sensor]->Write();
+    h_mSimpleClustersTrackFstResXY_2Layer[i_sensor]->Write();
+
+    h_mSimpleClustersTrackFstResR_2Layer[i_sensor]->Write();
+    h_mSimpleClustersTrackFstResPhi_2Layer[i_sensor]->Write();
+    h_mSimpleClustersTrackFstResRPhi_2Layer[i_sensor]->Write();
+
+    for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
+    {
+      h_mSimpleClustersTrackFstResX_2Layer_Rstrips[i_sensor][i_rstrip]->Write();
+      h_mSimpleClustersTrackFstResY_2Layer_Rstrips[i_sensor][i_rstrip]->Write();
+      h_mSimpleClustersTrackFstResXY_2Layer_Rstrips[i_sensor][i_rstrip]->Write();
+
+      h_mSimpleClustersTrackFstResR_2Layer_Rstrips[i_sensor][i_rstrip]->Write();
+      h_mSimpleClustersTrackFstResPhi_2Layer_Rstrips[i_sensor][i_rstrip]->Write();
+      h_mSimpleClustersTrackFstResRPhi_2Layer_Rstrips[i_sensor][i_rstrip]->Write();
+    }
   }
 
-  h_mScanClustersTrackFstResX_3Layer->Write();
-  h_mScanClustersTrackFstResY_3Layer->Write();
-  h_mScanClustersTrackFstResXY_3Layer->Write();
-
-  h_mScanClustersTrackFstResR_3Layer->Write();
-  h_mScanClustersTrackFstResPhi_3Layer->Write();
-  h_mScanClustersTrackFstResRPhi_3Layer->Write();
-
-  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
   {
-    h_mScanClustersTrackFstResX_3Layer_Rstrips[i_rstrip]->Write();
-    h_mScanClustersTrackFstResY_3Layer_Rstrips[i_rstrip]->Write();
-    h_mScanClustersTrackFstResXY_3Layer_Rstrips[i_rstrip]->Write();
-    	      
-    h_mScanClustersTrackFstResR_3Layer_Rstrips[i_rstrip]->Write();
-    h_mScanClustersTrackFstResPhi_3Layer_Rstrips[i_rstrip]->Write();
-    h_mScanClustersTrackFstResRPhi_3Layer_Rstrips[i_rstrip]->Write();
+    h_mSimpleClustersTrackFstResX_3Layer[i_sensor]->Write();
+    h_mSimpleClustersTrackFstResY_3Layer[i_sensor]->Write();
+    h_mSimpleClustersTrackFstResXY_3Layer[i_sensor]->Write();
+
+    h_mSimpleClustersTrackFstResR_3Layer[i_sensor]->Write();
+    h_mSimpleClustersTrackFstResPhi_3Layer[i_sensor]->Write();
+    h_mSimpleClustersTrackFstResRPhi_3Layer[i_sensor]->Write();
+
+    for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
+    {
+      h_mSimpleClustersTrackFstResX_3Layer_Rstrips[i_sensor][i_rstrip]->Write();
+      h_mSimpleClustersTrackFstResY_3Layer_Rstrips[i_sensor][i_rstrip]->Write();
+      h_mSimpleClustersTrackFstResXY_3Layer_Rstrips[i_sensor][i_rstrip]->Write();
+
+      h_mSimpleClustersTrackFstResR_3Layer_Rstrips[i_sensor][i_rstrip]->Write();
+      h_mSimpleClustersTrackFstResPhi_3Layer_Rstrips[i_sensor][i_rstrip]->Write();
+      h_mSimpleClustersTrackFstResRPhi_3Layer_Rstrips[i_sensor][i_rstrip]->Write();
+    }
+  }
+ 
+  // FST scan clusters
+  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
+  {
+    h_mScanClustersTrackFstResX_2Layer[i_sensor]->Write();
+    h_mScanClustersTrackFstResY_2Layer[i_sensor]->Write();
+    h_mScanClustersTrackFstResXY_2Layer[i_sensor]->Write();
+
+    h_mScanClustersTrackFstResR_2Layer[i_sensor]->Write();
+    h_mScanClustersTrackFstResPhi_2Layer[i_sensor]->Write();
+    h_mScanClustersTrackFstResRPhi_2Layer[i_sensor]->Write();
+
+    for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
+    {
+      h_mScanClustersTrackFstResX_2Layer_Rstrips[i_sensor][i_rstrip]->Write();
+      h_mScanClustersTrackFstResY_2Layer_Rstrips[i_sensor][i_rstrip]->Write();
+      h_mScanClustersTrackFstResXY_2Layer_Rstrips[i_sensor][i_rstrip]->Write();
+
+      h_mScanClustersTrackFstResR_2Layer_Rstrips[i_sensor][i_rstrip]->Write();
+      h_mScanClustersTrackFstResPhi_2Layer_Rstrips[i_sensor][i_rstrip]->Write();
+      h_mScanClustersTrackFstResRPhi_2Layer_Rstrips[i_sensor][i_rstrip]->Write();
+    }
+  }
+
+  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
+  {
+    h_mScanClustersTrackFstResX_3Layer[i_sensor]->Write();
+    h_mScanClustersTrackFstResY_3Layer[i_sensor]->Write();
+    h_mScanClustersTrackFstResXY_3Layer[i_sensor]->Write();
+
+    h_mScanClustersTrackFstResR_3Layer[i_sensor]->Write();
+    h_mScanClustersTrackFstResPhi_3Layer[i_sensor]->Write();
+    h_mScanClustersTrackFstResRPhi_3Layer[i_sensor]->Write();
+
+    for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
+    {
+      h_mScanClustersTrackFstResX_3Layer_Rstrips[i_sensor][i_rstrip]->Write();
+      h_mScanClustersTrackFstResY_3Layer_Rstrips[i_sensor][i_rstrip]->Write();
+      h_mScanClustersTrackFstResXY_3Layer_Rstrips[i_sensor][i_rstrip]->Write();
+
+      h_mScanClustersTrackFstResR_3Layer_Rstrips[i_sensor][i_rstrip]->Write();
+      h_mScanClustersTrackFstResPhi_3Layer_Rstrips[i_sensor][i_rstrip]->Write();
+      h_mScanClustersTrackFstResRPhi_3Layer_Rstrips[i_sensor][i_rstrip]->Write();
+    }
   }
 }
 //--------------Track Resolution with Clusters---------------------

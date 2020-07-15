@@ -22,19 +22,19 @@ namespace FST
   const double rOuter       = 165.0; // mm | smallest radius of outer sector
   const double pitchR       = 28.75; // mm | (280-165)/4.0
   const double pitchPhi     = TMath::Pi()*30.0/180.0/numPhiSeg; // rad | 30 degree with 128 segmentations
-  // const double gapPhi       = TMath::Pi()*1.0/180.0; // 1 degree gap between 2 outer sensor
-  const double gapPhi       = 0.0;
+  const double gapPhi       = TMath::Pi()*1.0/180.0; // 1 degree gap between 2 outer sensor
+  // const double gapPhi       = 0.0;
   const double pitchLayer03 = 134.9375+23.3257; // mm
-
-  const double rMax   = rOuter + 5.0*pitchR; // 308.75 mm
-  const double rMin   = rInner - 1.0*pitchR; // 21.25 mm
-  const double phiMax = TMath::Pi()*15.0/180.0 + 0.5*gapPhi; // 64.0*FST::pitchPhi +0.5*gapPhi;
-  const double phiMin = 0.5*gapPhi; // 0.5*gapPhi
 
   // FST Clustering
   const int mFstNumSensorsPerModule = 3; // 0 for APV 0-3(1-4) on inner sector | 1 for APV 4&5(5&6) on outer sector | 2 for APV 6&7(7&8) on outer sector
   const int mFstNumPhiSegPerSensor  = 128; // 128 for sensor 0 | 64 for sensor 1 & 2
   const int mFstNumRstripPerSensor  = 4;
+
+  const double rMax   = rOuter + 5.0*pitchR; // 308.75 mm
+  const double rMin   = rInner - 1.0*pitchR; // 21.25 mm
+  const double phiMax = TMath::Pi()*15.0/180.0 + 0.5*gapPhi; // 64.0*FST::pitchPhi +0.5*gapPhi;
+  const double phiMin = 0.5*gapPhi; // 0.5*gapPhi
 
   // IST Cosmic Test Stand Geometry
   const int noRows          = 64; // for one group of sensors
