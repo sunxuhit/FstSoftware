@@ -32,10 +32,17 @@ namespace FST
   const int mFstNumRstripPerSensor  = 4;
   const int mFstNumMatching = 8; // 0: no matching | 1-7 matching within (1-7)*pitchR in r & 3.0(6.0)*pitchPhi in phi
 
-  const double rMax[mFstNumSensorsPerModule]   = {rInner+5.0*pitchR,rOuter+5.0*pitchR,rOuter+5.0*pitchR}; // 193.75 mm, 308.75 mm, 308.75 mm
-  const double rMin[mFstNumSensorsPerModule]   = {rInner-1.0*pitchR,rOuter-1.0*pitchR,rOuter-1.0*pitchR}; // 21.25 mm, 136.25 mm, 136.2 5mm
-  const double phiMax[mFstNumSensorsPerModule] = {TMath::Pi()*15.0/180.0,TMath::Pi()*15.0/180.0+0.5*gapPhi,-0.5*gapPhi}; // 64.0*FST::pitchPhi, 64.0*FST::pitchPhi +0.5*gapPhi, -0.5*gapPhi
-  const double phiMin[mFstNumSensorsPerModule] = {-TMath::Pi()*15.0/180.0,0.5*gapPhi,-TMath::Pi()*15.0/180.0-0.5*gapPhi}; // -64.0*FST::pitchPhi, +0.5*gapPhi, -64.0*FST::pitchPhi-0.5*gapPhi
+  // FST Limits 
+  const double mFstRMax[mFstNumSensorsPerModule]   = {rInner+4.0*pitchR, rOuter+4.0*pitchR, rOuter+4.0*pitchR}; // 165 mm, 280 mm, 280 mm
+  const double mFstRMin[mFstNumSensorsPerModule]   = {rInner, rOuter, rOuter}; // 50 mm, 165 mm, 165 mm
+  const double mFstPhiMax[mFstNumSensorsPerModule] = {TMath::Pi()*15.0/180.0, TMath::Pi()*15.0/180.0+0.5*gapPhi, -0.5*gapPhi}; // 64.0*FST::pitchPhi, 64.0*FST::pitchPhi +0.5*gapPhi, -0.5*gapPhi
+  const double mFstPhiMin[mFstNumSensorsPerModule] = {-TMath::Pi()*15.0/180.0, 0.5*gapPhi, -TMath::Pi()*15.0/180.0-0.5*gapPhi}; // -64.0*FST::pitchPhi, +0.5*gapPhi, -64.0*FST::pitchPhi-0.5*gapPhi
+
+  // FST Histograms Limits
+  const double rMax[mFstNumSensorsPerModule]   = {rInner+5.0*pitchR, rOuter+5.0*pitchR, rOuter+5.0*pitchR}; // mFstRMax + 1.0*pitchR
+  const double rMin[mFstNumSensorsPerModule]   = {rInner-1.0*pitchR, rOuter-1.0*pitchR, rOuter-1.0*pitchR}; // mFstRMin - 1.0*pitchR
+  const double phiMax[mFstNumSensorsPerModule] = {TMath::Pi()*15.0/180.0+10*pitchPhi, TMath::Pi()*15.0/180.0+0.5*gapPhi+10*pitchPhi, -0.5*gapPhi+10*pitchPhi}; // mFstPhiMax + 10.0*pitchPhi
+  const double phiMin[mFstNumSensorsPerModule] = {-TMath::Pi()*15.0/180.0-10*pitchPhi, 0.5*gapPhi-10*pitchPhi, -TMath::Pi()*15.0/180.0-0.5*gapPhi-10*pitchPhi}; // mFstPhiMin - 10.0*pitchPhi
 
   // IST Cosmic Test Stand Geometry
   const int noRows          = 64; // for one group of sensors
