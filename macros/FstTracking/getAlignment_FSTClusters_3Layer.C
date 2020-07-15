@@ -23,7 +23,7 @@
 R__LOAD_LIBRARY(../../lib/libFstEvent.dylib)
 
 typedef std::vector<double> dVec;
-typedef std::tuple<double, double, double, double, double, int> tPars; // phi_rot_ist2, x2_shift, y2_shift, xCut, yCut, nOffset
+typedef std::tuple<double, double, double, double, double, double, int> tPars; // phi_rot_ist2, x2_shift, y2_shift, z0_shift, xCut, yCut, nOffset
 
 tPars minuitAlignment(dVec x0_orig, dVec y0_orig, dVec x1_orig, dVec y1_orig, dVec x3_orig, dVec y3_orig, tPars cParameters);
 tPars updateFitParameters(tPars fitPars, double xCut, double yCut, int nOffset);
@@ -315,7 +315,7 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
   // initial fit
   int nFit = 0;
   cout << "Iteration " << nFit << " ==> " << endl;
-  tPars initPars = std::make_tuple(0.0,0.0,0.0,1000.0,1000.0,0); // set initial fit parameters
+  tPars initPars = std::make_tuple(0.0,0.0,0.0,0.0,1000.0,1000.0,0); // set initial fit parameters
   tPars fitPars = minuitAlignment(x0_fst, y0_fst, x1_ist, y1_ist, x3_ist, y3_ist, initPars);
   cout << endl;
   //------------------------------
@@ -324,8 +324,9 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
     double phi_ist2_temp = std::get<0>(initPars); // aligment parameters from previous iteration
     double x2_shift_temp = std::get<1>(initPars);
     double y2_shift_temp = std::get<2>(initPars);
-    double xCut_temp     = std::get<3>(initPars);
-    double yCut_temp     = std::get<4>(initPars);
+    double z0_shift_temp = std::get<3>(initPars);
+    double xCut_temp     = std::get<4>(initPars);
+    double yCut_temp     = std::get<5>(initPars);
 
     // cout << "reject trakcs out of xCut = " << xCut_temp << " and yCut: " << yCut_temp << endl;
     h_mXResidual->Reset();
@@ -344,8 +345,8 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
       double x3_corr_temp = x3_ist[i_cluster]*TMath::Cos(phi_ist2_temp) + y3_ist[i_cluster]*TMath::Sin(phi_ist2_temp) + x2_shift_temp;
       double y3_corr_temp = y3_ist[i_cluster]*TMath::Cos(phi_ist2_temp) - x3_ist[i_cluster]*TMath::Sin(phi_ist2_temp) + y2_shift_temp;
 
-      double x0_proj_temp   = x3_corr_temp + (x1_corr_temp-x3_corr_temp)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
-      double y0_proj_temp   = y3_corr_temp + (y1_corr_temp-y3_corr_temp)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
+      double x0_proj_temp   = x3_corr_temp + (x1_corr_temp-x3_corr_temp)*(FST::pitchLayer03+z0_shift_temp)/(FST::pitchLayer12+FST::pitchLayer23);
+      double y0_proj_temp   = y3_corr_temp + (y1_corr_temp-y3_corr_temp)*(FST::pitchLayer03+z0_shift_temp)/(FST::pitchLayer12+FST::pitchLayer23);
       double r0_proj_temp   = TMath::Sqrt(x0_proj_temp*x0_proj_temp+y0_proj_temp*y0_proj_temp);
       double phi0_proj_temp = TMath::ATan2(y0_proj_temp,x0_proj_temp);
 
@@ -390,7 +391,7 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
 
   // reject trakcs with xCut = 50 and yCut = 5
   tPars itPars = updateFitParameters(fitPars, 50, 10, 1);
-  int nOffset_temp = std::get<5>(itPars);
+  int nOffset_temp = std::get<6>(itPars);
   while(nOffset_temp > 0)
   { 
     // plotting
@@ -398,8 +399,9 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
       double phi_ist2_temp = std::get<0>(itPars); // aligment parameters from previous iteration
       double x2_shift_temp = std::get<1>(itPars);
       double y2_shift_temp = std::get<2>(itPars);
-      double xCut_temp     = std::get<3>(itPars);
-      double yCut_temp     = std::get<4>(itPars);
+      double z0_shift_temp = std::get<3>(itPars);
+      double xCut_temp     = std::get<4>(itPars);
+      double yCut_temp     = std::get<5>(itPars);
 
       // cout << "reject trakcs out of xCut = " << xCut_temp << " and yCut: " << yCut_temp << endl;
       h_mXResidual->Reset();
@@ -418,8 +420,8 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
 	double x3_corr_temp = x3_ist[i_cluster]*TMath::Cos(phi_ist2_temp) + y3_ist[i_cluster]*TMath::Sin(phi_ist2_temp) + x2_shift_temp;
 	double y3_corr_temp = y3_ist[i_cluster]*TMath::Cos(phi_ist2_temp) - x3_ist[i_cluster]*TMath::Sin(phi_ist2_temp) + y2_shift_temp;
 
-	double x0_proj_temp   = x3_corr_temp + (x1_corr_temp-x3_corr_temp)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
-	double y0_proj_temp   = y3_corr_temp + (y1_corr_temp-y3_corr_temp)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
+	double x0_proj_temp   = x3_corr_temp + (x1_corr_temp-x3_corr_temp)*(FST::pitchLayer03+z0_shift_temp)/(FST::pitchLayer12+FST::pitchLayer23);
+	double y0_proj_temp   = y3_corr_temp + (y1_corr_temp-y3_corr_temp)*(FST::pitchLayer03+z0_shift_temp)/(FST::pitchLayer12+FST::pitchLayer23);
 	double r0_proj_temp   = TMath::Sqrt(x0_proj_temp*x0_proj_temp+y0_proj_temp*y0_proj_temp);
 	double phi0_proj_temp = TMath::ATan2(y0_proj_temp,x0_proj_temp);
 
@@ -477,14 +479,14 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
     nFit++;
     cout << "Iteration " << nFit << " ==> " << endl;
     fitPars = minuitAlignment(x0_fst, y0_fst, x1_ist, y1_ist, x3_ist, y3_ist, itPars);
-    nOffset_temp = std::get<5>(fitPars);
+    nOffset_temp = std::get<6>(fitPars);
     itPars = updateFitParameters(fitPars,50,10,nOffset_temp);
     cout << endl;
   }
 
   // reject trakcs with xCut = 25 and yCut = 5 
   itPars = updateFitParameters(fitPars, 25, 5, 1);
-  nOffset_temp = std::get<5>(itPars);
+  nOffset_temp = std::get<6>(itPars);
   while(nOffset_temp > 0)
   {
     // plotting
@@ -492,8 +494,9 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
       double phi_ist2_temp = std::get<0>(itPars); // aligment parameters from previous iteration
       double x2_shift_temp = std::get<1>(itPars);
       double y2_shift_temp = std::get<2>(itPars);
-      double xCut_temp     = std::get<3>(itPars);
-      double yCut_temp     = std::get<4>(itPars);
+      double z0_shift_temp = std::get<3>(itPars);
+      double xCut_temp     = std::get<4>(itPars);
+      double yCut_temp     = std::get<5>(itPars);
 
       // cout << "reject trakcs out of xCut = " << xCut_temp << " and yCut: " << yCut_temp << endl;
       h_mXResidual->Reset();
@@ -512,8 +515,8 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
 	double x3_corr_temp = x3_ist[i_cluster]*TMath::Cos(phi_ist2_temp) + y3_ist[i_cluster]*TMath::Sin(phi_ist2_temp) + x2_shift_temp;
 	double y3_corr_temp = y3_ist[i_cluster]*TMath::Cos(phi_ist2_temp) - x3_ist[i_cluster]*TMath::Sin(phi_ist2_temp) + y2_shift_temp;
 
-	double x0_proj_temp   = x3_corr_temp + (x1_corr_temp-x3_corr_temp)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
-	double y0_proj_temp   = y3_corr_temp + (y1_corr_temp-y3_corr_temp)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
+	double x0_proj_temp   = x3_corr_temp + (x1_corr_temp-x3_corr_temp)*(FST::pitchLayer03+z0_shift_temp)/(FST::pitchLayer12+FST::pitchLayer23);
+	double y0_proj_temp   = y3_corr_temp + (y1_corr_temp-y3_corr_temp)*(FST::pitchLayer03+z0_shift_temp)/(FST::pitchLayer12+FST::pitchLayer23);
 	double r0_proj_temp   = TMath::Sqrt(x0_proj_temp*x0_proj_temp+y0_proj_temp*y0_proj_temp);
 	double phi0_proj_temp = TMath::ATan2(y0_proj_temp,x0_proj_temp);
 
@@ -568,13 +571,13 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
     nFit++;
     cout << "Iteration " << nFit << " ==> " << endl;
     fitPars = minuitAlignment(x0_fst, y0_fst, x1_ist, y1_ist, x3_ist, y3_ist, itPars);
-    nOffset_temp = std::get<5>(fitPars);
+    nOffset_temp = std::get<6>(fitPars);
     itPars = updateFitParameters(fitPars,25,5,nOffset_temp);
     cout << endl;
   }
 
   itPars = updateFitParameters(fitPars, 15, 2.5, 1);
-  nOffset_temp = std::get<5>(itPars);
+  nOffset_temp = std::get<6>(itPars);
   while(nOffset_temp > 0)
   {
     // plotting
@@ -582,8 +585,9 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
       double phi_ist2_temp = std::get<0>(itPars); // aligment parameters from previous iteration
       double x2_shift_temp = std::get<1>(itPars);
       double y2_shift_temp = std::get<2>(itPars);
-      double xCut_temp     = std::get<3>(itPars);
-      double yCut_temp     = std::get<4>(itPars);
+      double z0_shift_temp = std::get<3>(itPars);
+      double xCut_temp     = std::get<4>(itPars);
+      double yCut_temp     = std::get<5>(itPars);
 
       // cout << "reject trakcs out of xCut = " << xCut_temp << " and yCut: " << yCut_temp << endl;
       h_mXResidual->Reset();
@@ -602,8 +606,8 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
 	double x3_corr_temp = x3_ist[i_cluster]*TMath::Cos(phi_ist2_temp) + y3_ist[i_cluster]*TMath::Sin(phi_ist2_temp) + x2_shift_temp;
 	double y3_corr_temp = y3_ist[i_cluster]*TMath::Cos(phi_ist2_temp) - x3_ist[i_cluster]*TMath::Sin(phi_ist2_temp) + y2_shift_temp;
 
-	double x0_proj_temp   = x3_corr_temp + (x1_corr_temp-x3_corr_temp)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
-	double y0_proj_temp   = y3_corr_temp + (y1_corr_temp-y3_corr_temp)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
+	double x0_proj_temp   = x3_corr_temp + (x1_corr_temp-x3_corr_temp)*(FST::pitchLayer03+z0_shift_temp)/(FST::pitchLayer12+FST::pitchLayer23);
+	double y0_proj_temp   = y3_corr_temp + (y1_corr_temp-y3_corr_temp)*(FST::pitchLayer03+z0_shift_temp)/(FST::pitchLayer12+FST::pitchLayer23);
 	double r0_proj_temp   = TMath::Sqrt(x0_proj_temp*x0_proj_temp+y0_proj_temp*y0_proj_temp);
 	double phi0_proj_temp = TMath::ATan2(y0_proj_temp,x0_proj_temp);
 
@@ -658,7 +662,7 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
     nFit++;
     cout << "Iteration " << nFit << " ==> " << endl;
     fitPars = minuitAlignment(x0_fst, y0_fst, x1_ist, y1_ist, x3_ist, y3_ist, itPars);
-    nOffset_temp = std::get<5>(fitPars);
+    nOffset_temp = std::get<6>(fitPars);
     itPars = updateFitParameters(fitPars,15,2.5,nOffset_temp);
     cout << endl;
   }
@@ -669,8 +673,9 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
     double phi_ist2_temp = std::get<0>(fitPars); // aligment parameters from previous iteration
     double x2_shift_temp = std::get<1>(fitPars);
     double y2_shift_temp = std::get<2>(fitPars);
-    double xCut_temp     = std::get<3>(fitPars);
-    double yCut_temp     = std::get<4>(fitPars);
+    double z0_shift_temp = std::get<3>(fitPars);
+    double xCut_temp     = std::get<4>(fitPars);
+    double yCut_temp     = std::get<5>(fitPars);
 
     // cout << "reject trakcs out of xCut = " << xCut_temp << " and yCut: " << yCut_temp << endl;
     h_mXResidual->Reset();
@@ -689,8 +694,8 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
       double x3_corr_temp = x3_ist[i_cluster]*TMath::Cos(phi_ist2_temp) + y3_ist[i_cluster]*TMath::Sin(phi_ist2_temp) + x2_shift_temp;
       double y3_corr_temp = y3_ist[i_cluster]*TMath::Cos(phi_ist2_temp) - x3_ist[i_cluster]*TMath::Sin(phi_ist2_temp) + y2_shift_temp;
 
-      double x0_proj_temp   = x3_corr_temp + (x1_corr_temp-x3_corr_temp)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
-      double y0_proj_temp   = y3_corr_temp + (y1_corr_temp-y3_corr_temp)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
+      double x0_proj_temp   = x3_corr_temp + (x1_corr_temp-x3_corr_temp)*(FST::pitchLayer03+z0_shift_temp)/(FST::pitchLayer12+FST::pitchLayer23);
+      double y0_proj_temp   = y3_corr_temp + (y1_corr_temp-y3_corr_temp)*(FST::pitchLayer03+z0_shift_temp)/(FST::pitchLayer12+FST::pitchLayer23);
       double r0_proj_temp   = TMath::Sqrt(x0_proj_temp*x0_proj_temp+y0_proj_temp*y0_proj_temp);
       double phi0_proj_temp = TMath::ATan2(y0_proj_temp,x0_proj_temp);
 
@@ -758,7 +763,7 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
     f_gausPhi->SetParameter(1,0.0);
     f_gausPhi->SetParameter(2,10.0);
     f_gausPhi->FixParameter(3,h_mPhiResidual->GetBinWidth(1));
-    f_gausPhi->SetRange(-0.03,0.03);
+    f_gausPhi->SetRange(-0.02,0.02);
     h_mPhiResidual->Fit(f_gausPhi,"R");
     f_gausPhi->Draw("l same");
 
@@ -766,7 +771,7 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
     c_Residual->Print(outputname.c_str());
   }
 
-  cout << "Minuit minimization: phi_rot_ist2 = " << std::get<0>(fitPars) << ", x2_shift = " << std::get<1>(fitPars) << ", y2_shift = " << std::get<2>(fitPars) << endl;
+  cout << "Minuit minimization: phi_rot_ist2 = " << std::get<0>(fitPars) << ", x2_shift = " << std::get<1>(fitPars) << ", y2_shift = " << std::get<2>(fitPars) << ", z0_shift = " << std::get<3>(fitPars) << endl;
 
   string output_stop = Form("./figures/%sResidual_FSTClusters_3Layer.pdf]",mSector.c_str()); 
   c_Residual->Print(output_stop.c_str()); // close pdf file
@@ -808,16 +813,13 @@ tPars minuitAlignment(dVec x0_orig, dVec y0_orig, dVec x1_orig, dVec y1_orig, dV
     y3_temp.push_back(y3_orig[i_cluster]);
   }
 
-  // const double pitchLayer03 = 134.9375; // mm
-  // const double pitchLayer12 = 34.925; //mm, distances between the 1st & 2nd Layer => Added by Xu Sun @ 02/13/2020
-  // const double pitchLayer23 = 30.1625; //mm, distances between the 2nd & 3rd Layer
-
   // reject offset trakcs
   const double phi_ist2_temp = std::get<0>(cParameters); // aligment parameters from previous iteration
   const double x2_shift_temp = std::get<1>(cParameters);
   const double y2_shift_temp = std::get<2>(cParameters);
-  const double xCut_temp     = std::get<3>(cParameters);
-  const double yCut_temp     = std::get<4>(cParameters);
+  const double z0_shift_temp = std::get<3>(cParameters);
+  const double xCut_temp     = std::get<4>(cParameters);
+  const double yCut_temp     = std::get<5>(cParameters);
   cout << "reject trakcs out of xCut = " << xCut_temp << " and yCut: " << yCut_temp << endl;
 
   int numOfUsedHits = 0;
@@ -829,8 +831,8 @@ tPars minuitAlignment(dVec x0_orig, dVec y0_orig, dVec x1_orig, dVec y1_orig, dV
     double x3_corr_temp = x3_temp[i_cluster]*TMath::Cos(phi_ist2_temp) + y3_temp[i_cluster]*TMath::Sin(phi_ist2_temp) + x2_shift_temp;
     double y3_corr_temp = y3_temp[i_cluster]*TMath::Cos(phi_ist2_temp) - x3_temp[i_cluster]*TMath::Sin(phi_ist2_temp) + y2_shift_temp;
 
-    double x0_proj_temp = x3_corr_temp + (x1_corr_temp-x3_corr_temp)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
-    double y0_proj_temp = y3_corr_temp + (y1_corr_temp-y3_corr_temp)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
+    double x0_proj_temp = x3_corr_temp + (x1_corr_temp-x3_corr_temp)*(FST::pitchLayer03+z0_shift_temp)/(FST::pitchLayer12+FST::pitchLayer23);
+    double y0_proj_temp = y3_corr_temp + (y1_corr_temp-y3_corr_temp)*(FST::pitchLayer03+z0_shift_temp)/(FST::pitchLayer12+FST::pitchLayer23);
 
     double dx = x0_temp[i_cluster] - x0_proj_temp;
     double dy = y0_temp[i_cluster] - y0_proj_temp;
@@ -855,9 +857,10 @@ tPars minuitAlignment(dVec x0_orig, dVec y0_orig, dVec x1_orig, dVec y1_orig, dV
     double phi_rot_ist2 = par[0];
     double x2_shift     = par[1];
     double y2_shift     = par[2];
+    double z0_shift     = par[3];
 
     const double x_weight = 1.0;
-    const double y_weight = 36.0;
+    const double y_weight = 400.0;
     double f = 0;
     for (int i_cluster = 0; i_cluster < numOfUsedHits; i_cluster++)
     {
@@ -867,8 +870,8 @@ tPars minuitAlignment(dVec x0_orig, dVec y0_orig, dVec x1_orig, dVec y1_orig, dV
       double x3_corr = x3_fit[i_cluster]*TMath::Cos(phi_rot_ist2) + y3_fit[i_cluster]*TMath::Sin(phi_rot_ist2) + x2_shift;
       double y3_corr = y3_fit[i_cluster]*TMath::Cos(phi_rot_ist2) - x3_fit[i_cluster]*TMath::Sin(phi_rot_ist2) + y2_shift;
 
-      double x0_proj = x3_corr + (x1_corr-x3_corr)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
-      double y0_proj = y3_corr + (y1_corr-y3_corr)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
+      double x0_proj = x3_corr + (x1_corr-x3_corr)*(FST::pitchLayer03+z0_shift)/(FST::pitchLayer12+FST::pitchLayer23);
+      double y0_proj = y3_corr + (y1_corr-y3_corr)*(FST::pitchLayer03+z0_shift)/(FST::pitchLayer12+FST::pitchLayer23);
 
       double dx = x0_fit[i_cluster] - x0_proj;
       double dy = y0_fit[i_cluster] - y0_proj;
@@ -880,21 +883,22 @@ tPars minuitAlignment(dVec x0_orig, dVec y0_orig, dVec x1_orig, dVec y1_orig, dV
 
   // wrap chi2 funciton in a function object for the fit
   // 3 is the number of fit parameters (size of array par)
-  ROOT::Math::Functor fcn(chi2Function,3);
+  ROOT::Math::Functor fcn(chi2Function,4);
   ROOT::Fit::Fitter fitter;
 
-  double pStart[3] = {phi_ist2_temp,x2_shift_temp,y2_shift_temp};
+  double pStart[4] = {phi_ist2_temp,x2_shift_temp,y2_shift_temp,z0_shift_temp};
   fitter.SetFCN(fcn, pStart);
   fitter.Config().ParSettings(0).SetName("phi_rot_ist2");
   fitter.Config().ParSettings(0).SetLimits(0.5*TMath::Pi(),1.5*TMath::Pi());
   fitter.Config().ParSettings(1).SetName("x2_shift");
   fitter.Config().ParSettings(2).SetName("y2_shift");
+  fitter.Config().ParSettings(3).SetName("z0_shift");
 
   // do the fit
   bool ok = fitter.FitFCN();
   if (!ok) {
     Error("find alignment","Minuit Fit failed");
-    return std::make_tuple(-1.0, -1.0, -1.0, -1.0, -1.0, -1);
+    return std::make_tuple(-1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1);
   }
 
   const ROOT::Fit::FitResult & result = fitter.Result();
@@ -903,6 +907,7 @@ tPars minuitAlignment(dVec x0_orig, dVec y0_orig, dVec x1_orig, dVec y1_orig, dV
   double phi_rot_ist2_MF = fitpar[0];
   double x2_shift_MF     = fitpar[1];
   double y2_shift_MF     = fitpar[2];
+  double z0_shift_MF     = fitpar[3];
 
   // calculate nOffset with current fit parameters
   int nOffset = 0;
@@ -914,8 +919,8 @@ tPars minuitAlignment(dVec x0_orig, dVec y0_orig, dVec x1_orig, dVec y1_orig, dV
     double x3_corr_MF = x3_fit[i_cluster]*TMath::Cos(phi_rot_ist2_MF) + y3_fit[i_cluster]*TMath::Sin(phi_rot_ist2_MF) + x2_shift_MF;
     double y3_corr_MF = y3_fit[i_cluster]*TMath::Cos(phi_rot_ist2_MF) - x3_fit[i_cluster]*TMath::Sin(phi_rot_ist2_MF) + y2_shift_MF;
 
-    double x0_proj_MF = x3_corr_MF + (x1_corr_MF-x3_corr_MF)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
-    double y0_proj_MF = y3_corr_MF + (y1_corr_MF-y3_corr_MF)*FST::pitchLayer03/(FST::pitchLayer12+FST::pitchLayer23);
+    double x0_proj_MF = x3_corr_MF + (x1_corr_MF-x3_corr_MF)*(FST::pitchLayer03+z0_shift_MF)/(FST::pitchLayer12+FST::pitchLayer23);
+    double y0_proj_MF = y3_corr_MF + (y1_corr_MF-y3_corr_MF)*(FST::pitchLayer03+z0_shift_MF)/(FST::pitchLayer12+FST::pitchLayer23);
 
     double dx = x0_fit[i_cluster] - x0_proj_MF;
     double dy = y0_fit[i_cluster] - y0_proj_MF;
@@ -926,10 +931,10 @@ tPars minuitAlignment(dVec x0_orig, dVec y0_orig, dVec x1_orig, dVec y1_orig, dV
     }
   }
 
-  tPars tParameters = std::make_tuple(phi_rot_ist2_MF, x2_shift_MF, y2_shift_MF, xCut_temp, yCut_temp, nOffset);
+  tPars tParameters = std::make_tuple(phi_rot_ist2_MF, x2_shift_MF, y2_shift_MF, z0_shift_MF, xCut_temp, yCut_temp, nOffset);
 
   // cout << "Minuit minimization: phi_rot_ist1 = " << phi_rot_ist1_MF << ", phi_rot_ist3 = " << phi_rot_ist3_MF << ", x_shift = " << x_shift_MF << ", y_shift = " << y_shift_MF << endl;
-  cout << "Minuit minimization: phi_rot_ist2 = " << std::get<0>(tParameters) << ", x2_shift = " << (double)std::get<1>(tParameters) << ", y2_shift = " << std::get<2>(tParameters) << ", nOffset = " << std::get<5>(tParameters) << endl;
+  cout << "Minuit minimization: phi_rot_ist2 = " << std::get<0>(tParameters) << ", x2_shift = " << (double)std::get<1>(tParameters) << ", y2_shift = " << std::get<2>(tParameters) << ", z0_shift = " << std::get<3>(tParameters) << ", nOffset = " << std::get<6>(tParameters) << endl;
 
   return tParameters;
 }
@@ -939,11 +944,12 @@ tPars updateFitParameters(tPars fitPars, double xCut, double yCut, int nOffset)
   const double phi_ist2_old = std::get<0>(fitPars);
   const double x2_shift_old = std::get<1>(fitPars);
   const double y2_shift_old = std::get<2>(fitPars);
-  const double xCut_old     = std::get<3>(fitPars);
-  const double yCut_old     = std::get<4>(fitPars);
-  const double nOffset_old  = std::get<5>(fitPars);
+  const double z0_shift_old = std::get<3>(fitPars);
+  const double xCut_old     = std::get<4>(fitPars);
+  const double yCut_old     = std::get<5>(fitPars);
+  const double nOffset_old  = std::get<6>(fitPars);
 
-  tPars newPars = std::make_tuple(phi_ist2_old, x2_shift_old, y2_shift_old, xCut, yCut, nOffset);
+  tPars newPars = std::make_tuple(phi_ist2_old, x2_shift_old, y2_shift_old, z0_shift_old, xCut, yCut, nOffset);
 
   return newPars;
 }

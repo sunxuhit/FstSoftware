@@ -24,7 +24,7 @@ namespace FST
   const double pitchPhi     = TMath::Pi()*30.0/180.0/numPhiSeg; // rad | 30 degree with 128 segmentations
   // const double gapPhi       = TMath::Pi()*1.0/180.0; // 1 degree gap between 2 outer sensor
   const double gapPhi       = 0.0;
-  const double pitchLayer03 = 134.9375; // mm
+  const double pitchLayer03 = 134.9375+23.3257; // mm
 
   const double rMax   = rOuter + 5.0*pitchR; // 308.75 mm
   const double rMin   = rInner - 1.0*pitchR; // 21.25 mm
@@ -54,9 +54,9 @@ namespace FST
   // const double phi_rot_ist2 = 0.0438495; // aligned IST2 to FST with 2-layer tracking
   // const double x2_shift     = 140.99; // x2_shift + 6.0
   // const double y2_shift     = -20.7848;
-  const double phi_rot_ist2 = 3.16437; // for Inner sector test
-  const double x2_shift     = 214.935;
-  const double y2_shift     = 32.1761;
+  const double phi_rot_ist2 = 3.16612; // for Inner sector test
+  const double x2_shift     = 216.606;
+  const double y2_shift     = 33.5658;
 
   // Hits Selection
   const float nFstPedsCut      = 3.0; // used for ped
