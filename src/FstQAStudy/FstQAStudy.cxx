@@ -451,13 +451,13 @@ void FstQAStudy::initClusterSize_TrackClusters()
   {
     string ProName;
     ProName = Form("p_mNHitsR_rP_SF%d",i_match*10);
-    p_mNHitsR_rP[i_match] = new TProfile(ProName.c_str(),ProName.c_str(),24,FST::rMin,FST::rMax);
+    p_mNHitsR_rP[i_match] = new TProfile(ProName.c_str(),ProName.c_str(),24,FST::rMin[0],FST::rMax[0]);
     ProName = Form("p_mNHitsR_phiP_SF%d",i_match*10);
-    p_mNHitsR_phiP[i_match] = new TProfile(ProName.c_str(),ProName.c_str(),FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+    p_mNHitsR_phiP[i_match] = new TProfile(ProName.c_str(),ProName.c_str(),FST::numPhiSeg*2,-2.0*FST::phiMax[0],2.0*FST::phiMax[0]);
     ProName = Form("p_mNHitsPhi_rP_SF%d",i_match*10);
-    p_mNHitsPhi_rP[i_match] = new TProfile(ProName.c_str(),ProName.c_str(),24,FST::rMin,FST::rMax);
+    p_mNHitsPhi_rP[i_match] = new TProfile(ProName.c_str(),ProName.c_str(),24,FST::rMin[0],FST::rMax[0]);
     ProName = Form("p_mNHitsPhi_phiP_SF%d",i_match*10);
-    p_mNHitsPhi_phiP[i_match] = new TProfile(ProName.c_str(),ProName.c_str(),FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
+    p_mNHitsPhi_phiP[i_match] = new TProfile(ProName.c_str(),ProName.c_str(),FST::numPhiSeg*2,-2.0*FST::phiMax[0],2.0*FST::phiMax[0]);
   }
 }
 
@@ -545,69 +545,66 @@ void FstQAStudy::initSignalQA()
 {
   p_mPedMap_FST = new TProfile2D("p_mPedMap_FST","p_mPedMap_FST",FST::numRStrip,-0.5,FST::numRStrip-0.5,FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5);
   p_mSigMap_FST = new TProfile2D("p_mSigMap_FST","p_mSigMap_FST",FST::numRStrip,-0.5,FST::numRStrip-0.5,FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5);
-  h_mSignalHits_FST = new TH1F("h_mSignalHits_FST","h_mSignalHits_FST",200,-0.5,1999.5);
-  h_mNoiseHits_FST = new TH1F("h_mNoiseHits_FST","h_mNoiseHits_FST",100,-0.5,99.5);
-  h_mSNRatioHits_FST = new TH1F("h_mSNRatioHits_FST","h_mSNRatioHits_FST",200,-0.5,99.5);
-  h_mFstSimpleClustersSignal = new TH1F("h_mFstSimpleClustersSignal","h_mFstSimpleClustersSignal",200,-0.5,1999.5);
-  h_mFstScanClustersSignal = new TH1F("h_mFstScanClustersSignal","h_mFstScanClustersSignal",200,-0.5,1999.5);
 
-  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
   {
     string HistName;
-    HistName = Form("h_mMaxTbHits_Rstrip%d",i_rstrip);
-    h_mMaxTbHits_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),10,-0.5,9.5);
-    HistName = Form("h_mFstSimpleClustersMaxTb_Rstrip%d",i_rstrip);
-    h_mFstSimpleClustersMaxTb_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),20,-0.5,9.5);
-    HistName = Form("h_mFstScanClustersMaxTb_Rstrip%d",i_rstrip);
-    h_mFstScanClustersMaxTb_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),20,-0.5,9.5);
-    HistName = Form("h_mSignalHits_Rstrip%d",i_rstrip);
-    h_mSignalHits_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
-    HistName = Form("h_mNoiseHits_Rstrip%d",i_rstrip);
-    h_mNoiseHits_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,99.5);
-    HistName = Form("h_mSNRatioHits_Rstrip%d",i_rstrip);
-    h_mSNRatioHits_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,99.5);
-    HistName = Form("h_mFstSimpleClustersSignal_Rstrip%d",i_rstrip);
-    h_mFstSimpleClustersSignal_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
-    HistName = Form("h_mFstScanClustersSignal_Rstrip%d",i_rstrip);
-    h_mFstScanClustersSignal_Rstrip[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
-    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
-    {
-      HistName = Form("h_mSignalHits_Rstrip%d_TimeBin%d",i_rstrip,i_tb);
-      h_mSignalHits_Rstrip_TimeBin[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
-      HistName = Form("h_mNoiseHits_Rstrip%d_TimeBin%d",i_rstrip,i_tb);
-      h_mNoiseHits_Rstrip_TimeBin[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,99.5);
-      HistName = Form("h_mSNRatioHits_Rstrip%d_TimeBin%d",i_rstrip,i_tb);
-      h_mSNRatioHits_Rstrip_TimeBin[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,99.5);
-      HistName = Form("h_mFstSimpleClustersSignal_Rstrip%d_TimeBin%d",i_rstrip,i_tb);
-      h_mFstSimpleClustersSignal_Rstrip_TimeBin[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
-      HistName = Form("h_mFstScanClustersSignal_Rstrip%d_TimeBin%d",i_rstrip,i_tb);
-      h_mFstScanClustersSignal_Rstrip_TimeBin[i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
-    }
-  }
+    HistName = Form("h_mFstHitsMaxTb_Sensor%d",i_sensor);
+    h_mFstHitsMaxTb[i_sensor] = new TH1F(HistName.c_str(),HistName.c_str(),10,-0.5,9.5);
+    HistName = Form("h_mFstHitsSignal_Sensor%d",i_sensor);
+    h_mFstHitsSignal[i_sensor] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+    HistName = Form("h_mFstHitsNoise_Sensor%d",i_sensor);
+    h_mFstHitsNoise[i_sensor] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,99.5);
+    HistName = Form("h_mFstHitsSNRatio_Sensor%d",i_sensor);
+    h_mFstHitsSNRatio[i_sensor] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,99.5);
+    HistName = Form("h_mFstSimpleClustersSignal_Sensor%d",i_sensor);
+    h_mFstSimpleClustersSignal[i_sensor] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+    HistName = Form("h_mFstScanClustersSignal_Sensor%d",i_sensor);
+    h_mFstScanClustersSignal[i_sensor] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
 
-  for(int i_apv = 0; i_apv < FST::numFstAPVs; ++i_apv)
-  {
-    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+    for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
     {
-      for(int i_phi = 0; i_phi < 2; ++i_phi)
+      HistName = Form("h_mFstHitsMaxTb_Sensor%d_Rstrip%d",i_sensor,i_rstrip);
+      if(i_sensor > 0) HistName = Form("h_mFstHitsMaxTb_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mFstHitsMaxTb_Rstrip[i_sensor][i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),10,-0.5,9.5);
+      HistName = Form("h_mFstSimpleClustersMaxTb_Sensor%d_Rstrip%d",i_sensor,i_rstrip);
+      if(i_sensor > 0) HistName = Form("h_mFstSimpleClustersMaxTb_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mFstSimpleClustersMaxTb_Rstrip[i_sensor][i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),10,-0.5,9.5);
+      HistName = Form("h_mFstScanClustersMaxTb_Sensor%d_Rstrip%d",i_sensor,i_rstrip);
+      if(i_sensor > 0) HistName = Form("h_mFstScanClustersMaxTb_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mFstScanClustersMaxTb_Rstrip[i_sensor][i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),10,-0.5,9.5);
+      HistName = Form("h_mFstHitsSignal_Sensor%d_Rstrip%d",i_sensor,i_rstrip);
+      if(i_sensor > 0) HistName = Form("h_mFstHitsSignal_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mFstHitsSignal_Rstrip[i_sensor][i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+      HistName = Form("h_mFstHitsNoise_Sensor%d_Rstrip%d",i_sensor,i_rstrip);
+      if(i_sensor > 0) HistName = Form("h_mFstHitsNoise_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mFstHitsNoise_Rstrip[i_sensor][i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,99.5);
+      HistName = Form("h_mFstHitsSNRatio_Sensor%d_Rstrip%d",i_sensor,i_rstrip);
+      if(i_sensor > 0) HistName = Form("h_mFstHitsSNRatio_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mFstHitsSNRatio_Rstrip[i_sensor][i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,99.5);
+      HistName = Form("h_mFstSimpleClustersSignalSensor%d__Rstrip%d",i_sensor,i_rstrip);
+      if(i_sensor > 0) HistName = Form("h_mFstSimpleClustersSignalSensor%d__Rstrip%d",i_sensor,i_rstrip+4);
+      h_mFstSimpleClustersSignal_Rstrip[i_sensor][i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+      HistName = Form("h_mFstScanClustersSignal_Sensor%d_Rstrip%d",i_sensor,i_rstrip);
+      if(i_sensor > 0) HistName = Form("h_mFstScanClustersSignal_Sensor%d_Rstrip%d",i_sensor,i_rstrip+4);
+      h_mFstScanClustersSignal_Rstrip[i_sensor][i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+      for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
       {
-	string HistName;
-	HistName = Form("h_mMaxTbHits_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
-	h_mMaxTbHits_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),10,-0.5,9.5);
-	HistName = Form("h_mFstSimpleClustersMaxTb_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
-	h_mFstSimpleClustersMaxTb_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),20,-0.5,9.5);
-	HistName = Form("h_mFstScanClustersMaxTb_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
-	h_mFstScanClustersMaxTb_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),20,-0.5,9.5);
-	HistName = Form("h_mSignalHits_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
-	h_mSignalHits_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
-	HistName = Form("h_mNoiseHits_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
-	h_mNoiseHits_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,99.5);
-	HistName = Form("h_mSNRatioHits_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
-	h_mSNRatioHits_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,99.5);
-	HistName = Form("h_mFstSimpleClustersSignal_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
-	h_mFstSimpleClustersSignal_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
-	HistName = Form("h_mFstScanClustersSignal_Apv%d_Rstrip%d_Phi%d",i_apv+4,i_rstrip,i_phi);
-	h_mFstScanClustersSignal_Apv[i_apv][i_rstrip][i_phi] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+	HistName = Form("h_mFstHitsSignal_Sensor%d_Rstrip%d_TimeBin%d",i_sensor,i_rstrip,i_tb);
+	if(i_sensor > 0) HistName = Form("h_mFstHitsSignal_Sensor%d_Rstrip%d_TimeBin%d",i_sensor,i_rstrip+4,i_tb);
+	h_mFstHitsSignal_Rstrip_TimeBin[i_sensor][i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+	HistName = Form("h_mFstHitsNoise_Sensor%d_Rstrip%d_TimeBin%d",i_sensor,i_rstrip,i_tb);
+	if(i_sensor > 0) HistName = Form("h_mFstHitsNoise_Sensor%d_Rstrip%d_TimeBin%d",i_sensor,i_rstrip+4,i_tb);
+	h_mFstHitsNoise_Rstrip_TimeBin[i_sensor][i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,99.5);
+	HistName = Form("h_mFstHitsSNRatio_Sensor%d_Rstrip%d_TimeBin%d",i_sensor,i_rstrip,i_tb);
+	if(i_sensor > 0) HistName = Form("h_mFstHitsSNRatio_Sensor%d_Rstrip%d_TimeBin%d",i_sensor,i_rstrip+4,i_tb);
+	h_mFstHitsSNRatio_Rstrip_TimeBin[i_sensor][i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,99.5);
+	HistName = Form("h_mFstSimpleClustersSignal_Sensor%d_Rstrip%d_TimeBin%d",i_sensor,i_rstrip,i_tb);
+	if(i_sensor > 0) HistName = Form("h_mFstSimpleClustersSignal_Sensor%d_Rstrip%d_TimeBin%d",i_sensor,i_rstrip+4,i_tb);
+	h_mFstSimpleClustersSignal_Rstrip_TimeBin[i_sensor][i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+	HistName = Form("h_mFstScanClustersSignal_Sensor%d_Rstrip%d_TimeBin%d",i_sensor,i_rstrip,i_tb);
+	if(i_sensor > 0) HistName = Form("h_mFstScanClustersSignal_Sensor%d_Rstrip%d_TimeBin%d",i_sensor,i_rstrip+4,i_tb);
+	h_mFstScanClustersSignal_Rstrip_TimeBin[i_sensor][i_rstrip][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
       }
     }
   }
@@ -631,39 +628,35 @@ void FstQAStudy::fillSignalQA(FstEvent *fstEvent)
   {
     for(int i_hit = 0; i_hit < numOfFstHits; ++i_hit)
     {
+      const int sensorId  = fstRawHitVec[i_hit]->getSensor();
+      const int apv       = fstRawHitVec[i_hit]->getAPV();
+      const int channel   = fstRawHitVec[i_hit]->getChannel();
+      int column          = fstRawHitVec[i_hit]->getColumn(); // RStrip
+      const int row       = fstRawHitVec[i_hit]->getRow(); // phi segmentation
+      const int maxTb     = fstRawHitVec[i_hit]->getMaxTb();
+      const double ped    = fstRawHitVec[i_hit]->getPedMean(maxTb); // pedMean
+      const double signal = fstRawHitVec[i_hit]->getCharge(maxTb); // adc - pedMean - cmn
+      double noise        = fstRawHitVec[i_hit]->getPedStdDev(maxTb); // pedStdDev
+      if(mApplyCMNCorr) noise  = fstRawHitVec[i_hit]->getRanStdDev(maxTb); // pedStdDev
+      p_mPedMap_FST->Fill(column,row,ped);
+      p_mSigMap_FST->Fill(column,row,signal);
       if(fstRawHitVec[i_hit]->getIsHit())
       {
-	const int apv       = fstRawHitVec[i_hit]->getAPV();
-	const int channel   = fstRawHitVec[i_hit]->getChannel();
-	const int column    = fstRawHitVec[i_hit]->getColumn();
-	const int row       = fstRawHitVec[i_hit]->getRow();
-	const int maxTb     = fstRawHitVec[i_hit]->getMaxTb();
-	const double ped    = fstRawHitVec[i_hit]->getPedMean(maxTb); // pedMean
-	const double signal = fstRawHitVec[i_hit]->getCharge(maxTb); // adc - pedMean - cmn
-	double noise  = fstRawHitVec[i_hit]->getPedStdDev(maxTb); // pedStdDev
-	if(mApplyCMNCorr) noise  = fstRawHitVec[i_hit]->getRanStdDev(maxTb); // pedStdDev
-	p_mPedMap_FST->Fill(column,row,ped);
-	p_mSigMap_FST->Fill(column,row,signal);
-	h_mSignalHits_FST->Fill(signal);
-	h_mNoiseHits_FST->Fill(noise);
-	h_mSNRatioHits_FST->Fill(signal/noise);
+	h_mFstHitsMaxTb[sensorId]->Fill(maxTb);
+	h_mFstHitsSignal[sensorId]->Fill(signal);
+	h_mFstHitsNoise[sensorId]->Fill(noise);
+	h_mFstHitsSNRatio[sensorId]->Fill(signal/noise);
 
-	h_mMaxTbHits_Rstrip[column]->Fill(maxTb);
-	h_mSignalHits_Rstrip[column]->Fill(signal);
-	h_mNoiseHits_Rstrip[column]->Fill(noise);
-	h_mSNRatioHits_Rstrip[column]->Fill(signal/noise);
+	if(sensorId > 0) column = column-4;
 
-	h_mSignalHits_Rstrip_TimeBin[column][maxTb]->Fill(signal);
-	h_mNoiseHits_Rstrip_TimeBin[column][maxTb]->Fill(noise);
-	h_mSNRatioHits_Rstrip_TimeBin[column][maxTb]->Fill(signal/noise);
+	h_mFstHitsMaxTb_Rstrip[sensorId][column]->Fill(maxTb);
+	h_mFstHitsSignal_Rstrip[sensorId][column]->Fill(signal);
+	h_mFstHitsNoise_Rstrip[sensorId][column]->Fill(noise);
+	h_mFstHitsSNRatio_Rstrip[sensorId][column]->Fill(signal/noise);
 
-	int phibin = 0;
-	if(channel > 63) phibin = 1;
-
-	h_mMaxTbHits_Apv[apv][column][phibin]->Fill(maxTb);
-	h_mSignalHits_Apv[apv][column][phibin]->Fill(signal);
-	h_mNoiseHits_Apv[apv][column][phibin]->Fill(noise);
-	h_mSNRatioHits_Apv[apv][column][phibin]->Fill(signal/noise);
+	h_mFstHitsSignal_Rstrip_TimeBin[sensorId][column][maxTb]->Fill(signal);
+	h_mFstHitsNoise_Rstrip_TimeBin[sensorId][column][maxTb]->Fill(noise);
+	h_mFstHitsSNRatio_Rstrip_TimeBin[sensorId][column][maxTb]->Fill(signal/noise);
       }
     }
   }
@@ -683,72 +676,49 @@ void FstQAStudy::fillSignalQA(FstEvent *fstEvent)
   {
     for(int i_cluster = 0; i_cluster < numOfFstClusters; ++i_cluster)
     {
+      int sensorId = fstClusterVec[i_cluster]->getSensor();
       double meanColumn = fstClusterVec[i_cluster]->getMeanColumn();
       double meanRow = fstClusterVec[i_cluster]->getMeanRow();
       double signal = fstClusterVec[i_cluster]->getTotCharge();
       double maxTb = fstClusterVec[i_cluster]->getMaxTb();
       if(fstClusterVec[i_cluster]->getClusterType() == 1 && fstClusterVec[i_cluster]->getIsSeed())
       { // Simple Clusters
-	h_mFstSimpleClustersSignal->Fill(signal);
+	h_mFstSimpleClustersSignal[sensorId]->Fill(signal);
 
 	int column = -1;
 	if(meanColumn > -0.5 && meanColumn <= 0.5) column = 0;
 	if(meanColumn >  0.5 && meanColumn <= 1.5) column = 1;
 	if(meanColumn >  1.5 && meanColumn <= 2.5) column = 2;
 	if(meanColumn >  2.5 && meanColumn <= 3.5) column = 3;
-	if(meanColumn >  3.5 && meanColumn <= 4.5) column = 4;
-	if(meanColumn >  4.5 && meanColumn <= 5.5) column = 5;
-	if(meanColumn >  5.5 && meanColumn <= 6.5) column = 6;
-	if(meanColumn >  6.5 && meanColumn <= 7.5) column = 7;
+	if(meanColumn >  3.5 && meanColumn <= 4.5) column = 0;
+	if(meanColumn >  4.5 && meanColumn <= 5.5) column = 1;
+	if(meanColumn >  5.5 && meanColumn <= 6.5) column = 2;
+	if(meanColumn >  6.5 && meanColumn <= 7.5) column = 3;
 	if(column > -1)
 	{
-	  h_mFstSimpleClustersMaxTb_Rstrip[column]->Fill(maxTb);
-	  h_mFstSimpleClustersSignal_Rstrip[column]->Fill(signal);
-	  h_mFstSimpleClustersSignal_Rstrip_TimeBin[column][(int)maxTb]->Fill(signal);
-	}
-
-	int apv = 0;
-	int phibin = 0;
-	if(meanRow >= 0.00 && meanRow < 16.0) {apv = 4; phibin = 0;}
-	if(meanRow >= 16.0 && meanRow < 32.0) {apv = 4; phibin = 1;}
-	if(meanRow >= 32.0 && meanRow < 48.0) {apv = 5; phibin = 0;}
-	if(meanRow >= 48.0 && meanRow < 64.0) {apv = 5; phibin = 1;}
-	if(column > -1)
-	{
-	  h_mFstSimpleClustersMaxTb_Apv[apv][column][phibin]->Fill(maxTb);
-	  h_mFstSimpleClustersSignal_Apv[apv][column][phibin]->Fill(signal);
+	  h_mFstSimpleClustersMaxTb_Rstrip[sensorId][column]->Fill(maxTb);
+	  h_mFstSimpleClustersSignal_Rstrip[sensorId][column]->Fill(signal);
+	  h_mFstSimpleClustersSignal_Rstrip_TimeBin[sensorId][column][(int)maxTb]->Fill(signal);
 	}
       }
       if(fstClusterVec[i_cluster]->getClusterType() == 2 && fstClusterVec[i_cluster]->getIsSeed())
       { // Scan Clusters
-	h_mFstScanClustersSignal->Fill(signal);
+	h_mFstScanClustersSignal[sensorId]->Fill(signal);
 
 	int column = -1;
 	if(meanColumn > -0.5 && meanColumn <= 0.5) column = 0;
 	if(meanColumn >  0.5 && meanColumn <= 1.5) column = 1;
 	if(meanColumn >  1.5 && meanColumn <= 2.5) column = 2;
 	if(meanColumn >  2.5 && meanColumn <= 3.5) column = 3;
-	if(meanColumn >  3.5 && meanColumn <= 4.5) column = 4;
-	if(meanColumn >  4.5 && meanColumn <= 5.5) column = 5;
-	if(meanColumn >  5.5 && meanColumn <= 6.5) column = 6;
-	if(meanColumn >  6.5 && meanColumn <= 7.5) column = 7;
+	if(meanColumn >  3.5 && meanColumn <= 4.5) column = 0;
+	if(meanColumn >  4.5 && meanColumn <= 5.5) column = 1;
+	if(meanColumn >  5.5 && meanColumn <= 6.5) column = 2;
+	if(meanColumn >  6.5 && meanColumn <= 7.5) column = 3;
 	if(column > -1)
 	{
-	  h_mFstScanClustersMaxTb_Rstrip[column]->Fill(maxTb);
-	  h_mFstScanClustersSignal_Rstrip[column]->Fill(signal);
-	  h_mFstScanClustersSignal_Rstrip_TimeBin[column][(int)maxTb]->Fill(signal);
-	}
-
-	int apv = 0;
-	int phibin = 0;
-	if(meanRow >= 0.00 && meanRow < 16.0) {apv = 4; phibin = 0;}
-	if(meanRow >= 16.0 && meanRow < 32.0) {apv = 4; phibin = 1;}
-	if(meanRow >= 32.0 && meanRow < 48.0) {apv = 5; phibin = 0;}
-	if(meanRow >= 48.0 && meanRow < 64.0) {apv = 5; phibin = 1;}
-	if(column > -1)
-	{
-	  h_mFstScanClustersMaxTb_Apv[apv][column][phibin]->Fill(maxTb);
-	  h_mFstScanClustersSignal_Apv[apv][column][phibin]->Fill(signal);
+	  h_mFstScanClustersMaxTb_Rstrip[sensorId][column]->Fill(maxTb);
+	  h_mFstScanClustersSignal_Rstrip[sensorId][column]->Fill(signal);
+	  h_mFstScanClustersSignal_Rstrip_TimeBin[sensorId][column][(int)maxTb]->Fill(signal);
 	}
       }
     }
@@ -759,46 +729,33 @@ void FstQAStudy::writeSignalQA()
 {
   p_mPedMap_FST->Write();
   p_mSigMap_FST->Write();
-  h_mSignalHits_FST->Write();
-  h_mNoiseHits_FST->Write();
-  h_mSNRatioHits_FST->Write();
-  h_mFstSimpleClustersSignal->Write();
-  h_mFstScanClustersSignal->Write();
 
-  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
   {
-    h_mMaxTbHits_Rstrip[i_rstrip]->Write();
-    h_mFstSimpleClustersMaxTb_Rstrip[i_rstrip]->Write();
-    h_mFstScanClustersMaxTb_Rstrip[i_rstrip]->Write();
-    h_mSignalHits_Rstrip[i_rstrip]->Write();
-    h_mNoiseHits_Rstrip[i_rstrip]->Write();
-    h_mSNRatioHits_Rstrip[i_rstrip]->Write();
-    h_mFstSimpleClustersSignal_Rstrip[i_rstrip]->Write();
-    h_mFstScanClustersSignal_Rstrip[i_rstrip]->Write();
-    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
-    {
-      h_mSignalHits_Rstrip_TimeBin[i_rstrip][i_tb]->Write();
-      h_mNoiseHits_Rstrip_TimeBin[i_rstrip][i_tb]->Write();
-      h_mSNRatioHits_Rstrip_TimeBin[i_rstrip][i_tb]->Write();
-      h_mFstSimpleClustersSignal_Rstrip_TimeBin[i_rstrip][i_tb]->Write();
-      h_mFstScanClustersSignal_Rstrip_TimeBin[i_rstrip][i_tb]->Write();
-    }
-  }
+    h_mFstHitsMaxTb[i_sensor]->Write();
+    h_mFstHitsSignal[i_sensor]->Write();
+    h_mFstHitsNoise[i_sensor]->Write();
+    h_mFstHitsSNRatio[i_sensor]->Write();
+    h_mFstSimpleClustersSignal[i_sensor]->Write();
+    h_mFstScanClustersSignal[i_sensor]->Write();
 
-  for(int i_apv = 0; i_apv < FST::numFstAPVs; ++i_apv)
-  {
-    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+    for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
     {
-      for(int i_phi = 0; i_phi < 2; ++i_phi)
+      h_mFstHitsMaxTb_Rstrip[i_sensor][i_rstrip]->Write();
+      h_mFstSimpleClustersMaxTb_Rstrip[i_sensor][i_rstrip]->Write();
+      h_mFstScanClustersMaxTb_Rstrip[i_sensor][i_rstrip]->Write();
+      h_mFstHitsSignal_Rstrip[i_sensor][i_rstrip]->Write();
+      h_mFstHitsNoise_Rstrip[i_sensor][i_rstrip]->Write();
+      h_mFstHitsSNRatio_Rstrip[i_sensor][i_rstrip]->Write();
+      h_mFstSimpleClustersSignal_Rstrip[i_sensor][i_rstrip]->Write();
+      h_mFstScanClustersSignal_Rstrip[i_sensor][i_rstrip]->Write();
+      for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
       {
-	h_mMaxTbHits_Apv[i_apv][i_rstrip][i_phi]->Write();
-	h_mFstSimpleClustersMaxTb_Apv[i_apv][i_rstrip][i_phi]->Write();
-	h_mFstScanClustersMaxTb_Apv[i_apv][i_rstrip][i_phi]->Write();
-	h_mSignalHits_Apv[i_apv][i_rstrip][i_phi]->Write();
-	h_mNoiseHits_Apv[i_apv][i_rstrip][i_phi]->Write();
-	h_mSNRatioHits_Apv[i_apv][i_rstrip][i_phi]->Write();
-	h_mFstSimpleClustersSignal_Apv[i_apv][i_rstrip][i_phi]->Write();
-	h_mFstScanClustersSignal_Apv[i_apv][i_rstrip][i_phi]->Write();
+	h_mFstHitsSignal_Rstrip_TimeBin[i_sensor][i_rstrip][i_tb]->Write();
+	h_mFstHitsNoise_Rstrip_TimeBin[i_sensor][i_rstrip][i_tb]->Write();
+	h_mFstHitsSNRatio_Rstrip_TimeBin[i_sensor][i_rstrip][i_tb]->Write();
+	h_mFstSimpleClustersSignal_Rstrip_TimeBin[i_sensor][i_rstrip][i_tb]->Write();
+	h_mFstScanClustersSignal_Rstrip_TimeBin[i_sensor][i_rstrip][i_tb]->Write();
       }
     }
   }
@@ -808,19 +765,25 @@ void FstQAStudy::writeSignalQA()
 //--------------Event Display---------------------
 void FstQAStudy::initEventDisplay_TrackClusters()
 {
-  h_mFstRawHitsDisplay              = new TH2F("h_mFstRawHitsDisplay","h_mFstRawHitsDisplay",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstRawPedsDisplay              = new TH2F("h_mFstRawPedsDisplay","h_mFstRawPedsDisplay",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstMaxTbDisplay                = new TH2F("h_mFstMaxTbDisplay","h_mFstMaxTbDisplay",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstRawHitsDisplay_bTh          = new TH2F("h_mFstRawHitsDisplay_bTh","h_mFstRawHitsDisplay_bTh",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstRawPedsDisplay_bTh          = new TH2F("h_mFstRawPedsDisplay_bTh","h_mFstRawPedsDisplay_bTh",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstMaxTbDisplay_bTh            = new TH2F("h_mFstMaxTbDisplay_bTh","h_mFstMaxTbDisplay_bTh",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstSimpleClustersDisplay       = new TH2F("h_mFstSimpleClustersDisplay","h_mFstSimpleClustersDisplay",100,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstScanClustersDisplay         = new TH2F("h_mFstScanClustersDisplay","h_mFstScanClustersDisplay",100,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstScanClustersDisplay_RawHits = new TH2F("h_mFstScanClustersDisplay_RawHits","h_mFstScanClustersDisplay_RawHits",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstScanClustersDisplay_RawPeds = new TH2F("h_mFstScanClustersDisplay_RawPeds","h_mFstScanClustersDisplay_RawPeds",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mFstScanClustersDisplay_MaxTb   = new TH2F("h_mFstScanClustersDisplay_MaxTb","h_mFstScanClustersDisplay_MaxTb",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mHitTracksDisplay               = new TH2F("h_mHitTracksDisplay","h_mHitTracksDisplay",100,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
-  h_mClusterTracksDisplay           = new TH2F("h_mClusterTracksDisplay","h_mClusterTracksDisplay",100,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  const int numRDisplay = 10;
+  const double rMinDisplay = FST::rInner - 1.0*FST::pitchR;
+  const double rMaxDisplay = FST::rOuter + 5.0*FST::pitchR;
+  const int numPhiDisplay = 2*FST::numPhiSeg;
+  const double phiMinDisplay = -TMath::Pi()*30.0/180.0 - FST::gapPhi;
+  const double phiMaxDisplay =  TMath::Pi()*30.0/180.0 + FST::gapPhi;
+  h_mFstRawHitsDisplay              = new TH2F("h_mFstRawHitsDisplay","h_mFstRawHitsDisplay",numRDisplay,rMinDisplay,rMaxDisplay,numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  h_mFstRawPedsDisplay              = new TH2F("h_mFstRawPedsDisplay","h_mFstRawPedsDisplay",numRDisplay,rMinDisplay,rMaxDisplay,numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  h_mFstMaxTbDisplay                = new TH2F("h_mFstMaxTbDisplay","h_mFstMaxTbDisplay",numRDisplay,rMinDisplay,rMaxDisplay,numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  h_mFstRawHitsDisplay_bTh          = new TH2F("h_mFstRawHitsDisplay_bTh","h_mFstRawHitsDisplay_bTh",numRDisplay,rMinDisplay,rMaxDisplay,numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  h_mFstRawPedsDisplay_bTh          = new TH2F("h_mFstRawPedsDisplay_bTh","h_mFstRawPedsDisplay_bTh",numRDisplay,rMinDisplay,rMaxDisplay,numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  h_mFstMaxTbDisplay_bTh            = new TH2F("h_mFstMaxTbDisplay_bTh","h_mFstMaxTbDisplay_bTh",numRDisplay,rMinDisplay,rMaxDisplay,numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  h_mFstSimpleClustersDisplay       = new TH2F("h_mFstSimpleClustersDisplay","h_mFstSimpleClustersDisplay",10*numRDisplay,rMinDisplay,rMaxDisplay,2*numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  h_mFstScanClustersDisplay         = new TH2F("h_mFstScanClustersDisplay","h_mFstScanClustersDisplay",10*numRDisplay,rMinDisplay,rMaxDisplay,2*numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  h_mFstScanClustersDisplay_RawHits = new TH2F("h_mFstScanClustersDisplay_RawHits","h_mFstScanClustersDisplay_RawHits",numRDisplay,rMinDisplay,rMaxDisplay,numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  h_mFstScanClustersDisplay_RawPeds = new TH2F("h_mFstScanClustersDisplay_RawPeds","h_mFstScanClustersDisplay_RawPeds",numRDisplay,rMinDisplay,rMaxDisplay,numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  h_mFstScanClustersDisplay_MaxTb   = new TH2F("h_mFstScanClustersDisplay_MaxTb","h_mFstScanClustersDisplay_MaxTb",numRDisplay,rMinDisplay,rMaxDisplay,numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  h_mHitTracksDisplay               = new TH2F("h_mHitTracksDisplay","h_mHitTracksDisplay",10*numRDisplay,rMinDisplay,rMaxDisplay,2*numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  h_mClusterTracksDisplay           = new TH2F("h_mClusterTracksDisplay","h_mClusterTracksDisplay",10*numRDisplay,rMinDisplay,rMaxDisplay,2*numPhiDisplay,phiMinDisplay,phiMaxDisplay);
 
   g_mFstSimpleClustersDisplay = new TGraph();
   g_mFstSimpleClustersDisplay->SetName("g_mFstSimpleClustersDisplay");
@@ -1034,7 +997,7 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
 
       if( abs(y1_ist-y3_ist) < 17.0*FST::pitchRow )
       {
-	if(r_proj >= FST::rMin && r_proj <= FST::rMax && phi_proj >= FST::phiMin && phi_proj <= FST::phiMax)
+	if(r_proj >= FST::rInner-1.0*FST::pitchR && r_proj <= FST::rOuter+5.0*FST::pitchR && phi_proj >= -TMath::Pi()*15.0/180.0-10*FST::pitchPhi && phi_proj <= TMath::Pi()*15.0/180.0+10*FST::pitchPhi)
 	{ // save only when in the area of interest
 	  mNumOfClusterTracks_2Layer++; // satisfied 2-Layer tracking
 

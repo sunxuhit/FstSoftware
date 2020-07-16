@@ -119,38 +119,30 @@ class FstQAStudy : public TObject
     // hits
     TProfile2D *p_mPedMap_FST;
     TProfile2D *p_mSigMap_FST;
-    TH1F *h_mSignalHits_FST;
-    TH1F *h_mNoiseHits_FST;
-    TH1F *h_mSNRatioHits_FST;
+    TH1F *h_mFstHitsMaxTb[FST::mFstNumSensorsPerModule];
+    TH1F *h_mFstHitsSignal[FST::mFstNumSensorsPerModule];
+    TH1F *h_mFstHitsNoise[FST::mFstNumSensorsPerModule];
+    TH1F *h_mFstHitsSNRatio[FST::mFstNumSensorsPerModule];
 
-    TH1F *h_mMaxTbHits_Rstrip[FST::numRStrip];
-    TH1F *h_mSignalHits_Rstrip[FST::numRStrip];
-    TH1F *h_mNoiseHits_Rstrip[FST::numRStrip];
-    TH1F *h_mSNRatioHits_Rstrip[FST::numRStrip];
+    TH1F *h_mFstHitsMaxTb_Rstrip[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor];
+    TH1F *h_mFstHitsSignal_Rstrip[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor];
+    TH1F *h_mFstHitsNoise_Rstrip[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor];
+    TH1F *h_mFstHitsSNRatio_Rstrip[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor];
 
-    TH1F *h_mSignalHits_Rstrip_TimeBin[FST::numRStrip][FST::numTBins]; // time bin differential
-    TH1F *h_mNoiseHits_Rstrip_TimeBin[FST::numRStrip][FST::numTBins];
-    TH1F *h_mSNRatioHits_Rstrip_TimeBin[FST::numRStrip][FST::numTBins];
-
-    TH1F *h_mMaxTbHits_Apv[FST::numFstAPVs][FST::numRStrip][2]; // APV chips & R & phi: 0-63 & 64-127
-    TH1F *h_mSignalHits_Apv[FST::numFstAPVs][FST::numRStrip][2];
-    TH1F *h_mNoiseHits_Apv[FST::numFstAPVs][FST::numRStrip][2];
-    TH1F *h_mSNRatioHits_Apv[FST::numFstAPVs][FST::numRStrip][2];
+    TH1F *h_mFstHitsSignal_Rstrip_TimeBin[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor][FST::numTBins]; // time bin differential
+    TH1F *h_mFstHitsNoise_Rstrip_TimeBin[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor][FST::numTBins];
+    TH1F *h_mFstHitsSNRatio_Rstrip_TimeBin[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor][FST::numTBins];
 
     //clusters
-    TH1F *h_mFstSimpleClustersSignal;
-    TH1F *h_mFstSimpleClustersSignal_Rstrip[FST::numRStrip];
-    TH1F *h_mFstSimpleClustersMaxTb_Rstrip[FST::numRStrip];
-    TH1F *h_mFstSimpleClustersSignal_Rstrip_TimeBin[FST::numRStrip][FST::numTBins];
-    TH1F *h_mFstSimpleClustersMaxTb_Apv[FST::numFstAPVs][FST::numRStrip][2];
-    TH1F *h_mFstSimpleClustersSignal_Apv[FST::numFstAPVs][FST::numRStrip][2];
+    TH1F *h_mFstSimpleClustersSignal[FST::mFstNumSensorsPerModule];
+    TH1F *h_mFstSimpleClustersSignal_Rstrip[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor];
+    TH1F *h_mFstSimpleClustersMaxTb_Rstrip[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor];
+    TH1F *h_mFstSimpleClustersSignal_Rstrip_TimeBin[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor][FST::numTBins];
 
-    TH1F *h_mFstScanClustersSignal;
-    TH1F *h_mFstScanClustersSignal_Rstrip[FST::numRStrip];
-    TH1F *h_mFstScanClustersMaxTb_Rstrip[FST::numRStrip];
-    TH1F *h_mFstScanClustersSignal_Rstrip_TimeBin[FST::numRStrip][FST::numTBins];
-    TH1F *h_mFstScanClustersMaxTb_Apv[FST::numFstAPVs][FST::numRStrip][2];
-    TH1F *h_mFstScanClustersSignal_Apv[FST::numFstAPVs][FST::numRStrip][2];
+    TH1F *h_mFstScanClustersSignal[FST::mFstNumSensorsPerModule];
+    TH1F *h_mFstScanClustersSignal_Rstrip[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor];
+    TH1F *h_mFstScanClustersMaxTb_Rstrip[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor];
+    TH1F *h_mFstScanClustersSignal_Rstrip_TimeBin[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor][FST::numTBins];
 
     // Output TTree for Event Display
     bool mApplyCMNCorr;

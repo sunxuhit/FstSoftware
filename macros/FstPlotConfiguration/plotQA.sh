@@ -20,8 +20,14 @@ then
   mv ./figures/NumOfRawHits.pdf ${folder}/NumOfRawHits_${hv}_Th${nFstHitsCut}Tb${numOfUsedTimeBins}Ped2.5Ped3.5_${config}.pdf
 
   # echo "Plot Signal QA!!"
-  root -l -b -q plotSignalQA.C\(\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},${numOfUsedTimeBins},2.5,3.5\)
-  mv ./figures/SignalQA.pdf ${folder}/SignalQA_${hv}_Th${nFstHitsCut}Tb${numOfUsedTimeBins}Ped2.5Ped3.5_${config}.pdf
+  root -l -b -q plotSignalQA.C\(\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},${numOfUsedTimeBins},2.5,3.5,0\)
+  mv ./figures/SignalQA_Sensor0.pdf ${folder}/SignalQA_Sensor0_${hv}_Th${nFstHitsCut}Tb${numOfUsedTimeBins}Ped2.5Ped3.5_${config}.pdf
+
+  root -l -b -q plotSignalQA.C\(\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},${numOfUsedTimeBins},2.5,3.5,1\)
+  mv ./figures/SignalQA_Sensor1.pdf ${folder}/SignalQA_Sensor0_${hv}_Th${nFstHitsCut}Tb${numOfUsedTimeBins}Ped2.5Ped3.5_${config}.pdf
+
+  root -l -b -q plotSignalQA.C\(\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},${numOfUsedTimeBins},2.5,3.5,2\)
+  mv ./figures/SignalQA_Sensor2.pdf ${folder}/SignalQA_Sensor0_${hv}_Th${nFstHitsCut}Tb${numOfUsedTimeBins}Ped2.5Ped3.5_${config}.pdf
 
   # echo "Plot Ped Noise QA!!"
   root -l -b -q plotNoiseQA.C\(\"${hv}\",\"Ped\"\)

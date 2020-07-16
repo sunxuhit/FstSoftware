@@ -23,6 +23,13 @@ void plotEventDisplay_2Layer(string hv = "HV70V", bool isSavePed = true, bool is
   gStyle->SetPalette(kBlackBody);
   gStyle->SetPaintTextFormat("1.0f");
 
+  const int numRDisplay = 10;
+  const double rMinDisplay = FST::rInner - 1.0*FST::pitchR;
+  const double rMaxDisplay = FST::rOuter + 5.0*FST::pitchR;
+  const int numPhiDisplay = 2*FST::numPhiSeg;
+  const double phiMinDisplay = -TMath::Pi()*30.0/180.0 - FST::gapPhi;
+  const double phiMaxDisplay =  TMath::Pi()*30.0/180.0 + FST::gapPhi;
+
   int mEventId;
 
   int mNumOfFstRawHits;
@@ -41,20 +48,20 @@ void plotEventDisplay_2Layer(string hv = "HV70V", bool isSavePed = true, bool is
   int mNumOfClusterTracks_2Layer;
   int mNumOfClusterTracks_3Layer;
 
-  TH2F *h_mFstRawHitsDisplay      = new TH2F("h_mFstRawHitsDisplay","h_mFstRawHitsDisplay",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mFstRawPedsDisplay      = new TH2F("h_mFstRawPedsDisplay","h_mFstRawPedsDisplay",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mFstMaxTbDisplay        = new TH2F("h_mFstMaxTbDisplay","h_mFstMaxTbDisplay",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mFstRawHitsDisplay_bTh  = new TH2F("h_mFstRawHitsDisplay_bTh","h_mFstRawHitsDisplay_bTh",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mFstRawPedsDisplay_bTh  = new TH2F("h_mFstRawPedsDisplay_bTh","h_mFstRawPedsDisplay_bTh",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mFstMaxTbDisplay_bTh    = new TH2F("h_mFstMaxTbDisplay_bTh","h_mFstMaxTbDisplay_bTh",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-
-  TH2F *h_mFstSimpleClustersDisplay     = new TH2F("h_mFstSimpleClustersDisplay","h_mFstSimpleClustersDisplay",100,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mFstScanClustersDisplay = new TH2F("h_mFstScanClustersDisplay","h_mFstScanClustersDisplay",100,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mFstScanClustersDisplay_RawHits = new TH2F("h_mFstScanClustersDisplay_RawHits","h_mFstScanClustersDisplay_RawHits",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mFstScanClustersDisplay_RawPeds = new TH2F("h_mFstScanClustersDisplay_RawPeds","h_mFstScanClustersDisplay_RawPeds",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mFstScanClustersDisplay_MaxTb   = new TH2F("h_mFstScanClustersDisplay_MaxTb","h_mFstScanClustersDisplay_MaxTb",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mHitTracksDisplay       = new TH2F("h_mHitTracksDisplay","h_mHitTracksDisplay",100,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
-  TH2F *h_mClusterTracksDisplay   = new TH2F("h_mClusterTracksDisplay","h_mClusterTracksDisplay",100,FST::rMin,FST::rMax,FST::numPhiSeg*4,-2.0*FST::phiMax,2.0*FST::phiMax);
+  TH2F *h_mFstRawHitsDisplay              = new TH2F("h_mFstRawHitsDisplay","h_mFstRawHitsDisplay",numRDisplay,rMinDisplay,rMaxDisplay,numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  TH2F *h_mFstRawPedsDisplay              = new TH2F("h_mFstRawPedsDisplay","h_mFstRawPedsDisplay",numRDisplay,rMinDisplay,rMaxDisplay,numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  TH2F *h_mFstMaxTbDisplay                = new TH2F("h_mFstMaxTbDisplay","h_mFstMaxTbDisplay",numRDisplay,rMinDisplay,rMaxDisplay,numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  TH2F *h_mFstRawHitsDisplay_bTh          = new TH2F("h_mFstRawHitsDisplay_bTh","h_mFstRawHitsDisplay_bTh",numRDisplay,rMinDisplay,rMaxDisplay,numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  TH2F *h_mFstRawPedsDisplay_bTh          = new TH2F("h_mFstRawPedsDisplay_bTh","h_mFstRawPedsDisplay_bTh",numRDisplay,rMinDisplay,rMaxDisplay,numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  TH2F *h_mFstMaxTbDisplay_bTh            = new TH2F("h_mFstMaxTbDisplay_bTh","h_mFstMaxTbDisplay_bTh",numRDisplay,rMinDisplay,rMaxDisplay,numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+ 
+  TH2F *h_mFstSimpleClustersDisplay       = new TH2F("h_mFstSimpleClustersDisplay","h_mFstSimpleClustersDisplay",10*numRDisplay,rMinDisplay,rMaxDisplay,2*numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  TH2F *h_mFstScanClustersDisplay         = new TH2F("h_mFstScanClustersDisplay","h_mFstScanClustersDisplay",10*numRDisplay,rMinDisplay,rMaxDisplay,2*numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  TH2F *h_mFstScanClustersDisplay_RawHits = new TH2F("h_mFstScanClustersDisplay_RawHits","h_mFstScanClustersDisplay_RawHits",numRDisplay,rMinDisplay,rMaxDisplay,numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  TH2F *h_mFstScanClustersDisplay_RawPeds = new TH2F("h_mFstScanClustersDisplay_RawPeds","h_mFstScanClustersDisplay_RawPeds",numRDisplay,rMinDisplay,rMaxDisplay,numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  TH2F *h_mFstScanClustersDisplay_MaxTb   = new TH2F("h_mFstScanClustersDisplay_MaxTb","h_mFstScanClustersDisplay_MaxTb",numRDisplay,rMinDisplay,rMaxDisplay,numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  TH2F *h_mHitTracksDisplay               = new TH2F("h_mHitTracksDisplay","h_mHitTracksDisplay",10*numRDisplay,rMinDisplay,rMaxDisplay,2*numPhiDisplay,phiMinDisplay,phiMaxDisplay);
+  TH2F *h_mClusterTracksDisplay           = new TH2F("h_mClusterTracksDisplay","h_mClusterTracksDisplay",10*numRDisplay,rMinDisplay,rMaxDisplay,2*numPhiDisplay,phiMinDisplay,phiMaxDisplay);
   TGraph *g_mFstSimpleClustersDisplay   = new TGraph();
   TGraph *g_mFstScanClustersDisplay = new TGraph();
   TGraph *g_mHitTracksDisplay     = new TGraph();
@@ -183,7 +190,7 @@ void plotEventDisplay_2Layer(string hv = "HV70V", bool isSavePed = true, bool is
       h_mFstScanClustersDisplay_RawHits->SetStats(0);
       h_mFstScanClustersDisplay_RawHits->GetXaxis()->SetTitle("R");
       h_mFstScanClustersDisplay_RawHits->GetXaxis()->SetTitleSize(0.06);
-      h_mFstScanClustersDisplay_RawHits->GetXaxis()->SetRangeUser(FST::rMin,FST::rMax);
+      h_mFstScanClustersDisplay_RawHits->GetXaxis()->SetRangeUser(rMinDisplay,rMaxDisplay);
       h_mFstScanClustersDisplay_RawHits->GetYaxis()->SetTitle("#phi");
       h_mFstScanClustersDisplay_RawHits->GetYaxis()->SetRangeUser(1.2*phiMinFst,1.2*phiMaxFst);
       h_mFstScanClustersDisplay_RawHits->GetYaxis()->SetTitleSize(0.06);
@@ -245,9 +252,9 @@ void plotEventDisplay_2Layer(string hv = "HV70V", bool isSavePed = true, bool is
       h_mFstRawHitsDisplay_bTh->SetStats(0);
       h_mFstRawHitsDisplay_bTh->GetXaxis()->SetTitle("R");
       h_mFstRawHitsDisplay_bTh->GetXaxis()->SetTitleSize(0.06);
-      h_mFstRawHitsDisplay_bTh->GetXaxis()->SetRangeUser(FST::rMin,FST::rMax);
+      h_mFstRawHitsDisplay_bTh->GetXaxis()->SetRangeUser(rMinDisplay,rMaxDisplay);
       h_mFstRawHitsDisplay_bTh->GetYaxis()->SetTitle("#phi");
-      h_mFstRawHitsDisplay_bTh->GetYaxis()->SetRangeUser(1.2*phiMinFst,1.2*FST::phiMax);
+      h_mFstRawHitsDisplay_bTh->GetYaxis()->SetRangeUser(1.2*phiMinFst,1.2*phiMaxFst);
       h_mFstRawHitsDisplay_bTh->GetYaxis()->SetTitleSize(0.06);
       h_mFstRawHitsDisplay_bTh->GetZaxis()->SetRangeUser(1.0,2000.0);
       h_mFstRawHitsDisplay_bTh->Draw("colz");
