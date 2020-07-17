@@ -1292,8 +1292,8 @@ void FstTracking::calEfficiency_Hits(FstEvent *fstEvent)
 	      {
 		nMatchedTrack++;
 	      }
-	      if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-	      // if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 9.0*FST::pitchPhi)
+	      // if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+	      if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
 	      {
 		nMatchedTrack++;
 	      }
@@ -1329,25 +1329,25 @@ void FstTracking::initEfficiency_Clusters()
       string HistName;
       // simple clusters
       HistName = Form("h_mSimpleClustersTrackIstCounts_2Layer_Sensor%d_SF%d",i_sensor,i_match);
-      h_mSimpleClustersTrackIstCounts_2Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),60,FST::rMin[i_sensor],FST::rMax[i_sensor],60,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
+      h_mSimpleClustersTrackIstCounts_2Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),40,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
       HistName = Form("h_mSimpleClustersTrackFstCounts_2Layer_Sensor%d_SF%d",i_sensor,i_match);
-      h_mSimpleClustersTrackFstCounts_2Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),60,FST::rMin[i_sensor],FST::rMax[i_sensor],60,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
+      h_mSimpleClustersTrackFstCounts_2Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),40,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
 
       HistName = Form("h_mSimpleClustersTrackIstCounts_3Layer_Sensor%d_SF%d",i_sensor,i_match);
-      h_mSimpleClustersTrackIstCounts_3Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),60,FST::rMin[i_sensor],FST::rMax[i_sensor],60,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
+      h_mSimpleClustersTrackIstCounts_3Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),40,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
       HistName = Form("h_mSimpleClustersTrackFstCounts_3Layer_Sensor%d_SF%d",i_sensor,i_match);
-      h_mSimpleClustersTrackFstCounts_3Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),60,FST::rMin[i_sensor],FST::rMax[i_sensor],60,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
+      h_mSimpleClustersTrackFstCounts_3Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),40,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
 
       // scan clusters
       HistName = Form("h_mScanClustersTrackIstCounts_2Layer_Sensor%d_SF%d",i_sensor,i_match);
-      h_mScanClustersTrackIstCounts_2Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),60,FST::rMin[i_sensor],FST::rMax[i_sensor],60,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
+      h_mScanClustersTrackIstCounts_2Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),40,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
       HistName = Form("h_mScanClustersTrackFstCounts_2Layer_Sensor%d_SF%d",i_sensor,i_match);
-      h_mScanClustersTrackFstCounts_2Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),60,FST::rMin[i_sensor],FST::rMax[i_sensor],60,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
+      h_mScanClustersTrackFstCounts_2Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),40,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
 
       HistName = Form("h_mScanClustersTrackIstCounts_3Layer_Sensor%d_SF%d",i_sensor,i_match);
-      h_mScanClustersTrackIstCounts_3Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),60,FST::rMin[i_sensor],FST::rMax[i_sensor],60,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
+      h_mScanClustersTrackIstCounts_3Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),40,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
       HistName = Form("h_mScanClustersTrackFstCounts_3Layer_Sensor%d_SF%d",i_sensor,i_match);
-      h_mScanClustersTrackFstCounts_3Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),60,FST::rMin[i_sensor],FST::rMax[i_sensor],60,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
+      h_mScanClustersTrackFstCounts_3Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),40,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
     }
   }
 }
@@ -1427,8 +1427,8 @@ void FstTracking::calEfficiency_SimpleClusters(FstEvent *fstEvent)
 		    {
 		      nMatchedTrack++;
 		    }
-		    if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-		    // if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
+		    // if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		    if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
 		    {
 		      nMatchedTrack++;
 		    }
@@ -1498,8 +1498,8 @@ void FstTracking::calEfficiency_SimpleClusters(FstEvent *fstEvent)
 			{
 			  nMatchedTrack++;
 			}
-			if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-			// if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
+			// if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+			if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
 			{
 			  nMatchedTrack++;
 			}
@@ -1592,8 +1592,8 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
 		    {
 		      nMatchedTrack++;
 		    }
-		    if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-		    // if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
+		    // if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		    if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
 		    {
 		      nMatchedTrack++;
 		    }
@@ -1663,8 +1663,8 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
 			{
 			  nMatchedTrack++;
 			}
-			if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-			// if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
+			// if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+			if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
 			{
 			  nMatchedTrack++;
 			}

@@ -57,14 +57,14 @@ namespace FST
   const double phi_rot_ist3 = -0.00379431;
   const double x3_shift     = 0.45811;
   const double y3_shift     = 1.0116;
-  const double phi_rot_ist2 = 0.0311535; // aligned IST2 to FST with 2-layer tracking
-  const double x2_shift     = 141.268; 
-  const double y2_shift     = -19.7014;
-  const double pitchLayer03 = 134.9375+0.644155; // mm
-  // const double phi_rot_ist2 = 3.16612; // for Inner sector test
-  // const double x2_shift     = 216.606;
-  // const double y2_shift     = 33.5658;
-  // const double pitchLayer03 = 134.9375+23.3257; // mm
+  // const double phi_rot_ist2 = 0.0311535; // for Outer sector test
+  // const double x2_shift     = 141.268; 
+  // const double y2_shift     = -19.7014;
+  // const double pitchLayer03 = 134.9375+0.644155; // mm
+  const double phi_rot_ist2 = 3.16612; // for Inner sector test
+  const double x2_shift     = 216.606;
+  const double y2_shift     = 33.5658;
+  const double pitchLayer03 = 134.9375+23.3257; // mm
 
   // Hits Selection
   const float nFstPedsCut      = 3.0; // used for ped

@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void plotMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, string hv = "HV70V")
+void plotMcProjection(bool isRot = false, int sensorId = 1, int rAligned = 0, string hv = "HV140V")
 {
   string mode = "Scan";
   // string mode = "Simple";
@@ -214,8 +214,8 @@ void plotMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, st
   h_mFstProjResPhi_2Layer->GetXaxis()->SetTitle("#phi_{ro} - #phi_{proj} (rad)");
   h_mFstProjResPhi_2Layer->GetXaxis()->SetTitleSize(0.06);
   h_mFstProjResPhi_2Layer->GetXaxis()->CenterTitle();
-  h_mFstProjResPhi_2Layer->GetXaxis()->SetRangeUser(-0.1,0.1);
-  if(!isRot) h_mFstProjResPhi_2Layer->GetXaxis()->SetRangeUser(-0.1,0.1);
+  h_mFstProjResPhi_2Layer->GetXaxis()->SetRangeUser(-0.05,0.05);
+  if(!isRot) h_mFstProjResPhi_2Layer->GetXaxis()->SetRangeUser(-0.05,0.05);
   h_mFstProjResPhi_2Layer->SetLineStyle(1);
   h_mFstProjResPhi_2Layer->SetLineWidth(2);
   h_mFstProjResPhi_2Layer->SetLineColor(1);
@@ -282,8 +282,8 @@ void plotMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, st
     h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitle("#phi_{ro} - #phi_{proj} (rad)");
     h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitleSize(0.06);
     h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->CenterTitle();
-    h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetRangeUser(-0.1,0.1);
-    if(!isRot) h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetRangeUser(-0.1,0.1);
+    h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetRangeUser(-0.05,0.05);
+    if(!isRot) h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetRangeUser(-0.05,0.05);
     if(NormPhi_Data[i_rstrp] > 0 && NormPhi_MC[i_rstrp] > 0) h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->Scale(NormPhi_Data[i_rstrp]/NormPhi_MC[i_rstrp]);
     h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetYaxis()->SetRangeUser(0.0,h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetMaximum()*1.1);
     h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->SetLineStyle(1);

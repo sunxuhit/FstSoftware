@@ -40,8 +40,8 @@ void calTrackClusterEfficiency_2Layer(string hv = "HV70V", bool isSavePed = true
 
       // IST R projection
       HistName = Form("h_mSimpleClustersTrackIstCountsR_2Layer_Sensor%d_SF%d",i_sensor,i_match);
-      int projIstBinX0 = h_mSimpleClustersTrackIstCounts_2Layer[i_sensor][i_match]->GetYaxis()->FindBin(FST::mFstPhiMin[i_sensor]);
-      int projIstBinX1 = h_mSimpleClustersTrackIstCounts_2Layer[i_sensor][i_match]->GetYaxis()->FindBin(FST::mFstPhiMax[i_sensor]);
+      int projIstBinX0 = h_mSimpleClustersTrackIstCounts_2Layer[i_sensor][i_match]->GetYaxis()->FindBin(FST::mFstPhiMin[i_sensor]+4*FST::pitchPhi);
+      int projIstBinX1 = h_mSimpleClustersTrackIstCounts_2Layer[i_sensor][i_match]->GetYaxis()->FindBin(FST::mFstPhiMax[i_sensor]-4*FST::pitchPhi);
       h_mSimpleClustersTrackIstCountsR_2Layer[i_sensor][i_match] = (TH1F*)h_mSimpleClustersTrackIstCounts_2Layer[i_sensor][i_match]->ProjectionX(HistName.c_str(),projIstBinX0,projIstBinX1);
 
       // IST Phi projection
@@ -56,8 +56,8 @@ void calTrackClusterEfficiency_2Layer(string hv = "HV70V", bool isSavePed = true
 
       // FST R projection
       HistName = Form("h_mSimpleClustersTrackFstCountsR_2Layer_Sensor%d_SF%d",i_sensor,i_match);
-      int projFstBinX0 = h_mSimpleClustersTrackFstCounts_2Layer[i_sensor][i_match]->GetYaxis()->FindBin(FST::mFstPhiMin[i_sensor]);
-      int projFstBinX1 = h_mSimpleClustersTrackFstCounts_2Layer[i_sensor][i_match]->GetYaxis()->FindBin(FST::mFstPhiMax[i_sensor]);
+      int projFstBinX0 = h_mSimpleClustersTrackFstCounts_2Layer[i_sensor][i_match]->GetYaxis()->FindBin(FST::mFstPhiMin[i_sensor]+4*FST::pitchPhi);
+      int projFstBinX1 = h_mSimpleClustersTrackFstCounts_2Layer[i_sensor][i_match]->GetYaxis()->FindBin(FST::mFstPhiMax[i_sensor]-4*FST::pitchPhi);
       h_mSimpleClustersTrackFstCountsR_2Layer[i_sensor][i_match] = (TH1F*)h_mSimpleClustersTrackFstCounts_2Layer[i_sensor][i_match]->ProjectionX(HistName.c_str(),projFstBinX0,projFstBinX1);
 
       // FST Phi projection
@@ -124,8 +124,8 @@ void calTrackClusterEfficiency_2Layer(string hv = "HV70V", bool isSavePed = true
 
       // IST R projection
       HistName = Form("h_mScanClustersTrackIstCountsR_2Layer_Sensor%d_SF%d",i_sensor,i_match);
-      int projIstBinX0 = h_mScanClustersTrackIstCounts_2Layer[i_sensor][i_match]->GetYaxis()->FindBin(FST::mFstPhiMin[i_sensor]);
-      int projIstBinX1 = h_mScanClustersTrackIstCounts_2Layer[i_sensor][i_match]->GetYaxis()->FindBin(FST::mFstPhiMax[i_sensor]);
+      int projIstBinX0 = h_mScanClustersTrackIstCounts_2Layer[i_sensor][i_match]->GetYaxis()->FindBin(FST::mFstPhiMin[i_sensor]+4*FST::pitchPhi);
+      int projIstBinX1 = h_mScanClustersTrackIstCounts_2Layer[i_sensor][i_match]->GetYaxis()->FindBin(FST::mFstPhiMax[i_sensor]-4*FST::pitchPhi);
       h_mScanClustersTrackIstCountsR_2Layer[i_sensor][i_match] = (TH1F*)h_mScanClustersTrackIstCounts_2Layer[i_sensor][i_match]->ProjectionX(HistName.c_str(),projIstBinX0,projIstBinX1);
 
       // IST Phi projection
@@ -140,8 +140,8 @@ void calTrackClusterEfficiency_2Layer(string hv = "HV70V", bool isSavePed = true
 
       // FST R projection
       HistName = Form("h_mScanClustersTrackFstCountsR_2Layer_Sensor%d_SF%d",i_sensor,i_match);
-      int projFstBinX0 = h_mScanClustersTrackFstCounts_2Layer[i_sensor][i_match]->GetYaxis()->FindBin(FST::mFstPhiMin[i_sensor]);
-      int projFstBinX1 = h_mScanClustersTrackFstCounts_2Layer[i_sensor][i_match]->GetYaxis()->FindBin(FST::mFstPhiMax[i_sensor]);
+      int projFstBinX0 = h_mScanClustersTrackFstCounts_2Layer[i_sensor][i_match]->GetYaxis()->FindBin(FST::mFstPhiMin[i_sensor]+4*FST::pitchPhi);
+      int projFstBinX1 = h_mScanClustersTrackFstCounts_2Layer[i_sensor][i_match]->GetYaxis()->FindBin(FST::mFstPhiMax[i_sensor]-4*FST::pitchPhi);
       h_mScanClustersTrackFstCountsR_2Layer[i_sensor][i_match] = (TH1F*)h_mScanClustersTrackFstCounts_2Layer[i_sensor][i_match]->ProjectionX(HistName.c_str(),projFstBinX0,projFstBinX1);
 
       // FST Phi projection
@@ -307,7 +307,7 @@ void calTrackClusterEfficiency_2Layer(string hv = "HV70V", bool isSavePed = true
       PlotLine(FST::phiMin[i_sensor], FST::phiMax[i_sensor], 0.95, 0.95, 4, 1, 2);
       if(i_match == 0)
       {
-	TLegend *leg = new TLegend(0.4,0.6,0.85,0.8);
+	TLegend *leg = new TLegend(0.3,0.4,0.7,0.6);
 	leg->SetBorderSize(0);
 	leg->SetFillColor(10);
 	leg->AddEntry(h_mSimpleClustersTrackFstEffPhi_2Layer[i_sensor][i_match],"Simple Cluster","L");
