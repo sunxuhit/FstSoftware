@@ -1427,8 +1427,8 @@ void FstTracking::calEfficiency_SimpleClusters(FstEvent *fstEvent)
 		    {
 		      nMatchedTrack++;
 		    }
-		    // if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-		    if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
+		    if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		    // if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
 		    {
 		      nMatchedTrack++;
 		    }
@@ -1498,8 +1498,8 @@ void FstTracking::calEfficiency_SimpleClusters(FstEvent *fstEvent)
 			{
 			  nMatchedTrack++;
 			}
-			// if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-			if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
+			if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+			// if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
 			{
 			  nMatchedTrack++;
 			}
@@ -1592,8 +1592,8 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
 		    {
 		      nMatchedTrack++;
 		    }
-		    // if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-		    if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
+		    if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+		    // if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
 		    {
 		      nMatchedTrack++;
 		    }
@@ -1663,8 +1663,8 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
 			{
 			  nMatchedTrack++;
 			}
-			// if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-			if( i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
+			if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
+			// if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
 			{
 			  nMatchedTrack++;
 			}

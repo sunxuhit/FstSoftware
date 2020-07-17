@@ -1,17 +1,18 @@
 #include <TCanvas.h>
 #include <TH1F.h>
 #include <TLegend.h>
+#include "../../src/FstUtil/FstCons.h"
 
 using namespace std;
 
-void plotMcProjection(bool isRot = true, int rAligned = 0, string hv = "HV70V")
+void plotMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, string hv = "HV70V")
 {
   string mode = "Scan";
   // string mode = "Simple";
-  string inputname = "../../output/simulation/FstMcProjection_woRot.root";
+  string inputname = Form("../../output/simulation/FstMcProjection_woRot_Sensor%d.root",sensorId);
   if(isRot) 
   {
-    inputname = Form("../../output/simulation/FstMcProjection_Rot_AlignedRstrip%d.root",rAligned);
+    inputname = Form("../../output/simulation/FstMcProjection_Rot_AlignedRstrip%d_Sensor%d.root",rAligned,sensorId);
   }
   TFile *File_InPut = TFile::Open(inputname.c_str());
   TH1F *h_mIstProjResX_2Layer    = (TH1F*)File_InPut->Get("h_mIstProjResX_2Layer");
@@ -26,56 +27,66 @@ void plotMcProjection(bool isRot = true, int rAligned = 0, string hv = "HV70V")
   TH1F *h_mFstProjResPhi_2Layer  = (TH1F*)File_InPut->Get("h_mFstProjResPhi_2Layer");
   TH2F *h_mFstProjResRPhi_2Layer = (TH2F*)File_InPut->Get("h_mFstProjResRPhi_2Layer");
 
-  TH1F *h_mFstProjResX_2Layer_Rstrips[4];
-  TH1F *h_mFstProjResY_2Layer_Rstrips[4];
-  TH2F *h_mFstProjResXY_2Layer_Rstrips[4]; // 2D distribution
+  TH1F *h_mFstProjResX_2Layer_Rstrips[FST::mFstNumRstripPerSensor];
+  TH1F *h_mFstProjResY_2Layer_Rstrips[FST::mFstNumRstripPerSensor];
+  TH2F *h_mFstProjResXY_2Layer_Rstrips[FST::mFstNumRstripPerSensor]; // 2D distribution
 
-  TH1F *h_mFstProjResR_2Layer_Rstrips[4];
-  TH1F *h_mFstProjResPhi_2Layer_Rstrips[4];
-  TH2F *h_mFstProjResRPhi_2Layer_Rstrips[4]; // 2D distribution
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
+  TH1F *h_mFstProjResR_2Layer_Rstrips[FST::mFstNumRstripPerSensor];
+  TH1F *h_mFstProjResPhi_2Layer_Rstrips[FST::mFstNumRstripPerSensor];
+  TH2F *h_mFstProjResRPhi_2Layer_Rstrips[FST::mFstNumRstripPerSensor]; // 2D distribution
+  for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
   {
     string HistName;
-    HistName = Form("h_mFstProjResX_2Layer_Rstrip%d",i_rstrip);
+    HistName = Form("h_mFstProjResX_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip);
+    if(sensorId > 0) HistName = Form("h_mFstProjResX_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip+4);
     h_mFstProjResX_2Layer_Rstrips[i_rstrip]  = (TH1F*)File_InPut->Get(HistName.c_str());
-    HistName = Form("h_mFstProjResY_2Layer_Rstrip%d",i_rstrip);
+    HistName = Form("h_mFstProjResY_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip);
+    if(sensorId > 0) HistName = Form("h_mFstProjResY_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip+4);
     h_mFstProjResY_2Layer_Rstrips[i_rstrip]  = (TH1F*)File_InPut->Get(HistName.c_str());
-    HistName = Form("h_mFstProjResXY_2Layer_Rstrip%d",i_rstrip);
+    HistName = Form("h_mFstProjResXY_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip);
+    if(sensorId > 0) HistName = Form("h_mFstProjResXY_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip+4);
     h_mFstProjResXY_2Layer_Rstrips[i_rstrip] = (TH2F*)File_InPut->Get(HistName.c_str());
     
-    HistName = Form("h_mFstProjResR_2Layer_Rstrip%d",i_rstrip);
+    HistName = Form("h_mFstProjResR_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip);
+    if(sensorId > 0) HistName = Form("h_mFstProjResR_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip+4);
     h_mFstProjResR_2Layer_Rstrips[i_rstrip]    = (TH1F*)File_InPut->Get(HistName.c_str());
-    HistName = Form("h_mFstProjResPhi_2Layer_Rstrip%d",i_rstrip);
+    HistName = Form("h_mFstProjResPhi_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip);
+    if(sensorId > 0) HistName = Form("h_mFstProjResPhi_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip+4);
     h_mFstProjResPhi_2Layer_Rstrips[i_rstrip]  = (TH1F*)File_InPut->Get(HistName.c_str());
-    HistName = Form("h_mFstProjResRPhi_2Layer_Rstrip%d",i_rstrip);
+    HistName = Form("h_mFstProjResRPhi_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip);
+    if(sensorId > 0) HistName = Form("h_mFstProjResRPhi_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip+4);
     h_mFstProjResRPhi_2Layer_Rstrips[i_rstrip] = (TH2F*)File_InPut->Get(HistName.c_str());
   }
-
 
   TH1F *h_mFstSimResR_2Layer     = (TH1F*)File_InPut->Get("h_mFstSimResR_2Layer");
   TH1F *h_mFstSimResPhi_2Layer   = (TH1F*)File_InPut->Get("h_mFstSimResPhi_2Layer");
   TH2F *h_mFstSimResRPhi_2Layer  = (TH2F*)File_InPut->Get("h_mFstSimResRPhi_2Layer");
 
-  string inputData = Form("../../output/simulation/FstTracking_woRot_%s.root",hv.c_str());
-  if(isRot) inputData = Form("../../output/simulation/FstTracking_Rot_AlignedRstrip%d_%s.root",rAligned,hv.c_str());
+  string mSector = "Inner";
+  if(sensorId > 0) mSector = "Outer";
+
+  string inputData = Form("../../output/simulation/FstTracking_woRot_%s_%s.root",hv.c_str(),mSector.c_str());
+  if(isRot) inputData = Form("../../output/simulation/FstTracking_Rot_AlignedRstrip%d_%s_%s.root",rAligned,hv.c_str(),mSector.c_str());
   TFile *File_InPutData = TFile::Open(inputData.c_str());
   TH1F *h_mClustersTrackFstResR_2Layer;
   TH1F *h_mClustersTrackFstResPhi_2Layer;
   {
     string HistName;
-    HistName = Form("h_m%sClustersTrackFstResR_2Layer",mode.c_str());
+    HistName = Form("h_m%sClustersTrackFstResR_2Layer_Sensor%d",mode.c_str(),sensorId);
     h_mClustersTrackFstResR_2Layer = (TH1F*)File_InPutData->Get(HistName.c_str());
-    HistName = Form("h_m%sClustersTrackFstResPhi_2Layer",mode.c_str());
+    HistName = Form("h_m%sClustersTrackFstResPhi_2Layer_Sensor%d",mode.c_str(),sensorId);
     h_mClustersTrackFstResPhi_2Layer = (TH1F*)File_InPutData->Get(HistName.c_str());
   }
-  TH1F *h_mClustersTrackFstResR_2Layer_Rstrips[4];
-  TH1F *h_mClustersTrackFstResPhi_2Layer_Rstrips[4];
-  for(int i_rstrp = 0; i_rstrp < 4; ++i_rstrp)
+  TH1F *h_mClustersTrackFstResR_2Layer_Rstrips[FST::mFstNumRstripPerSensor];
+  TH1F *h_mClustersTrackFstResPhi_2Layer_Rstrips[FST::mFstNumRstripPerSensor];
+  for(int i_rstrp = 0; i_rstrp < FST::mFstNumRstripPerSensor; ++i_rstrp)
   {
     string HistName;
-    HistName = Form("h_m%sClustersTrackFstResR_2Layer_Rstrip%d",mode.c_str(),i_rstrp);
+    HistName = Form("h_m%sClustersTrackFstResR_2Layer_Sensor%d_Rstrip%d",mode.c_str(),sensorId,i_rstrp); // R Residual
+    if(sensorId > 0) HistName = Form("h_m%sClustersTrackFstResR_2Layer_Sensor%d_Rstrip%d",mode.c_str(),sensorId,i_rstrp+4);
     h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp] = (TH1F*)File_InPutData->Get(HistName.c_str());
-    HistName = Form("h_m%sClustersTrackFstResPhi_2Layer_Rstrip%d",mode.c_str(),i_rstrp);
+    HistName = Form("h_m%sClustersTrackFstResPhi_2Layer_Sensor%d_Rstrip%d",mode.c_str(),sensorId,i_rstrp); // R Residual
+    if(sensorId > 0) HistName = Form("h_m%sClustersTrackFstResPhi_2Layer_Sensor%d_Rstrip%d",mode.c_str(),sensorId,i_rstrp+4);
     h_mClustersTrackFstResPhi_2Layer_Rstrips[i_rstrp] = (TH1F*)File_InPutData->Get(HistName.c_str());
   }
 
@@ -217,8 +228,8 @@ void plotMcProjection(bool isRot = true, int rAligned = 0, string hv = "HV70V")
   h_mClustersTrackFstResPhi_2Layer->Draw("pE same");
   leg->Draw("same");
 
-  string FigName = Form("./figures/c_Residual_woRot_%s_%s.eps",mode.c_str(),hv.c_str());
-  if(isRot) FigName = Form("./figures/c_Residual_Rot_AlignedRstrip%d_%s_%s.eps",rAligned,mode.c_str(),hv.c_str());
+  string FigName = Form("./figures/c_Residual_woRot_%s_%s_Sensor%d.eps",mode.c_str(),hv.c_str(),sensorId);
+  if(isRot) FigName = Form("./figures/c_Residual_Rot_AlignedRstrip%d_%s_%s_Sensor%d.eps",rAligned,mode.c_str(),hv.c_str(),sensorId);
   c_Residual->SaveAs(FigName.c_str());
 
   TCanvas *c_ResDiff = new TCanvas("c_ResDiff","c_ResDiff",10,10,900,1200);
@@ -287,7 +298,7 @@ void plotMcProjection(bool isRot = true, int rAligned = 0, string hv = "HV70V")
     leg->Draw("same");
   }
 
-  FigName = Form("./figures/c_ResDiff_woRot_%s_%s.eps",mode.c_str(),hv.c_str());
-  if(isRot) FigName = Form("./figures/c_ResDiff_Rot_AlignedRstrip%d_%s_%s.eps",rAligned,mode.c_str(),hv.c_str());
+  FigName = Form("./figures/c_ResDiff_woRot_%s_%s_Sensor%d.eps",mode.c_str(),hv.c_str(),sensorId);
+  if(isRot) FigName = Form("./figures/c_ResDiff_Rot_AlignedRstrip%d_%s_%s_Sensor%d.eps",rAligned,mode.c_str(),hv.c_str(),sensorId);
   c_ResDiff->SaveAs(FigName.c_str());
 }

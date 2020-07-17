@@ -23,8 +23,6 @@ namespace FST
   const double pitchR       = 28.75; // mm | (280-165)/4.0
   const double pitchPhi     = TMath::Pi()*30.0/180.0/numPhiSeg; // rad | 30 degree with 128 segmentations
   const double gapPhi       = TMath::Pi()*1.0/180.0; // 1 degree gap between 2 outer sensor
-  // const double gapPhi       = 0.0;
-  const double pitchLayer03 = 134.9375+23.3257; // mm
 
   // FST Clustering
   const int mFstNumSensorsPerModule = 3; // 0 for APV 0-3(1-4) on inner sector | 1 for APV 4&5(5&6) on outer sector | 2 for APV 6&7(7&8) on outer sector
@@ -59,12 +57,14 @@ namespace FST
   const double phi_rot_ist3 = -0.00379431;
   const double x3_shift     = 0.45811;
   const double y3_shift     = 1.0116;
-  // const double phi_rot_ist2 = 0.0438495; // aligned IST2 to FST with 2-layer tracking
-  // const double x2_shift     = 140.99; // x2_shift + 6.0
-  // const double y2_shift     = -20.7848;
-  const double phi_rot_ist2 = 3.16612; // for Inner sector test
-  const double x2_shift     = 216.606;
-  const double y2_shift     = 33.5658;
+  const double phi_rot_ist2 = 0.0311535; // aligned IST2 to FST with 2-layer tracking
+  const double x2_shift     = 141.268; 
+  const double y2_shift     = -19.7014;
+  const double pitchLayer03 = 134.9375+0.644155; // mm
+  // const double phi_rot_ist2 = 3.16612; // for Inner sector test
+  // const double x2_shift     = 216.606;
+  // const double y2_shift     = 33.5658;
+  // const double pitchLayer03 = 134.9375+23.3257; // mm
 
   // Hits Selection
   const float nFstPedsCut      = 3.0; // used for ped

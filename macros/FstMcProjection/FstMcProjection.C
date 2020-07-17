@@ -14,10 +14,10 @@ void genCosmicTrackRandom(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPos
 void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TH1F *h_TrackAngle, bool isRot, int rAligned, double deltaX, double deltaY); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
 void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TF1 *f_TrackAngle, bool isRot, int rAligned, double deltaX, double deltaY); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
 TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot, int rAligned, double deltaX, double deltaY); // get projected position on FST from IST1 & IST3 | return (r,phi) for FST
-TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST); // get readout position from a real hit | return (x,y) for IST & (r,phi) for FST
+TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST, int sensorId); // get readout position from a real hit | return (x,y) for IST & (r,phi) for FST
 int findCrossTalkBin(double r_hit);
 
-void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 500000)
+void FstMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, int numOfTracks = 500000)
 {
   printAlignmentInfo(isRot,rAligned);
 
@@ -33,14 +33,14 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
   const double z2_ist = FST::pitchLayer23;
   const double z3_ist = 0.0;
 
-  const double phiGap = 1.0*TMath::Pi()/180.0;
-
+  int binNumR[3] = {6,6,6};
+  int binNumPhi[3] = {148,84,84};
   std::cout << std::fixed;
   std::cout << std::setprecision(4);
 
   TH2F *h_mIst3Pixel = new TH2F("h_mIst3Pixel","h_mIst3Pixel",FST::noColumns,0.0,lengthColumn,FST::noRows,0.0,lengthRow);
   TH2F *h_mIst1Pixel = new TH2F("h_mIst1Pixel","h_mIst1Pixel",FST::noColumns,0.0,lengthColumn,FST::noRows,0.0,lengthRow);
-  TH2F *h_mFstPixel  = new TH2F("h_mFstPixel","h_mFstPixel",10,FST::rMin,FST::rMax,FST::numPhiSeg*2,-2.0*(FST::phiMax-0.5*FST::gapPhi),2.0*(FST::phiMax-0.5*FST::gapPhi));
+  TH2F *h_mFstPixel  = new TH2F("h_mFstPixel","h_mFstPixel",binNumR[sensorId],FST::rMin[sensorId],FST::rMax[sensorId],binNumPhi[sensorId],FST::phiMin[sensorId],FST::phiMax[sensorId]);
 
   TH2F *h_mIst3Display = new TH2F("h_mIst3Display","h_mIst3Display",FST::noColumns,0.0,lengthColumn,FST::noRows,0.0,lengthRow);
   TH2F *h_mIst1Display = new TH2F("h_mIst1Display","h_mIst1Display",FST::noColumns,0.0,lengthColumn,FST::noRows,0.0,lengthRow);
@@ -76,7 +76,7 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
     maxPhi    = 0.15;
   }
 
-  TH2F *h_mFstDisplay = new TH2F("h_mFstDisplay","h_mFstDisplay",10,FST::rMin,FST::rMax,FST::numPhiSeg,-1.0*FST::phiMax,1.0*FST::phiMax);
+  TH2F *h_mFstDisplay = new TH2F("h_mFstDisplay","h_mFstDisplay",binNumR[sensorId],FST::rMin[sensorId],FST::rMax[sensorId],binNumPhi[sensorId],FST::phiMin[sensorId],FST::phiMax[sensorId]);
   // FST residual
   TH1F *h_mFstProjResX_2Layer  = new TH1F("h_mFstProjResX_2Layer","h_mFstProjResX_2Layer",numBinX,-maxX,maxX);
   TH1F *h_mFstProjResY_2Layer  = new TH1F("h_mFstProjResY_2Layer","h_mFstProjResY_2Layer",numBinY,-maxY,maxY);
@@ -86,28 +86,34 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
   TH1F *h_mFstProjResPhi_2Layer  = new TH1F("h_mFstProjResPhi_2Layer","h_mFstProjResPhi_2Layer",numBinPhi,-maxPhi,maxPhi);
   TH2F *h_mFstProjResRPhi_2Layer = new TH2F("h_mFstProjResRPhi_2Layer","h_mFstProjResRPhi_2Layer",numBinR,-maxR,maxR,numBinPhi,-maxPhi,maxPhi);
     
-  TH1F *h_mFstProjResX_2Layer_Rstrips[FST::numRStrip];
-  TH1F *h_mFstProjResY_2Layer_Rstrips[FST::numRStrip];
-  TH2F *h_mFstProjResXY_2Layer_Rstrips[FST::numRStrip]; // 2D distribution
+  TH1F *h_mFstProjResX_2Layer_Rstrips[FST::mFstNumRstripPerSensor];
+  TH1F *h_mFstProjResY_2Layer_Rstrips[FST::mFstNumRstripPerSensor];
+  TH2F *h_mFstProjResXY_2Layer_Rstrips[FST::mFstNumRstripPerSensor]; // 2D distribution
 
-  TH1F *h_mFstProjResR_2Layer_Rstrips[FST::numRStrip];
-  TH1F *h_mFstProjResPhi_2Layer_Rstrips[FST::numRStrip];
-  TH2F *h_mFstProjResRPhi_2Layer_Rstrips[FST::numRStrip]; // 2D distribution
-  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+  TH1F *h_mFstProjResR_2Layer_Rstrips[FST::mFstNumRstripPerSensor];
+  TH1F *h_mFstProjResPhi_2Layer_Rstrips[FST::mFstNumRstripPerSensor];
+  TH2F *h_mFstProjResRPhi_2Layer_Rstrips[FST::mFstNumRstripPerSensor]; // 2D distribution
+  for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
   {
     string HistName;
-    HistName = Form("h_mFstProjResX_2Layer_Rstrip%d",i_rstrip);
+    HistName = Form("h_mFstProjResX_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip);
+    if(sensorId > 0) HistName = Form("h_mFstProjResX_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip+4);
     h_mFstProjResX_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),numBinX,-maxX,maxX);
-    HistName = Form("h_mFstProjResY_2Layer_Rstrip%d",i_rstrip);
+    HistName = Form("h_mFstProjResY_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip);
+    if(sensorId > 0) HistName = Form("h_mFstProjResY_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip+4);
     h_mFstProjResY_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),numBinY,-maxY,maxY);
-    HistName = Form("h_mFstProjResXY_2Layer_Rstrip%d",i_rstrip);
+    HistName = Form("h_mFstProjResXY_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip);
+    if(sensorId > 0) HistName = Form("h_mFstProjResXY_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip+4);
     h_mFstProjResXY_2Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),numBinX,-maxX,maxX,numBinY,-maxY,maxY);
     
-    HistName = Form("h_mFstProjResR_2Layer_Rstrip%d",i_rstrip);
+    HistName = Form("h_mFstProjResR_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip);
+    if(sensorId > 0) HistName = Form("h_mFstProjResR_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip+4);
     h_mFstProjResR_2Layer_Rstrips[i_rstrip]    = new TH1F(HistName.c_str(),HistName.c_str(),numBinR,-maxR,maxR);
-    HistName = Form("h_mFstProjResPhi_2Layer_Rstrip%d",i_rstrip);
+    HistName = Form("h_mFstProjResPhi_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip);
+    if(sensorId > 0) HistName = Form("h_mFstProjResPhi_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip+4);
     h_mFstProjResPhi_2Layer_Rstrips[i_rstrip]  = new TH1F(HistName.c_str(),HistName.c_str(),numBinPhi,-maxPhi,maxPhi);
-    HistName = Form("h_mFstProjResRPhi_2Layer_Rstrip%d",i_rstrip);
+    HistName = Form("h_mFstProjResRPhi_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip);
+    if(sensorId > 0) HistName = Form("h_mFstProjResRPhi_2Layer_Sensor%d_Rstrip%d",sensorId,i_rstrip+4);
     h_mFstProjResRPhi_2Layer_Rstrips[i_rstrip] = new TH2F(HistName.c_str(),HistName.c_str(),numBinR,-maxR,maxR,numBinPhi,-maxPhi,maxPhi);
   }
 
@@ -117,16 +123,16 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
 
   int numBinEffR = 30;
   if(isRot) numBinEffR = 120;
-  TH2F *h_mIstCounts_2Layer[8];
-  TH2F *h_mFstCounts_2Layer[8];
-  for(int i_match = 0; i_match < 8; ++i_match)
+  TH2F *h_mIstCounts_2Layer[FST::mFstNumMatching];
+  TH2F *h_mFstCounts_2Layer[FST::mFstNumMatching];
+  for(int i_match = 0; i_match < FST::mFstNumMatching; ++i_match)
   {
     string HistName;
     // simple clusters
-    HistName = Form("h_mIstCounts_2Layer_SF%d",i_match);
-    h_mIstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),numBinEffR,FST::rMin,FST::rMax,90,-1.5*FST::phiMax,1.5*FST::phiMax);
-    HistName = Form("h_mFstCounts_2Layer_SF%d",i_match);
-    h_mFstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),numBinEffR,FST::rMin,FST::rMax,90,-1.5*FST::phiMax,1.5*FST::phiMax);
+    HistName = Form("h_mIstCounts_2Layer_Sensor%d_SF%d",sensorId,i_match);
+    h_mIstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),numBinEffR,FST::rMin[sensorId],FST::rMax[sensorId],90,FST::phiMin[sensorId],FST::phiMax[sensorId]);
+    HistName = Form("h_mFstCounts_2Layer_Sensor%d_SF%d",sensorId,i_match);
+    h_mFstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),numBinEffR,FST::rMin[sensorId],FST::rMax[sensorId],90,FST::phiMin[sensorId],FST::phiMax[sensorId]);
   }
 
   TH1F *h_mRecoAngle = new TH1F("h_mRecoAngle","h_mRecoAngle",25,0.0,0.5*TMath::Pi());
@@ -150,8 +156,8 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
     // genCosmicTrackRandom(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, isRot, rAligned, deltaX, deltaY);
     // genCosmicTrackAngle(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, h_mClustersTrackAngle, isRot, rAligned, deltaX, deltaY);
     genCosmicTrackAngle(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, f_mClustersTrackAngle, isRot, rAligned, deltaX, deltaY);
-    TVector2 vHitRo_IST3 = getReadOut(vHitGen_IST3, h_mIst3Pixel, false); // RO position at IST3
-    TVector2 vHitRo_IST1 = getReadOut(vHitGen_IST1, h_mIst1Pixel, false); // RO position at IST1
+    TVector2 vHitRo_IST3 = getReadOut(vHitGen_IST3, h_mIst3Pixel, false, sensorId); // RO position at IST3
+    TVector2 vHitRo_IST1 = getReadOut(vHitGen_IST1, h_mIst1Pixel, false, sensorId); // RO position at IST1
 
     // cosmic incident angle simulation
     double theta = f_mClustersTrackAngle->GetRandom(); // random generated theta from input cosmic angle distribution
@@ -162,7 +168,7 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
     if( !(vHitRo_IST1.X() > -100.0 && vHitRo_IST1.Y() > -100.0) ) continue;
     if( !(vHitRo_IST3.X() > -100.0 && vHitRo_IST3.Y() > -100.0) ) continue;
 
-    TVector2 vHitRo_FST = getReadOut(vHitGen_FST, h_mFstPixel, true); // RO position at FST
+    TVector2 vHitRo_FST = getReadOut(vHitGen_FST, h_mFstPixel, true, sensorId); // RO position at FST
     TVector2 vReco_FST = getProjection(vHitRo_IST1, vHitRo_IST3, isRot, rAligned, deltaX, deltaY); // projected position on FST through the readout position from IST1 & IST3
 
     double x3_gen = vHitGen_IST3.X();
@@ -234,11 +240,9 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
       h_mFstProjResY_2Layer->Fill(y0_ro-y0_reco);
       h_mFstProjResXY_2Layer->Fill(x0_ro-x0_reco,y0_ro-y0_reco);
 
-      for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+      for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
       {
-	// if(r0_reco > FST::rOuter + FST::pitchR*i_rstrip && r0_reco <= FST::rOuter + FST::pitchR*(i_rstrip+1))
-	// if(r0_gen > FST::rOuter + FST::pitchR*i_rstrip && r0_gen <= FST::rOuter + FST::pitchR*(i_rstrip+1))
-	if(r0_gen > FST::rInner + FST::pitchR*i_rstrip && r0_gen <= FST::rInner + FST::pitchR*(i_rstrip+1))
+	if(r0_reco > FST::mFstRMin[sensorId] + FST::pitchR*i_rstrip && r0_reco <= FST::mFstRMin[sensorId] + FST::pitchR*(i_rstrip+1))
 	{ // check the position of the projected r is within a specific r_strip and fill accordingly
 	  h_mFstProjResX_2Layer_Rstrips[i_rstrip]->Fill(x0_ro-x0_reco);
 	  h_mFstProjResY_2Layer_Rstrips[i_rstrip]->Fill(y0_ro-y0_reco);
@@ -258,8 +262,7 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
     double phiMatchingCut = 0.01; // before totation
     if(isRot) phiMatchingCut = 0.05;
     // fill Efficiency
-    // if(r0_reco >= FST::rMin && r0_reco < FST::rMax && phi0_reco >= -FST::phiMax && phi0_reco < FST::phiMax)
-    if(r0_reco >= FST::rMin && r0_reco < FST::rMax && phi0_reco >= 0.0 && phi0_reco < FST::phiMax)
+    if(r0_reco >= FST::rMin[sensorId] && r0_reco < FST::rMax[sensorId] && phi0_reco >= FST::phiMin[sensorId] && phi0_reco < FST::phiMax[sensorId])
     {
       for(int i_match = 0; i_match < 8; ++i_match)
       {
@@ -281,10 +284,10 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
     }
   }
 
-  string outputname = "../../output/simulation/FstMcProjection_woRot.root";
+  string outputname = Form("../../output/simulation/FstMcProjection_woRot_Sensor%d.root",sensorId);
   if(isRot) 
   {
-    outputname = Form("../../output/simulation/FstMcProjection_Rot_AlignedRstrip%d.root",rAligned);
+    outputname = Form("../../output/simulation/FstMcProjection_Rot_AlignedRstrip%d_Sensor%d.root",rAligned,sensorId);
   }
 
   TFile *File_OutPut = new TFile(outputname.c_str(),"RECREATE");
@@ -309,7 +312,7 @@ void FstMcProjection(bool isRot = true, int rAligned = 0, int numOfTracks = 5000
   h_mFstProjResY_2Layer->Write();
   h_mFstProjResXY_2Layer->Write();
 
-  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+  for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
   {
     h_mFstProjResX_2Layer_Rstrips[i_rstrip]->Write();
     h_mFstProjResY_2Layer_Rstrips[i_rstrip]->Write();
@@ -488,7 +491,7 @@ TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot = false,
   return vPosFST;
 }
 
-TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST)
+TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST, int sensorId)
 {
   const double lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
   const double lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
@@ -520,7 +523,7 @@ TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST)
     double phi_ro  = -999.0;
     // check if FST has readout
     // if(r_hit >= FST::rOuter && r_hit <= FST::rOuter+4.0*FST::pitchR && phi_hit >= 0.0 && phi_hit <= FST::phiMax)
-    if(r_hit >= FST::rInner && r_hit <= FST::rInner+4.0*FST::pitchR && phi_hit >= -FST::phiMax+0.5*FST::gapPhi && phi_hit <= FST::phiMax-0.5*FST::gapPhi)
+    if(r_hit >= FST::mFstRMin[sensorId] && r_hit <= FST::mFstRMax[sensorId] && phi_hit >= FST::mFstPhiMin[sensorId] && phi_hit <= FST::mFstPhiMax[sensorId])
     {
       int binR      = h_pixel->GetXaxis()->FindBin(r_hit);
       // int deltaBinR = findCrossTalkBin(r_hit);
