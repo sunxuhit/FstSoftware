@@ -11,29 +11,22 @@
 
 using namespace std;
 
-void plotDataCrossTalk(string hv = "HV200V")
+void plotDataCrossTalk(int sensorId = 1, string hv = "HV70V")
 {
   string mode = "Scan";
   // string mode = "Simple";
 
-  TH1F *h_mClustersTrackFstResR_2Layer_Rstrips[4];
 
-  string inputRot0= Form("../../output/simulation/FstTracking_Rot_AlignedRstrip0_%s.root",hv.c_str());
-  TFile *File_InPutRot0 = TFile::Open(inputRot0.c_str());
-  for(int i_rstrp = 0; i_rstrp < 2; ++i_rstrp)
+  string inputfile = Form("/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/output/simulation/Module03/FstTracking_woRot_%s_Sensor%d.root",hv.c_str(),sensorId);
+
+  TFile *File_InPut = TFile::Open(inputfile.c_str());
+
+  TH1F *h_mClustersTrackFstResR_2Layer_Rstrips[FST::mFstNumRstripPerSensor];
+  for(int i_rstrp = 0; i_rstrp < FST::mFstNumRstripPerSensor; ++i_rstrp)
   {
-    string HistName;
-    HistName = Form("h_m%sClustersTrackFstResR_2Layer_Rstrip%d",mode.c_str(),i_rstrp);
-    h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp] = (TH1F*)File_InPutRot0->Get(HistName.c_str());
-  }
-  
-  string inputRot3= Form("../../output/simulation/FstTracking_Rot_AlignedRstrip3_%s.root",hv.c_str());
-  TFile *File_InPutRot3 = TFile::Open(inputRot3.c_str());
-  for(int i_rstrp = 2; i_rstrp < 4; ++i_rstrp)
-  {
-    string HistName;
-    HistName = Form("h_m%sClustersTrackFstResR_2Layer_Rstrip%d",mode.c_str(),i_rstrp);
-    h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp] = (TH1F*)File_InPutRot3->Get(HistName.c_str());
+    string HistName = Form("h_m%sClustersTrackFstResR_2Layer_Sensor%d_Rstrip%d",mode.c_str(),sensorId,i_rstrp); // R Residual
+    if(sensorId > 0) HistName = Form("h_m%sClustersTrackFstResR_2Layer_Sensor%d_Rstrip%d",mode.c_str(),sensorId,i_rstrp+4);
+    h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp] = (TH1F*)File_InPut->Get(HistName.c_str());
   }
 
   TH1F *h_mFstRecoResR_2Layer_Rstrips[4];
@@ -92,7 +85,7 @@ void plotDataCrossTalk(string hv = "HV200V")
       double deltaStop  = (i_delta-2.5)*FST::pitchR;
       int binDelta_start = h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->FindBin(deltaStart);
       int binDelta_stop  = h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->FindBin(deltaStop);
-      double inteDelta = h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->Integral(binDelta_start,binDelta_stop);
+      double inteDelta = h_mClustersTrackFstResR_2Layer_Rstrips[i_rstrp]->Integral(binDelta_start,binDelta_stop-1);
       double ratio = inteDelta/inteR[i_rstrp];
       // cout << "i_delta = " << i_delta << ", deltaStart = " << deltaStart << ", deltaStop = " << deltaStop << endl;
       // cout << "binDelta_start = " << binDelta_start << ", binDelta_stop = " << binDelta_stop << endl;

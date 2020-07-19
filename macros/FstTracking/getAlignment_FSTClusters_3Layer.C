@@ -46,7 +46,7 @@ double gaussian(double *var, double *par)
   return y;
 }
 
-int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, bool isInner = true)
+int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, int sensorId = 0)
 {
   gStyle->SetOptStat(111111);
   gStyle->SetOptFit(1001);
@@ -79,9 +79,7 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
   const double x3_shift = 0.45811;
   const double y3_shift = 1.0116;
 
-  string mSector = "Inner";
-  if(!isInner) mSector = "Outer";
-  std::string inputlist = Form("../../list/FST/alignment/FstCluster_Th%1.1fTb%d_%s.list",nFstHitsCut,numOfUsedTimeBins,mSector.c_str());
+  std::string inputlist = Form("../../list/FST/alignment/FstCluster_Th%1.1fTb%d_InOut.list",nFstHitsCut,numOfUsedTimeBins);
   cout << "input list set to: " << inputlist.c_str() << endl;
   TChain *mChainInPut = new TChain("mTree_FstEvent");
   if (!inputlist.empty())   // if input file is ok
@@ -138,7 +136,7 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
     for(int i_cluster = 0; i_cluster < mFstEvent->getNumClusters(); ++i_cluster)
     { // get Clusters info for IST1 IST2 and IST3
       FstCluster *fstCluster = mFstEvent->getCluster(i_cluster);
-      if(fstCluster->getLayer() == 0 && fstCluster->getClusterType() == 2 && fstCluster->getIsSeed())
+      if(fstCluster->getLayer() == 0 && fstCluster->getClusterType() == 2 && fstCluster->getIsSeed() && fstCluster->getSensor() == sensorId)
       { // use Scan cluster
 	clusterVec_fst.push_back(fstCluster);
       }
@@ -180,10 +178,8 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
 	    {
 	      double r0 = clusterVec_fst[i_fst]->getMeanX();
 	      double phi0 = clusterVec_fst[i_fst]->getMeanY();
-	      double rMinTest = FST::rInner;
-	      double rMaxTest = FST::rInner + 4.0*FST::pitchR;
-	      if(!isInner) rMinTest = FST::rOuter;
-	      if(!isInner) rMaxTest = FST::rOuter + 4.0*FST::pitchR;
+	      double rMinTest = FST::mFstRMin[sensorId];
+	      double rMaxTest = FST::mFstRMax[sensorId];
 	      if(r0 > rMinTest && r0 < rMaxTest)
 	      {
 		double x0 = r0*TMath::Cos(phi0);
@@ -221,7 +217,7 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
   int numBinPhi = 1570;
   double maxPhi = 0.5*TMath::Pi();
   double minPhi = -0.5*TMath::Pi();
-  if(!isInner)
+  if(sensorId > 0)
   {
     numBinX   = 75;
     maxX      = 320.0;
@@ -307,8 +303,8 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
     c_Residual->cd(i_pad+1)->SetTicks(1,1);
     c_Residual->cd(i_pad+1)->SetGrid(0,0);
   }
-  string outputname = Form("./figures/%sResidual_FSTClusters_3Layer.pdf",mSector.c_str());
-  string output_start = Form("./figures/%sResidual_FSTClusters_3Layer.pdf[",mSector.c_str());
+  string outputname = Form("./figures/Sensor%dResidual_FSTClusters_3Layer.pdf",sensorId);
+  string output_start = Form("./figures/Sensor%dResidual_FSTClusters_3Layer.pdf[",sensorId);
   c_Residual->Print(output_start.c_str()); // open pdf file
 
   //------------------------------
@@ -724,6 +720,7 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
     canvas_title->SetBorderSize(1);
     canvas_title->Draw();
     c_Residual->cd(1);
+    if(sensorId > 0) h_mXResidual->GetXaxis()->SetRangeUser(-160.0,160.0);
     h_mXResidual->DrawCopy("hE");
     TF1 *f_gausX = new TF1("f_gausX",gaussian,-150.0,150.0,4);
     f_gausX->SetParameter(0,100.0);
@@ -741,11 +738,12 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
     f_gausY->SetParameter(1,0.0);
     f_gausY->SetParameter(2,10.0);
     f_gausY->FixParameter(3,h_mYResidual->GetBinWidth(1));
-    f_gausY->SetRange(-4.0,4.0);
+    f_gausY->SetRange(-5.0,5.0);
     h_mYResidual->Fit(f_gausY,"R");
     f_gausY->Draw("l same");
 
     c_Residual->cd(3);
+    if(sensorId > 0) h_mRResidual->GetXaxis()->SetRangeUser(-160.0,160.0);
     h_mRResidual->DrawCopy("hE");
     TF1 *f_gausR = new TF1("f_gausR",gaussian,-150.0,150.0,4);
     f_gausR->SetParameter(0,100.0);
@@ -773,7 +771,7 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
 
   cout << "Minuit minimization: phi_rot_ist2 = " << std::get<0>(fitPars) << ", x2_shift = " << std::get<1>(fitPars) << ", y2_shift = " << std::get<2>(fitPars) << ", z0_shift = " << std::get<3>(fitPars) << endl;
 
-  string output_stop = Form("./figures/%sResidual_FSTClusters_3Layer.pdf]",mSector.c_str()); 
+  string output_stop = Form("./figures/Sensor%dResidual_FSTClusters_3Layer.pdf]",sensorId); 
   c_Residual->Print(output_stop.c_str()); // close pdf file
 
   return 1;

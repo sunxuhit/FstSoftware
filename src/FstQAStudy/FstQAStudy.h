@@ -117,8 +117,8 @@ class FstQAStudy : public TObject
 
     // Signal & noise for max time bin
     // hits
-    TProfile2D *p_mPedMap_FST;
-    TProfile2D *p_mSigMap_FST;
+    TProfile2D *p_mFstPedMap[FST::mFstNumSensorsPerModule];
+    TProfile2D *p_mFstSigMap[FST::mFstNumSensorsPerModule];
     TH1F *h_mFstHitsMaxTb[FST::mFstNumSensorsPerModule];
     TH1F *h_mFstHitsSignal[FST::mFstNumSensorsPerModule];
     TH1F *h_mFstHitsNoise[FST::mFstNumSensorsPerModule];
@@ -135,11 +135,15 @@ class FstQAStudy : public TObject
 
     //clusters
     TH1F *h_mFstSimpleClustersSignal[FST::mFstNumSensorsPerModule];
+    TH1F *h_mFstSimpleClustersNoise[FST::mFstNumSensorsPerModule];
+    TH1F *h_mFstSimpleClustersSNRatio[FST::mFstNumSensorsPerModule];
     TH1F *h_mFstSimpleClustersSignal_Rstrip[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor];
     TH1F *h_mFstSimpleClustersMaxTb_Rstrip[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor];
     TH1F *h_mFstSimpleClustersSignal_Rstrip_TimeBin[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor][FST::numTBins];
 
     TH1F *h_mFstScanClustersSignal[FST::mFstNumSensorsPerModule];
+    TH1F *h_mFstScanClustersNoise[FST::mFstNumSensorsPerModule];
+    TH1F *h_mFstScanClustersSNRatio[FST::mFstNumSensorsPerModule];
     TH1F *h_mFstScanClustersSignal_Rstrip[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor];
     TH1F *h_mFstScanClustersMaxTb_Rstrip[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor];
     TH1F *h_mFstScanClustersSignal_Rstrip_TimeBin[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor][FST::numTBins];

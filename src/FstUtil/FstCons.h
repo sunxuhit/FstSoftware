@@ -61,10 +61,23 @@ namespace FST
   // const double x2_shift     = 141.268; 
   // const double y2_shift     = -19.7014;
   // const double pitchLayer03 = 134.9375+0.644155; // mm
-  const double phi_rot_ist2 = 3.16612; // for Inner sector test
-  const double x2_shift     = 216.606;
-  const double y2_shift     = 33.5658;
-  const double pitchLayer03 = 134.9375+23.3257; // mm
+  // const double phi_rot_ist2 = 3.16612; // for Inner sector test
+  // const double x2_shift     = 216.606;
+  // const double y2_shift     = 33.5658;
+  // const double pitchLayer03 = 134.9375+23.3257; // mm
+
+  // const double phi_rot_ist2 = 3.16555; // module 3 sensor 0
+  // const double x2_shift     = 216.997;
+  // const double y2_shift     = 33.6829;
+  // const double pitchLayer03 = 134.9375+23.1678;
+  const double phi_rot_ist2 = 3.16037; // module 3 sensor 1
+  const double x2_shift     = 220.998;
+  const double y2_shift     = 34.2155;
+  const double pitchLayer03 = 134.9375+10.7764;
+  // const double phi_rot_ist2 = 3.1592; // module 3 sensor 2
+  // const double x2_shift     = 221.685;
+  // const double y2_shift     = 33.8473;
+  // const double pitchLayer03 = 134.9375+11.8905;
 
   // Hits Selection
   const float nFstPedsCut      = 3.0; // used for ped

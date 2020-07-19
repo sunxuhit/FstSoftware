@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void plotMcProjection(bool isRot = false, int sensorId = 1, int rAligned = 0, string hv = "HV140V")
+void plotMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, string hv = "HV70V")
 {
   string mode = "Scan";
   // string mode = "Simple";
@@ -65,7 +65,8 @@ void plotMcProjection(bool isRot = false, int sensorId = 1, int rAligned = 0, st
   string mSector = "Inner";
   if(sensorId > 0) mSector = "Outer";
 
-  string inputData = Form("../../output/simulation/FstTracking_woRot_%s_%s.root",hv.c_str(),mSector.c_str());
+  // string inputData = Form("../../output/simulation/FstTracking_woRot_%s_%s.root",hv.c_str(),mSector.c_str());
+  string inputData = Form("../../output/simulation/FstTracking_woRot_%s_Sensor%d.root",hv.c_str(),sensorId);
   if(isRot) inputData = Form("../../output/simulation/FstTracking_Rot_AlignedRstrip%d_%s_%s.root",rAligned,hv.c_str(),mSector.c_str());
   TFile *File_InPutData = TFile::Open(inputData.c_str());
   TH1F *h_mClustersTrackFstResR_2Layer;
@@ -93,6 +94,7 @@ void plotMcProjection(bool isRot = false, int sensorId = 1, int rAligned = 0, st
   // calculate scaling factor
   double NormR_InteMC = h_mFstProjResR_2Layer->GetMaximum();
   double NormR_InteData = h_mClustersTrackFstResR_2Layer->GetMaximum();
+  double NormR_InteIST = h_mFstSimResR_2Layer->GetMaximum();
   double NormR_Data[4];
   double NormR_MC[4];
   for(int i_rstrp = 0; i_rstrp < 4; ++i_rstrp)
@@ -102,6 +104,7 @@ void plotMcProjection(bool isRot = false, int sensorId = 1, int rAligned = 0, st
   }
   double NormPhi_InteMC = h_mFstProjResPhi_2Layer->GetMaximum();
   double NormPhi_InteData = h_mClustersTrackFstResPhi_2Layer->GetMaximum();
+  double NormPhi_InteIST = h_mFstSimResPhi_2Layer->GetMaximum();
   double NormPhi_Data[4];
   double NormPhi_MC[4];
   for(int i_rstrp = 0; i_rstrp < 4; ++i_rstrp)
@@ -199,6 +202,11 @@ void plotMcProjection(bool isRot = false, int sensorId = 1, int rAligned = 0, st
   h_mFstProjResR_2Layer->SetLineColor(1);
   h_mFstProjResR_2Layer->Scale(NormR_InteData/NormR_InteMC);
   h_mFstProjResR_2Layer->Draw("h");
+  h_mFstSimResR_2Layer->SetLineStyle(2);
+  h_mFstSimResR_2Layer->SetLineWidth(2);
+  h_mFstSimResR_2Layer->SetLineColor(2);
+  h_mFstSimResR_2Layer->Scale(NormR_InteData/NormR_InteIST);
+  h_mFstSimResR_2Layer->Draw("h same");
   h_mClustersTrackFstResR_2Layer->SetMarkerStyle(24);
   h_mClustersTrackFstResR_2Layer->SetMarkerSize(0.8);
   h_mClustersTrackFstResR_2Layer->SetMarkerColor(1);
@@ -207,6 +215,7 @@ void plotMcProjection(bool isRot = false, int sensorId = 1, int rAligned = 0, st
   TLegend *leg = new TLegend(0.60,0.5,0.85,0.7);
   leg->AddEntry(h_mClustersTrackFstResR_2Layer,"Data","p");
   leg->AddEntry(h_mFstProjResR_2Layer,"MC","l");
+  leg->AddEntry(h_mFstSimResR_2Layer,"IST Proj Err.","l");
   leg->Draw("same");
 
   c_Residual->cd(9);
@@ -221,6 +230,11 @@ void plotMcProjection(bool isRot = false, int sensorId = 1, int rAligned = 0, st
   h_mFstProjResPhi_2Layer->SetLineColor(1);
   h_mFstProjResPhi_2Layer->Scale(NormPhi_InteData/NormPhi_InteMC);
   h_mFstProjResPhi_2Layer->Draw("h");
+  h_mFstSimResPhi_2Layer->SetLineStyle(2);
+  h_mFstSimResPhi_2Layer->SetLineWidth(2);
+  h_mFstSimResPhi_2Layer->SetLineColor(2);
+  h_mFstSimResPhi_2Layer->Scale(NormPhi_InteData/NormPhi_InteIST);
+  h_mFstSimResPhi_2Layer->Draw("h same");
   h_mClustersTrackFstResPhi_2Layer->SetMarkerStyle(24);
   h_mClustersTrackFstResPhi_2Layer->SetMarkerSize(0.8);
   h_mClustersTrackFstResPhi_2Layer->SetMarkerColor(1);

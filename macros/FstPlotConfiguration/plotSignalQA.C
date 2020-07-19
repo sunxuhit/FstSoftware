@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, float nFstThresholdCut2 = 2.5, float nFstThresholdCut1 = 3.5, int sensorId = 1)
+void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, float nFstThresholdCut2 = 2.5, float nFstThresholdCut1 = 3.5, int sensorId = 2)
 {
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
   gStyle->SetStatW(0.25); gStyle->SetStatH(0.55);
@@ -51,8 +51,8 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
 
   string inputfile = Form("../../output/configuration/FstQAStudy_%s_Th%1.1fTb%dPed%1.1fPed%1.1f_%s_%s.root",hv.c_str(),nFstHitsCut,numOfUsedTimeBins,nFstThresholdCut2,nFstThresholdCut1,pedMode.c_str(),cmnMode.c_str());
   TFile *File_InPut = TFile::Open(inputfile.c_str());
-  TProfile2D *p_mPedMap_FST = (TProfile2D*)File_InPut->Get("p_mPedMap_FST");;
-  TProfile2D *p_mSigMap_FST = (TProfile2D*)File_InPut->Get("p_mSigMap_FST");
+  TProfile2D *p_mFstPedMap[FST::mFstNumSensorsPerModule];
+  TProfile2D *p_mFstSigMap[FST::mFstNumSensorsPerModule];
 
   TH1F *h_mFstHitsMaxTb[FST::mFstNumSensorsPerModule];
   TH1F *h_mFstHitsSignal[FST::mFstNumSensorsPerModule];
@@ -70,11 +70,15 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
 
   //clusters
   TH1F *h_mFstSimpleClustersSignal[FST::mFstNumSensorsPerModule];
+  TH1F *h_mFstSimpleClustersNoise[FST::mFstNumSensorsPerModule];
+  TH1F *h_mFstSimpleClustersSNRatio[FST::mFstNumSensorsPerModule];
   TH1F *h_mFstSimpleClustersSignal_Rstrip[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor];
   TH1F *h_mFstSimpleClustersMaxTb_Rstrip[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor];
   TH1F *h_mFstSimpleClustersSignal_Rstrip_TimeBin[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor][FST::numTBins];
 
   TH1F *h_mFstScanClustersSignal[FST::mFstNumSensorsPerModule];
+  TH1F *h_mFstScanClustersNoise[FST::mFstNumSensorsPerModule];
+  TH1F *h_mFstScanClustersSNRatio[FST::mFstNumSensorsPerModule];
   TH1F *h_mFstScanClustersSignal_Rstrip[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor];
   TH1F *h_mFstScanClustersMaxTb_Rstrip[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor];
   TH1F *h_mFstScanClustersSignal_Rstrip_TimeBin[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor][FST::numTBins];
@@ -82,6 +86,10 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
   for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
   {
     string HistName;
+    HistName = Form("p_mFstPedMap_Sensor%d",i_sensor);
+    p_mFstPedMap[i_sensor] = (TProfile2D*)File_InPut->Get(HistName.c_str());
+    HistName = Form("p_mFstSigMap_Sensor%d",i_sensor);
+    p_mFstSigMap[i_sensor] = (TProfile2D*)File_InPut->Get(HistName.c_str());
     HistName = Form("h_mFstHitsMaxTb_Sensor%d",i_sensor);
     h_mFstHitsMaxTb[i_sensor] = (TH1F*)File_InPut->Get(HistName.c_str());
     HistName = Form("h_mFstHitsSignal_Sensor%d",i_sensor);
@@ -90,10 +98,20 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
     h_mFstHitsNoise[i_sensor] = (TH1F*)File_InPut->Get(HistName.c_str());
     HistName = Form("h_mFstHitsSNRatio_Sensor%d",i_sensor);
     h_mFstHitsSNRatio[i_sensor] = (TH1F*)File_InPut->Get(HistName.c_str());
+
     HistName = Form("h_mFstSimpleClustersSignal_Sensor%d",i_sensor);
     h_mFstSimpleClustersSignal[i_sensor] = (TH1F*)File_InPut->Get(HistName.c_str());
+    HistName = Form("h_mFstSimpleClustersNoise_Sensor%d",i_sensor);
+    h_mFstSimpleClustersNoise[i_sensor] = (TH1F*)File_InPut->Get(HistName.c_str());
+    HistName = Form("h_mFstSimpleClustersSNRatio_Sensor%d",i_sensor);
+    h_mFstSimpleClustersSNRatio[i_sensor] = (TH1F*)File_InPut->Get(HistName.c_str());
+
     HistName = Form("h_mFstScanClustersSignal_Sensor%d",i_sensor);
     h_mFstScanClustersSignal[i_sensor] = (TH1F*)File_InPut->Get(HistName.c_str());
+    HistName = Form("h_mFstScanClustersNoise_Sensor%d",i_sensor);
+    h_mFstScanClustersNoise[i_sensor] = (TH1F*)File_InPut->Get(HistName.c_str());
+    HistName = Form("h_mFstScanClustersSNRatio_Sensor%d",i_sensor);
+    h_mFstScanClustersSNRatio[i_sensor] = (TH1F*)File_InPut->Get(HistName.c_str());
 
     for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
     {
@@ -163,25 +181,25 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
   c_Signal->Print(output_start.c_str()); // open pdf file
 
   c_Signal->cd(1);
-  p_mPedMap_FST->SetTitle("Pedestal");
-  p_mPedMap_FST->SetStats(0);
-  p_mPedMap_FST->GetXaxis()->SetTitle("R");
-  p_mPedMap_FST->GetYaxis()->SetTitle("#phi");
-  p_mPedMap_FST->GetXaxis()->SetTitleSize(0.06);
-  p_mPedMap_FST->GetYaxis()->SetTitleSize(0.06);
-  p_mPedMap_FST->Draw("colz");
+  p_mFstPedMap[sensorId]->SetTitle("Pedestal");
+  p_mFstPedMap[sensorId]->SetStats(0);
+  p_mFstPedMap[sensorId]->GetXaxis()->SetTitle("R");
+  p_mFstPedMap[sensorId]->GetYaxis()->SetTitle("#phi");
+  p_mFstPedMap[sensorId]->GetXaxis()->SetTitleSize(0.06);
+  p_mFstPedMap[sensorId]->GetYaxis()->SetTitleSize(0.06);
+  p_mFstPedMap[sensorId]->Draw("colz");
 
   c_Signal->cd(2);
-  p_mSigMap_FST->SetTitle("Signal");
-  p_mSigMap_FST->SetStats(0);
-  p_mSigMap_FST->GetXaxis()->SetTitle("R");
-  p_mSigMap_FST->GetYaxis()->SetTitle("#phi");
-  p_mSigMap_FST->GetXaxis()->SetTitleSize(0.06);
-  p_mSigMap_FST->GetYaxis()->SetTitleSize(0.06);
-  p_mSigMap_FST->Draw("colz");
+  p_mFstSigMap[sensorId]->SetTitle("Signal");
+  p_mFstSigMap[sensorId]->SetStats(0);
+  p_mFstSigMap[sensorId]->GetXaxis()->SetTitle("R");
+  p_mFstSigMap[sensorId]->GetYaxis()->SetTitle("#phi");
+  p_mFstSigMap[sensorId]->GetXaxis()->SetTitleSize(0.06);
+  p_mFstSigMap[sensorId]->GetYaxis()->SetTitleSize(0.06);
+  p_mFstSigMap[sensorId]->Draw("colz");
 
   c_Signal->cd(3);
-  h_mFstHitsSignal[sensorId]->SetTitle("Signal of Hits");
+  h_mFstHitsSignal[sensorId]->SetTitle("Signal of Seeds");
   h_mFstHitsSignal[sensorId]->GetXaxis()->SetTitle("ADC");
   h_mFstHitsSignal[sensorId]->GetXaxis()->SetTitleSize(0.06);
   h_mFstHitsSignal[sensorId]->Draw("HIST");
@@ -203,16 +221,27 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
   leg->Draw("same");
 
   c_Signal->cd(5);
-  h_mFstHitsNoise[sensorId]->SetTitle("Noise");
+  h_mFstHitsNoise[sensorId]->SetTitle("Noise of Seeds");
   h_mFstHitsNoise[sensorId]->GetXaxis()->SetTitle("ADC");
   h_mFstHitsNoise[sensorId]->GetXaxis()->SetTitleSize(0.06);
+  h_mFstHitsNoise[sensorId]->SetLineColor(1);
   h_mFstHitsNoise[sensorId]->Draw("HIST");
+  // h_mFstSimpleClustersNoise[sensorId]->SetTitle("Clusters Noise");
+  // h_mFstSimpleClustersNoise[sensorId]->GetXaxis()->SetTitle("ADC");
+  // h_mFstSimpleClustersNoise[sensorId]->GetXaxis()->SetTitleSize(0.06);
+  // h_mFstSimpleClustersNoise[sensorId]->SetLineColor(1);
+  // h_mFstSimpleClustersNoise[sensorId]->Draw("HIST");
+  // h_mFstScanClustersNoise[sensorId]->SetLineColor(2);
+  // h_mFstScanClustersNoise[sensorId]->Draw("HIST same");
 
   c_Signal->cd(6);
-  h_mFstHitsSNRatio[sensorId]->SetTitle("Signal/Noise of Hits");
-  h_mFstHitsSNRatio[sensorId]->GetXaxis()->SetTitle("Signal/Noise");
-  h_mFstHitsSNRatio[sensorId]->GetXaxis()->SetTitleSize(0.06);
-  h_mFstHitsSNRatio[sensorId]->Draw("HIST");
+  h_mFstSimpleClustersSNRatio[sensorId]->SetTitle("Signal/Noise of Clusters");
+  h_mFstSimpleClustersSNRatio[sensorId]->GetXaxis()->SetTitle("Signal/Noise");
+  h_mFstSimpleClustersSNRatio[sensorId]->GetXaxis()->SetTitleSize(0.06);
+  h_mFstSimpleClustersSNRatio[sensorId]->SetLineColor(1);
+  h_mFstSimpleClustersSNRatio[sensorId]->Draw("HIST");
+  h_mFstScanClustersSNRatio[sensorId]->SetLineColor(2);
+  h_mFstScanClustersSNRatio[sensorId]->Draw("HIST same");
 
   c_Signal->Update();
   c_Signal->Print(outputname.c_str());
