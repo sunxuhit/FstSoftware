@@ -1278,6 +1278,21 @@ void FstTracking::calEfficiency_Hits(FstEvent *fstEvent)
     {
       if(r_proj >= FST::rMin[i_sensor] && r_proj <= FST::rMax[i_sensor] && phi_proj >= FST::phiMin[i_sensor] && phi_proj <= FST::phiMax[i_sensor])
       { // used for efficiency only if the projected position is within FST acceptance
+	int rStrip = -1;
+	if(r_proj > FST::rMin[i_sensor] && r_proj <= FST::mFstRMin[i_sensor]) rStrip = 0;
+	for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
+	{
+	  double rStart = FST::rInner + i_rstrip*FST::pitchR;
+	  double rStop  = FST::rInner + (i_rstrip+1)*FST::pitchR;
+	  if(i_sensor > 0) rStart = FST::rOuter + i_rstrip*FST::pitchR;
+	  if(i_sensor > 0) rStop  = FST::rOuter + (i_rstrip+1)*FST::pitchR;
+	  if(r_proj > rStart && r_proj <= rStop)
+	  { // check the position of the projected r is within a specific r_strip and fill accordingly
+	    rStrip = i_rstrip;
+	  }
+	}
+	if(r_proj > FST::mFstRMax[i_sensor] && r_proj <= FST::rMax[i_sensor]) rStrip = 3;
+
 	for(int i_match = 0; i_match < FST::mFstNumMatching; ++i_match)
 	{
 	  h_mHitsTrackIstCounts[i_sensor][i_match]->Fill(r_proj,phi_proj);
@@ -1292,8 +1307,7 @@ void FstTracking::calEfficiency_Hits(FstEvent *fstEvent)
 	      {
 		nMatchedTrack++;
 	      }
-	      if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-	      // if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
+	      if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= FST::phiMatchCut[i_sensor][rStrip])
 	      {
 		nMatchedTrack++;
 	      }
@@ -1411,6 +1425,21 @@ void FstTracking::calEfficiency_SimpleClusters(FstEvent *fstEvent)
 	{
 	  if(r_proj >= FST::rMin[i_sensor] && r_proj <= FST::rMax[i_sensor] && phi_proj >= FST::phiMin[i_sensor] && phi_proj <= FST::phiMax[i_sensor])
 	  { // used for efficiency only if the projected position is within FST acceptance
+	    int rStrip = -1;
+	    if(r_proj > FST::rMin[i_sensor] && r_proj <= FST::mFstRMin[i_sensor]) rStrip = 0;
+	    for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
+	    {
+	      double rStart = FST::rInner + i_rstrip*FST::pitchR;
+	      double rStop  = FST::rInner + (i_rstrip+1)*FST::pitchR;
+	      if(i_sensor > 0) rStart = FST::rOuter + i_rstrip*FST::pitchR;
+	      if(i_sensor > 0) rStop  = FST::rOuter + (i_rstrip+1)*FST::pitchR;
+	      if(r_proj > rStart && r_proj <= rStop)
+	      { // check the position of the projected r is within a specific r_strip and fill accordingly
+		rStrip = i_rstrip;
+	      }
+	    }
+	    if(r_proj > FST::mFstRMax[i_sensor] && r_proj <= FST::rMax[i_sensor]) rStrip = 3;
+
 	    for(int i_match = 0; i_match < FST::mFstNumMatching; ++i_match)
 	    {
 	      h_mSimpleClustersTrackIstCounts_2Layer[i_sensor][i_match]->Fill(r_proj,phi_proj);
@@ -1427,8 +1456,7 @@ void FstTracking::calEfficiency_SimpleClusters(FstEvent *fstEvent)
 		    {
 		      nMatchedTrack++;
 		    }
-		    if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-		    // if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
+		    if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= FST::phiMatchCut[i_sensor][rStrip])
 		    {
 		      nMatchedTrack++;
 		    }
@@ -1482,6 +1510,21 @@ void FstTracking::calEfficiency_SimpleClusters(FstEvent *fstEvent)
 	    {
 	      if(r_proj >= FST::rMin[i_sensor] && r_proj <= FST::rMax[i_sensor] && phi_proj >= FST::phiMin[i_sensor] && phi_proj <= FST::phiMax[i_sensor])
 	      { // used for efficiency only if the projected position is within FST acceptance
+		int rStrip = -1;
+		if(r_proj > FST::rMin[i_sensor] && r_proj <= FST::mFstRMin[i_sensor]) rStrip = 0;
+		for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
+		{
+		  double rStart = FST::rInner + i_rstrip*FST::pitchR;
+		  double rStop  = FST::rInner + (i_rstrip+1)*FST::pitchR;
+		  if(i_sensor > 0) rStart = FST::rOuter + i_rstrip*FST::pitchR;
+		  if(i_sensor > 0) rStop  = FST::rOuter + (i_rstrip+1)*FST::pitchR;
+		  if(r_proj > rStart && r_proj <= rStop)
+		  { // check the position of the projected r is within a specific r_strip and fill accordingly
+		    rStrip = i_rstrip;
+		  }
+		}
+		if(r_proj > FST::mFstRMax[i_sensor] && r_proj <= FST::rMax[i_sensor]) rStrip = 3;
+
 		for(int i_match = 0; i_match < FST::mFstNumMatching; ++i_match)
 		{
 		  h_mSimpleClustersTrackIstCounts_3Layer[i_sensor][i_match]->Fill(r_proj,phi_proj);
@@ -1498,8 +1541,7 @@ void FstTracking::calEfficiency_SimpleClusters(FstEvent *fstEvent)
 			{
 			  nMatchedTrack++;
 			}
-			if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-			// if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
+			if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= FST::phiMatchCut[i_sensor][rStrip])
 			{
 			  nMatchedTrack++;
 			}
@@ -1576,6 +1618,21 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
 	{
 	  if(r_proj >= FST::rMin[i_sensor] && r_proj <= FST::rMax[i_sensor] && phi_proj >= FST::phiMin[i_sensor] && phi_proj <= FST::phiMax[i_sensor])
 	  { // used for efficiency only if the projected position is within FST acceptance
+	    int rStrip = -1;
+	    if(r_proj > FST::rMin[i_sensor] && r_proj <= FST::mFstRMin[i_sensor]) rStrip = 0;
+	    for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
+	    {
+	      double rStart = FST::rInner + i_rstrip*FST::pitchR;
+	      double rStop  = FST::rInner + (i_rstrip+1)*FST::pitchR;
+	      if(i_sensor > 0) rStart = FST::rOuter + i_rstrip*FST::pitchR;
+	      if(i_sensor > 0) rStop  = FST::rOuter + (i_rstrip+1)*FST::pitchR;
+	      if(r_proj > rStart && r_proj <= rStop)
+	      { // check the position of the projected r is within a specific r_strip and fill accordingly
+		rStrip = i_rstrip;
+	      }
+	    }
+	    if(r_proj > FST::mFstRMax[i_sensor] && r_proj <= FST::rMax[i_sensor]) rStrip = 3;
+
 	    for(int i_match = 0; i_match < FST::mFstNumMatching; ++i_match)
 	    {
 	      h_mScanClustersTrackIstCounts_2Layer[i_sensor][i_match]->Fill(r_proj,phi_proj);
@@ -1592,8 +1649,7 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
 		    {
 		      nMatchedTrack++;
 		    }
-		    if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-		    // if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
+		    if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= FST::phiMatchCut[i_sensor][rStrip])
 		    {
 		      nMatchedTrack++;
 		    }
@@ -1649,6 +1705,21 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
 	      { // used for efficiency only if the projected position is within FST acceptance
 		for(int i_match = 0; i_match < FST::mFstNumMatching; ++i_match)
 		{
+		  int rStrip = -1;
+		  if(r_proj > FST::rMin[i_sensor] && r_proj <= FST::mFstRMin[i_sensor]) rStrip = 0;
+		  for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
+		  {
+		    double rStart = FST::rInner + i_rstrip*FST::pitchR;
+		    double rStop  = FST::rInner + (i_rstrip+1)*FST::pitchR;
+		    if(i_sensor > 0) rStart = FST::rOuter + i_rstrip*FST::pitchR;
+		    if(i_sensor > 0) rStop  = FST::rOuter + (i_rstrip+1)*FST::pitchR;
+		    if(r_proj > rStart && r_proj <= rStop)
+		    { // check the position of the projected r is within a specific r_strip and fill accordingly
+		      rStrip = i_rstrip;
+		    }
+		  }
+		  if(r_proj > FST::mFstRMax[i_sensor] && r_proj <= FST::rMax[i_sensor]) rStrip = 3;
+
 		  h_mScanClustersTrackIstCounts_3Layer[i_sensor][i_match]->Fill(r_proj,phi_proj);
 		  int nMatchedTrack = 0;
 		  if(clusterVec_fst[i_sensor].size() > 0)
@@ -1663,8 +1734,7 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
 			{
 			  nMatchedTrack++;
 			}
-			if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 3.0*FST::pitchPhi)
-			// if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= 6.0*FST::pitchPhi)
+			if(i_match > 0 && abs(r_fst-r_proj) <= i_match*0.5*FST::pitchR && abs(phi_fst-phi_proj) <= FST::phiMatchCut[i_sensor][rStrip])
 			{
 			  nMatchedTrack++;
 			}

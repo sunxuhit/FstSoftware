@@ -15,7 +15,7 @@ void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosF
 void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TF1 *f_TrackAngle, bool isRot, int rAligned, double deltaX, double deltaY); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
 TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot, int rAligned, double deltaX, double deltaY); // get projected position on FST from IST1 & IST3 | return (r,phi) for FST
 TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST, int sensorId); // get readout position from a real hit | return (x,y) for IST & (r,phi) for FST
-int findCrossTalkBin(double r_hit);
+int findCrossTalkBin(double r_hit, int sensorId);
 
 void FstMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, int numOfTracks = 500000)
 {
@@ -526,7 +526,7 @@ TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST, int sensorId)
     if(r_hit >= FST::mFstRMin[sensorId] && r_hit <= FST::mFstRMax[sensorId] && phi_hit >= FST::mFstPhiMin[sensorId] && phi_hit <= FST::mFstPhiMax[sensorId])
     {
       int deltaBinR = 0;
-      if(sensorId > 0) deltaBinR = findCrossTalkBin(r_hit);
+      if(sensorId > -1) deltaBinR = findCrossTalkBin(r_hit,sensorId);
       int binR      = h_pixel->GetXaxis()->FindBin(r_hit);
       int binPhi    = h_pixel->GetYaxis()->FindBin(phi_hit);
       r_ro          = h_pixel->GetXaxis()->GetBinCenter(binR+deltaBinR);
@@ -539,7 +539,7 @@ TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST, int sensorId)
   return vPosRO;
 }
 
-int findCrossTalkBin(double r_hit)
+int findCrossTalkBin(double r_hit, int sensorId)
 {
   // const double ctRate[4][7] = { 
   //   {0.0000, 0.0000, 0.0000, 0.9024, 0.9595, 0.9807, 1.0000}, 
@@ -549,11 +549,16 @@ int findCrossTalkBin(double r_hit)
   // };
 
   const double ctRate[4][7] = { 
-    {0.0000, 0.0000, 0.0000, 0.8771, 0.9800, 0.9905, 0.9990},
-    {0.0000, 0.0000, 0.1343, 0.9141, 0.9889, 1.0000, 1.0000},
-    {0.0000, 0.0371, 0.1886, 0.9274, 0.9985, 1.0000, 1.0000},
-    {0.0415, 0.2166, 0.3871, 1.0000, 1.0000, 1.0000, 1.0000}
+    // {0.0000, 0.0000, 0.0000, 0.8771, 0.9800, 0.9905, 0.9990},
+    // {0.0000, 0.0000, 0.1343, 0.9141, 0.9889, 1.0000, 1.0000},
+    // {0.0000, 0.0371, 0.1886, 0.9274, 0.9985, 1.0000, 1.0000},
+    // {0.0415, 0.2166, 0.3871, 1.0000, 1.0000, 1.0000, 1.0000}
+    {0.0000, 0.0000, 0.0000, 0.7419, 0.9413, 0.9775, 1.0000},
+    {0.0000, 0.0000, 0.0247, 0.8769, 0.9804, 0.9995, 1.0000},
+    {0.0000, 0.0052, 0.0667, 0.8712, 0.9984, 1.0000, 1.0000},
+    {0.0095, 0.0638, 0.1465, 0.9799, 1.0000, 1.0000, 1.0000}
   };
+
 
   const int deltaBin[7] = {-3, -2, -1, 0, 1, 2, 3};
   // for(int i_rstrp = 0; i_rstrp < 4; ++i_rstrp)
@@ -564,11 +569,11 @@ int findCrossTalkBin(double r_hit)
   double ran = gRandom->Uniform(0.0,1.0);
 
   int rstrip = -999;
-  if(r_hit >= FST::rOuter && r_hit < FST::rOuter+4.0*FST::pitchR)
+  if(r_hit >= FST::mFstRMin[sensorId] && r_hit <= FST::mFstRMax[sensorId])
   {
     for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
     {
-      if(r_hit >= FST::rOuter+i_rstrip*FST::pitchR && r_hit < FST::rOuter+(i_rstrip+1)*FST::pitchR)
+      if(r_hit >= FST::mFstRMin[sensorId]+i_rstrip*FST::pitchR && r_hit < FST::mFstRMin[sensorId]+(i_rstrip+1)*FST::pitchR)
       {
 	rstrip = i_rstrip;
       }

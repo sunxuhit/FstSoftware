@@ -41,6 +41,7 @@ namespace FST
   const double rMin[mFstNumSensorsPerModule]   = {rInner-1.0*pitchR, rOuter-1.0*pitchR, rOuter-1.0*pitchR}; // mFstRMin - 1.0*pitchR
   const double phiMax[mFstNumSensorsPerModule] = {TMath::Pi()*15.0/180.0+10*pitchPhi, TMath::Pi()*15.0/180.0+0.5*gapPhi+10*pitchPhi, -0.5*gapPhi+10*pitchPhi}; // mFstPhiMax + 10.0*pitchPhi
   const double phiMin[mFstNumSensorsPerModule] = {-TMath::Pi()*15.0/180.0-10*pitchPhi, 0.5*gapPhi-10*pitchPhi, -TMath::Pi()*15.0/180.0-0.5*gapPhi-10*pitchPhi}; // mFstPhiMin - 10.0*pitchPhi
+  const double phiMatchCut[mFstNumSensorsPerModule][mFstNumRstripPerSensor] = {{0.04,0.03,0.02,0.02},{0.02,0.015,0.01,0.01},{0.02,0.015,0.01,0.01}};
 
   // IST Cosmic Test Stand Geometry
   const int noRows          = 64; // for one group of sensors
@@ -66,14 +67,14 @@ namespace FST
   // const double y2_shift     = 33.5658;
   // const double pitchLayer03 = 134.9375+23.3257; // mm
 
-  // const double phi_rot_ist2 = 3.16555; // module 3 sensor 0
-  // const double x2_shift     = 216.997;
-  // const double y2_shift     = 33.6829;
-  // const double pitchLayer03 = 134.9375+23.1678;
-  const double phi_rot_ist2 = 3.16037; // module 3 sensor 1
-  const double x2_shift     = 220.998;
-  const double y2_shift     = 34.2155;
-  const double pitchLayer03 = 134.9375+10.7764;
+  const double phi_rot_ist2 = 3.16555; // module 3 sensor 0
+  const double x2_shift     = 216.997;
+  const double y2_shift     = 33.6829;
+  const double pitchLayer03 = 134.9375+23.1678;
+  // const double phi_rot_ist2 = 3.16037; // module 3 sensor 1
+  // const double x2_shift     = 220.998;
+  // const double y2_shift     = 34.2155;
+  // const double pitchLayer03 = 134.9375+10.7764;
   // const double phi_rot_ist2 = 3.1592; // module 3 sensor 2
   // const double x2_shift     = 221.685;
   // const double y2_shift     = 33.8473;
