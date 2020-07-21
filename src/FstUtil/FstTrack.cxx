@@ -26,6 +26,10 @@ void FstTrack::setTrackType(int trackType)
 {
   mTrackType = trackType;
 }
+void FstTrack::setSensorId(int sensorId)
+{
+  mSensorId = sensorId;
+}
 void FstTrack::setId(int layer, int id)
 {
   mId[layer] = id;
@@ -53,6 +57,10 @@ int FstTrack::getTrackType() const
 {
   return mTrackType;
 }
+int FstTrack::getSensorId() const
+{
+  return mSensorId;
+}
 int FstTrack::getId(int layer) const
 {
   return mId[layer];
@@ -74,6 +82,7 @@ void FstTrack::Print() const
 {
   cout << "mTrackId = " << mTrackId << endl;
   cout << "mTrackType = " << mTrackType << endl;
+  cout << "mSensorId = " << mSensorId << endl;
 
   for(int i_layer = 0; i_layer < 4; ++i_layer)
   {
@@ -92,6 +101,7 @@ void FstTrack::Clear()
 {
   mTrackId = -1;
   mTrackType = -1;
+  mSensorId = -1;
 
   for(int i_layer = 0; i_layer < 4; ++i_layer)
   {

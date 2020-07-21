@@ -9,6 +9,7 @@ class FstTrack : public TObject
   private:
     int mTrackId; // 0 => reconstructed from hits | 100 => reconstructed from simple cluster | 200 => reconstructed from scan cluster
     int mTrackType; // 0: reconstructed from hits | 1: reconstructed from simple cluster | 2: reconstructed from scan cluster
+    int mSensorId; // 0: projected to FST sensor 0 | 1: projected to FST sensor 1 | 2: projected to FST sensor 2
 
     int mId[4]; // track/cluster Id for each layer
     TVector3 mPosition[4]; // measured position on each layer: 0 for FST | 1-3 for IST
@@ -21,6 +22,7 @@ class FstTrack : public TObject
 
     void setTrackId(int trackId);
     void setTrackType(int trackType);
+    void setSensorId(int sensorId);
     void setId(int layer, int id);
     void setPosition(int layer, TVector3 pos);
     void setProjection(int layer, TVector3 pos);
@@ -28,6 +30,7 @@ class FstTrack : public TObject
 
     int getTrackId() const;
     int getTrackType() const;
+    int getSensorId() const;
     int getId(int layer) const;
     TVector3 getPosition(int layer) const;
     TVector3 getProjection(int layer) const; // r&phi for FST, x&y before aligned to FST for IST2

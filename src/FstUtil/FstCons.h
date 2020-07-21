@@ -23,6 +23,7 @@ namespace FST
   const double pitchR       = 28.75; // mm | (280-165)/4.0
   const double pitchPhi     = TMath::Pi()*30.0/180.0/numPhiSeg; // rad | 30 degree with 128 segmentations
   const double gapPhi       = TMath::Pi()*1.0/180.0; // 1 degree gap between 2 outer sensor
+  const double pitchLayer03 = 134.9375;
 
   // FST Clustering
   const int mFstNumSensorsPerModule = 3; // 0 for APV 0-3(1-4) on inner sector | 1 for APV 4&5(5&6) on outer sector | 2 for APV 6&7(7&8) on outer sector
@@ -62,15 +63,18 @@ namespace FST
   // const double x2_shift     = 141.268; 
   // const double y2_shift     = -19.7014;
   // const double pitchLayer03 = 134.9375+0.644155; // mm
-  // const double phi_rot_ist2 = 3.16612; // for Inner sector test
-  // const double x2_shift     = 216.606;
-  // const double y2_shift     = 33.5658;
-  // const double pitchLayer03 = 134.9375+23.3257; // mm
 
-  const double phi_rot_ist2 = 3.16555; // module 3 sensor 0
-  const double x2_shift     = 216.997;
-  const double y2_shift     = 33.6829;
-  const double pitchLayer03 = 134.9375+23.1678;
+  // alignment from IST2 to each sensor of FST03
+  const int mDefSenorId = 0; // default FST sensor for alignment (phi_rot, x_shift and y_shift | z_shift is from the sensorId to be aligned)
+  const double phi_rot[mFstNumSensorsPerModule] = {3.16555, 3.16037, 3.15920};
+  const double x_shift[mFstNumSensorsPerModule] = {216.997, 220.998, 221.685};
+  const double y_shift[mFstNumSensorsPerModule] = {33.6829, 34.2155, 33.8473};
+  const double z_shift[mFstNumSensorsPerModule] = {23.1678, 10.7764, 11.8905};
+
+  // const double phi_rot_ist2 = 3.16555; // module 3 sensor 0
+  // const double x2_shift     = 216.997;
+  // const double y2_shift     = 33.6829;
+  // const double pitchLayer03 = 134.9375+23.1678;
   // const double phi_rot_ist2 = 3.16037; // module 3 sensor 1
   // const double x2_shift     = 220.998;
   // const double y2_shift     = 34.2155;
