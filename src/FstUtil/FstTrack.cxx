@@ -26,27 +26,38 @@ void FstTrack::setTrackType(int trackType)
 {
   mTrackType = trackType;
 }
-void FstTrack::setSensorId(int sensorId)
+void FstTrack::setIdIst1(int id)
 {
-  mSensorId = sensorId;
+  mIdIst1 = id;
 }
-void FstTrack::setId(int layer, int id)
+void FstTrack::setOrigPosIst1(TVector3 pos)
 {
-  mId[layer] = id;
+  mOrigPosIst1.SetXYZ(pos.X(),pos.Y(),pos.Z());
 }
-void FstTrack::setPosition(int layer, TVector3 pos)
+void FstTrack::setAlignedIst1(TVector3 pos)
 {
-  mPosition[layer].SetXYZ(pos.X(),pos.Y(),pos.Z());
+  mAlignedIst1.SetXYZ(pos.X(),pos.Y(),pos.Z());
 }
-void FstTrack::setProjection(int layer, TVector3 pos)
+void FstTrack::setIdIst3(int id)
 {
-  mProjection[layer].SetXYZ(pos.X(),pos.Y(),pos.Z());
+  mIdIst3 = id;
 }
-void FstTrack::setPosOrig(int layer, TVector3 pos)
+void FstTrack::setOrigPosIst3(TVector3 pos)
 {
-  mPosOrig[layer].SetXYZ(pos.X(),pos.Y(),pos.Z());
+  mOrigPosIst3.SetXYZ(pos.X(),pos.Y(),pos.Z());
 }
-
+void FstTrack::setAlignedIst3(TVector3 pos)
+{
+  mAlignedIst3.SetXYZ(pos.X(),pos.Y(),pos.Z());
+}
+void FstTrack::setProjIst2(TVector3 pos)
+{
+  mProjIst2.SetXYZ(pos.X(),pos.Y(),pos.Z());
+}
+void FstTrack::setProjFst(int sensorId, TVector3 pos)
+{
+  mProjFst[sensorId].SetXYZ(pos.X(),pos.Y(),pos.Z());
+}
 
 // accessors
 int FstTrack::getTrackId() const
@@ -57,43 +68,61 @@ int FstTrack::getTrackType() const
 {
   return mTrackType;
 }
-int FstTrack::getSensorId() const
+int FstTrack::getIdIst1() const
 {
-  return mSensorId;
+  return mIdIst1;
 }
-int FstTrack::getId(int layer) const
+TVector3 FstTrack::getOrigPosIst1() const
 {
-  return mId[layer];
+  return mOrigPosIst1;
 }
-TVector3 FstTrack::getPosition(int layer) const
+TVector3 FstTrack::getAlignedIst1() const
 {
-  return mPosition[layer];
+  return mAlignedIst1;
 }
-TVector3 FstTrack::getProjection(int layer) const
+int FstTrack::getIdIst3() const
 {
-  return mProjection[layer];
+  return mIdIst3;
 }
-TVector3 FstTrack::getPosOrig(int layer) const
+TVector3 FstTrack::getOrigPosIst3() const
 {
-  return mPosOrig[layer];
+  return mOrigPosIst3;
+}
+TVector3 FstTrack::getAlignedIst3() const
+{
+  return mAlignedIst3;
+}
+TVector3 FstTrack::getProjIst2() const
+{
+  return mProjIst2;
+}
+TVector3 FstTrack::getProjFst(int sensorId) const
+{
+  return mProjFst[sensorId];
 }
 //------------------------------------------
 void FstTrack::Print() const
 {
   cout << "mTrackId = " << mTrackId << endl;
   cout << "mTrackType = " << mTrackType << endl;
-  cout << "mSensorId = " << mSensorId << endl;
 
-  for(int i_layer = 0; i_layer < 4; ++i_layer)
+  cout << "Ist1: " << endl;
+  cout << "mIdIst1 = " << mIdIst1 << endl;
+  cout << "Original Ist1 X = " << mOrigPosIst1.X() << ", Y = " << mOrigPosIst1.Y() << ", Z = " << mOrigPosIst1.Z() << endl;;
+  cout << "Aligned  Ist1 X = " << mAlignedIst1.X() << ", Y = " << mAlignedIst1.Y() << ", Z = " << mAlignedIst1.Z() << endl;;
+
+  cout << "Ist3: " << endl;
+  cout << "mIdIst3 = " << mIdIst1 << endl;
+  cout << "Original Ist3 X = " << mOrigPosIst1.X() << ", Y = " << mOrigPosIst1.Y() << ", Z = " << mOrigPosIst1.Z() << endl;;
+  cout << "Aligned  Ist3 X = " << mAlignedIst1.X() << ", Y = " << mAlignedIst1.Y() << ", Z = " << mAlignedIst1.Z() << endl;;
+
+  cout << "Projection in IST2: " << endl;
+  cout << "Projection X = " << mProjIst2.X() << ", Y = " << mProjIst2.Y() << ", Z = " << mProjIst2.Z() << endl;;
+
+  cout << "Projection in FST: " << endl;
+  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
   {
-    cout << "layer = " << i_layer << ", Hit/Cluster Id is: " << mId[i_layer] << endl;
-    cout << "layer = " << i_layer << ", Hit/Cluster ReadOut Position =>" << endl; 
-    cout << "X = " << mPosition[i_layer].X() << ", Y = " << mPosition[i_layer].Y() << ", Z = " << mPosition[i_layer].Z() << endl;;
-    if(i_layer == 0 || i_layer == 2)
-    {
-      cout << "layer = " << i_layer << ", Hit/Cluster Projected Position =>" << endl; 
-      cout << "X = " << mProjection[i_layer].X() << ", Y = " << mProjection[i_layer].Y() << ", Z = " << mProjection[i_layer].Z() << endl;;
-    }
+    cout << "i_sensor = " << i_sensor << "Projection X = " << mProjFst[i_sensor].X() << ", Y = " << mProjFst[i_sensor].Y() << ", Z = " << mProjFst[i_sensor].Z() << endl;;
   }
 }
 
@@ -101,14 +130,17 @@ void FstTrack::Clear()
 {
   mTrackId = -1;
   mTrackType = -1;
-  mSensorId = -1;
 
-  for(int i_layer = 0; i_layer < 4; ++i_layer)
+  mIdIst1 = -1;
+  mOrigPosIst1.SetXYZ(-999.9,-999.9,-999.9); 
+  mAlignedIst1.SetXYZ(-999.9,-999.9,-999.9);
+  mIdIst3 = -1;
+  mOrigPosIst3.SetXYZ(-999.9,-999.9,-999.9);
+  mAlignedIst3.SetXYZ(-999.9,-999.9,-999.9);
+  mProjIst2.SetXYZ(-999.9,-999.9,-999.9);
+  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
   {
-    mId[i_layer] = -1;
-    mPosition[i_layer].SetXYZ(-999.9,-999.9,-999.9);
-    mProjection[i_layer].SetXYZ(-999.9,-999.9,-999.9);
-    mPosOrig[i_layer].SetXYZ(-999.9,-999.9,-999.9);
+    mProjFst[i_sensor].SetXYZ(-999.9,-999.9,-999.9);
   }
 }
 //------------------------------------------

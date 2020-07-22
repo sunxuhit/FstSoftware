@@ -194,7 +194,7 @@ class FstTracking : public TObject
     FstTrack *mFstTrack;
 
     // Utility for tracking
-    TVector3 getAlignedFST(TVector3 vPosFst, int sensorId); // get alignmed sensorId w.r.t. IST2 then to mDefSenorId
+    TVector2 getFstAlignedPos(TVector2 vPosFst, int sensorId); // get alignmed sensorId w.r.t. IST2 then to mDefSenorId
 
     ClassDef(FstTracking,1)
 };

@@ -798,13 +798,16 @@ int FstClusterMaker::Make()
 	mFstTrack = mFstEvent->createTrack();
 	mFstTrack->setTrackId(fstTrackVec_Hits[i_track]->getTrackId());
 	mFstTrack->setTrackType(fstTrackVec_Hits[i_track]->getTrackType());
-	mFstTrack->setSensorId(fstTrackVec_Hits[i_track]->getSensorId());
-	for(int i_layer = 0; i_layer < 4; ++i_layer)
+	mFstTrack->setIdIst1(fstTrackVec_Hits[i_track]->getIdIst1());
+	mFstTrack->setOrigPosIst1(fstTrackVec_Hits[i_track]->getOrigPosIst1());
+	mFstTrack->setAlignedIst1(fstTrackVec_Hits[i_track]->getAlignedIst1());
+	mFstTrack->setIdIst3(fstTrackVec_Hits[i_track]->getIdIst3());
+	mFstTrack->setOrigPosIst3(fstTrackVec_Hits[i_track]->getOrigPosIst3());
+	mFstTrack->setAlignedIst3(fstTrackVec_Hits[i_track]->getAlignedIst3());
+	mFstTrack->setProjIst2(fstTrackVec_Hits[i_track]->getProjIst2());
+	for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
 	{
-	  mFstTrack->setId(i_layer, fstTrackVec_Hits[i_track]->getId(i_layer));
-	  mFstTrack->setPosition(i_layer, fstTrackVec_Hits[i_track]->getPosition(i_layer));
-	  mFstTrack->setProjection(i_layer, fstTrackVec_Hits[i_track]->getProjection(i_layer));
-	  mFstTrack->setPosOrig(i_layer, fstTrackVec_Hits[i_track]->getPosOrig(i_layer));
+	  mFstTrack->setProjFst(i_sensor, fstTrackVec_Hits[i_track]->getProjFst(i_sensor));
 	}
       }
       mFstEvent->setNumRawHitTraks(fstTrackVec_Hits.size());
@@ -816,13 +819,16 @@ int FstClusterMaker::Make()
 	// if(mFstEvent->getNumTracks() > 30) continue; // only save first 30 tracks | will drop the event with more than 10 trakcs anyway
 	mFstTrack->setTrackId(fstTrackVec_Clusters[i_track]->getTrackId());
 	mFstTrack->setTrackType(fstTrackVec_Clusters[i_track]->getTrackType());
-	mFstTrack->setSensorId(fstTrackVec_Clusters[i_track]->getSensorId());
-	for(int i_layer = 0; i_layer < 4; ++i_layer)
+	mFstTrack->setIdIst1(fstTrackVec_Clusters[i_track]->getIdIst1());
+	mFstTrack->setOrigPosIst1(fstTrackVec_Clusters[i_track]->getOrigPosIst1());
+	mFstTrack->setAlignedIst1(fstTrackVec_Clusters[i_track]->getAlignedIst1());
+	mFstTrack->setIdIst3(fstTrackVec_Clusters[i_track]->getIdIst3());
+	mFstTrack->setOrigPosIst3(fstTrackVec_Clusters[i_track]->getOrigPosIst3());
+	mFstTrack->setAlignedIst3(fstTrackVec_Clusters[i_track]->getAlignedIst3());
+	mFstTrack->setProjIst2(fstTrackVec_Clusters[i_track]->getProjIst2());
+	for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
 	{
-	  mFstTrack->setId(i_layer, fstTrackVec_Clusters[i_track]->getId(i_layer));
-	  mFstTrack->setPosition(i_layer, fstTrackVec_Clusters[i_track]->getPosition(i_layer));
-	  mFstTrack->setProjection(i_layer, fstTrackVec_Clusters[i_track]->getProjection(i_layer));
-	  mFstTrack->setPosOrig(i_layer, fstTrackVec_Clusters[i_track]->getPosOrig(i_layer));
+	  mFstTrack->setProjFst(i_sensor, fstTrackVec_Clusters[i_track]->getProjFst(i_sensor));
 	}
       }
       mFstEvent->setNumClusterTraks(fstTrackVec_Clusters.size());
@@ -2412,6 +2418,26 @@ std::vector<FstTrack *> FstClusterMaker::findTrack_Hits(std::vector<FstRawHit *>
 	// vAlignedIst3.SetXYZ(x3_corr_FST,y3_corr_FST,z3_ist); // set aligned pos of hits on ist3
 	vAlignedIst3 = this->getIstAlignedPos(vPosIst3);
 
+	// double x2_proj = x3_corr_FST + (x1_corr_FST-x3_corr_FST)*z2_ist/z1_ist;
+	// double y2_proj = y3_corr_FST + (y1_corr_FST-y3_corr_FST)*z2_ist/z1_ist;
+	double x2_proj = x3_corr_IST + (x1_corr_IST-x3_corr_IST)*z2_ist/z1_ist;
+	double y2_proj = y3_corr_IST + (y1_corr_IST-y3_corr_IST)*z2_ist/z1_ist;
+	vProjIst2.SetXYZ(x2_proj,y2_proj,z2_ist); // x & y before aligned to FST
+
+	FstTrack *fstTrack = new FstTrack(); // generate a FstTrack when both ist1 and ist3 have a hit
+	fstTrack->Clear();
+	fstTrack->setTrackId(numOfTracks);
+	fstTrack->setTrackType(0);
+
+	// set IST1 & IST3 position projection on IST2
+	fstTrack->setIdIst1(rawHitVec[1][i_ist1]->getHitId());
+	fstTrack->setOrigPosIst1(vPosIst1_orig);
+	fstTrack->setAlignedIst1(vAlignedIst1); // aligned w.r.t. mDefSenorId
+	fstTrack->setIdIst3(rawHitVec[3][i_ist3]->getHitId());
+	fstTrack->setOrigPosIst3(vPosIst3_orig);
+	fstTrack->setAlignedIst3(vAlignedIst3);
+	fstTrack->setProjIst2(vProjIst2);
+
 	for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
 	{
 	  // double x0_proj = x3_corr_FST + (x1_corr_FST-x3_corr_FST)*z0_fst/z1_ist;
@@ -2421,38 +2447,13 @@ std::vector<FstTrack *> FstClusterMaker::findTrack_Hits(std::vector<FstRawHit *>
 	  // vProjFst.SetXYZ(r0_proj,phi0_proj,z0_fst); // r & phi for FST
 	  vProjFst = this->getIstProjection(vPosIst1, vPosIst3, i_sensor); // get aligned with mSensorId and projected to FST i_sensor
 
-	  // double x2_proj = x3_corr_FST + (x1_corr_FST-x3_corr_FST)*z2_ist/z1_ist;
-	  // double y2_proj = y3_corr_FST + (y1_corr_FST-y3_corr_FST)*z2_ist/z1_ist;
-	  double x2_proj = x3_corr_IST + (x1_corr_IST-x3_corr_IST)*z2_ist/z1_ist;
-	  double y2_proj = y3_corr_IST + (y1_corr_IST-y3_corr_IST)*z2_ist/z1_ist;
-	  vProjIst2.SetXYZ(x2_proj,y2_proj,z2_ist); // x & y before aligned to FST
-
-	  FstTrack *fstTrack = new FstTrack(); // generate a FstTrack when both ist1 and ist3 have a hit
-	  fstTrack->Clear();
-	  fstTrack->setTrackId(numOfTracks);
-	  fstTrack->setTrackType(0);
-	  fstTrack->setSensorId(i_sensor);
-
-	  // set position
-	  fstTrack->setId(1,rawHitVec[1][i_ist1]->getHitId());
-	  fstTrack->setPosition(1,vAlignedIst1); // aligned w.r.t. mDefSenorId
-	  fstTrack->setId(3,rawHitVec[3][i_ist3]->getHitId());
-	  fstTrack->setPosition(3,vAlignedIst3);
-
-	  // set projection
-	  fstTrack->setProjection(0,vProjFst);
-	  fstTrack->setProjection(2,vProjIst2);
-
-	  // set original position
-	  fstTrack->setPosOrig(1,vPosIst1_orig);
-	  fstTrack->setPosOrig(3,vPosIst3_orig);
-
-	  trackVec.push_back(fstTrack);
-
-	  // cout << "numOfTracks = " << numOfTracks << endl;
-	  // trackVec[numOfTracks]->Print();
-	  numOfTracks++;
+	  // set projection on FST
+	  fstTrack->setProjFst(i_sensor,vProjFst);
 	}
+	trackVec.push_back(fstTrack);
+	// cout << "numOfTracks = " << numOfTracks << endl;
+	// trackVec[numOfTracks]->Print();
+	numOfTracks++;
       }
     }
   }
@@ -2524,6 +2525,26 @@ std::vector<FstTrack *> FstClusterMaker::findTrack_Clusters(std::vector<FstClust
 	// vAlignedIst3.SetXYZ(x3_corr_FST,y3_corr_FST,z3_ist); // set aligned pos of hits on ist3
 	vAlignedIst3 = this->getIstAlignedPos(vPosIst3);
 
+	// double x2_proj = x3_corr_FST + (x1_corr_FST-x3_corr_FST)*z2_ist/z1_ist;
+	// double y2_proj = y3_corr_FST + (y1_corr_FST-y3_corr_FST)*z2_ist/z1_ist;
+	double x2_proj = x3_corr_IST + (x1_corr_IST-x3_corr_IST)*z2_ist/z1_ist;
+	double y2_proj = y3_corr_IST + (y1_corr_IST-y3_corr_IST)*z2_ist/z1_ist;
+	vProjIst2.SetXYZ(x2_proj,y2_proj,z2_ist); // x & y before aligned to FST
+
+	FstTrack *fstTrack = new FstTrack(); // generate a FstTrack when both ist1 and ist3 have a hit
+	fstTrack->Clear();
+	fstTrack->setTrackId(numOfTracks);
+	fstTrack->setTrackType(1);
+
+	// set IST1 & IST3 position projection on IST2
+	fstTrack->setIdIst1(clusterVec[1][i_ist1]->getClusterId());
+	fstTrack->setOrigPosIst1(vPosIst1_orig);
+	fstTrack->setAlignedIst1(vAlignedIst1); // aligned w.r.t. mDefSenorId
+	fstTrack->setIdIst3(clusterVec[3][i_ist3]->getClusterId());
+	fstTrack->setOrigPosIst3(vPosIst3_orig);
+	fstTrack->setAlignedIst3(vAlignedIst3); // aligned w.r.t. mDefSenorId
+	fstTrack->setProjIst2(vProjIst2);
+
 	for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
 	{
 	  // double x0_proj = x3_corr_FST + (x1_corr_FST-x3_corr_FST)*z0_fst/z1_ist;
@@ -2533,38 +2554,13 @@ std::vector<FstTrack *> FstClusterMaker::findTrack_Clusters(std::vector<FstClust
 	  // vProjFst.SetXYZ(r0_proj,phi0_proj,z0_fst); // r & phi for FST
 	  vProjFst = this->getIstProjection(vPosIst1, vPosIst3, i_sensor); // get aligned with mSensorId and projected to FST i_sensor
 
-	  // double x2_proj = x3_corr_FST + (x1_corr_FST-x3_corr_FST)*z2_ist/z1_ist;
-	  // double y2_proj = y3_corr_FST + (y1_corr_FST-y3_corr_FST)*z2_ist/z1_ist;
-	  double x2_proj = x3_corr_IST + (x1_corr_IST-x3_corr_IST)*z2_ist/z1_ist;
-	  double y2_proj = y3_corr_IST + (y1_corr_IST-y3_corr_IST)*z2_ist/z1_ist;
-	  vProjIst2.SetXYZ(x2_proj,y2_proj,z2_ist); // x & y before aligned to FST
-
-	  FstTrack *fstTrack = new FstTrack(); // generate a FstTrack when both ist1 and ist3 have a hit
-	  fstTrack->Clear();
-	  fstTrack->setTrackId(numOfTracks);
-	  fstTrack->setTrackType(1);
-	  fstTrack->setSensorId(i_sensor);
-
-	  // set position
-	  fstTrack->setId(1,clusterVec[1][i_ist1]->getClusterId());
-	  fstTrack->setPosition(1,vAlignedIst1); // aligned w.r.t. mDefSenorId
-	  fstTrack->setId(3,clusterVec[3][i_ist3]->getClusterId());
-	  fstTrack->setPosition(3,vAlignedIst3);
-
-	  // set projection
-	  fstTrack->setProjection(0,vProjFst);
-	  fstTrack->setProjection(2,vProjIst2);
-
-	  // set original position
-	  fstTrack->setPosOrig(1,vPosIst1_orig);
-	  fstTrack->setPosOrig(3,vPosIst3_orig);
-
-	  trackVec.push_back(fstTrack);
-
-	  // cout << "numOfTracks = " << numOfTracks << endl;
-	  // trackVec[numOfTracks]->Print();
-	  numOfTracks++;
+	  // set projection on FST
+	  fstTrack->setProjFst(i_sensor,vProjFst);
 	}
+	trackVec.push_back(fstTrack);
+	// cout << "numOfTracks = " << numOfTracks << endl;
+	// trackVec[numOfTracks]->Print();
+	numOfTracks++;
       }
     }
   }
