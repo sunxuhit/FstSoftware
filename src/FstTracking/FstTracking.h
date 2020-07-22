@@ -77,12 +77,6 @@ class FstTracking : public TObject
     // Tracking QA based on Hits
     TH2F *h_mHitsCorrXR[4]; // 0: ist1x vs. ist3x | 1: ist1x vs. fstr | 2: ist3x vs. fstr | 3: ist1x+ist3x vs. fstr
     TH2F *h_mHitsCorrYPhi[4]; // 0: ist1y vs. ist3y | 1: ist1y vs. fstphi | 2: ist3y vs. fstphi | 3: ist1y+ist3y vs. fstphi
-    TH1F *h_mXResidual_Hits_Before;
-    TH1F *h_mYResidual_Hits_Before;
-    TH1F *h_mXResidual_Hits;
-    TH1F *h_mYResidual_Hits;
-    TH1F *h_mRResidual_Hits;
-    TH1F *h_mPhiResidual_Hits;
 
     // incident angle
     TH1F *h_mClustersTrackAngle; // cosmic incident angle on IST
@@ -198,6 +192,9 @@ class FstTracking : public TObject
     FstRawHit *mFstRawHit;
     FstCluster *mFstCluster;
     FstTrack *mFstTrack;
+
+    // Utility for tracking
+    TVector3 getAlignedFST(TVector3 vPosFst, int sensorId); // get alignmed sensorId w.r.t. IST2 then to mDefSenorId
 
     ClassDef(FstTracking,1)
 };

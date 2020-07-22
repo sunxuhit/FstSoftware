@@ -155,8 +155,8 @@ class FstClusterMaker : public TObject
     double getPosX(int arm, int port, int apv, int ch); // return FST/IST X based on arm & port & apv & ch
     double getPosY(int arm, int port, int apv, int ch); // return FST/IST Y based on arm & port & apv & ch
     bool isBadAPV(int arm, int port, int apv);
-    TVector3 getProjection(TVector3 vPosIst1, TVector3 vPosIst3, int sensorId); // get projected position w.r.t. different sensorId
-    TVector3 getAlignedFST(TVector3 vPosIst); // get alignmed position w.r.t. FST default sensor
+    TVector3 getIstProjection(TVector3 vPosIst1, TVector3 vPosIst3, int sensorId); // get projected position of IST tracks w.r.t. different sensorId in mDefSenorId frame
+    TVector3 getIstAlignedPos(TVector3 vPosIst); // get alignmed IST1 & IST3 position w.r.t. FST default sensor
 
     TChain *mChainInPut; // input TTree
     int evt_rdo[FST::numARMs][FST::numPorts][FST::numAPVs];

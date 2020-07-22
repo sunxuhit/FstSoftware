@@ -2397,7 +2397,7 @@ std::vector<FstTrack *> FstClusterMaker::findTrack_Hits(std::vector<FstRawHit *>
 	// double x1_corr_FST = x1_corr_IST*TMath::Cos(FST::phi_rot_ist2) + y1_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::x2_shift;
 	// double y1_corr_FST = y1_corr_IST*TMath::Cos(FST::phi_rot_ist2) - x1_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::y2_shift;
 	// vAlignedIst1.SetXYZ(x1_corr_FST,y1_corr_FST,z1_ist); // set aligned pos of hits on ist1
-	vAlignedIst1 = this->getAlignedFST(vPosIst1);
+	vAlignedIst1 = this->getIstAlignedPos(vPosIst1);
 
 	double x3_ist = rawHitVec[3][i_ist3]->getPosX();
 	double y3_ist = rawHitVec[3][i_ist3]->getPosY();
@@ -2410,7 +2410,7 @@ std::vector<FstTrack *> FstClusterMaker::findTrack_Hits(std::vector<FstRawHit *>
 	// double x3_corr_FST = x3_corr_IST*TMath::Cos(FST::phi_rot_ist2) + y3_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::x2_shift;
 	// double y3_corr_FST = y3_corr_IST*TMath::Cos(FST::phi_rot_ist2) - x3_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::y2_shift;
 	// vAlignedIst3.SetXYZ(x3_corr_FST,y3_corr_FST,z3_ist); // set aligned pos of hits on ist3
-	vAlignedIst3 = this->getAlignedFST(vPosIst3);
+	vAlignedIst3 = this->getIstAlignedPos(vPosIst3);
 
 	for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
 	{
@@ -2419,7 +2419,7 @@ std::vector<FstTrack *> FstClusterMaker::findTrack_Hits(std::vector<FstRawHit *>
 	  // double r0_proj = TMath::Sqrt(x0_proj*x0_proj+y0_proj*y0_proj);
 	  // double phi0_proj = TMath::ATan2(y0_proj,x0_proj);
 	  // vProjFst.SetXYZ(r0_proj,phi0_proj,z0_fst); // r & phi for FST
-	  vProjFst = this->getProjection(vPosIst1, vPosIst3, i_sensor); // get aligned with mSensorId and projected to FST i_sensor
+	  vProjFst = this->getIstProjection(vPosIst1, vPosIst3, i_sensor); // get aligned with mSensorId and projected to FST i_sensor
 
 	  // double x2_proj = x3_corr_FST + (x1_corr_FST-x3_corr_FST)*z2_ist/z1_ist;
 	  // double y2_proj = y3_corr_FST + (y1_corr_FST-y3_corr_FST)*z2_ist/z1_ist;
@@ -2509,7 +2509,7 @@ std::vector<FstTrack *> FstClusterMaker::findTrack_Clusters(std::vector<FstClust
 	// double x1_corr_FST = x1_corr_IST*TMath::Cos(FST::phi_rot_ist2) + y1_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::x2_shift;
 	// double y1_corr_FST = y1_corr_IST*TMath::Cos(FST::phi_rot_ist2) - x1_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::y2_shift;
 	// vAlignedIst1.SetXYZ(x1_corr_FST,y1_corr_FST,z1_ist); // set aligned pos of hits on ist1
-	vAlignedIst1 = this->getAlignedFST(vPosIst1);
+	vAlignedIst1 = this->getIstAlignedPos(vPosIst1);
 
 	double x3_ist = clusterVec[3][i_ist3]->getMeanX();
 	double y3_ist = clusterVec[3][i_ist3]->getMeanY();
@@ -2522,7 +2522,7 @@ std::vector<FstTrack *> FstClusterMaker::findTrack_Clusters(std::vector<FstClust
 	// double x3_corr_FST = x3_corr_IST*TMath::Cos(FST::phi_rot_ist2) + y3_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::x2_shift;
 	// double y3_corr_FST = y3_corr_IST*TMath::Cos(FST::phi_rot_ist2) - x3_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::y2_shift;
 	// vAlignedIst3.SetXYZ(x3_corr_FST,y3_corr_FST,z3_ist); // set aligned pos of hits on ist3
-	vAlignedIst3 = this->getAlignedFST(vPosIst3);
+	vAlignedIst3 = this->getIstAlignedPos(vPosIst3);
 
 	for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
 	{
@@ -2531,7 +2531,7 @@ std::vector<FstTrack *> FstClusterMaker::findTrack_Clusters(std::vector<FstClust
 	  // double r0_proj = TMath::Sqrt(x0_proj*x0_proj+y0_proj*y0_proj);
 	  // double phi0_proj = TMath::ATan2(y0_proj,x0_proj);
 	  // vProjFst.SetXYZ(r0_proj,phi0_proj,z0_fst); // r & phi for FST
-	  vProjFst = this->getProjection(vPosIst1, vPosIst3, i_sensor); // get aligned with mSensorId and projected to FST i_sensor
+	  vProjFst = this->getIstProjection(vPosIst1, vPosIst3, i_sensor); // get aligned with mSensorId and projected to FST i_sensor
 
 	  // double x2_proj = x3_corr_FST + (x1_corr_FST-x3_corr_FST)*z2_ist/z1_ist;
 	  // double y2_proj = y3_corr_FST + (y1_corr_FST-y3_corr_FST)*z2_ist/z1_ist;
@@ -2736,15 +2736,15 @@ bool FstClusterMaker::isBadAPV(int arm, int port, int apv)
   return bAPV;
 }
 
-TVector3 FstClusterMaker::getProjection(TVector3 vPosIst1, TVector3 vPosIst3, int sensorId)
+TVector3 FstClusterMaker::getIstProjection(TVector3 vPosIst1, TVector3 vPosIst3, int sensorId)
 {
   // double x1_IST = vPosIst1.X(); // aligned to IST2
   // double y1_IST = vPosIst1.Y();
   // double z1_IST = vPosIst1.Z();
   // double x1_FST = x1_IST*TMath::Cos(FST::phi_rot[FST::mDefSenorId]) + y1_IST*TMath::Sin(FST::phi_rot[FST::mDefSenorId]) + FST::x_shift[FST::mDefSenorId]; // aligned to FST sensorId mDefSenorId
   // double y1_FST = y1_IST*TMath::Cos(FST::phi_rot[FST::mDefSenorId]) - x1_IST*TMath::Sin(FST::phi_rot[FST::mDefSenorId]) + FST::y_shift[FST::mDefSenorId];
-  TVector3 vAlignedIst1 = this->getAlignedFST(vPosIst1); // aligned to IST2
-  double x1_FST = vAlignedIst1.X(); // aligned to FST sensorId mDefSenorId
+  TVector3 vAlignedIst1 = this->getIstAlignedPos(vPosIst1); // aligned to FST sensorId mDefSenorId
+  double x1_FST = vAlignedIst1.X();
   double y1_FST = vAlignedIst1.Y();
 
   // double x3_IST = vPosIst3.X(); // aligned to IST2
@@ -2752,8 +2752,8 @@ TVector3 FstClusterMaker::getProjection(TVector3 vPosIst1, TVector3 vPosIst3, in
   // double z3_IST = vPosIst3.Z();
   // double x3_FST = x3_IST*TMath::Cos(FST::phi_rot[FST::mDefSenorId]) + y3_IST*TMath::Sin(FST::phi_rot[FST::mDefSenorId]) + FST::x_shift[FST::mDefSenorId]; // aligned to FST sensorId mDefSenorId
   // double y3_FST = y3_IST*TMath::Cos(FST::phi_rot[FST::mDefSenorId]) - x3_IST*TMath::Sin(FST::phi_rot[FST::mDefSenorId]) + FST::y_shift[FST::mDefSenorId];
-  TVector3 vAlignedIst3 = this->getAlignedFST(vPosIst3); // aligned to IST2
-  double x3_FST = vAlignedIst3.X(); // aligned to FST sensorId mDefSenorId
+  TVector3 vAlignedIst3 = this->getIstAlignedPos(vPosIst3); // aligned to FST sensorId mDefSenorId
+  double x3_FST = vAlignedIst3.X();
   double y3_FST = vAlignedIst3.Y();
 
   double x0_FST = x3_FST + (x1_FST-x3_FST)*(FST::pitchLayer03+FST::z_shift[sensorId])/(FST::pitchLayer12+FST::pitchLayer23);
@@ -2768,19 +2768,18 @@ TVector3 FstClusterMaker::getProjection(TVector3 vPosIst1, TVector3 vPosIst3, in
   return vProjFst;
 }
 
-TVector3 FstClusterMaker::getAlignedFST(TVector3 vPosIst)
+TVector3 FstClusterMaker::getIstAlignedPos(TVector3 vPosIst)
 {
   double x_IST = vPosIst.X(); // aligned to IST2
   double y_IST = vPosIst.Y();
   double z_IST = vPosIst.Z();
   // aligned to FST sensorId mDefSenorId
-  double x_FST = x_IST*TMath::Cos(FST::phi_rot[FST::mDefSenorId]) + y_IST*TMath::Sin(FST::phi_rot[FST::mDefSenorId]) + FST::x_shift[FST::mDefSenorId];
-  double y_FST = y_IST*TMath::Cos(FST::phi_rot[FST::mDefSenorId]) - x_IST*TMath::Sin(FST::phi_rot[FST::mDefSenorId]) + FST::y_shift[FST::mDefSenorId];
+  double x_AlignedIST = x_IST*TMath::Cos(FST::phi_rot[FST::mDefSenorId]) + y_IST*TMath::Sin(FST::phi_rot[FST::mDefSenorId]) + FST::x_shift[FST::mDefSenorId];
+  double y_AlignedIST = y_IST*TMath::Cos(FST::phi_rot[FST::mDefSenorId]) - x_IST*TMath::Sin(FST::phi_rot[FST::mDefSenorId]) + FST::y_shift[FST::mDefSenorId];
 
-  TVector3 vPosFst;
-  vPosFst.SetXYZ(x_FST,y_FST,z_IST);
+  TVector3 vAlignedIst;
+  vAlignedIst.SetXYZ(x_AlignedIST,y_AlignedIST,z_IST);
 
-  return vPosFst;
+  return vAlignedIst;
 }
-//--------------Utility---------------------
 //--------------Utility---------------------

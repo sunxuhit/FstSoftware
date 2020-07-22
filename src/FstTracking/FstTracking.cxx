@@ -195,13 +195,6 @@ bool FstTracking::initTrackingQA_Hits()
     else h_mHitsCorrYPhi[i_corr] = new TH2F(HistName.c_str(),HistName.c_str(),FST::noRows,-0.5,FST::noRows-0.5,FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5);
   }
 
-  h_mXResidual_Hits_Before = new TH1F("h_mXResidual_Hits_Before","h_mXResidual_Hits_Before",100,-500.0,500.0);
-  h_mYResidual_Hits_Before = new TH1F("h_mYResidual_Hits_Before","h_mYResidual_Hits_Before",100,-50.0,50.0);
-  h_mXResidual_Hits = new TH1F("h_mXResidual_Hits","h_mXResidual_Hits",100,-80.0,80.0);
-  h_mYResidual_Hits = new TH1F("h_mYResidual_Hits","h_mYResidual_Hits",100,-16.0,16.0);
-  h_mRResidual_Hits = new TH1F("h_mRResidual_Hits","h_mRResidual_Hits",100,-80.0,80.0);
-  h_mPhiResidual_Hits = new TH1F("h_mPhiResidual_Hits","h_mPhiResidual_Hits",100,-0.05,0.05);
-
   return true;
 }
 
@@ -235,52 +228,6 @@ void FstTracking::fillTrackingQA_Hits(std::vector<FstRawHit *> rawHitVec_orig)
     h_mHitsCorrYPhi[1]->Fill(rawHitVec[1][0]->getRow(),rawHitVec[0][0]->getRow());
     h_mHitsCorrYPhi[2]->Fill(rawHitVec[3][0]->getRow(),rawHitVec[0][0]->getRow());
     h_mHitsCorrYPhi[3]->Fill(5.25/2*rawHitVec[1][0]->getRow()-3.25/2*rawHitVec[3][0]->getRow()+20,rawHitVec[0][0]->getRow());
-
-    double r_fst   = rawHitVec[0][0]->getPosX();
-    double phi_fst = rawHitVec[0][0]->getPosY();
-    double x0_fst  = r_fst*TMath::Cos(phi_fst); // x = r*cos(phi)
-    double y0_fst  = r_fst*TMath::Sin(phi_fst); // y = r*sin(phi)
-    double z0_fst  = FST::pitchLayer03;
-
-    double x1_ist = rawHitVec[1][0]->getPosX();
-    double y1_ist = rawHitVec[1][0]->getPosY();
-    double z1_ist = FST::pitchLayer12 + FST::pitchLayer23;
-    double x1_corr_IST = x1_ist*TMath::Cos(FST::phi_rot_ist1) + y1_ist*TMath::Sin(FST::phi_rot_ist1) + FST::x1_shift; // aligned to IST2
-    double y1_corr_IST = y1_ist*TMath::Cos(FST::phi_rot_ist1) - x1_ist*TMath::Sin(FST::phi_rot_ist1) + FST::y1_shift;
-    double x1_corr_FST = x1_corr_IST*TMath::Cos(FST::phi_rot_ist2) + y1_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::x2_shift; // aligned to FST
-    double y1_corr_FST = y1_corr_IST*TMath::Cos(FST::phi_rot_ist2) - x1_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::y2_shift;
-
-    double x3_ist = rawHitVec[3][0]->getPosX();
-    double y3_ist = rawHitVec[3][0]->getPosY();
-    double z3_ist = 0.0;
-    double x3_corr_IST = x3_ist*TMath::Cos(FST::phi_rot_ist3) + y3_ist*TMath::Sin(FST::phi_rot_ist3) + FST::x3_shift; // aligned to IST2
-    double y3_corr_IST = y3_ist*TMath::Cos(FST::phi_rot_ist3) - x3_ist*TMath::Sin(FST::phi_rot_ist3) + FST::y3_shift;
-    double x3_corr_FST = x3_corr_IST*TMath::Cos(FST::phi_rot_ist2) + y3_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::x2_shift; // aligned to FST
-    double y3_corr_FST = y3_corr_IST*TMath::Cos(FST::phi_rot_ist2) - x3_corr_IST*TMath::Sin(FST::phi_rot_ist2) + FST::y2_shift;
-
-    double x0_proj = x3_corr_IST + (x1_corr_IST-x3_corr_IST)*z0_fst/z1_ist; // before aligned to FST
-    double y0_proj = y3_corr_IST + (y1_corr_IST-y3_corr_IST)*z0_fst/z1_ist;
-
-    double x0_corr = x3_corr_FST + (x1_corr_FST-x3_corr_FST)*z0_fst/z1_ist; // after aligned to FST
-    double y0_corr = y3_corr_FST + (y1_corr_FST-y3_corr_FST)*z0_fst/z1_ist;
-
-    if(abs(rawHitVec[1][0]->getRow()-rawHitVec[3][0]->getRow()) < 17)
-    {
-      h_mXResidual_Hits_Before->Fill(x0_fst-x0_proj);
-      h_mYResidual_Hits_Before->Fill(y0_fst-y0_proj);
-
-      double xResidual = x0_fst-x0_corr;
-      double yResidual = y0_fst-y0_corr;
-      h_mXResidual_Hits->Fill(xResidual);
-      h_mYResidual_Hits->Fill(yResidual);
-
-      double r_corr = TMath::Sqrt(x0_corr*x0_corr+y0_corr*y0_corr);
-      double phi_corr = TMath::ATan2(y0_corr,x0_corr);
-      double rResidual = r_fst-r_corr;
-      double phiResidual = phi_fst-phi_corr;
-      h_mRResidual_Hits->Fill(rResidual);
-      h_mPhiResidual_Hits->Fill(phiResidual);
-    }
   }
 }
 
@@ -291,12 +238,6 @@ void FstTracking::writeTrackingQA_Hits()
     h_mHitsCorrXR[i_corr]->Write();
     h_mHitsCorrYPhi[i_corr]->Write();
   }
-  h_mXResidual_Hits_Before->Write();
-  h_mYResidual_Hits_Before->Write();
-  h_mXResidual_Hits->Write();
-  h_mYResidual_Hits->Write();
-  h_mRResidual_Hits->Write();
-  h_mPhiResidual_Hits->Write();
 }
 //--------------Track QA with Hits---------------------
 
@@ -1775,3 +1716,25 @@ void FstTracking::writeEfficiency_Clusters()
   }
 }
 //--------------Efficiency with Clusters---------------------
+
+//--------------Utility for tracking-------------------
+TVector3 FstTracking::getAlignedFST(TVector3 vPosFst, int sensorId)
+{
+  double x_FstLocal = vPosFst.X();
+  double y_FstLocal = vPosFst.Y();
+  double z_FST = vPosFst.Z();
+  // transfer to IST2 frame
+  double x_IST = (x_FstLocal-FST::x_shift[sensorId])*TMath::Cos(FST::phi_rot[sensorId]) - (y_FstLocal-FST::y_shift[sensorId])*TMath::Sin(FST::phi_rot[sensorId]);
+  double y_IST = (y_FstLocal-FST::y_shift[sensorId])*TMath::Cos(FST::phi_rot[sensorId]) + (x_FstLocal-FST::x_shift[sensorId])*TMath::Sin(FST::phi_rot[sensorId]);
+
+  // transfer to FST mDefSenorId frame
+  double x_FST = x_IST*TMath::Cos(FST::phi_rot[FST::mDefSenorId]) + y_IST*TMath::Sin(FST::phi_rot[FST::mDefSenorId])   + FST::x_shift[FST::mDefSenorId];
+  double y_FST = y_IST*TMath::Cos(FST::phi_rot[FST::mDefSenorId]) - x_IST*TMath::Sin(FST::phi_rot[FST::mDefSenorId])   + FST::y_shift[FST::mDefSenorId];
+
+  TVector3 vAlignedFST;
+  vAlignedFST.SetXYZ(x_FST,y_FST,z_FST);
+
+  return vAlignedFST;
+}
+//--------------Utility for tracking-------------------
+
