@@ -38,11 +38,6 @@ int FstQAStudy::Init()
   File_mOutPut = new TFile(mOutPutFile.c_str(),"RECREATE");
 
   bool isInPut = initChain(); // initialize input data/ped TChain;
-  initCounts();
-  initAdc_Hits();
-  initAdc_Clusters();
-  initClusterSize();
-  initClusterSize_TrackClusters();
   initSignalQA();
   initEventDisplay_TrackClusters();
 
@@ -65,49 +60,11 @@ int FstQAStudy::Make()
   mChainInPut->GetEntry(0);
 
   int numOfUsedEvent = 0;
-  std::vector<FstRawHit *> rawHitVec_orig;
-  std::vector<FstCluster *> clusterVec_orig;
-  std::vector<FstTrack *> trackHitsVec_orig;
-  std::vector<FstTrack *> trackClustersVec_orig;
   for(int i_event = 0; i_event < NumOfEvents; ++i_event)
   {
     if(i_event%1000==0) cout << "processing events:  " << i_event << "/" << NumOfEvents << endl;
     mChainInPut->GetEntry(i_event);
 
-    fillCounts(mFstEvent_InPut);
-
-    rawHitVec_orig.clear(); // clear the container for hits
-    for(int i_hit = 0; i_hit < mFstEvent_InPut->getNumRawHits(); ++i_hit)
-    { // get Hits info
-      FstRawHit *fstRawHit = mFstEvent_InPut->getRawHit(i_hit);
-      rawHitVec_orig.push_back(fstRawHit);
-    }
-    fillAdc_Hits(rawHitVec_orig);
-
-    clusterVec_orig.clear(); // clear the container for clusters
-    for(int i_cluster = 0; i_cluster < mFstEvent_InPut->getNumClusters(); ++i_cluster)
-    { // get Clusters info
-      FstCluster *fstCluster = mFstEvent_InPut->getCluster(i_cluster);
-      clusterVec_orig.push_back(fstCluster);
-    }
-    fillAdc_Clusters(clusterVec_orig);
-    fillClusterSize(clusterVec_orig);
-
-    trackHitsVec_orig.clear(); // clear the container for clusters
-    trackClustersVec_orig.clear(); // clear the container for clusters
-    for(int i_track = 0; i_track < mFstEvent_InPut->getNumTracks(); ++i_track)
-    { // get Tracks info
-      FstTrack *fstTrack = mFstEvent_InPut->getTrack(i_track);
-      if(fstTrack->getTrackType() == 0) // track reconstructed with hits
-      {
-	trackHitsVec_orig.push_back(fstTrack);
-      }
-      if(fstTrack->getTrackType() == 1) // track reconstructed with clusters
-      {
-	trackClustersVec_orig.push_back(fstTrack);
-      }
-    }
-    fillClusterSize_TrackClusters(mFstEvent_InPut);
     fillSignalQA(mFstEvent_InPut);
     fillEventDisplay_TrackClusters(mFstEvent_InPut);
   }
@@ -120,11 +77,6 @@ int FstQAStudy::Make()
 int FstQAStudy::Finish()
 {
   cout << "FstQAStudy::Finish => " << endl;
-  writeCounts();
-  writeAdc_Hits();
-  writeAdc_Cluster();
-  writeClusterSize();
-  writeClusterSize_TrackClusters();
   writeSignalQA();
   writeEventDisplay_TrackClusters();
 
@@ -177,368 +129,6 @@ bool FstQAStudy::initChain()
   return true;
 }
 // init Input TChain
-
-//--------------QA---------------------
-void FstQAStudy::initCounts()
-{
-  for(int i_layer = 0; i_layer < 4; ++i_layer)
-  {
-    std::string HistName = Form("h_mCounts_Hits_Layer%d",i_layer);
-    h_mCounts_Hits[i_layer] = new TH1F(HistName.c_str(),HistName.c_str(),15,-0.5,14.5);
-    HistName = Form("h_mCounts_Clusters_Layer%d",i_layer);
-    h_mCounts_Clusters[i_layer] = new TH1F(HistName.c_str(),HistName.c_str(),15,-0.5,14.5);
-    HistName = Form("h_mCounts_Corr_Layer%d",i_layer);
-    h_mCounts_Corr[i_layer] = new TH2F(HistName.c_str(),HistName.c_str(),15,-0.5,14.5,15,-0.5,14.5);
-    HistName = Form("h_mCounts_RPhi_Layer%d",i_layer);
-    h_mCounts_RPhi[i_layer] = new TH2F(HistName.c_str(),HistName.c_str(),10,-0.5,9.5,10,-0.5,9.5);
-  }
-}
-
-void FstQAStudy::fillCounts(FstEvent *fstEvent)
-{
-  int numOfHits[4] = {0,0,0,0};
-  for(int i_hit = 0; i_hit < fstEvent->getNumRawHits(); ++i_hit)
-  { // get Hits info
-    FstRawHit *fstRawHit = fstEvent->getRawHit(i_hit);
-    int layer = fstRawHit->getLayer();
-    numOfHits[layer]++;
-  }
-  int numOfClusters[4] = {0,0,0,0};
-  for(int i_cluster = 0; i_cluster < fstEvent->getNumClusters(); ++i_cluster)
-  { // get Clusters info
-    FstCluster *fstCluster = fstEvent->getCluster(i_cluster);
-    int layer = fstCluster->getLayer();
-    numOfClusters[layer]++;
-    h_mCounts_RPhi[layer]->Fill(fstCluster->getNRawHitsR(),fstCluster->getNRawHitsPhi());
-  }
-
-  for(int i_layer = 0; i_layer < 4; ++i_layer)
-  {
-    h_mCounts_Hits[i_layer]->Fill(numOfHits[i_layer]);
-    h_mCounts_Clusters[i_layer]->Fill(numOfClusters[i_layer]);
-    h_mCounts_Corr[i_layer]->Fill(numOfHits[i_layer],numOfClusters[i_layer]);
-  }
-}
-
-void FstQAStudy::writeCounts()
-{
-  for(int i_layer = 0; i_layer < 4; ++i_layer)
-  {
-    h_mCounts_Hits[i_layer]->Write();
-    h_mCounts_Clusters[i_layer]->Write();
-    h_mCounts_Corr[i_layer]->Write();
-    h_mCounts_RPhi[i_layer]->Write();
-  }
-}
-//--------------QA---------------------
-
-//--------------ADC---------------------
-void FstQAStudy::initAdc_Hits()
-{
-  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
-  {
-    std::string HistName; 
-    HistName = Form("h_mAdcFst_Hits_RStrip%d",i_rstrip);
-    h_mAdcFst_Hits[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
-    HistName = Form("h_mAdcIst_Hits_Layer%d",i_rstrip);
-    h_mAdcIst_Hits[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
-  }
-}
-
-void FstQAStudy::fillAdc_Hits(std::vector<FstRawHit *> rawHitVec_orig)
-{
-  std::vector<FstRawHit *> rawHitVec;
-  rawHitVec.clear(); // clear the container for hits
-  for(int i_hit = 0; i_hit < rawHitVec_orig.size(); ++i_hit)
-  {
-    rawHitVec.push_back(rawHitVec_orig[i_hit]);
-  }
-
-  for(int i_hit = 0; i_hit < rawHitVec.size(); ++i_hit)
-  { // get Hits info
-    int layer = rawHitVec[i_hit]->getLayer();
-    int maxTb = rawHitVec[i_hit]->getMaxTb();
-    double adc = rawHitVec[i_hit]->getCharge(maxTb);
-    if(rawHitVec[i_hit]->getIsHit())
-    {
-      h_mAdcIst_Hits[layer]->Fill(adc);
-
-      if(layer == 0)
-      { // FST
-	int column = rawHitVec[i_hit]->getColumn(); // R strip
-	h_mAdcFst_Hits[column]->Fill(adc);
-      }
-    }
-  }
-}
-
-void FstQAStudy::writeAdc_Hits()
-{
-  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
-  {
-    h_mAdcFst_Hits[i_rstrip]->Write();
-    h_mAdcIst_Hits[i_rstrip]->Write();
-  }
-}
-
-void FstQAStudy::initAdc_Clusters()
-{
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
-  {
-    std::string HistName; 
-    HistName = Form("h_mAdcFst_Clusters_RStrip%d",i_rstrip);
-    h_mAdcFst_Clusters[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
-    HistName = Form("h_mAdcIst_Clusters_Layer%d",i_rstrip);
-    h_mAdcIst_Clusters[i_rstrip] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
-  }
-
-  p_mAdcFst_Column = new TProfile2D("p_mAdcFst_Column","p_mAdcFst_Column",FST::numRStrip*5.0,0.0,FST::numRStrip,FST::numRStrip,-0.5,FST::numRStrip-0.5);
-  p_mAdcFst_Row = new TProfile2D("p_mAdcFst_Row","p_mAdcFst_Row",FST::numPhiSeg*2.0,0.0,FST::numPhiSeg,FST::numPhiSeg,-0.5,FST::numPhiSeg-0.5);
-
-  // h_mPositionR_Clusters = new TH2F("h_mPositionR_Clusters","h_mPositionR_Clusters",FST::numRStrip*10.0,FST::rOuter,FST::rOuter+4*FST::pitchR,0.5*FST::numRStrip,FST::rOuter,FST::rOuter+4*FST::pitchR);
-  // h_mPositionPhi_Clusters = new TH2F("h_mPositionPhi_Clusters","h_mPositionPhi_Clusters",FST::numPhiSeg,-0.5*FST::numPhiSeg*FST::pitchPhi,0.5*FST::numPhiSeg*FST::pitchPhi,0.5*FST::numPhiSeg,0.0,0.5*FST::numPhiSeg*FST::pitchPhi);
-}
-
-void FstQAStudy::fillAdc_Clusters(std::vector<FstCluster *> clusterVec_orig)
-{
-  std::vector<FstCluster *> clusterVec;
-  clusterVec.clear(); // clear the container for hits
-  for(int i_cluster = 0; i_cluster < clusterVec_orig.size(); ++i_cluster)
-  {
-    clusterVec.push_back(clusterVec_orig[i_cluster]);
-  }
-
-  for(int i_cluster = 0; i_cluster < clusterVec.size(); ++i_cluster)
-  { // get Hits info
-    int layer = clusterVec[i_cluster]->getLayer();
-    double adc = clusterVec[i_cluster]->getTotCharge();
-    h_mAdcIst_Clusters[layer]->Fill(adc);
-
-    if(layer == 0)
-    { // FST
-      double meanColumn = clusterVec[i_cluster]->getMeanColumn(); // R strip
-      int column = 0;
-      if(meanColumn > 3.5 && meanColumn <= 4.5) column = 0;
-      if(meanColumn > 4.5 && meanColumn <= 5.5) column = 1;
-      if(meanColumn > 5.5 && meanColumn <= 6.5) column = 2;
-      if(meanColumn > 6.5 && meanColumn <= 7.5) column = 3;
-      h_mAdcFst_Clusters[column]->Fill(adc);
-    }
-  }
-
-  for(int i_cluster = 0; i_cluster < clusterVec.size(); ++i_cluster)
-  { // get Hits info
-    int layer = clusterVec[i_cluster]->getLayer();
-    const int nHits = clusterVec[i_cluster]->getNRawHits();
-    if(layer == 0 && nHits > 1) // only study cluster with at least 2 hits
-    {
-      double meanColumn = clusterVec[i_cluster]->getMeanColumn();
-      double meanRow = clusterVec[i_cluster]->getMeanRow();
-      for(int i_clusterHit = 0; i_clusterHit < nHits; ++i_clusterHit)
-      {
-	FstRawHit *fstRawHit = clusterVec[i_cluster]->getRawHit(i_clusterHit);
-	int column = fstRawHit->getColumn(); // R strip
-	int row = fstRawHit->getRow(); // phi segmentation
-	int maxTb = fstRawHit->getMaxTb();
-	double adc = fstRawHit->getCharge(maxTb);
-
-	p_mAdcFst_Column->Fill(meanColumn,column,adc);
-	p_mAdcFst_Row->Fill(meanRow,row,adc);
-      }
-    }
-  }
-}
-
-void FstQAStudy::writeAdc_Cluster()
-{
-  for(int i_rstrip = 0; i_rstrip < 4; ++i_rstrip)
-  {
-    h_mAdcFst_Clusters[i_rstrip]->Write();
-    h_mAdcIst_Clusters[i_rstrip]->Write();
-  }
-
-  p_mAdcFst_Column->Write();
-  p_mAdcFst_Row->Write();
-}
-//--------------ADC---------------------
-
-//--------------Cluster Size---------------------
-void FstQAStudy::initClusterSize()
-{
-  p_mNHitsR_meanColumn   = new TProfile("p_mNHitsR_meanColumn","p_mNHitsR_meanColumn",FST::numRStrip*5.0,-0.5,FST::numRStrip-0.5);
-  p_mNHitsR_meanRow      = new TProfile("p_mNHitsR_meanRow","p_mNHitsR_meanRow",FST::numPhiSeg*2.0,-0.5,FST::numPhiSeg-0.5);
-  p_mNHitsPhi_meanColumn = new TProfile("p_mNHitsPhi_meanColumn","p_mNHitsPhi_meanColumn",FST::numRStrip*5.0,-0.5,FST::numRStrip-0.5);
-  p_mNHitsPhi_meanRow    = new TProfile("p_mNHitsPhi_meanRow","p_mNHitsPhi_meanRow",FST::numPhiSeg*2.0,-0.5,FST::numPhiSeg-0.5);
-  p_mTbDiffR             = new TProfile("p_mTbDiffR","p_mTbDiffR",FST::numRStrip*5.0,-0.5,FST::numRStrip-0.5);
-  p_mTbDiffPhi           = new TProfile("p_mTbDiffPhi","p_mTbDiffPhi",FST::numPhiSeg*2.0,-0.5,FST::numPhiSeg-0.5);
-}
-
-void FstQAStudy::fillClusterSize(std::vector<FstCluster *> clusterVec_orig)
-{
-  std::vector<FstCluster *> clusterVec;
-  clusterVec.clear(); // clear the container for hits
-  for(int i_cluster = 0; i_cluster < clusterVec_orig.size(); ++i_cluster)
-  {
-    clusterVec.push_back(clusterVec_orig[i_cluster]);
-  }
-
-  for(int i_cluster = 0; i_cluster < clusterVec.size(); ++i_cluster)
-  { // get Hits info
-    int layer = clusterVec[i_cluster]->getLayer();
-    const int nHits = clusterVec[i_cluster]->getNRawHits();
-    if(layer == 0 && nHits > 1) // only study cluster with at least 2 hits
-    {
-      double meanColumn = clusterVec[i_cluster]->getMeanColumn();
-      double meanRow = clusterVec[i_cluster]->getMeanRow();
-      double nHitsR = clusterVec[i_cluster]->getNRawHitsR();
-      double nHitsPhi = clusterVec[i_cluster]->getNRawHitsPhi();
-      p_mNHitsR_meanColumn->Fill(meanColumn,nHitsR);
-      p_mNHitsR_meanRow->Fill(meanRow,nHitsR);
-      p_mNHitsPhi_meanColumn->Fill(meanColumn,nHitsPhi);
-      p_mNHitsPhi_meanRow->Fill(meanRow,nHitsPhi);
-
-      int TimeBin[nHits];
-      double charge[nHits];
-
-      for(int i_clusterHit = 0; i_clusterHit < nHits; ++i_clusterHit)
-      {
-	FstRawHit *fstRawHit = clusterVec[i_cluster]->getRawHit(i_clusterHit);
-	int maxTb = fstRawHit->getMaxTb();
-	double adc = fstRawHit->getCharge(maxTb);
-
-	TimeBin[i_clusterHit] = maxTb;
-	charge[i_clusterHit] = adc;
-      }
-
-      double maxCharge = charge[0];
-      int maxHitIt = 0;
-      for (int i_hit = 1; i_hit < nHits; ++i_hit) 
-      {
-	if ( charge[i_hit] > maxCharge) 
-	{
-	  maxCharge = charge[i_hit];
-	  maxHitIt = i_hit;
-	}
-      }
-
-      for(int i_hit = 0; i_hit < nHits; ++i_hit)
-      {
-	if(i_hit != maxHitIt)
-	{
-	  p_mTbDiffR->Fill(meanColumn,TimeBin[maxHitIt]-TimeBin[i_hit]);
-	  p_mTbDiffPhi->Fill(meanRow,TimeBin[maxHitIt]-TimeBin[i_hit]);
-	}
-      }
-    }
-  }
-}
-
-void FstQAStudy::writeClusterSize()
-{
-  p_mNHitsR_meanColumn->Write();
-  p_mNHitsR_meanRow->Write();
-  p_mNHitsPhi_meanColumn->Write();
-  p_mNHitsPhi_meanRow->Write();
-  p_mTbDiffR->Write();
-  p_mTbDiffPhi->Write();
-}
-//--------------Cluster Size---------------------
-
-//--------------Cluster Size with Track---------------------
-void FstQAStudy::initClusterSize_TrackClusters()
-{
-  for(int i_match = 0; i_match < 4; ++i_match)
-  {
-    string ProName;
-    ProName = Form("p_mNHitsR_rP_SF%d",i_match*10);
-    p_mNHitsR_rP[i_match] = new TProfile(ProName.c_str(),ProName.c_str(),24,FST::rMin[0],FST::rMax[0]);
-    ProName = Form("p_mNHitsR_phiP_SF%d",i_match*10);
-    p_mNHitsR_phiP[i_match] = new TProfile(ProName.c_str(),ProName.c_str(),FST::numPhiSeg*2,-2.0*FST::phiMax[0],2.0*FST::phiMax[0]);
-    ProName = Form("p_mNHitsPhi_rP_SF%d",i_match*10);
-    p_mNHitsPhi_rP[i_match] = new TProfile(ProName.c_str(),ProName.c_str(),24,FST::rMin[0],FST::rMax[0]);
-    ProName = Form("p_mNHitsPhi_phiP_SF%d",i_match*10);
-    p_mNHitsPhi_phiP[i_match] = new TProfile(ProName.c_str(),ProName.c_str(),FST::numPhiSeg*2,-2.0*FST::phiMax[0],2.0*FST::phiMax[0]);
-  }
-}
-
-void FstQAStudy::fillClusterSize_TrackClusters(FstEvent *fstEvent)
-{
-  std::vector<FstTrack *> trackClustersVec;
-  trackClustersVec.clear(); // clear the container for clusters
-  for(int i_track = 0; i_track < fstEvent->getNumTracks(); ++i_track)
-  { // get Tracks info
-    FstTrack *fstTrack = fstEvent->getTrack(i_track);
-    if(fstTrack->getTrackType() == 1) // track reconstructed with clusters
-    {
-      trackClustersVec.push_back(fstTrack);
-    }
-  }
-
-  std::vector<FstCluster *> fstClusterVec;
-  fstClusterVec.clear(); // clear the container for clusters
-  for(int i_cluster = 0; i_cluster < fstEvent->getNumClusters(); ++i_cluster)
-  { // get Clusters info
-    FstCluster *fstCluster = fstEvent->getCluster(i_cluster);
-    if(fstCluster->getLayer() == 0)
-    {
-      fstClusterVec.push_back(fstCluster);
-    }
-  }
-
-  int numOfFstClusters = fstEvent->getNumFstClusters_Simple();
-  if(numOfFstClusters > 0)
-  {
-    for(int i_cluster = 0; i_cluster < numOfFstClusters; ++i_cluster)
-    {
-      int nHits = fstClusterVec[i_cluster]->getNRawHits();
-      if(nHits > 1)
-      {
-	int nHitsR = fstClusterVec[i_cluster]->getNRawHitsR();
-	int nHitsPhi = fstClusterVec[i_cluster]->getNRawHitsPhi();
-	double r_fst = fstClusterVec[i_cluster]->getMeanX(); // r for fst
-	double phi_fst = fstClusterVec[i_cluster]->getMeanY(); // phi for fst
-
-	for(int i_track = 0; i_track < trackClustersVec.size(); ++i_track)
-	{
-	  TVector3 proj_fst = trackClustersVec[i_track]->getProjection(0);
-	  double r_proj = proj_fst.Perp();
-	  double phi_proj = proj_fst.Phi();
-
-	  for(int i_match = 0; i_match < 4; ++i_match)
-	  {
-	    if(i_match == 0)
-	    {
-	      p_mNHitsR_rP[i_match]->Fill(r_proj,nHitsR);
-	      p_mNHitsR_phiP[i_match]->Fill(phi_proj,nHitsR);
-	      p_mNHitsPhi_rP[i_match]->Fill(r_proj,nHitsPhi);
-	      p_mNHitsPhi_phiP[i_match]->Fill(phi_proj,nHitsPhi);
-	    }
-	    if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR && abs(phi_fst-phi_proj) <= (i_match*10+0.5)*FST::pitchPhi)
-	      // if( i_match > 0 && abs(r_fst-r_proj) <= (i_match+0.5)*FST::pitchR)
-	    {
-	      p_mNHitsR_rP[i_match]->Fill(r_proj,nHitsR);
-	      p_mNHitsR_phiP[i_match]->Fill(phi_proj,nHitsR);
-	      p_mNHitsPhi_rP[i_match]->Fill(r_proj,nHitsPhi);
-	      p_mNHitsPhi_phiP[i_match]->Fill(phi_proj,nHitsPhi);
-	    }
-	  }
-	}
-      }
-    }
-  }
-}
-
-void FstQAStudy::writeClusterSize_TrackClusters()
-{
-  for(int i_match = 0; i_match < 4; ++i_match)
-  {
-    p_mNHitsR_rP[i_match]->Write();
-    p_mNHitsR_phiP[i_match]->Write();
-    p_mNHitsPhi_rP[i_match]->Write();
-    p_mNHitsPhi_phiP[i_match]->Write();
-  }
-}
-//--------------Cluster Size with Track---------------------
 
 //--------------Signal QA---------------------
 void FstQAStudy::initSignalQA()
@@ -928,11 +518,16 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
     FstRawHit *fstRawHit = fstEvent->getRawHit(i_hit);
     if(fstRawHit->getLayer() == 0) // FST
     {
-      double r_fst = fstRawHit->getPosX(); // r for fst
-      double phi_fst = fstRawHit->getPosY(); // phi for fst
-      int maxTb = fstRawHit->getMaxTb();
-      double adc = fstRawHit->getCharge(maxTb); // adc - pedMean
-      double ped = fstRawHit->getPedStdDev(maxTb); // pedStdDev
+      int sensorId    = fstRawHit->getSensor();
+      double r_orig   = fstRawHit->getPosX(); // r for fst in sensorId frame
+      double phi_orig = fstRawHit->getPosY(); // phi for fst in sensorId frame
+      TVector2 vPosFst(r_orig,phi_orig); // set origninal pos in sensorId frame
+      TVector2 vAlignedFST = this->getFstAlignedPos(vPosFst,sensorId); // convert to mDefSenorId frame
+      double r_fst   = vAlignedFST.X(); // r for fst in mDefSenorId frame
+      double phi_fst = vAlignedFST.Y(); // phi for fst in mDefSenorId frame
+      int maxTb      = fstRawHit->getMaxTb();
+      double adc     = fstRawHit->getCharge(maxTb); // adc - pedMean
+      double ped     = fstRawHit->getPedStdDev(maxTb); // pedStdDev
       if(mApplyCMNCorr) ped = fstRawHit->getRanStdDev(maxTb); // ranStdDev
 
       if( fstRawHit->getIsHit() )
@@ -961,9 +556,14 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
       if( fstCluster->getIsSeed() ) // select cluste with seed
       {
 	mNumOfFstSimpleClusters++;
-	double r_fst = fstCluster->getMeanX(); // r for fst
-	double phi_fst = fstCluster->getMeanY(); // phi for fst
-	double adc = fstCluster->getTotCharge();
+	int sensorId    = fstCluster->getSensor();
+	double r_orig   = fstCluster->getMeanX(); // r for fst in sensorId frame
+	double phi_orig = fstCluster->getMeanY(); // phi for fst in sensorId frame
+	TVector2 vPosFst(r_orig,phi_orig); // set origninal pos in sensorId frame
+	TVector2 vAlignedFST = this->getFstAlignedPos(vPosFst,sensorId); // convert to mDefSenorId frame
+	double r_fst   = vAlignedFST.X(); // r for fst in mDefSenorId frame
+	double phi_fst = vAlignedFST.Y(); // phi for fst in mDefSenorId frame
+	double adc     = fstCluster->getTotCharge();
 	h_mFstSimpleClustersDisplay->Fill(r_fst,phi_fst,adc);
 	g_mFstSimpleClustersDisplay->SetPoint(mNumOfFstSimpleClusters-1,r_fst,phi_fst);
       }
@@ -977,18 +577,28 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
       if( fstCluster->getIsSeed() ) // select cluste with seed
       {
 	mNumOfFstScanClusters++;
-	double r_fst = fstCluster->getMeanX(); // r for fst
-	double phi_fst = fstCluster->getMeanY(); // phi for fst
-	double adc = fstCluster->getTotCharge();
+	int sensorId    = fstCluster->getSensor();
+	double r_orig   = fstCluster->getMeanX(); // r for fst in sensorId frame
+	double phi_orig = fstCluster->getMeanY(); // phi for fst in sensorId frame
+	TVector2 vPosFst(r_orig,phi_orig); // set origninal pos in sensorId frame
+	TVector2 vAlignedFST = this->getFstAlignedPos(vPosFst,sensorId); // convert to mDefSenorId frame
+	double r_fst   = vAlignedFST.X(); // r for fst in mDefSenorId frame
+	double phi_fst = vAlignedFST.Y(); // phi for fst in mDefSenorId frame
+	double adc     = fstCluster->getTotCharge();
 	h_mFstScanClustersDisplay->Fill(r_fst,phi_fst,adc);
 	g_mFstScanClustersDisplay->SetPoint(mNumOfFstScanClusters-1,r_fst,phi_fst);
 
 	for(int i_hit = 0; i_hit < fstCluster->getNumRawHits(); ++i_hit)
 	{ // fill hits display for clusters with hit
 	  FstRawHit *fstRawHit = fstCluster->getRawHit(i_hit);
-	  double r_hit = fstRawHit->getPosX(); // r for fst
-	  double phi_hit = fstRawHit->getPosY(); // phi for fst
-	  int maxTb_hit = fstRawHit->getMaxTb();
+	  int sensorId        = fstRawHit->getSensor();
+	  double r_hit_orig   = fstRawHit->getPosX(); // r for fst in sensorId frame
+	  double phi_hit_orig = fstRawHit->getPosY(); // phi for fst in sensorId frame
+	  TVector2 vPosHitFst(r_hit_orig,phi_hit_orig); // set origninal pos in sensorId frame
+	  TVector2 vAlignedHitFST = this->getFstAlignedPos(vPosHitFst,sensorId); // convert to mDefSenorId frame
+	  double r_hit   = vAlignedHitFST.X(); // r for fst in mDefSenorId frame
+	  double phi_hit = vAlignedHitFST.Y(); // phi for fst in mDefSenorId frame
+	  int maxTb_hit  = fstRawHit->getMaxTb();
 	  double adc_hit = fstRawHit->getCharge(maxTb_hit); // adc - pedMean
 	  double ped_hit = fstRawHit->getPedStdDev(maxTb_hit); // pedStdDev
 	  if(mApplyCMNCorr) ped_hit = fstRawHit->getRanStdDev(maxTb_hit); // ranStdDev
@@ -1008,16 +618,16 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
   { // fill Tracks Display
     FstTrack *fstTrack = mFstEvent_InPut->getTrack(i_track);
 
-    TVector3 pos_ist1 = fstTrack->getPosOrig(1);
+    TVector3 pos_ist1 = fstTrack->getOrigPosIst1();
     double y1_ist = pos_ist1.Y(); // original hit postion on IST1
-    TVector3 pos_ist3 = fstTrack->getPosOrig(3);
+    TVector3 pos_ist3 = fstTrack->getOrigPosIst3();
     double y3_ist = pos_ist3.Y(); // original hit postion on IST3
 
-    TVector3 proj_fst = fstTrack->getProjection(0);
+    TVector3 proj_fst = fstTrack->getProjFst(FST::mDefSenorId); // use mDefSenorId for now
     double r_proj = proj_fst.X();
     double phi_proj = proj_fst.Y();
 
-    TVector3 proj_ist2 = fstTrack->getProjection(2);
+    TVector3 proj_ist2 = fstTrack->getProjIst2();
     double x2_proj = proj_ist2.X(); // get aligned projected position w.r.t. IST2
     double y2_proj = proj_ist2.Y(); // x & y for ist2
 
@@ -1070,3 +680,27 @@ void FstQAStudy::writeEventDisplay_TrackClusters()
   h_mNumFstScanClustersDisplay->Write();
 }
 //--------------Event Display---------------------
+
+//--------------Utility for tracking-------------------
+TVector2 FstQAStudy::getFstAlignedPos(TVector2 vPosFst, int sensorId)
+{
+  double r_FstLocal   = vPosFst.X();
+  double phi_FstLocal = vPosFst.Y();
+  double x_FstLocal   = r_FstLocal*TMath::Cos(phi_FstLocal);
+  double y_FstLocal   = r_FstLocal*TMath::Sin(phi_FstLocal);
+  // transfer to IST2 frame
+  double x_IST = (x_FstLocal-FST::x_shift[sensorId])*TMath::Cos(FST::phi_rot[sensorId]) - (y_FstLocal-FST::y_shift[sensorId])*TMath::Sin(FST::phi_rot[sensorId]);
+  double y_IST = (y_FstLocal-FST::y_shift[sensorId])*TMath::Cos(FST::phi_rot[sensorId]) + (x_FstLocal-FST::x_shift[sensorId])*TMath::Sin(FST::phi_rot[sensorId]);
+
+  // transfer to FST mDefSenorId frame
+  double x_FST = x_IST*TMath::Cos(FST::phi_rot[FST::mDefSenorId]) + y_IST*TMath::Sin(FST::phi_rot[FST::mDefSenorId]) + FST::x_shift[FST::mDefSenorId];
+  double y_FST = y_IST*TMath::Cos(FST::phi_rot[FST::mDefSenorId]) - x_IST*TMath::Sin(FST::phi_rot[FST::mDefSenorId]) + FST::y_shift[FST::mDefSenorId];
+  double r_FST = TMath::Sqrt(x_FST*x_FST+y_FST*y_FST);
+  double phi_FST = TMath::ATan2(y_FST,x_FST);
+
+  TVector2 vAlignedFST;
+  vAlignedFST.Set(r_FST,phi_FST);
+
+  return vAlignedFST;
+}
+//--------------Utility for tracking-------------------

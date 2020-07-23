@@ -140,7 +140,7 @@ void plotNoiseQA(string module = "Mod03", string mode = "Ped")
   h_mRanSigma->Draw("P same");
   leg->Draw("same");
 
-  c_noise->SaveAs("./NoiseScan.eps");
+  c_noise->SaveAs("./NoiseScan.pdf");
 
   /*
   TH1F *h_mPedSigma_Apv0Rstrip0[4];

@@ -46,29 +46,6 @@ class FstQAStudy : public TObject
     // init input TChain
     bool initChain();
 
-    // Counts
-    void initCounts();
-    void fillCounts(FstEvent *fstEvent);
-    void writeCounts();
-
-    // ADC
-    void initAdc_Hits();
-    void fillAdc_Hits(std::vector<FstRawHit *> rawHitVec_orig);
-    void writeAdc_Hits();
-
-    void initAdc_Clusters();
-    void fillAdc_Clusters(std::vector<FstCluster *> clusterVec_orig);
-    void writeAdc_Cluster();
-
-    // cluster size
-    void initClusterSize();
-    void fillClusterSize(std::vector<FstCluster *> clusterVec_orig);
-    void writeClusterSize();
-
-    void initClusterSize_TrackClusters();
-    void fillClusterSize_TrackClusters(FstEvent *fstEvent);
-    void writeClusterSize_TrackClusters();
-    
     // signal & noise
     void initSignalQA();
     void fillSignalQA(FstEvent *fstEvent);
@@ -85,35 +62,6 @@ class FstQAStudy : public TObject
     std::string mOutPutFile;
 
     TFile *File_mOutPut;
-
-    // Counts
-    TH1F *h_mCounts_Hits[4]; // 0 for FST, 1-3 for IST
-    TH1F *h_mCounts_Clusters[4]; // 0 for FST, 1-3 for IST
-    TH2F *h_mCounts_Corr[4];
-    TH2F *h_mCounts_RPhi[4];
-
-    // ADC
-    TH1F *h_mAdcFst_Hits[FST::numRStrip]; // 0-3 r_strip
-    TH1F *h_mAdcIst_Hits[4]; // 0: FST | 1: ISST
-
-    TH1F *h_mAdcFst_Clusters[FST::numRStrip]; // 0-3 r_strip
-    TH1F *h_mAdcIst_Clusters[4]; // 0: FST | 1: ISST
-    TProfile2D *p_mAdcFst_Column; // cluster mean column vs. hit column
-    TProfile2D *p_mAdcFst_Row; // cluster mean row vs. hit row 
-
-    // cluster size
-    TProfile *p_mNHitsR_meanColumn; // <R>
-    TProfile *p_mNHitsR_meanRow; // <phi>
-    TProfile *p_mNHitsPhi_meanColumn;
-    TProfile *p_mNHitsPhi_meanRow;
-    TProfile *p_mTbDiffR;
-    TProfile *p_mTbDiffPhi;
-
-    // Cluster size with track 
-    TProfile *p_mNHitsR_rP[4]; // 0: no matching | 1-3 matching within (1-3)*pitchR in r & (1-3)*pitchPhi in phi
-    TProfile *p_mNHitsR_phiP[4];
-    TProfile *p_mNHitsPhi_rP[4];
-    TProfile *p_mNHitsPhi_phiP[4];
 
     // Signal & noise for max time bin
     // hits
@@ -199,6 +147,9 @@ class FstQAStudy : public TObject
     FstRawHit *mFstRawHit;
     FstCluster *mFstCluster;
     FstTrack *mFstTrack;
+
+    // Utility for tracking
+    TVector2 getFstAlignedPos(TVector2 vPosFst, int sensorId); // get alignmed sensorId w.r.t. IST2 then to mDefSenorId
 
     ClassDef(FstQAStudy,1)
 };
