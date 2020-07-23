@@ -1,12 +1,13 @@
 #!/bin/bash
 date
 
-#. ./genPedList.sh HV200V
+#. ./genPedList.sh Mod03 HV200V
 
-if [ $# -eq 1 ]
+if [ $# -eq 2 ]
 then
-  hv=$1
-  rm FstPed_${hv}.list
-  touch FstPed_${hv}.list
-  ls ../../data/FstCosmicTestStand_*/ped/Fst*_${hv}_ped_*.root >> FstPed_${hv}.list
+  mod=$1
+  hv=$2
+  rm FstPed_${mod}_${hv}.list
+  touch FstPed_${mod}_${hv}.list
+  ls ../../data/FstCosmicTestStand_*/ped/FstInnerTracking*${mod}*_${hv}_ped_*.root >> FstPed_${mod}_${hv}.list
 fi
