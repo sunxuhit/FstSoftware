@@ -228,7 +228,7 @@ void calTrackClusterEfficiency_2Layer(string hv = "HV70V", bool isSavePed = true
       h_mScanClustersTrackIstCountsR_2Layer[i_sensor][i_match]->SetLineColor(1);
       h_mScanClustersTrackIstCountsR_2Layer[i_sensor][i_match]->Draw("HIST");
       h_mSimpleClustersTrackIstCountsR_2Layer[i_sensor][i_match]->SetLineColor(1);
-      h_mSimpleClustersTrackIstCountsR_2Layer[i_sensor][i_match]->Draw("HIST");
+      h_mSimpleClustersTrackIstCountsR_2Layer[i_sensor][i_match]->Draw("HIST same");
       PlotLine(FST::mFstRMin[i_sensor], FST::mFstRMin[i_sensor], 0.5, h_mScanClustersTrackIstCountsR_2Layer[i_sensor][i_match]->GetMaximum(), 1, 2, 2);
       PlotLine(FST::mFstRMax[i_sensor], FST::mFstRMax[i_sensor], 0.5, h_mScanClustersTrackIstCountsR_2Layer[i_sensor][i_match]->GetMaximum(), 1, 2, 2);
 
