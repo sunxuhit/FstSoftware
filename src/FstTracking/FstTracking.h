@@ -61,11 +61,14 @@ class FstTracking : public TObject
     // efficiency
     void initEfficiency_Hits();
     void calEfficiency_Hits(FstEvent *fstEvent);
+    void calEfficiencyModule_Hits(FstEvent *fstEvent);
     void writeEfficiency_Hits();
 
     void initEfficiency_Clusters();
     void calEfficiency_SimpleClusters(FstEvent *fstEvent);
     void calEfficiency_ScanClusters(FstEvent *fstEvent);
+    void calEfficiencyModule_SimpleClusters(FstEvent *fstEvent);
+    void calEfficiencyModule_ScanClusters(FstEvent *fstEvent);
     void writeEfficiency_Clusters();
 
   private:
@@ -170,21 +173,32 @@ class FstTracking : public TObject
     // 0: no matching | 1-7 matching within (1-7)*pitchR in r & 3.0(6.0)*pitchPhi in phi
     TH2F *h_mHitsTrackIstCounts[FST::mFstNumSensorsPerModule][FST::mFstNumMatching]; // position on FST from IST projection
     TH2F *h_mHitsTrackFstCounts[FST::mFstNumSensorsPerModule][FST::mFstNumMatching]; // position on FST from FST measurement
+    // whole module
+    TH2F *h_mHitsTrackIstCountsModule[FST::mFstNumMatching]; // position on FST from IST projection
+    TH2F *h_mHitsTrackFstCountsModule[FST::mFstNumMatching]; // position on FST from FST measurement
 
     // Efficiency based on Clusters
     // simple clusters
     TH2F *h_mSimpleClustersTrackIstCounts_2Layer[FST::mFstNumSensorsPerModule][FST::mFstNumMatching]; // position on FST from IST projection
     TH2F *h_mSimpleClustersTrackFstCounts_2Layer[FST::mFstNumSensorsPerModule][FST::mFstNumMatching]; // position on FST from FST measurement
-
     TH2F *h_mSimpleClustersTrackIstCounts_3Layer[FST::mFstNumSensorsPerModule][FST::mFstNumMatching]; // position on FST from IST projection
     TH2F *h_mSimpleClustersTrackFstCounts_3Layer[FST::mFstNumSensorsPerModule][FST::mFstNumMatching]; // position on FST from FST measurement
+    // whole module
+    TH2F *h_mSimpleClustersTrackIstCountsModule_2Layer[FST::mFstNumMatching]; // position on FST from IST projection
+    TH2F *h_mSimpleClustersTrackFstCountsModule_2Layer[FST::mFstNumMatching]; // position on FST from FST measurement
+    TH2F *h_mSimpleClustersTrackIstCountsModule_3Layer[FST::mFstNumMatching]; // position on FST from IST projection
+    TH2F *h_mSimpleClustersTrackFstCountsModule_3Layer[FST::mFstNumMatching]; // position on FST from FST measurement
 
     // scan clusters
     TH2F *h_mScanClustersTrackIstCounts_2Layer[FST::mFstNumSensorsPerModule][FST::mFstNumMatching]; // position on FST from IST projection
     TH2F *h_mScanClustersTrackFstCounts_2Layer[FST::mFstNumSensorsPerModule][FST::mFstNumMatching]; // position on FST from FST measurement
-
     TH2F *h_mScanClustersTrackIstCounts_3Layer[FST::mFstNumSensorsPerModule][FST::mFstNumMatching]; // position on FST from IST projection
     TH2F *h_mScanClustersTrackFstCounts_3Layer[FST::mFstNumSensorsPerModule][FST::mFstNumMatching]; // position on FST from FST measurement
+    // whole module
+    TH2F *h_mScanClustersTrackIstCountsModule_2Layer[FST::mFstNumMatching]; // position on FST from IST projection
+    TH2F *h_mScanClustersTrackFstCountsModule_2Layer[FST::mFstNumMatching]; // position on FST from FST measurement
+    TH2F *h_mScanClustersTrackIstCountsModule_3Layer[FST::mFstNumMatching]; // position on FST from IST projection
+    TH2F *h_mScanClustersTrackFstCountsModule_3Layer[FST::mFstNumMatching]; // position on FST from FST measurement
 
     // Input TChain for hits and clusters
     TChain *mChainInPut; // input TTree
