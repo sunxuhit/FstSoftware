@@ -322,4 +322,22 @@ void calTrackClusterEfficiency_2Layer(string hv = "HV70V", bool isSavePed = true
 
   string output_stop = "./figures/Efficiency_TrackCluster_2Layer.pdf]";
   c_play->Print(output_stop.c_str()); // open pdf file
+
+  string outputfile = Form("../../output/configuration/FstEfficiency_%s_Th%1.1fTb%dPed%1.1fPed%1.1f_%s_%s.root",hv.c_str(),nFstHitsCut,numOfUsedTimeBins,nFstThresholdCut2,nFstThresholdCut1,pedMode.c_str(),cmnMode.c_str());
+  TFile *File_OutPut = new TFile(outputfile.c_str(),"RECREATE");
+  File_OutPut->cd();
+  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
+  {
+    for(int i_match = 0; i_match < FST::mFstNumMatching; ++i_match)
+    {
+      h_mSimpleClustersTrackFstEff_2Layer[i_sensor][i_match]->Write();
+      h_mSimpleClustersTrackFstEffR_2Layer[i_sensor][i_match]->Write();
+      h_mSimpleClustersTrackFstEffPhi_2Layer[i_sensor][i_match]->Write();
+
+      h_mScanClustersTrackFstEff_2Layer[i_sensor][i_match]->Write();
+      h_mScanClustersTrackFstEffR_2Layer[i_sensor][i_match]->Write();
+      h_mScanClustersTrackFstEffPhi_2Layer[i_sensor][i_match]->Write();
+    }
+  }
+  File_OutPut->Close();
 }

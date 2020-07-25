@@ -66,7 +66,8 @@ void plotMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, st
   if(sensorId > 0) mSector = "Outer";
 
   // string inputData = Form("../../output/simulation/FstTracking_woRot_%s_%s.root",hv.c_str(),mSector.c_str());
-  string inputData = Form("../../output/simulation/FstTracking_woRot_%s_Sensor%d.root",hv.c_str(),sensorId);
+  // string inputData = Form("../../output/simulation/FstTracking_woRot_%s_Sensor%d.root",hv.c_str(),sensorId);
+  string inputData = Form("../../output/simulation/FstTracking_woRot_%s_Module03.root",hv.c_str());
   if(isRot) inputData = Form("../../output/simulation/FstTracking_Rot_AlignedRstrip%d_%s_%s.root",rAligned,hv.c_str(),mSector.c_str());
   TFile *File_InPutData = TFile::Open(inputData.c_str());
   TH1F *h_mClustersTrackFstResR_2Layer;
