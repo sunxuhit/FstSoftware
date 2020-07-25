@@ -1420,25 +1420,25 @@ void FstTracking::initEfficiency_Clusters()
       string HistName;
       // simple clusters
       HistName = Form("h_mSimpleClustersTrackIstCounts_2Layer_Sensor%d_SF%d",i_sensor,i_match);
-      h_mSimpleClustersTrackIstCounts_2Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),40,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
+      h_mSimpleClustersTrackIstCounts_2Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
       HistName = Form("h_mSimpleClustersTrackFstCounts_2Layer_Sensor%d_SF%d",i_sensor,i_match);
-      h_mSimpleClustersTrackFstCounts_2Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),40,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
+      h_mSimpleClustersTrackFstCounts_2Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
 
       HistName = Form("h_mSimpleClustersTrackIstCounts_3Layer_Sensor%d_SF%d",i_sensor,i_match);
-      h_mSimpleClustersTrackIstCounts_3Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),40,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
+      h_mSimpleClustersTrackIstCounts_3Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
       HistName = Form("h_mSimpleClustersTrackFstCounts_3Layer_Sensor%d_SF%d",i_sensor,i_match);
-      h_mSimpleClustersTrackFstCounts_3Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),40,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
+      h_mSimpleClustersTrackFstCounts_3Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
 
       // scan clusters
       HistName = Form("h_mScanClustersTrackIstCounts_2Layer_Sensor%d_SF%d",i_sensor,i_match);
-      h_mScanClustersTrackIstCounts_2Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),40,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
+      h_mScanClustersTrackIstCounts_2Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
       HistName = Form("h_mScanClustersTrackFstCounts_2Layer_Sensor%d_SF%d",i_sensor,i_match);
-      h_mScanClustersTrackFstCounts_2Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),40,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
+      h_mScanClustersTrackFstCounts_2Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
 
       HistName = Form("h_mScanClustersTrackIstCounts_3Layer_Sensor%d_SF%d",i_sensor,i_match);
-      h_mScanClustersTrackIstCounts_3Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),40,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
+      h_mScanClustersTrackIstCounts_3Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
       HistName = Form("h_mScanClustersTrackFstCounts_3Layer_Sensor%d_SF%d",i_sensor,i_match);
-      h_mScanClustersTrackFstCounts_3Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),40,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
+      h_mScanClustersTrackFstCounts_3Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
     }
   }
   for(int i_match = 0; i_match < FST::mFstNumMatching; ++i_match)
@@ -1446,25 +1446,25 @@ void FstTracking::initEfficiency_Clusters()
     string HistName;
     // simple clusters
     HistName = Form("h_mSimpleClustersTrackIstCountsModule_2Layer_SF%d",i_match);
-    h_mSimpleClustersTrackIstCountsModule_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),80,FST::rMin[0],FST::rMax[1],80,FST::phiMin[2],FST::phiMax[1]);
+    h_mSimpleClustersTrackIstCountsModule_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),50,FST::rMin[0],FST::rMax[1],80,FST::phiMin[2],FST::phiMax[1]);
     HistName = Form("h_mSimpleClustersTrackFstCountsModule_2Layer_SF%d",i_match);
-    h_mSimpleClustersTrackFstCountsModule_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),80,FST::rMin[0],FST::rMax[1],80,FST::phiMin[2],FST::phiMax[1]);
+    h_mSimpleClustersTrackFstCountsModule_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),50,FST::rMin[0],FST::rMax[1],80,FST::phiMin[2],FST::phiMax[1]);
 
     HistName = Form("h_mSimpleClustersTrackIstCountsModule_3Layer_SF%d",i_match);
-    h_mSimpleClustersTrackIstCountsModule_3Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),80,FST::rMin[0],FST::rMax[1],80,FST::phiMin[2],FST::phiMax[1]);
+    h_mSimpleClustersTrackIstCountsModule_3Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),50,FST::rMin[0],FST::rMax[1],80,FST::phiMin[2],FST::phiMax[1]);
     HistName = Form("h_mSimpleClustersTrackFstCountsModule_3Layer_SF%d",i_match);
-    h_mSimpleClustersTrackFstCountsModule_3Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),80,FST::rMin[0],FST::rMax[1],80,FST::phiMin[2],FST::phiMax[1]);
+    h_mSimpleClustersTrackFstCountsModule_3Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),50,FST::rMin[0],FST::rMax[1],80,FST::phiMin[2],FST::phiMax[1]);
 
     // scan clusters
     HistName = Form("h_mScanClustersTrackIstCountsModule_2Layer_SF%d",i_match);
-    h_mScanClustersTrackIstCountsModule_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),80,FST::rMin[0],FST::rMax[1],80,FST::phiMin[2],FST::phiMax[1]);
+    h_mScanClustersTrackIstCountsModule_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),50,FST::rMin[0],FST::rMax[1],80,FST::phiMin[2],FST::phiMax[1]);
     HistName = Form("h_mScanClustersTrackFstCountsModule_2Layer_SF%d",i_match);
-    h_mScanClustersTrackFstCountsModule_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),80,FST::rMin[0],FST::rMax[1],80,FST::phiMin[2],FST::phiMax[1]);
+    h_mScanClustersTrackFstCountsModule_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),50,FST::rMin[0],FST::rMax[1],80,FST::phiMin[2],FST::phiMax[1]);
 
     HistName = Form("h_mScanClustersTrackIstCountsModule_3Layer_SF%d",i_match);
-    h_mScanClustersTrackIstCountsModule_3Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),80,FST::rMin[0],FST::rMax[1],80,FST::phiMin[2],FST::phiMax[1]);
+    h_mScanClustersTrackIstCountsModule_3Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),50,FST::rMin[0],FST::rMax[1],80,FST::phiMin[2],FST::phiMax[1]);
     HistName = Form("h_mScanClustersTrackFstCountsModule_3Layer_SF%d",i_match);
-    h_mScanClustersTrackFstCountsModule_3Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),80,FST::rMin[0],FST::rMax[1],80,FST::phiMin[2],FST::phiMax[1]);
+    h_mScanClustersTrackFstCountsModule_3Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),50,FST::rMin[0],FST::rMax[1],80,FST::phiMin[2],FST::phiMax[1]);
   }
 }
 
@@ -1920,11 +1920,12 @@ void FstTracking::calEfficiencyModule_SimpleClusters(FstEvent *fstEvent)
 		  double r_fst   = vAlignedFST.X();
 		  double phi_fst = vAlignedFST.Y();
 
-		  // get projected rStrip
+		  // get projected position w.r.t. sensorId
 		  proj_fst = trackClusterVec[i_track]->getProjFst(sensorId); // use sensorId for better tracking
 		  r_proj   = proj_fst.X();
 		  phi_proj = proj_fst.Y();
 
+		  // get projected rStrip
 		  int rStrip = -1;
 		  if(r_proj > FST::rMin[sensorId] && r_proj <= FST::mFstRMin[sensorId]) rStrip = 0;
 		  for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
@@ -1947,6 +1948,10 @@ void FstTracking::calEfficiencyModule_SimpleClusters(FstEvent *fstEvent)
 		}
 	      }
 	    }
+	    // get projected position w.r.t. mDefSenorId 
+	    proj_fst = trackClusterVec[i_track]->getProjFst(FST::mDefSenorId);
+	    r_proj   = proj_fst.X();
+	    phi_proj = proj_fst.Y();
 	    if(nMatchedTrack > 0) h_mSimpleClustersTrackFstCountsModule_2Layer[i_match]->Fill(r_proj,phi_proj);
 	    h_mSimpleClustersTrackIstCountsModule_2Layer[i_match]->Fill(r_proj,phi_proj);
 	  }
@@ -2036,6 +2041,10 @@ void FstTracking::calEfficiencyModule_SimpleClusters(FstEvent *fstEvent)
 		    }
 		  }
 		}
+		// get projected position w.r.t. mDefSenorId 
+		proj_fst = trackClusterVec[i_track]->getProjFst(FST::mDefSenorId);
+		r_proj   = proj_fst.X();
+		phi_proj = proj_fst.Y();
 		if(nMatchedTrack > 0) h_mSimpleClustersTrackFstCountsModule_3Layer[i_match]->Fill(r_proj,phi_proj);
 		h_mSimpleClustersTrackIstCountsModule_3Layer[i_match]->Fill(r_proj,phi_proj);
 	      }
@@ -2144,6 +2153,10 @@ void FstTracking::calEfficiencyModule_ScanClusters(FstEvent *fstEvent)
 		}
 	      }
 	    }
+	    // get projected position w.r.t. mDefSenorId 
+	    proj_fst = trackClusterVec[i_track]->getProjFst(FST::mDefSenorId);
+	    r_proj   = proj_fst.X();
+	    phi_proj = proj_fst.Y();
 	    if(nMatchedTrack > 0) h_mScanClustersTrackFstCountsModule_2Layer[i_match]->Fill(r_proj,phi_proj);
 	    h_mScanClustersTrackIstCountsModule_2Layer[i_match]->Fill(r_proj,phi_proj);
 	  }
@@ -2233,6 +2246,10 @@ void FstTracking::calEfficiencyModule_ScanClusters(FstEvent *fstEvent)
 		    }
 		  }
 		}
+		// get projected position w.r.t. mDefSenorId 
+		proj_fst = trackClusterVec[i_track]->getProjFst(FST::mDefSenorId);
+		r_proj   = proj_fst.X();
+		phi_proj = proj_fst.Y();
 		if(nMatchedTrack > 0) h_mScanClustersTrackFstCountsModule_3Layer[i_match]->Fill(r_proj,phi_proj);
 		h_mScanClustersTrackIstCountsModule_3Layer[i_match]->Fill(r_proj,phi_proj);
 	      }
