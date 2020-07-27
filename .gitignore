@@ -28,3 +28,4 @@ output/*/*/*.root
 list/FST/*.list
 list/FST/configuration/*.list
 list/FST/timesequence/*.list
+list/FST/alignment/*.list

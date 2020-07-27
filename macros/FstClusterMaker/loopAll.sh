@@ -17,14 +17,24 @@ then
    # . ./fstCluster.sh HV70V $isApplyCMNCorr 3.0 $item 
   # done
 
-  echo "Time Sequence Study for HV100V"
-  InPutDate_HV100V=../../list/FST/DateHV100V.list
-  for item in `cat $InPutDate_HV100V`
-  do
+  # echo "Time Sequence Study for HV100V"
+  # InPutDate_HV100V=../../list/FST/DateHV100V.list
+  # for item in `cat $InPutDate_HV100V`
+  # do
    # . ./fstCluster.sh HV100V $isApplyCMNCorr 4.5 $item 
-   . ./fstCluster.sh HV100V $isApplyCMNCorr 4.0 $item 
+   # . ./fstCluster.sh HV100V $isApplyCMNCorr 4.0 $item 
    # . ./fstCluster.sh HV100V $isApplyCMNCorr 3.5 $item 
    # . ./fstCluster.sh HV100V $isApplyCMNCorr 3.0 $item 
+  # done
+
+  echo "Time Sequence Study for HV120V"
+  InPutDate_HV120V=../../list/FST/DateHV120V.list
+  for item in `cat $InPutDate_HV120V`
+  do
+   # . ./fstCluster.sh HV120V $isApplyCMNCorr 4.5 $item 
+   . ./fstCluster.sh HV120V $isApplyCMNCorr 4.0 $item 
+   # . ./fstCluster.sh HV120V $isApplyCMNCorr 3.5 $item 
+   # . ./fstCluster.sh HV120V $isApplyCMNCorr 3.0 $item 
   done
 
   # echo "Time Sequence Study for HV140V"
