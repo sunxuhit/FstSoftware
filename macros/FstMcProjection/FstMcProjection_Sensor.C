@@ -9,21 +9,18 @@
 
 using namespace std;
 
-void printAlignmentInfo(bool isRot, int rAligned);
-void genCosmicTrackRandom(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, bool isRot, int rAligned, double deltaX, double deltaY); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
-void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TH1F *h_TrackAngle, bool isRot, int rAligned, double deltaX, double deltaY); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
-void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TF1 *f_TrackAngle, bool isRot, int rAligned, double deltaX, double deltaY); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
-TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot, int rAligned, double deltaX, double deltaY); // get projected position on FST from IST1 & IST3 | return (r,phi) for FST
-TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST, int sensorId); // get readout position from a real hit | return (x,y) for IST & (r,phi) for FST
+void printAlignmentInfo();
+void genCosmicTrackRandom(TVector3 &vPosIST1, TVector3 &vPosIST3, TVector3 &vPosFST, int sensorId, double deltaX, double deltaY); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
+void genCosmicTrackAngle(TVector3 &vPosIST1, TVector3 &vPosIST3, TVector3 &vPosFST, TF1 *f_TrackAngle, int sensorId, double deltaX, double deltaY); // cosmic ray simulation | return (x,y) for IST & (r,phi) for FST
+TVector3 getIstProjection(TVector3 vPosIst1, TVector3 vPosIst3, int sensorId, double deltaX, double deltaY); // get projected position from IST1 & IST3 to sensorId w.r.t. mDefSenorId
+TVector3 getIstAlignedPos(TVector3 vPosIst, double deltaX, double deltaY); // get Aligned IST1 & IST3 position w.r.t. FST mDefSenorId
+// TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot, int rAligned, double deltaX, double deltaY); // get projected position on FST from IST1 & IST3 | return (r,phi) for FST
+TVector3 getReadOut(TVector3 vPosHit, TH2F *h_pixel, bool isFST, int sensorId); // get readout position from a real hit | return (x,y) for IST & (r,phi) for FST
 int findCrossTalkBin(double r_hit, int sensorId);
 
-void FstMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, int numOfTracks = 500000)
+void FstMcProjection_Sensor(int sensorId = 0, int numOfTracks = 500000)
 {
-  printAlignmentInfo(isRot,rAligned);
-
-  // cosmic angle distribution
-  // TFile *File_InPut = TFile::Open("../../output/configuration/FstTracking_HV200V_Th4.0Tb2Ped2.5Ped3.5_withPed_withCMNCorr.root");
-  // TH1F *h_mClustersTrackAngle = (TH1F*)File_InPut->Get("h_mClustersTrackAngle")->Clone();
+  printAlignmentInfo();
 
   const double lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
   const double lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
@@ -64,17 +61,6 @@ void FstMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, int
   double maxR    = 160.0;
   int numBinPhi = 200;
   double maxPhi  = 0.10;
-  if(isRot)
-  {
-    numBinX   = 160;
-    maxX      = 160.0;
-    numBinY   = 75;
-    maxY      = 25.0;
-    numBinR   = 160;
-    maxR      = 160.0;
-    numBinPhi = 75;
-    maxPhi    = 0.15;
-  }
 
   TH2F *h_mFstDisplay = new TH2F("h_mFstDisplay","h_mFstDisplay",binNumR[sensorId],FST::rMin[sensorId],FST::rMax[sensorId],binNumPhi[sensorId],FST::phiMin[sensorId],FST::phiMax[sensorId]);
   // FST residual
@@ -122,7 +108,7 @@ void FstMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, int
   TH2F *h_mFstSimResRPhi_2Layer = new TH2F("h_mFstSimResRPhi_2Layer","h_mFstSimResRPhi_2Layer",160,-4.0*FST::pitchR,4.0*FST::pitchR,320,-32.0*FST::pitchPhi,32.0*FST::pitchPhi);
 
   int numBinEffR = 30;
-  if(isRot) numBinEffR = 120;
+  int numBinEffPhi = 40;
   TH2F *h_mIstCounts_2Layer[FST::mFstNumMatching];
   TH2F *h_mFstCounts_2Layer[FST::mFstNumMatching];
   for(int i_match = 0; i_match < FST::mFstNumMatching; ++i_match)
@@ -130,9 +116,9 @@ void FstMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, int
     string HistName;
     // simple clusters
     HistName = Form("h_mIstCounts_2Layer_Sensor%d_SF%d",sensorId,i_match);
-    h_mIstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),numBinEffR,FST::rMin[sensorId],FST::rMax[sensorId],90,FST::phiMin[sensorId],FST::phiMax[sensorId]);
+    h_mIstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),numBinEffR,FST::rMin[sensorId],FST::rMax[sensorId],numBinEffPhi,FST::phiMin[sensorId],FST::phiMax[sensorId]);
     HistName = Form("h_mFstCounts_2Layer_Sensor%d_SF%d",sensorId,i_match);
-    h_mFstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),numBinEffR,FST::rMin[sensorId],FST::rMax[sensorId],90,FST::phiMin[sensorId],FST::phiMax[sensorId]);
+    h_mFstCounts_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),numBinEffR,FST::rMin[sensorId],FST::rMax[sensorId],numBinEffPhi,FST::phiMin[sensorId],FST::phiMax[sensorId]);
   }
 
   TH1F *h_mRecoAngle = new TH1F("h_mRecoAngle","h_mRecoAngle",25,0.0,0.5*TMath::Pi());
@@ -144,33 +130,25 @@ void FstMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, int
   // Cosmic Simulation
   for(int i_track =0; i_track < numOfTracks; ++i_track)
   {
-    TVector2 vHitGen_IST1, vHitGen_IST3, vHitGen_FST;
-    vHitGen_IST1.Set(-999.0,-999.0);
-    vHitGen_IST3.Set(-999.0,-999.0);
-    vHitGen_FST.Set(-999.0,-999.0);
+    TVector3 vHitGen_IST1, vHitGen_IST3, vHitGen_FST;
+    vHitGen_IST1.SetXYZ(-999.0,-999.0,-999.0);
+    vHitGen_IST3.SetXYZ(-999.0,-999.0,-999.0);
+    vHitGen_FST.SetXYZ(-999.0,-999.0,-999.0);
 
     double deltaX = 0.0;
     double deltaY = 0.0;
 
     // randomly generated cosmic
-    // genCosmicTrackRandom(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, isRot, rAligned, deltaX, deltaY);
-    // genCosmicTrackAngle(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, h_mClustersTrackAngle, isRot, rAligned, deltaX, deltaY);
-    genCosmicTrackAngle(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, f_mClustersTrackAngle, isRot, rAligned, deltaX, deltaY);
-    TVector2 vHitRo_IST3 = getReadOut(vHitGen_IST3, h_mIst3Pixel, false, sensorId); // RO position at IST3
-    TVector2 vHitRo_IST1 = getReadOut(vHitGen_IST1, h_mIst1Pixel, false, sensorId); // RO position at IST1
-
-    // cosmic incident angle simulation
-    double theta = f_mClustersTrackAngle->GetRandom(); // random generated theta from input cosmic angle distribution
-    double phi = gRandom->Uniform(-TMath::Pi(),TMath::Pi()); // random generated phi distribution
-    h_mPolarAngle->Fill(theta);
-    h_mAzimuthalAngle->Fill(phi);
+    // genCosmicTrackRandom(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, sensorId, deltaX, deltaY);
+    genCosmicTrackAngle(vHitGen_IST1, vHitGen_IST3, vHitGen_FST, f_mClustersTrackAngle, sensorId, deltaX, deltaY);
+    TVector3 vHitRo_IST3 = getReadOut(vHitGen_IST3, h_mIst3Pixel, false, sensorId); // RO position at IST3
+    TVector3 vHitRo_IST1 = getReadOut(vHitGen_IST1, h_mIst1Pixel, false, sensorId); // RO position at IST1
 
     if( !(vHitRo_IST1.X() > -100.0 && vHitRo_IST1.Y() > -100.0) ) continue;
     if( !(vHitRo_IST3.X() > -100.0 && vHitRo_IST3.Y() > -100.0) ) continue;
 
-    TVector2 vHitRo_FST = getReadOut(vHitGen_FST, h_mFstPixel, true, sensorId); // RO position at FST
-    TVector2 vReco_FST = getProjection(vHitRo_IST1, vHitRo_IST3, isRot, rAligned, deltaX, deltaY); // projected position on FST through the readout position from IST1 & IST3
-
+    //------------------------------
+    // IST Display & Projection Error
     double x3_gen = vHitGen_IST3.X();
     double y3_gen = vHitGen_IST3.Y();
     double x3_ro  = vHitRo_IST3.X(); 
@@ -189,6 +167,25 @@ void FstMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, int
     h_mIst1ResX_2Layer->Fill(x1_ro-x1_gen);
     h_mIst1ResY_2Layer->Fill(y1_ro-y1_gen);
 
+    // projected position (w/o alignment) through the randomly generated hit position from IST1 & IST3
+    double x0_genIST = x3_gen + (x1_gen-x3_gen)*(z0_fst+FST::z_shift[sensorId])/z1_ist;
+    double y0_genIST = y3_gen + (y1_gen-y3_gen)*(z0_fst+FST::z_shift[sensorId])/z1_ist;
+    // projected position (w/o alignment) through the readout position from IST1 & IST3
+    double x0_roIST = x3_ro + (x1_ro-x3_ro)*(z0_fst+FST::z_shift[sensorId])/z1_ist;
+    double y0_roIST = y3_ro + (y1_ro-y3_ro)*(z0_fst+FST::z_shift[sensorId])/z1_ist;
+    // IST Projection Error
+    h_mIstProjResX_2Layer->Fill(x0_roIST-x0_genIST);
+    h_mIstProjResY_2Layer->Fill(y0_roIST-y0_genIST);
+    h_mIstProjResXY_2Layer->Fill(x0_roIST-x0_genIST,y0_roIST-y0_genIST);
+    //------------------------------
+
+    //------------------------------
+    // cosmic incident angle simulation
+    double theta = f_mClustersTrackAngle->GetRandom(); // random generated theta from input cosmic angle distribution
+    double phi = gRandom->Uniform(-TMath::Pi(),TMath::Pi()); // random generated phi distribution
+    h_mPolarAngle->Fill(theta);
+    h_mAzimuthalAngle->Fill(phi);
+
     // QA for incident angle
     TVector3 vPos_IST1, vPos_IST3, normVec;
     vPos_IST1.SetXYZ(x1_gen,y1_gen,z1_ist);
@@ -197,21 +194,13 @@ void FstMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, int
     normVec.SetXYZ(0.0,0.0,vPos_IST1.Z()-vPos_IST3.Z());
     double pAngle = istTrack.Angle(normVec);
     h_mRecoAngle->Fill(pAngle);
+    //------------------------------
 
-    // projected position (w/o alignment) through the randomly generated hit position from IST1 & IST3
-    double x0_genIST = x3_gen + (x1_gen-x3_gen)*z0_fst/z1_ist;
-    double y0_genIST = y3_gen + (y1_gen-y3_gen)*z0_fst/z1_ist;
+    //------------------------------
+    // FST Display & Resolution & Efficiency
+    TVector3 vHitRo_FST = getReadOut(vHitGen_FST, h_mFstPixel, true, sensorId); // RO position at FST
+    TVector3 vReco_FST = getIstProjection(vHitRo_IST1, vHitRo_IST3, sensorId, deltaX, deltaY); // projected position on FST through the readout position from IST1 & IST3
 
-    // projected position (w/o alignment) through the readout position from IST1 & IST3
-    double x0_roIST = x3_ro + (x1_ro-x3_ro)*z0_fst/z1_ist;
-    double y0_roIST = y3_ro + (y1_ro-y3_ro)*z0_fst/z1_ist;
-
-    // IST Projection Error
-    h_mIstProjResX_2Layer->Fill(x0_roIST-x0_genIST);
-    h_mIstProjResY_2Layer->Fill(y0_roIST-y0_genIST);
-    h_mIstProjResXY_2Layer->Fill(x0_roIST-x0_genIST,y0_roIST-y0_genIST);
-
-    // FST Residual
     // real position
     double r0_gen   = vHitGen_FST.X();
     double phi0_gen = vHitGen_FST.Y();
@@ -231,7 +220,6 @@ void FstMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, int
     if(r0_ro > -100.0 && phi0_ro > -100.0)
     {
       h_mFstDisplay->Fill(r0_ro,phi0_ro);
-      // h_mFstDisplay->Fill(r0_reco,phi0_reco);
       h_mFstProjResR_2Layer->Fill(r0_ro-r0_reco);
       h_mFstProjResPhi_2Layer->Fill(phi0_ro-phi0_reco);
       h_mFstProjResRPhi_2Layer->Fill(r0_ro-r0_reco,phi0_ro-phi0_reco);
@@ -259,11 +247,21 @@ void FstMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, int
       h_mFstSimResRPhi_2Layer->Fill(r0_reco-r0_gen,phi0_reco-phi0_gen);
     }
 
-    double phiMatchingCut = 0.01; // before totation
-    if(isRot) phiMatchingCut = 0.05;
+    double phiMatchingCut = 0.05; // before totation
     // fill Efficiency
     if(r0_reco >= FST::rMin[sensorId] && r0_reco < FST::rMax[sensorId] && phi0_reco >= FST::phiMin[sensorId] && phi0_reco < FST::phiMax[sensorId])
     {
+      int rStrip = -1;
+      if(r0_reco > FST::rMin[sensorId] && r0_reco <= FST::mFstRMin[sensorId]) rStrip = 0;
+      for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
+      {
+	if(r0_reco > FST::mFstRMin[sensorId] + i_rstrip*FST::pitchR && r0_reco <= FST::mFstRMin[sensorId] + (i_rstrip+1)*FST::pitchR)
+	{ // check the position of the projected r is within a specific r_strip and fill accordingly
+	  rStrip = i_rstrip;
+	}
+      }
+      if(r0_reco > FST::mFstRMax[sensorId] && r0_reco <= FST::rMax[sensorId]) rStrip = 3;
+
       for(int i_match = 0; i_match < 8; ++i_match)
       {
 	h_mIstCounts_2Layer[i_match]->Fill(r0_reco,phi0_reco);
@@ -274,7 +272,7 @@ void FstMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, int
 	  {
 	    nMatchedTrack++;
 	  }
-	  if( i_match > 0 && abs(r0_ro-r0_reco) <= i_match*0.5*FST::pitchR && abs(phi0_ro-phi0_reco) <= phiMatchingCut)
+	  if( i_match > 0 && abs(r0_ro-r0_reco) <= i_match*0.5*FST::pitchR && abs(phi0_ro-phi0_reco) <= FST::phiMatchCut[sensorId][rStrip])
 	  {
 	    nMatchedTrack++;
 	  }
@@ -282,16 +280,16 @@ void FstMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, int
 	if(nMatchedTrack > 0) h_mFstCounts_2Layer[i_match]->Fill(r0_reco,phi0_reco);
       }
     }
+    //------------------------------
   }
 
-  string outputname = Form("../../output/simulation/FstMcProjection_woRot_Sensor%d.root",sensorId);
-  if(isRot) 
-  {
-    outputname = Form("../../output/simulation/FstMcProjection_Rot_AlignedRstrip%d_Sensor%d.root",rAligned,sensorId);
-  }
+  string outputname = Form("../../output/simulation/FstMcProjection_Sensor%d.root",sensorId);
 
   TFile *File_OutPut = new TFile(outputname.c_str(),"RECREATE");
   File_OutPut->cd();
+
+  //------------------------------
+  // IST Display & Projection Error
   h_mIst1Display->Write();
   h_mIst3Display->Write();
   h_mIst1ResX_2Layer->Write();
@@ -302,7 +300,17 @@ void FstMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, int
   h_mIstProjResX_2Layer->Write();
   h_mIstProjResY_2Layer->Write();
   h_mIstProjResXY_2Layer->Write();
+  //------------------------------
 
+  //------------------------------
+  // Cosmic Angle
+  h_mRecoAngle->Write();
+  h_mPolarAngle->Write();
+  h_mAzimuthalAngle->Write();
+  //------------------------------
+
+  //------------------------------
+  // FST Display & Resolution & Efficiency
   h_mFstDisplay->Write();
   h_mFstProjResR_2Layer->Write();
   h_mFstProjResPhi_2Layer->Write();
@@ -332,47 +340,25 @@ void FstMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, int
     h_mIstCounts_2Layer[i_match]->Write();
     h_mFstCounts_2Layer[i_match]->Write();
   }
+  //------------------------------
 
-  h_mRecoAngle->Write();
-  h_mPolarAngle->Write();
-  h_mAzimuthalAngle->Write();
   File_OutPut->Close();
 }
 
-void printAlignmentInfo(bool isRot, int rAligned = 0)
+void printAlignmentInfo()
 {
-  double x2_shift = 0.0;
-  double y2_shift = 0.0;
-  double phi_rot_ist2 = 0.0;
-
-  // before rotation
-  if( !isRot )
+  cout << "default SensorId: " << FST::mDefSenorId << endl;
+  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
   {
-    x2_shift = FST::x2_shift;
-    y2_shift = FST::y2_shift;
-    phi_rot_ist2 = FST::phi_rot_ist2;
+    cout << "Alignment Parameters for Sensor" << i_sensor << " => " << endl;
+    cout << "phi_rot = " << FST::phi_rot[i_sensor] << endl;
+    cout << "x_shift = " << FST::x_shift[i_sensor] << endl;
+    cout << "y_shift = " << FST::y_shift[i_sensor] << endl;
+    cout << "z_shift = " << FST::z_shift[i_sensor] << endl;
   }
-
-  // after rotation
-  if( isRot && rAligned == 0)
-  {
-    // Aligned with RStrip3
-    x2_shift = 209.361;
-    y2_shift = -48.0745;
-    phi_rot_ist2 = -1.50174;
-  }
-  if( isRot && rAligned == 3)
-  {
-    // Aligned with RStrip3
-    x2_shift = 264.505;
-    y2_shift = -48.2426;
-    phi_rot_ist2 = -1.5185; 
-  }
-
-  cout << "isRot = " << isRot << ", x2_shift = " << x2_shift << ", y2_shift = " << y2_shift << ", phi_rot_ist2 = " << phi_rot_ist2 << endl;
 }
 
-void genCosmicTrackRandom(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, bool isRot = false, int rAligned = 0, double deltaX = 0.0, double deltaY = 0.0)
+void genCosmicTrackRandom(TVector3 &vPosIST1, TVector3 &vPosIST3, TVector3 &vPosFST, int sensorId, double deltaX = 0.0, double deltaY = 0.0)
 {
   // gRandom->SetSeed();
 
@@ -382,16 +368,18 @@ void genCosmicTrackRandom(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPos
   // generated position on IST
   double x3_gen = gRandom->Rndm()*lengthColumn;
   double y3_gen = gRandom->Rndm()*lengthRow;
-  vPosIST3.Set(x3_gen,y3_gen);
+  double z3_gen = 0.0;
+  vPosIST3.SetXYZ(x3_gen,y3_gen,z3_gen);
 
   double x1_gen = gRandom->Rndm()*lengthColumn;
   double y1_gen = gRandom->Rndm()*lengthRow;
-  vPosIST1.Set(x1_gen,y1_gen);
+  double z1_gen = FST::pitchLayer12 + FST::pitchLayer23;
+  vPosIST1.SetXYZ(x1_gen,y1_gen,z1_gen);
 
-  vPosFST = getProjection(vPosIST1,vPosIST3,isRot,rAligned,deltaX,deltaY);
+  vPosFST = getIstProjection(vPosIST1,vPosIST3,sensorId,deltaX,deltaY);
 }
 
-void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TH1F *h_TrackAngle, bool isRot = false, int rAligned = 0, double deltaX = 0.0, double deltaY = 0.0)
+void genCosmicTrackAngle(TVector3 &vPosIST1, TVector3 &vPosIST3, TVector3 &vPosFST, TF1 *f_TrackAngle, int sensorId, double deltaX = 0.0, double deltaY = 0.0)
 {
   const double lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
   const double lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
@@ -399,38 +387,22 @@ void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosF
   // random generated position on IST
   double x3_gen = gRandom->Rndm()*lengthColumn;
   double y3_gen = gRandom->Rndm()*lengthRow;
-  vPosIST3.Set(x3_gen,y3_gen);
+  double z3_gen = 0.0;
 
-  // double theta = h_TrackAngle->GetRandom(); // random generated theta from input cosmic angle distribution
-  double theta = h_TrackAngle->GetRandom(); // random generated theta from input cosmic angle distribution
-  double phi = gRandom->Uniform(-TMath::Pi(),TMath::Pi()); // random generated phi distribution
-  double x1_gen = x3_gen + (FST::pitchLayer12 + FST::pitchLayer23)*TMath::Tan(theta)*TMath::Cos(phi);
-  double y1_gen = y3_gen + (FST::pitchLayer12 + FST::pitchLayer23)*TMath::Tan(theta)*TMath::Sin(phi);
-  vPosIST1.Set(x1_gen,y1_gen);
-
-  vPosFST = getProjection(vPosIST1,vPosIST3,isRot,rAligned,deltaX,deltaY);
-}
-
-void genCosmicTrackAngle(TVector2 &vPosIST1, TVector2 &vPosIST3, TVector2 &vPosFST, TF1 *f_TrackAngle, bool isRot = false, int rAligned = 0, double deltaX = 0.0, double deltaY = 0.0)
-{
-  const double lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
-  const double lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
-
-  // random generated position on IST
-  double x3_gen = gRandom->Rndm()*lengthColumn;
-  double y3_gen = gRandom->Rndm()*lengthRow;
-  vPosIST3.Set(x3_gen,y3_gen);
+  vPosIST3.SetXYZ(x3_gen,y3_gen,z3_gen);
 
   // double theta = h_TrackAngle->GetRandom(); // random generated theta from input cosmic angle distribution
   double theta = f_TrackAngle->GetRandom(); // random generated theta from input cosmic angle distribution
   double phi = gRandom->Uniform(-TMath::Pi(),TMath::Pi()); // random generated phi distribution
   double x1_gen = x3_gen + (FST::pitchLayer12 + FST::pitchLayer23)*TMath::Tan(theta)*TMath::Cos(phi);
   double y1_gen = y3_gen + (FST::pitchLayer12 + FST::pitchLayer23)*TMath::Tan(theta)*TMath::Sin(phi);
-  vPosIST1.Set(x1_gen,y1_gen);
+  double z1_gen = FST::pitchLayer12 + FST::pitchLayer23;
+  vPosIST1.SetXYZ(x1_gen,y1_gen,z1_gen);
 
-  vPosFST = getProjection(vPosIST1,vPosIST3,isRot,rAligned,deltaX,deltaY);
+  vPosFST = getIstProjection(vPosIST1,vPosIST3,sensorId,deltaX,deltaY);
 }
 
+/*
 TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot = false, int rAligned = 0, double deltaX = 0.0, double deltaY = 0.0)
 {
   const double z0_fst = FST::pitchLayer03;
@@ -490,17 +462,56 @@ TVector2 getProjection(TVector2 vPosIST1, TVector2 vPosIST3, bool isRot = false,
 
   return vPosFST;
 }
+*/
 
-TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST, int sensorId)
+TVector3 getIstProjection(TVector3 vPosIst1, TVector3 vPosIst3, int sensorId, double deltaX = 0.0, double deltaY = 0.0)
+{
+  TVector3 vAlignedIst1 = getIstAlignedPos(vPosIst1,deltaX,deltaY); // aligned to FST sensorId mDefSenorId
+  double x1_FST = vAlignedIst1.X();
+  double y1_FST = vAlignedIst1.Y();
+
+  TVector3 vAlignedIst3 = getIstAlignedPos(vPosIst3,deltaX,deltaY); // aligned to FST sensorId mDefSenorId
+  double x3_FST = vAlignedIst3.X();
+  double y3_FST = vAlignedIst3.Y();
+
+  double x0_FST = x3_FST + (x1_FST-x3_FST)*(FST::pitchLayer03+FST::z_shift[sensorId])/(FST::pitchLayer12+FST::pitchLayer23);
+  double y0_FST = y3_FST + (y1_FST-y3_FST)*(FST::pitchLayer03+FST::z_shift[sensorId])/(FST::pitchLayer12+FST::pitchLayer23);
+  double z0_FST = FST::pitchLayer03+FST::z_shift[sensorId];
+  double r0_FST = TMath::Sqrt(x0_FST*x0_FST+y0_FST*y0_FST);
+  double phi0_FST = TMath::ATan2(y0_FST,x0_FST);
+
+  TVector3 vProjFst;
+  vProjFst.SetXYZ(r0_FST,phi0_FST,z0_FST);
+
+  return vProjFst;
+}
+
+TVector3 getIstAlignedPos(TVector3 vPosIst, double deltaX = 0.0, double deltaY = 0.0)
+{
+  double x_IST = vPosIst.X(); // aligned to IST2
+  double y_IST = vPosIst.Y();
+  double z_IST = vPosIst.Z();
+  // aligned to FST sensorId mDefSenorId
+  double x_AlignedIST = x_IST*TMath::Cos(FST::phi_rot[FST::mDefSenorId]) + y_IST*TMath::Sin(FST::phi_rot[FST::mDefSenorId]) + FST::x_shift[FST::mDefSenorId] + deltaX;
+  double y_AlignedIST = y_IST*TMath::Cos(FST::phi_rot[FST::mDefSenorId]) - x_IST*TMath::Sin(FST::phi_rot[FST::mDefSenorId]) + FST::y_shift[FST::mDefSenorId] + deltaY;
+
+  TVector3 vAlignedIst;
+  vAlignedIst.SetXYZ(x_AlignedIST,y_AlignedIST,z_IST);
+
+  return vAlignedIst;
+}
+
+TVector3 getReadOut(TVector3 vPosHit, TH2F *h_pixel, bool isFST, int sensorId)
 {
   const double lengthColumn = FST::noColumns*FST::pitchColumn; // length of IST Column
   const double lengthRow = FST::noRows*FST::pitchRow; // length of IST Row
 
-  TVector2 vPosRO;
-  vPosRO.Set(-999.0,-999.0);
+  TVector3 vPosRO;
+  vPosRO.SetXYZ(-999.0,-999.0,-999.0);
 
   double x_hit = vPosHit.X();
   double y_hit = vPosHit.Y();
+  double z_hit = vPosHit.Z();
 
   if( !isFST )
   {
@@ -513,7 +524,7 @@ TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST, int sensorId)
       x_ro = h_pixel->GetXaxis()->GetBinCenter(binX);
       y_ro = h_pixel->GetYaxis()->GetBinCenter(binY);
     }
-    vPosRO.Set(x_ro,y_ro);
+    vPosRO.SetXYZ(x_ro,y_ro,z_hit);
   }
   if( isFST )
   {
@@ -522,7 +533,6 @@ TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST, int sensorId)
     double r_ro    = -999.0;
     double phi_ro  = -999.0;
     // check if FST has readout
-    // if(r_hit >= FST::rOuter && r_hit <= FST::rOuter+4.0*FST::pitchR && phi_hit >= 0.0 && phi_hit <= FST::phiMax)
     if(r_hit >= FST::mFstRMin[sensorId] && r_hit <= FST::mFstRMax[sensorId] && phi_hit >= FST::mFstPhiMin[sensorId] && phi_hit <= FST::mFstPhiMax[sensorId])
     {
       int deltaBinR = 0;
@@ -533,7 +543,7 @@ TVector2 getReadOut(TVector2 vPosHit, TH2F *h_pixel, bool isFST, int sensorId)
       phi_ro        = h_pixel->GetYaxis()->GetBinCenter(binPhi);
       // if(r_hit < FST::rOuter) cout << "r_hit = " << r_hit << ", r_ro = " << r_ro << ", binR = " << binR << ", phi_ro = " << phi_ro << ", binPhi = " << binPhi << endl;
     }
-    vPosRO.Set(r_ro,phi_ro);
+    vPosRO.SetXYZ(r_ro,phi_ro,z_hit);
   }
 
   return vPosRO;

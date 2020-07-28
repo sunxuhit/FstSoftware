@@ -4,15 +4,11 @@
 
 using namespace std;
 
-void plotMcProjError(bool isRot = true, int rAligned = 0)
+void plotMcProjError(int sensorId = 0)
 {
   string mode = "Scan";
   // string mode = "Simple";
-  string inputname = "../../output/simulation/FstMcProjection_woRot.root";
-  if(isRot) 
-  {
-    inputname = Form("../../output/simulation/FstMcProjection_Rot_AlignedRstrip%d.root",rAligned);
-  }
+  string inputname = Form("../../output/simulation/FstMcProjection_Sensor%d.root",sensorId);
   TFile *File_InPut = TFile::Open(inputname.c_str());
   TH1F *h_mFstSimResR_2Layer     = (TH1F*)File_InPut->Get("h_mFstSimResR_2Layer");
   TH1F *h_mFstSimResPhi_2Layer   = (TH1F*)File_InPut->Get("h_mFstSimResPhi_2Layer");
@@ -59,8 +55,7 @@ void plotMcProjError(bool isRot = true, int rAligned = 0)
   h_mFstSimResPhi_2Layer->SetLineColor(1);
   h_mFstSimResPhi_2Layer->Draw("hE");
 
-  string FigName = Form("./figures/c_ProjError_woRot_%s.eps",mode.c_str());
-  if(isRot) FigName = Form("./figures/c_ProjError_Rot_AlignedRstrip%d_%s.eps",rAligned,mode.c_str());
+  string FigName = Form("./figures/c_ProjError_Sensor%d.eps",sensorId);
   c_ProjError->SaveAs(FigName.c_str());
 }
 

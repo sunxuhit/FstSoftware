@@ -10,71 +10,52 @@
 
 using namespace std;
 
-void calMcEfficiency(bool isRot = true, int rAligned = 0)
+void calMcEfficiency(int sensorId = 0)
 {
-  const double rMaxFst = FST::rOuter + 4.0*FST::pitchR;
-  const double rMinFst = FST::rOuter;
-  const double phiMaxFst = 64.0*FST::pitchPhi;
-  const double phiMinFst = 0.0;
-  double phiMaxProj = 64.0*FST::pitchPhi-0.5*TMath::Pi()/180.0;
-  double phiMinProj = 0.0+0.5*TMath::Pi()/180.0;
-  if(isRot)
-  {
-    phiMaxProj = 64.0*FST::pitchPhi-2.5*TMath::Pi()/180.0;
-    phiMinProj = 0.0+2.5*TMath::Pi()/180.0;
-  }
-  // const double phiMinFst = -64.0*FST::pitchPhi;
-
-  const int nMatch = 8;
-
-  string inputname = "../../output/simulation/FstMcProjection_woRot.root";
-  if(isRot) 
-  {
-    inputname = Form("../../output/simulation/FstMcProjection_Rot_AlignedRstrip%d.root",rAligned);
-  }
+  string inputname = Form("../../output/simulation/FstMcProjection_Sensor%d.root",sensorId);
   TFile *File_InPut = TFile::Open(inputname.c_str());
-  TH2F *h_mIstCounts_2Layer[nMatch];
-  TH1F *h_mIstCountsR_2Layer[nMatch];
-  TH1F *h_mIstCountsPhi_2Layer[nMatch];
+  TH2F *h_mIstCounts_2Layer[FST::mFstNumMatching];
+  TH1F *h_mIstCountsR_2Layer[FST::mFstNumMatching];
+  TH1F *h_mIstCountsPhi_2Layer[FST::mFstNumMatching];
 
-  TH2F *h_mFstCounts_2Layer[nMatch];
-  TH1F *h_mFstCountsR_2Layer[nMatch];
-  TH1F *h_mFstCountsPhi_2Layer[nMatch];
-  for(int i_match = 0; i_match < 8; ++i_match)
+  TH2F *h_mFstCounts_2Layer[FST::mFstNumMatching];
+  TH1F *h_mFstCountsR_2Layer[FST::mFstNumMatching];
+  TH1F *h_mFstCountsPhi_2Layer[FST::mFstNumMatching];
+  for(int i_match = 0; i_match < FST::mFstNumMatching; ++i_match)
   {
     string HistName;
     // simple clusters
-    HistName = Form("h_mIstCounts_2Layer_SF%d",i_match);
+    HistName = Form("h_mIstCounts_2Layer_Sensor%d_SF%d",sensorId,i_match);
     h_mIstCounts_2Layer[i_match] = (TH2F*)File_InPut->Get(HistName.c_str());
     h_mIstCounts_2Layer[i_match]->Sumw2();
-    int projIstBinX0 = h_mIstCounts_2Layer[i_match]->GetYaxis()->FindBin(phiMinProj);
-    int projIstBinX1 = h_mIstCounts_2Layer[i_match]->GetYaxis()->FindBin(phiMaxProj);
+    int projIstBinX0 = h_mIstCounts_2Layer[i_match]->GetYaxis()->FindBin(FST::mFstPhiMin[sensorId]+4*FST::pitchPhi);
+    int projIstBinX1 = h_mIstCounts_2Layer[i_match]->GetYaxis()->FindBin(FST::mFstPhiMax[sensorId]-4*FST::pitchPhi);
     HistName = Form("h_mIstCountsR_2Layer_SF%d",i_match);
     h_mIstCountsR_2Layer[i_match] = (TH1F*)h_mIstCounts_2Layer[i_match]->ProjectionX(HistName.c_str(),projIstBinX0,projIstBinX1);
 
-    int projIstBinY0 = h_mIstCounts_2Layer[i_match]->GetXaxis()->FindBin(rMinFst+0.4*FST::pitchR);
-    int projIstBinY1 = h_mIstCounts_2Layer[i_match]->GetXaxis()->FindBin(rMaxFst-0.4*FST::pitchR);
+    int projIstBinY0 = h_mIstCounts_2Layer[i_match]->GetXaxis()->FindBin(FST::mFstRMin[sensorId]+0.4*FST::pitchR);
+    int projIstBinY1 = h_mIstCounts_2Layer[i_match]->GetXaxis()->FindBin(FST::mFstRMax[sensorId]-0.4*FST::pitchR);
     HistName = Form("h_mIstCountsPhi_2Layer_SF%d",i_match);
     h_mIstCountsPhi_2Layer[i_match] = (TH1F*)h_mIstCounts_2Layer[i_match]->ProjectionY(HistName.c_str(),projIstBinY0,projIstBinY1);
 
-    HistName = Form("h_mFstCounts_2Layer_SF%d",i_match);
+    HistName = Form("h_mFstCounts_2Layer_Sensor%d_SF%d",sensorId,i_match);
     h_mFstCounts_2Layer[i_match] = (TH2F*)File_InPut->Get(HistName.c_str());
     h_mFstCounts_2Layer[i_match]->Sumw2();
-    int projFstBinX0 = h_mFstCounts_2Layer[i_match]->GetYaxis()->FindBin(phiMinProj);
-    int projFstBinX1 = h_mFstCounts_2Layer[i_match]->GetYaxis()->FindBin(phiMaxProj);
+    int projFstBinX0 = h_mFstCounts_2Layer[i_match]->GetYaxis()->FindBin(FST::mFstPhiMin[sensorId]+4*FST::pitchPhi);
+    int projFstBinX1 = h_mFstCounts_2Layer[i_match]->GetYaxis()->FindBin(FST::mFstPhiMax[sensorId]-4*FST::pitchPhi);
     HistName = Form("h_mFstCountsR_2Layer_SF%d",i_match);
     h_mFstCountsR_2Layer[i_match] = (TH1F*)h_mFstCounts_2Layer[i_match]->ProjectionX(HistName.c_str(),projFstBinX0,projFstBinX1);
 
-    int projFstBinY0 = h_mFstCounts_2Layer[i_match]->GetXaxis()->FindBin(rMinFst+0.4*FST::pitchR);
-    int projFstBinY1 = h_mFstCounts_2Layer[i_match]->GetXaxis()->FindBin(rMaxFst-0.4*FST::pitchR);
+    int projFstBinY0 = h_mFstCounts_2Layer[i_match]->GetXaxis()->FindBin(FST::mFstRMin[sensorId]+0.4*FST::pitchR);
+    int projFstBinY1 = h_mFstCounts_2Layer[i_match]->GetXaxis()->FindBin(FST::mFstRMax[sensorId]-0.4*FST::pitchR);
     HistName = Form("h_mFstCountsPhi_2Layer_SF%d",i_match);
     h_mFstCountsPhi_2Layer[i_match] = (TH1F*)h_mFstCounts_2Layer[i_match]->ProjectionY(HistName.c_str(),projFstBinY0,projFstBinY1);
   }
 
-  TH2F *h_mFstEff_2Layer[nMatch];
-  TH1F *h_mFstEffR_2Layer[nMatch];
-  TH1F *h_mFstEffPhi_2Layer[nMatch];
-  for(int i_match = 0; i_match < nMatch; ++i_match)
+  TH2F *h_mFstEff_2Layer[FST::mFstNumMatching];
+  TH1F *h_mFstEffR_2Layer[FST::mFstNumMatching];
+  TH1F *h_mFstEffPhi_2Layer[FST::mFstNumMatching];
+  for(int i_match = 0; i_match < FST::mFstNumMatching; ++i_match)
   {
     string HistName;
     HistName = Form("h_mFstEff_2Layer_SF%d",i_match);
@@ -97,8 +78,7 @@ void calMcEfficiency(bool isRot = true, int rAligned = 0)
   }
 
 
-  string outputname = "./figures/McEfficiency_woRot.pdf";
-  if(isRot) outputname = Form("./figures/McEfficiency_Rot_AlignedRstrip%d.pdf",rAligned);
+  string outputname = Form("./figures/McEfficiency_Sensor%d.pdf",sensorId);
   TCanvas *c_play = new TCanvas("c_play","c_play",10,10,900,900);
   c_play->Divide(3,3);
   for(int i_pad = 0; i_pad < 9; ++i_pad)
@@ -109,69 +89,68 @@ void calMcEfficiency(bool isRot = true, int rAligned = 0)
     c_play->cd(i_pad+1)->SetGrid(0,0);
   }
 
-  string output_start= "./figures/McEfficiency_woRot.pdf[";
-  if(isRot) output_start = Form("./figures/McEfficiency_Rot_AlignedRstrip%d.pdf[",rAligned);
+  string output_start= Form("./figures/McEfficiency_Sensor%d.pdf[",sensorId);
   c_play->Print(output_start.c_str()); // open pdf file
 
-  for(int i_match = 0; i_match < nMatch; ++i_match)
+  for(int i_match = 0; i_match < FST::mFstNumMatching; ++i_match)
   {
     // projection position from IST
     c_play->cd(1);
     h_mIstCounts_2Layer[i_match]->GetXaxis()->SetTitle("r_{proj} (mm)");
     h_mIstCounts_2Layer[i_match]->GetYaxis()->SetTitle("phi_{proj} (rad)");
     h_mIstCounts_2Layer[i_match]->Draw("colz");
-    PlotLine(rMinFst, rMaxFst, phiMinFst, phiMinFst, 1, 2, 2);
-    PlotLine(rMinFst, rMaxFst, phiMaxFst, phiMaxFst, 1, 2, 2);
-    PlotLine(rMinFst, rMinFst, phiMinFst, phiMaxFst, 1, 2, 2);
-    PlotLine(rMaxFst, rMaxFst, phiMinFst, phiMaxFst, 1, 2, 2);
+    PlotLine(FST::mFstRMin[sensorId], FST::mFstRMax[sensorId], FST::mFstPhiMin[sensorId], FST::mFstPhiMin[sensorId], 1, 2, 2);
+    PlotLine(FST::mFstRMin[sensorId], FST::mFstRMax[sensorId], FST::mFstPhiMax[sensorId], FST::mFstPhiMax[sensorId], 1, 2, 2);
+    PlotLine(FST::mFstRMin[sensorId], FST::mFstRMin[sensorId], FST::mFstPhiMin[sensorId], FST::mFstPhiMax[sensorId], 1, 2, 2);
+    PlotLine(FST::mFstRMax[sensorId], FST::mFstRMax[sensorId], FST::mFstPhiMin[sensorId], FST::mFstPhiMax[sensorId], 1, 2, 2);
 
     c_play->cd(2);
     h_mIstCountsR_2Layer[i_match]->GetXaxis()->SetTitle("r_{proj} (mm)");
     h_mIstCountsR_2Layer[i_match]->GetYaxis()->SetRangeUser(0.0,1.1*h_mIstCountsR_2Layer[i_match]->GetMaximum());
     h_mIstCountsR_2Layer[i_match]->Draw("HIST");
-    PlotLine(rMinFst, rMinFst, 0.5, h_mIstCountsR_2Layer[i_match]->GetMaximum(), 1, 2, 2);
-    PlotLine(rMaxFst, rMaxFst, 0.5, h_mIstCountsR_2Layer[i_match]->GetMaximum(), 1, 2, 2);
+    PlotLine(FST::mFstRMin[sensorId], FST::mFstRMin[sensorId], 0.5, h_mFstCountsR_2Layer[i_match]->GetMaximum(), 1, 2, 2);
+    PlotLine(FST::mFstRMax[sensorId], FST::mFstRMax[sensorId], 0.5, h_mFstCountsR_2Layer[i_match]->GetMaximum(), 1, 2, 2);
 
     c_play->cd(3);
     h_mIstCountsPhi_2Layer[i_match]->GetXaxis()->SetTitle("phi_{proj} (mm)");
-    h_mIstCountsPhi_2Layer[i_match]->GetXaxis()->SetRangeUser(-1.2*phiMaxFst,1.2*phiMaxFst);
+    // h_mIstCountsPhi_2Layer[i_match]->GetXaxis()->SetRangeUser(-1.2*phiMaxFst,1.2*phiMaxFst);
     h_mIstCountsPhi_2Layer[i_match]->Draw("HIST");
-    PlotLine(phiMinFst, phiMinFst, 0.5, h_mIstCountsPhi_2Layer[i_match]->GetMaximum(), 1, 2, 2);
-    PlotLine(phiMaxFst, phiMaxFst, 0.5, h_mIstCountsPhi_2Layer[i_match]->GetMaximum(), 1, 2, 2);
+    PlotLine(FST::mFstPhiMin[sensorId], FST::mFstPhiMin[sensorId], 0.5, h_mFstCountsPhi_2Layer[i_match]->GetMaximum(), 1, 2, 2);
+    PlotLine(FST::mFstPhiMax[sensorId], FST::mFstPhiMax[sensorId], 0.5, h_mFstCountsPhi_2Layer[i_match]->GetMaximum(), 1, 2, 2);
 
     // measured position from FST
     c_play->cd(4);
     h_mFstCounts_2Layer[i_match]->GetXaxis()->SetTitle("r_{proj} (mm)");
     h_mFstCounts_2Layer[i_match]->GetYaxis()->SetTitle("phi_{proj} (rad)");
     h_mFstCounts_2Layer[i_match]->Draw("colz");
-    PlotLine(rMinFst, rMaxFst, phiMinFst, phiMinFst, 1, 2, 2);
-    PlotLine(rMinFst, rMaxFst, phiMaxFst, phiMaxFst, 1, 2, 2);
-    PlotLine(rMinFst, rMinFst, phiMinFst, phiMaxFst, 1, 2, 2);
-    PlotLine(rMaxFst, rMaxFst, phiMinFst, phiMaxFst, 1, 2, 2);
+    PlotLine(FST::mFstRMin[sensorId], FST::mFstRMax[sensorId], FST::mFstPhiMin[sensorId], FST::mFstPhiMin[sensorId], 1, 2, 2);
+    PlotLine(FST::mFstRMin[sensorId], FST::mFstRMax[sensorId], FST::mFstPhiMax[sensorId], FST::mFstPhiMax[sensorId], 1, 2, 2);
+    PlotLine(FST::mFstRMin[sensorId], FST::mFstRMin[sensorId], FST::mFstPhiMin[sensorId], FST::mFstPhiMax[sensorId], 1, 2, 2);
+    PlotLine(FST::mFstRMax[sensorId], FST::mFstRMax[sensorId], FST::mFstPhiMin[sensorId], FST::mFstPhiMax[sensorId], 1, 2, 2);
 
     c_play->cd(5);
     h_mFstCountsR_2Layer[i_match]->GetXaxis()->SetTitle("r_{proj} (mm)");
     h_mFstCountsR_2Layer[i_match]->GetYaxis()->SetRangeUser(0.0,1.1*h_mFstCountsR_2Layer[i_match]->GetMaximum());
     h_mFstCountsR_2Layer[i_match]->Draw("HIST");
-    PlotLine(rMinFst, rMinFst, 0.5, h_mFstCountsR_2Layer[i_match]->GetMaximum(), 1, 2, 2);
-    PlotLine(rMaxFst, rMaxFst, 0.5, h_mFstCountsR_2Layer[i_match]->GetMaximum(), 1, 2, 2);
+    PlotLine(FST::mFstRMin[sensorId], FST::mFstRMin[sensorId], 0.5, h_mFstCountsR_2Layer[i_match]->GetMaximum(), 1, 2, 2);
+    PlotLine(FST::mFstRMax[sensorId], FST::mFstRMax[sensorId], 0.5, h_mFstCountsR_2Layer[i_match]->GetMaximum(), 1, 2, 2);
 
     c_play->cd(6);
     h_mFstCountsPhi_2Layer[i_match]->GetXaxis()->SetTitle("phi_{proj} (mm)");
-    h_mFstCountsPhi_2Layer[i_match]->GetXaxis()->SetRangeUser(-1.2*phiMaxFst,1.2*phiMaxFst);
+    // h_mFstCountsPhi_2Layer[i_match]->GetXaxis()->SetRangeUser(-1.2*phiMaxFst,1.2*phiMaxFst);
     h_mFstCountsPhi_2Layer[i_match]->Draw("HIST");
-    PlotLine(phiMinFst, phiMinFst, 0.5, h_mFstCountsPhi_2Layer[i_match]->GetMaximum(), 1, 2, 2);
-    PlotLine(phiMaxFst, phiMaxFst, 0.5, h_mFstCountsPhi_2Layer[i_match]->GetMaximum(), 1, 2, 2);
+    PlotLine(FST::mFstPhiMin[sensorId], FST::mFstPhiMin[sensorId], 0.5, h_mFstCountsPhi_2Layer[i_match]->GetMaximum(), 1, 2, 2);
+    PlotLine(FST::mFstPhiMax[sensorId], FST::mFstPhiMax[sensorId], 0.5, h_mFstCountsPhi_2Layer[i_match]->GetMaximum(), 1, 2, 2);
 
     c_play->cd(7);
     h_mFstEff_2Layer[i_match]->SetStats(0);
     h_mFstEff_2Layer[i_match]->GetXaxis()->SetTitle("r_{proj} (mm)");
     h_mFstEff_2Layer[i_match]->GetYaxis()->SetTitle("phi_{proj} (rad)");
     h_mFstEff_2Layer[i_match]->Draw("colz");
-    PlotLine(rMinFst, rMaxFst, phiMinFst, phiMinFst, 1, 2, 2);
-    PlotLine(rMinFst, rMaxFst, phiMaxFst, phiMaxFst, 1, 2, 2);
-    PlotLine(rMinFst, rMinFst, phiMinFst, phiMaxFst, 1, 2, 2);
-    PlotLine(rMaxFst, rMaxFst, phiMinFst, phiMaxFst, 1, 2, 2);
+    PlotLine(FST::mFstRMin[sensorId], FST::mFstRMax[sensorId], FST::mFstPhiMin[sensorId], FST::mFstPhiMin[sensorId], 1, 2, 2);
+    PlotLine(FST::mFstRMin[sensorId], FST::mFstRMax[sensorId], FST::mFstPhiMax[sensorId], FST::mFstPhiMax[sensorId], 1, 2, 2);
+    PlotLine(FST::mFstRMin[sensorId], FST::mFstRMin[sensorId], FST::mFstPhiMin[sensorId], FST::mFstPhiMax[sensorId], 1, 2, 2);
+    PlotLine(FST::mFstRMax[sensorId], FST::mFstRMax[sensorId], FST::mFstPhiMin[sensorId], FST::mFstPhiMax[sensorId], 1, 2, 2);
 
     c_play->cd(8);
     h_mFstEffR_2Layer[i_match]->SetStats(0);
@@ -179,26 +158,38 @@ void calMcEfficiency(bool isRot = true, int rAligned = 0)
     h_mFstEffR_2Layer[i_match]->GetYaxis()->SetRangeUser(0.0,1.05);
     h_mFstEffR_2Layer[i_match]->SetLineColor(1);
     h_mFstEffR_2Layer[i_match]->Draw("pE");
-    PlotLine(rMinFst, rMinFst, 0.0, 1.05, 1, 2, 2);
-    PlotLine(rMaxFst, rMaxFst, 0.0, 1.05, 1, 2, 2);
-    PlotLine(rMinFst-FST::pitchR, rMaxFst+FST::pitchR, 0.90, 0.90, 4, 1, 2);
-    PlotLine(rMinFst-FST::pitchR, rMaxFst+FST::pitchR, 0.95, 0.95, 4, 1, 2);
+    PlotLine(FST::mFstRMin[sensorId], FST::mFstRMin[sensorId], 0.0, 1.05, 1, 2, 2);
+    PlotLine(FST::mFstRMax[sensorId], FST::mFstRMax[sensorId], 0.0, 1.05, 1, 2, 2);
+    PlotLine(FST::rMin[sensorId], FST::rMax[sensorId], 0.90, 0.90, 4, 1, 2);
+    PlotLine(FST::rMin[sensorId], FST::rMax[sensorId], 0.95, 0.95, 4, 1, 2);
 
     c_play->cd(9);
     h_mFstEffPhi_2Layer[i_match]->SetStats(0);
     h_mFstEffPhi_2Layer[i_match]->GetXaxis()->SetTitle("phi_{proj} (rad)");
-    h_mFstEffPhi_2Layer[i_match]->GetXaxis()->SetRangeUser(-1.2*phiMaxFst,1.2*phiMaxFst);
+    // h_mFstEffPhi_2Layer[i_match]->GetXaxis()->SetRangeUser(-1.2*phiMaxFst,1.2*phiMaxFst);
     h_mFstEffPhi_2Layer[i_match]->GetYaxis()->SetRangeUser(0.0,1.05);
     h_mFstEffPhi_2Layer[i_match]->SetLineColor(1);
     h_mFstEffPhi_2Layer[i_match]->Draw("pE");
-    PlotLine(phiMinFst, phiMinFst, 0.0, 1.05, 1, 2, 2);
-    PlotLine(phiMaxFst, phiMaxFst, 0.0, 1.05, 1, 2, 2);
+    PlotLine(FST::mFstPhiMin[sensorId], FST::mFstPhiMin[sensorId], 0.0, 1.05, 1, 2, 2);
+    PlotLine(FST::mFstPhiMax[sensorId], FST::mFstPhiMax[sensorId], 0.0, 1.05, 1, 2, 2);
+    PlotLine(FST::phiMin[sensorId], FST::phiMax[sensorId], 0.90, 0.90, 4, 1, 2);
+    PlotLine(FST::phiMin[sensorId], FST::phiMax[sensorId], 0.95, 0.95, 4, 1, 2);
 
     c_play->Update();
     c_play->Print(outputname.c_str());
   }
 
-  string output_stop= "./figures/McEfficiency_woRot.pdf]";
-  if(isRot) output_stop = Form("./figures/McEfficiency_Rot_AlignedRstrip%d.pdf]",rAligned);
+  string output_stop= Form("./figures/McEfficiency_Sensor%d.pdf]",sensorId);
   c_play->Print(output_stop.c_str()); // open pdf file
+
+  string outputfile = Form("../../output/simulation/FstMcEfficiency_Sensor%d.root",sensorId);
+  TFile *File_OutPut = new TFile(outputfile.c_str(),"RECREATE");
+  File_OutPut->cd();
+  for(int i_match = 0; i_match < FST::mFstNumMatching; ++i_match)
+  {
+    h_mFstEff_2Layer[i_match]->Write();
+    h_mFstEffR_2Layer[i_match]->Write();
+    h_mFstEffPhi_2Layer[i_match]->Write();
+  }
+  File_OutPut->Close();
 }

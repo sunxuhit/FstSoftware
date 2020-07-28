@@ -1,13 +1,9 @@
 #include <TCanvas.h>
 #include <TH1F.h>
 
-void plotMcHitsDisplay(bool isRot = false, int sensorId = 0, int rAligned = 0)
+void plotMcHitsDisplay(int sensorId = 0)
 {
-  string inputname = Form("../../output/simulation/FstMcProjection_woRot_Sensor%d.root",sensorId);
-  if(isRot) 
-  {
-    inputname = Form("../../output/simulation/FstMcProjection_Rot_AlignedRstrip%d_Sensor%d.root",rAligned,sensorId);
-  }
+  string inputname = Form("../../output/simulation/FstMcProjection_Sensor%d.root",sensorId);
   TFile *File_InPut = TFile::Open(inputname.c_str());
   TH1F *h_mIst1Display = (TH1F*)File_InPut->Get("h_mIst1Display");
   TH1F *h_mIst3Display = (TH1F*)File_InPut->Get("h_mIst3Display");
@@ -51,7 +47,6 @@ void plotMcHitsDisplay(bool isRot = false, int sensorId = 0, int rAligned = 0)
   h_mFstDisplay->GetYaxis()->CenterTitle();
   h_mFstDisplay->Draw("colz");
 
-  string FigName = Form("./figures/c_HitsDisplay_woRot_Sensor%d.eps",sensorId);
-  if(isRot) FigName = Form("./figures/c_HitsDisplay_Rot_AlignedRstrip%d_Sensor%d.eps",rAligned, sensorId);
+  string FigName = Form("./figures/c_HitsDisplay_Sensor%d.eps",sensorId);
   c_HitsDisplay->SaveAs(FigName.c_str());
 }

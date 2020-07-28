@@ -17,9 +17,9 @@ using namespace std;
 
 void plotSignalHVScan()
 {
-  const int numOfHV = 3;
-  string hv[numOfHV] = {"HV70V","HV100V","HV120V"};
-  double highVolt[numOfHV] = {70.0,100.0,120.0};
+  const int numOfHV = 4;
+  string hv[numOfHV] = {"HV70V","HV100V","HV120V","HV140V"};
+  double highVolt[numOfHV] = {70.0,100.0,120.0,140.0};
   TFile *File_InPut[numOfHV];
   TH1F *h_mFstScanClustersSignal[numOfHV][FST::mFstNumSensorsPerModule];
   TH1F *h_mFstScanClustersNoise[numOfHV][FST::mFstNumSensorsPerModule];

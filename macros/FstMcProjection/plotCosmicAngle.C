@@ -1,11 +1,9 @@
 #include <TCanvas.h>
 #include <TH1F.h>
 
-void plotCosmicAngle(bool isRot = false)
+void plotCosmicAngle(int sensorId = 0)
 {
-  string mRot = "woRot";
-  if(isRot) mRot = "Rot";
-  string inputname = Form("../../output/simulation/FstMcProjection_%s.root",mRot.c_str());
+  string inputname = Form("../../output/simulation/FstMcProjection_Sensor%d.root",sensorId);
   TFile *File_InPut = TFile::Open(inputname.c_str());
   TH1F *h_mPolarAngle = (TH1F*)File_InPut->Get("h_mPolarAngle");
   TH1F *h_mAzimuthalAngle = (TH1F*)File_InPut->Get("h_mAzimuthalAngle");

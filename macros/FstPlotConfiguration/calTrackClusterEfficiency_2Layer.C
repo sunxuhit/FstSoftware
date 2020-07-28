@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void calTrackClusterEfficiency_2Layer(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, float nFstThresholdCut2 = 2.5, float nFstThresholdCut1 = 3.5)
+void calTrackClusterEfficiency_2Layer(string hv = "HV100V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, float nFstThresholdCut2 = 2.5, float nFstThresholdCut1 = 3.5)
 {
   std::string pedMode = "withPed";
   if(!isSavePed) pedMode = "woPed";

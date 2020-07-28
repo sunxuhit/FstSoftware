@@ -5,15 +5,11 @@
 
 using namespace std;
 
-void plotMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, string hv = "HV70V")
+void plotMcProjection(int sensorId = 0, string hv = "HV70V")
 {
   string mode = "Scan";
   // string mode = "Simple";
-  string inputname = Form("../../output/simulation/FstMcProjection_woRot_Sensor%d.root",sensorId);
-  if(isRot) 
-  {
-    inputname = Form("../../output/simulation/FstMcProjection_Rot_AlignedRstrip%d_Sensor%d.root",rAligned,sensorId);
-  }
+  string inputname = Form("../../output/simulation/FstMcProjection_Sensor%d.root",sensorId);
   TFile *File_InPut = TFile::Open(inputname.c_str());
   TH1F *h_mIstProjResX_2Layer    = (TH1F*)File_InPut->Get("h_mIstProjResX_2Layer");
   TH1F *h_mIstProjResY_2Layer    = (TH1F*)File_InPut->Get("h_mIstProjResY_2Layer");
@@ -62,13 +58,7 @@ void plotMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, st
   TH1F *h_mFstSimResPhi_2Layer   = (TH1F*)File_InPut->Get("h_mFstSimResPhi_2Layer");
   TH2F *h_mFstSimResRPhi_2Layer  = (TH2F*)File_InPut->Get("h_mFstSimResRPhi_2Layer");
 
-  string mSector = "Inner";
-  if(sensorId > 0) mSector = "Outer";
-
-  // string inputData = Form("../../output/simulation/FstTracking_woRot_%s_%s.root",hv.c_str(),mSector.c_str());
-  // string inputData = Form("../../output/simulation/FstTracking_woRot_%s_Sensor%d.root",hv.c_str(),sensorId);
-  string inputData = Form("../../output/simulation/FstTracking_woRot_%s_Module03.root",hv.c_str());
-  if(isRot) inputData = Form("../../output/simulation/FstTracking_Rot_AlignedRstrip%d_%s_%s.root",rAligned,hv.c_str(),mSector.c_str());
+  string inputData = Form("../../output/simulation/FstTracking_%s_Module03.root",hv.c_str());
   TFile *File_InPutData = TFile::Open(inputData.c_str());
   TH1F *h_mClustersTrackFstResR_2Layer;
   TH1F *h_mClustersTrackFstResPhi_2Layer;
@@ -225,7 +215,6 @@ void plotMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, st
   h_mFstProjResPhi_2Layer->GetXaxis()->SetTitleSize(0.06);
   h_mFstProjResPhi_2Layer->GetXaxis()->CenterTitle();
   h_mFstProjResPhi_2Layer->GetXaxis()->SetRangeUser(-0.05,0.05);
-  if(!isRot) h_mFstProjResPhi_2Layer->GetXaxis()->SetRangeUser(-0.05,0.05);
   h_mFstProjResPhi_2Layer->SetLineStyle(1);
   h_mFstProjResPhi_2Layer->SetLineWidth(2);
   h_mFstProjResPhi_2Layer->SetLineColor(1);
@@ -243,8 +232,7 @@ void plotMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, st
   h_mClustersTrackFstResPhi_2Layer->Draw("pE same");
   leg->Draw("same");
 
-  string FigName = Form("./figures/c_Residual_woRot_%s_%s_Sensor%d.eps",mode.c_str(),hv.c_str(),sensorId);
-  if(isRot) FigName = Form("./figures/c_Residual_Rot_AlignedRstrip%d_%s_%s_Sensor%d.eps",rAligned,mode.c_str(),hv.c_str(),sensorId);
+  string FigName = Form("./figures/c_Residual_%s_%s_Sensor%d.eps",mode.c_str(),hv.c_str(),sensorId);
   c_Residual->SaveAs(FigName.c_str());
 
   TCanvas *c_ResDiff = new TCanvas("c_ResDiff","c_ResDiff",10,10,900,1200);
@@ -298,7 +286,6 @@ void plotMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, st
     h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetTitleSize(0.06);
     h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->CenterTitle();
     h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetRangeUser(-0.05,0.05);
-    if(!isRot) h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetXaxis()->SetRangeUser(-0.05,0.05);
     if(NormPhi_Data[i_rstrp] > 0 && NormPhi_MC[i_rstrp] > 0) h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->Scale(NormPhi_Data[i_rstrp]/NormPhi_MC[i_rstrp]);
     h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetYaxis()->SetRangeUser(0.0,h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->GetMaximum()*1.1);
     h_mFstProjResPhi_2Layer_Rstrips[i_rstrp]->SetLineStyle(1);
@@ -313,7 +300,6 @@ void plotMcProjection(bool isRot = false, int sensorId = 0, int rAligned = 0, st
     leg->Draw("same");
   }
 
-  FigName = Form("./figures/c_ResDiff_woRot_%s_%s_Sensor%d.eps",mode.c_str(),hv.c_str(),sensorId);
-  if(isRot) FigName = Form("./figures/c_ResDiff_Rot_AlignedRstrip%d_%s_%s_Sensor%d.eps",rAligned,mode.c_str(),hv.c_str(),sensorId);
+  FigName = Form("./figures/c_ResDiff_%s_%s_Sensor%d.eps",mode.c_str(),hv.c_str(),sensorId);
   c_ResDiff->SaveAs(FigName.c_str());
 }

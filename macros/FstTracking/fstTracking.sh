@@ -21,12 +21,12 @@ then
 
   # HV120V
   # root -l -b -q doFstTracking.C\(\"HV120V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},3,2.5,3.5\)
-  root -l -b -q doFstTracking.C\(\"HV120V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,2.5,3.5\)
+  # root -l -b -q doFstTracking.C\(\"HV120V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,2.5,3.5\)
   # root -l -b -q doFstTracking.C\(\"HV120V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},1,2.5,3.5\)
 
   # HV140V
   # root -l -b -q doFstTracking.C\(\"HV140V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},3,2.5,3.5\)
-  # root -l -b -q doFstTracking.C\(\"HV140V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,2.5,3.5\)
+  root -l -b -q doFstTracking.C\(\"HV140V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,2.5,3.5\)
   # root -l -b -q doFstTracking.C\(\"HV140V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},1,2.5,3.5\)
 
   # HV200V
