@@ -1,17 +1,18 @@
 #!/bin/bash
 date
 
-#. ./fstCluster.sh hv isApplyCMNCorr nFstHitsCut date
+#. ./fstCluster.sh Mod03 hv isApplyCMNCorr nFstHitsCut date
 
-if [ $# -eq 4 ]
+if [ $# -eq 5 ]
 then
-  hv=$1
+  mod=$1
+  hv=$2
   isSavePed=true
-  isApplyCMNCorr=$2
-  nFstHitsCut=$3
-  date=$4
+  isApplyCMNCorr=$3
+  nFstHitsCut=$4
+  date=$5
 
-  # root -l -b -q makeFstCluster.C\(\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},3,2.5,3.5,\"${date}\"\)
-  root -l -b -q makeFstCluster.C\(\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,2.5,3.5,\"${date}\"\)
-  # root -l -b -q makeFstCluster.C\(\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},1,2.5,3.5,\"${date}\"\)
+  # root -l -b -q makeFstCluster.C\(\"${mod}\",\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},3,2.5,3.5,\"${date}\"\)
+  root -l -b -q makeFstCluster.C\(\"${mod}\",\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,2.5,3.5,\"${date}\"\)
+  # root -l -b -q makeFstCluster.C\(\"${mod}\",\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},1,2.5,3.5,\"${date}\"\)
 fi

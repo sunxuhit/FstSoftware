@@ -15,10 +15,10 @@
 
 using namespace std;
 
-void plotMcEffComparison(string hv = "HV70V", int sensorId = 0)
+void plotMcEffComparison(string mod = "Mod03", string hv = "HV70V", int sensorId = 0)
 {
   // read in Data efficiency 
-  string inputData = Form("../../output/configuration/FstEfficiency_%s_Th4.0Tb2Ped2.5Ped3.5_withPed_withCMNCorr.root",hv.c_str());
+  string inputData = Form("../../output/configuration/FstEfficiency_%s_%s_Th4.0Tb2Ped2.5Ped3.5_withPed_withCMNCorr.root",mod.c_str(),hv.c_str());
   TFile *File_InPutData = TFile::Open(inputData.c_str());
   TH1F *h_mSensorScanClustersTrackFstEffR_2Layer[FST::mFstNumSensorsPerModule][FST::mFstNumMatching];
   for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)

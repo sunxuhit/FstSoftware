@@ -1,12 +1,13 @@
 #!/bin/bash
 date
 
-#. ./genDataList.sh HV200V
+#. ./genDataList.sh Mod03 HV200V
 
-if [ $# -eq 1 ]
+if [ $# -eq 2 ]
 then
-  hv=$1
-  rm FstData_${hv}.list
-  touch FstData_${hv}.list
-  ls ../../data/FstCosmicTestStand_*/data/Fst*_${hv}_data_*.root >> FstData_${hv}.list
+  mod=$1
+  hv=$2
+  rm FstData_${mod}_${hv}.list
+  touch FstData_${mod}_${hv}.list
+  ls ../../data/FstCosmicTestStand_*/data/Fst*${mod}*_${hv}_data_*.root >> FstData_${mod}_${hv}.list
 fi

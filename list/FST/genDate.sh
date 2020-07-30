@@ -1,10 +1,11 @@
 #!/bin/bash
 date
 
-#. ./genDate.sh HV200V
+#. ./genDate.sh Mod03 HV200V
 
-if [ $# -eq 1 ]
+if [ $# -eq 2 ]
 then
-  hv=$1
-  cut -d '_' -f 5 FstData_${hv}.list | sort | uniq > Date${hv}.list
+  mod=$1
+  hv=$2
+  cut -d '_' -f 5 FstData_${mod}_${hv}.list | sort | uniq > Date_${mod}_${hv}.list
 fi

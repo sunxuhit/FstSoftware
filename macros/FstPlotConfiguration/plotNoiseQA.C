@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotNoiseQA(string module = "Mod03", string hv = "HV70V", string mode = "Data")
+void plotNoiseQA(string module = "Mod03", string hv = "HV70V", string mode = "Ped")
 {
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
   gStyle->SetStatW(0.35); gStyle->SetStatH(0.35);

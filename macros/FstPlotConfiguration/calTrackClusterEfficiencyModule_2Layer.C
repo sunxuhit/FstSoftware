@@ -10,14 +10,14 @@
 
 using namespace std;
 
-void calTrackClusterEfficiencyModule_2Layer(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, float nFstThresholdCut2 = 2.5, float nFstThresholdCut1 = 3.5)
+void calTrackClusterEfficiencyModule_2Layer(string mod = "Mod03", string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, float nFstThresholdCut2 = 2.5, float nFstThresholdCut1 = 3.5)
 {
   std::string pedMode = "withPed";
   if(!isSavePed) pedMode = "woPed";
   std::string cmnMode = "withCMNCorr";
   if(!isApplyCMNCorr) cmnMode = "woCMNCorr";
 
-  string inputfile = Form("../../output/configuration/FstTracking_%s_Th%1.1fTb%dPed%1.1fPed%1.1f_%s_%s.root",hv.c_str(),nFstHitsCut,numOfUsedTimeBins,nFstThresholdCut2,nFstThresholdCut1,pedMode.c_str(),cmnMode.c_str());
+  string inputfile = Form("../../output/configuration/FstTracking_%s_%s_Th%1.1fTb%dPed%1.1fPed%1.1f_%s_%s.root",mod.c_str(),hv.c_str(),nFstHitsCut,numOfUsedTimeBins,nFstThresholdCut2,nFstThresholdCut1,pedMode.c_str(),cmnMode.c_str());
 
   TFile *File_InPut = TFile::Open(inputfile.c_str());
 
@@ -38,8 +38,8 @@ void calTrackClusterEfficiencyModule_2Layer(string hv = "HV70V", bool isSavePed 
 
     // IST R projection
     HistName = Form("h_mSimpleClustersTrackIstCountsR_2Layer_SF%d",i_match);
-    int projIstBinX0 = h_mSimpleClustersTrackIstCounts_2Layer[i_match]->GetYaxis()->FindBin(FST::mFstPhiMin[0]+4*FST::pitchPhi);
-    int projIstBinX1 = h_mSimpleClustersTrackIstCounts_2Layer[i_match]->GetYaxis()->FindBin(FST::mFstPhiMax[2]-4*FST::pitchPhi);
+    int projIstBinX0 = h_mSimpleClustersTrackIstCounts_2Layer[i_match]->GetYaxis()->FindBin(FST::mFstPhiMin[1]+4*FST::pitchPhi);
+    int projIstBinX1 = h_mSimpleClustersTrackIstCounts_2Layer[i_match]->GetYaxis()->FindBin(FST::mFstPhiMax[0]-4*FST::pitchPhi);
     h_mSimpleClustersTrackIstCountsR_2Layer[i_match] = (TH1F*)h_mSimpleClustersTrackIstCounts_2Layer[i_match]->ProjectionX(HistName.c_str(),projIstBinX0,projIstBinX1);
 
     // IST Phi projection
@@ -54,8 +54,8 @@ void calTrackClusterEfficiencyModule_2Layer(string hv = "HV70V", bool isSavePed 
 
     // FST R projection
     HistName = Form("h_mSimpleClustersTrackFstCountsR_2Layer_SF%d",i_match);
-    int projFstBinX0 = h_mSimpleClustersTrackFstCounts_2Layer[i_match]->GetYaxis()->FindBin(FST::mFstPhiMin[0]+4*FST::pitchPhi);
-    int projFstBinX1 = h_mSimpleClustersTrackFstCounts_2Layer[i_match]->GetYaxis()->FindBin(FST::mFstPhiMax[2]-4*FST::pitchPhi);
+    int projFstBinX0 = h_mSimpleClustersTrackFstCounts_2Layer[i_match]->GetYaxis()->FindBin(FST::mFstPhiMin[1]+4*FST::pitchPhi);
+    int projFstBinX1 = h_mSimpleClustersTrackFstCounts_2Layer[i_match]->GetYaxis()->FindBin(FST::mFstPhiMax[0]-4*FST::pitchPhi);
     h_mSimpleClustersTrackFstCountsR_2Layer[i_match] = (TH1F*)h_mSimpleClustersTrackFstCounts_2Layer[i_match]->ProjectionX(HistName.c_str(),projFstBinX0,projFstBinX1);
 
     // FST Phi projection
@@ -116,8 +116,8 @@ void calTrackClusterEfficiencyModule_2Layer(string hv = "HV70V", bool isSavePed 
 
     // IST R projection
     HistName = Form("h_mScanClustersTrackIstCountsR_2Layer_SF%d",i_match);
-    int projIstBinX0 = h_mScanClustersTrackIstCounts_2Layer[i_match]->GetYaxis()->FindBin(FST::mFstPhiMin[0]+4*FST::pitchPhi);
-    int projIstBinX1 = h_mScanClustersTrackIstCounts_2Layer[i_match]->GetYaxis()->FindBin(FST::mFstPhiMax[2]-4*FST::pitchPhi);
+    int projIstBinX0 = h_mScanClustersTrackIstCounts_2Layer[i_match]->GetYaxis()->FindBin(FST::mFstPhiMin[1]+4*FST::pitchPhi);
+    int projIstBinX1 = h_mScanClustersTrackIstCounts_2Layer[i_match]->GetYaxis()->FindBin(FST::mFstPhiMax[0]-4*FST::pitchPhi);
     h_mScanClustersTrackIstCountsR_2Layer[i_match] = (TH1F*)h_mScanClustersTrackIstCounts_2Layer[i_match]->ProjectionX(HistName.c_str(),projIstBinX0,projIstBinX1);
 
     // IST Phi projection
@@ -132,8 +132,8 @@ void calTrackClusterEfficiencyModule_2Layer(string hv = "HV70V", bool isSavePed 
 
     // FST R projection
     HistName = Form("h_mScanClustersTrackFstCountsR_2Layer_SF%d",i_match);
-    int projFstBinX0 = h_mScanClustersTrackFstCounts_2Layer[i_match]->GetYaxis()->FindBin(FST::mFstPhiMin[0]+4*FST::pitchPhi);
-    int projFstBinX1 = h_mScanClustersTrackFstCounts_2Layer[i_match]->GetYaxis()->FindBin(FST::mFstPhiMax[2]-4*FST::pitchPhi);
+    int projFstBinX0 = h_mScanClustersTrackFstCounts_2Layer[i_match]->GetYaxis()->FindBin(FST::mFstPhiMin[1]+4*FST::pitchPhi);
+    int projFstBinX1 = h_mScanClustersTrackFstCounts_2Layer[i_match]->GetYaxis()->FindBin(FST::mFstPhiMax[0]-4*FST::pitchPhi);
     h_mScanClustersTrackFstCountsR_2Layer[i_match] = (TH1F*)h_mScanClustersTrackFstCounts_2Layer[i_match]->ProjectionX(HistName.c_str(),projFstBinX0,projFstBinX1);
 
     // FST Phi projection

@@ -1,12 +1,13 @@
 #!/bin/bash
 date
 
-#. ./genClusterList.sh HV200V
+#. ./genClusterList.sh Mod03 HV200V
 
-if [ $# -eq 1 ]
+if [ $# -eq 2 ]
 then
-  hv=$1
-  rm FstCluster_${hv}.list
-  touch FstCluster_${hv}.list
-  ls ../../output/clusters/FstClusters_${hv}_*.root >> FstCluster_${hv}.list
+  mod=$1
+  hv=$2
+  rm FstCluster_${mod}_${hv}.list
+  touch FstCluster_${mod}_${hv}.list
+  ls ../../output/clusters/FstClusters_${mod}_${hv}_*.root >> FstCluster_${mod}_${hv}.list
 fi

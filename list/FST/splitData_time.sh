@@ -1,19 +1,20 @@
 #!/bin/bash
 date
 
-#. ./splitData_time.sh HV200V
-if [ $# -eq 1 ]
+#. ./splitData_time.sh Mod03 HV200V
+if [ $# -eq 2 ]
 then
-  hv=$1
-  InPutList=FstData_${hv}.list
-  InPutDate=Date${hv}.list
+  mod=$1
+  hv=$2
+  InPutList=FstData_${mod}_${hv}.list
+  InPutDate=Date_${mod}_${hv}.list
 
   mkdir -p timesequence
 
   for item in `cat $InPutDate`
   do
     echo $item
-    OutPutList=./timesequence/FstData_${hv}_${item}.list
+    OutPutList=./timesequence/FstData_${mod}_${hv}_${item}.list
     rm $OutPutList
     touch $OutPutList
     cat $InPutList | grep $item >> $OutPutList
