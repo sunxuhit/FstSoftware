@@ -59,10 +59,14 @@ namespace FST
   const double phi_rot_ist3 = -0.00379431;
   const double x3_shift     = 0.45811;
   const double y3_shift     = 1.0116;
-  // const double phi_rot_ist2 = 0.0311535; // for Outer sector test
-  // const double x2_shift     = 141.268; 
-  // const double y2_shift     = -19.7014;
-  // const double pitchLayer03 = 134.9375+0.644155; // mm
+
+  // alignment from IST2 to each sensor of FST01
+  // const int mDefSenorId = 1; // default FST sensor for alignment (phi_rot, x_shift and y_shift | z_shift is from the sensorId to be aligned)
+  // const double delta_x = 0.0;
+  // const double phi_rot[mFstNumSensorsPerModule] = {0.0, 0.0311535, 0.0};
+  // const double x_shift[mFstNumSensorsPerModule] = {0.0, 141.268,   0.0}; 
+  // const double y_shift[mFstNumSensorsPerModule] = {0.0, -19.7014,  0.0};
+  // const double z_shift[mFstNumSensorsPerModule] = {0.0, 0.644155,  0.0};
 
   // alignment from IST2 to each sensor of FST03
   const int mDefSenorId = 0; // default FST sensor for alignment (phi_rot, x_shift and y_shift | z_shift is from the sensorId to be aligned)
