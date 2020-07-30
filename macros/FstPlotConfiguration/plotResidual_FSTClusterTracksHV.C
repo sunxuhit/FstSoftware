@@ -34,7 +34,7 @@ double gaussian(double *var, double *par)
   return y;
 }
 
-void plotResidual_FSTClusterTracksHV()
+void plotResidual_FSTClusterTracksHV(string mod = "Mod03")
 {
   bool isSavePed = true;
   bool isApplyCMNCorr = true;
@@ -66,7 +66,7 @@ void plotResidual_FSTClusterTracksHV()
 
   for(int i_hv = 0; i_hv < numOfHV; ++i_hv)
   {
-    string inputfile = Form("../../output/configuration/FstTracking_%s_Th%1.1fTb%dPed%1.1fPed%1.1f_%s_%s.root",hv[i_hv].c_str(),nFstHitsCut,numOfUsedTimeBins,nFstThresholdCut2,nFstThresholdCut1,pedMode.c_str(),cmnMode.c_str());
+    string inputfile = Form("../../output/configuration/FstTracking_%s_%s_Th%1.1fTb%dPed%1.1fPed%1.1f_%s_%s.root",mod.c_str(),hv[i_hv].c_str(),nFstHitsCut,numOfUsedTimeBins,nFstThresholdCut2,nFstThresholdCut1,pedMode.c_str(),cmnMode.c_str());
     File_InPut[i_hv] = TFile::Open(inputfile.c_str());
     for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
     {
@@ -91,7 +91,7 @@ void plotResidual_FSTClusterTracksHV()
     }
   }
 
-  string outputname = "./figures/Residual_FSTClusterTracksHV.pdf";
+  string outputname = Form("./figures/Residual_FSTClusterTracksHV_%s.pdf",mod.c_str());
   TCanvas *c_play = new TCanvas("c_play","c_play",10,10,800,400);
   c_play->Divide(2,1);
   for(int i_pad = 0; i_pad < 2; ++i_pad)
@@ -103,7 +103,7 @@ void plotResidual_FSTClusterTracksHV()
     c_play->cd(i_pad+1)->SetGrid(0,0);
   }
 
-  string output_start = "./figures/Residual_FSTClusterTracksHV.pdf[";
+  string output_start = Form("./figures/Residual_FSTClusterTracksHV_%s.pdf[",mod.c_str());
   c_play->Print(output_start.c_str()); // open pdf file
 
   for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
@@ -252,6 +252,6 @@ void plotResidual_FSTClusterTracksHV()
     }
   }
 
-  string output_stop = "./figures/Residual_FSTClusterTracksHV.pdf]"; 
+  string output_stop = Form("./figures/Residual_FSTClusterTracksHV_%s.pdf]",mod.c_str()); 
   c_play->Print(output_stop.c_str()); // close pdf file
 }

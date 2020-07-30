@@ -11,13 +11,13 @@
 
 using namespace std;
 
-void plotDataCrossTalk(int sensorId = 1, string hv = "HV70V")
+void plotDataCrossTalk(int sensorId = 1, string mod = "Mod03", string hv = "HV70V")
 {
   string mode = "Scan";
   // string mode = "Simple";
 
 
-  string inputfile = Form("/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/output/simulation/Module03/FstTracking_woRot_%s_Sensor%d.root",hv.c_str(),sensorId);
+  string inputfile = Form("/Users/xusun/WorkSpace/STAR/ForwardSiliconTracker/FstTracking/output/configuration/FstTracking_%s_%s_Th4.0Tb2Ped2.5Ped3.5_withPed_withCMNCorr.root",mod.c_str(),hv.c_str());
 
   TFile *File_InPut = TFile::Open(inputfile.c_str());
 

@@ -18,7 +18,7 @@ TVector3 getIstAlignedPos(TVector3 vPosIst, double deltaX, double deltaY); // ge
 TVector3 getReadOut(TVector3 vPosHit, TH2F *h_pixel, bool isFST, int sensorId); // get readout position from a real hit | return (x,y) for IST & (r,phi) for FST
 int findCrossTalkBin(double r_hit, int sensorId);
 
-void FstMcProjection_Sensor(int sensorId = 0, int numOfTracks = 500000)
+void FstMcProjection_Sensor(int sensorId = 1, int numOfTracks = 500000)
 {
   printAlignmentInfo();
 
@@ -558,16 +558,17 @@ int findCrossTalkBin(double r_hit, int sensorId)
   //   {0.0674, 0.2435, 0.3921, 1.0000, 1.0000, 1.0000, 1.0000}
   // };
 
-  const double ctRate[4][7] = { 
-    // {0.0000, 0.0000, 0.0000, 0.8771, 0.9800, 0.9905, 0.9990},
-    // {0.0000, 0.0000, 0.1343, 0.9141, 0.9889, 1.0000, 1.0000},
-    // {0.0000, 0.0371, 0.1886, 0.9274, 0.9985, 1.0000, 1.0000},
-    // {0.0415, 0.2166, 0.3871, 1.0000, 1.0000, 1.0000, 1.0000}
-    {0.0000, 0.0000, 0.0000, 0.7419, 0.9413, 0.9775, 1.0000},
-    {0.0000, 0.0000, 0.0247, 0.8769, 0.9804, 0.9995, 1.0000},
-    {0.0000, 0.0052, 0.0667, 0.8712, 0.9984, 1.0000, 1.0000},
-    {0.0095, 0.0638, 0.1465, 0.9799, 1.0000, 1.0000, 1.0000}
+  const double ctRate[8][7] = { 
+    {0.0000, 0.0000, 0.0000, 0.8182, 0.9430, 0.9772, 1.0000}, // RStrip0 @ inner sensor
+    {0.0000, 0.0000, 0.0451, 0.9111, 0.9794, 1.0000, 1.0000}, // RStrip1 @ inner sensor
+    {0.0000, 0.0051, 0.0953, 0.9180, 1.0000, 1.0000, 1.0000}, // RStrip2 @ inner sensor
+    {0.0086, 0.0634, 0.1631, 1.0000, 1.0000, 1.0000, 1.0000}, // RStrip3 @ inner sensor
+    {0.0000, 0.0000, 0.0000, 0.9211, 0.9749, 0.9904, 1.0000}, // RStrip0 @ outer sensor
+    {0.0000, 0.0035, 0.1618, 0.9446, 0.9888, 1.0000, 1.0000}, // RStrip1 @ outer sensor
+    {0.0000, 0.0502, 0.2497, 0.9560, 1.0000, 1.0000, 1.0000}, // RStrip2 @ outer sensor
+    {0.0444, 0.2167, 0.3972, 1.0000, 1.0000, 1.0000, 1.0000}  // RStrip3 @ outer sensor
   };
+
 
 
   const int deltaBin[7] = {-3, -2, -1, 0, 1, 2, 3};
@@ -589,6 +590,7 @@ int findCrossTalkBin(double r_hit, int sensorId)
       }
     }
   }
+  if(sensorId > 0) rstrip = rstrip+4;
 
   int ctBin = -999;
   if(rstrip > -100)

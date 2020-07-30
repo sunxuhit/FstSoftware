@@ -58,7 +58,7 @@ void plotMcProjection(int sensorId = 0, string mod = "Mod03", string hv = "HV70V
   TH1F *h_mFstSimResPhi_2Layer   = (TH1F*)File_InPut->Get("h_mFstSimResPhi_2Layer");
   TH2F *h_mFstSimResRPhi_2Layer  = (TH2F*)File_InPut->Get("h_mFstSimResRPhi_2Layer");
 
-  string inputData = Form("../../output/simulation/FstTracking_%s_%s.root",mod.c_str(),hv.c_str());
+  string inputData = Form("../../output/configuration/FstTracking_%s_%s_Th4.0Tb2Ped2.5Ped3.5_withPed_withCMNCorr.root",mod.c_str(),hv.c_str());
   TFile *File_InPutData = TFile::Open(inputData.c_str());
   TH1F *h_mClustersTrackFstResR_2Layer;
   TH1F *h_mClustersTrackFstResPhi_2Layer;
