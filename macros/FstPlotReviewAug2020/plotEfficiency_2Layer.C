@@ -248,7 +248,7 @@ void plotEfficiency_2Layer(string hv = "HV100V", bool isSavePed = true, bool isA
     h_mSensorScanClustersTrackFstEffPhi_2Layer[2][i_match]->SetLineStyle(2);
     h_mSensorScanClustersTrackFstEffPhi_2Layer[2][i_match]->SetLineWidth(1);
     h_mSensorScanClustersTrackFstEffPhi_2Layer[2][i_match]->Draw("HIST same");
-    for(int i_sensor = 0; i_sensor < 1; ++i_sensor)
+    for(int i_sensor = 1; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
     {
       PlotLine(FST::mFstPhiMin[i_sensor], FST::mFstPhiMin[i_sensor], 0.0, 1.05, 1, 2, 2);
       PlotLine(FST::mFstPhiMax[i_sensor], FST::mFstPhiMax[i_sensor], 0.0, 1.05, 1, 2, 2);

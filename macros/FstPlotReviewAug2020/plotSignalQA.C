@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, float nFstThresholdCut2 = 2.5, float nFstThresholdCut1 = 3.5, int sensorId = 2)
+void plotSignalQA(string mod = "Mod03", string hv = "HV140V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, float nFstThresholdCut2 = 2.5, float nFstThresholdCut1 = 3.5, int sensorId = 2)
 {
   gStyle->SetStatX(0.90); gStyle->SetStatY(0.90);
   gStyle->SetStatW(0.35); gStyle->SetStatH(0.55);
@@ -25,7 +25,7 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
   std::string cmnMode = "withCMNCorr";
   if(!isApplyCMNCorr) cmnMode = "woCMNCorr";
 
-  string inputfile = Form("../../output/configuration/FstQAStudy_%s_Th%1.1fTb%dPed%1.1fPed%1.1f_%s_%s.root",hv.c_str(),nFstHitsCut,numOfUsedTimeBins,nFstThresholdCut2,nFstThresholdCut1,pedMode.c_str(),cmnMode.c_str());
+  string inputfile = Form("../../output/configuration/FstQAStudy_%s_%s_Th%1.1fTb%dPed%1.1fPed%1.1f_%s_%s.root",mod.c_str(),hv.c_str(),nFstHitsCut,numOfUsedTimeBins,nFstThresholdCut2,nFstThresholdCut1,pedMode.c_str(),cmnMode.c_str());
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TProfile2D *p_mFstPedMap[FST::mFstNumSensorsPerModule];
   TProfile2D *p_mFstSigMap[FST::mFstNumSensorsPerModule];
@@ -170,7 +170,7 @@ void plotSignalQA(string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCor
   // h_mFstSimpleClustersSNRatio[sensorId]->SetLineColor(2);
   // h_mFstSimpleClustersSNRatio[sensorId]->Draw("HIST same");
 
-  string FigName = Form("./figures/c_SignalSensor%d.eps",sensorId);
+  string FigName = Form("./figures/c_SignalSensor%d_%s_%s.eps",sensorId,mod.c_str(),hv.c_str());
   c_Signal->SaveAs(FigName.c_str());
 }
 

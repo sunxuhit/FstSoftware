@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotSignalHVScan()
+void plotSignalHVScan(string mod = "Mod03")
 {
   const int numOfHV = 4;
   string hv[numOfHV] = {"HV70V","HV100V","HV120V","HV140V"};
@@ -28,7 +28,7 @@ void plotSignalHVScan()
   // read in signal histograms
   for(int i_hv = 0; i_hv < numOfHV; ++i_hv)
   {
-    string inputfile = Form("../../output/configuration/FstQAStudy_%s_Th4.0Tb2Ped2.5Ped3.5_withPed_withCMNCorr.root",hv[i_hv].c_str());
+    string inputfile = Form("../../output/configuration/FstQAStudy_%s_%s_Th4.0Tb2Ped2.5Ped3.5_withPed_withCMNCorr.root",mod.c_str(),hv[i_hv].c_str());
     File_InPut[i_hv] = TFile::Open(inputfile.c_str());
     for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
     {
@@ -71,10 +71,12 @@ void plotSignalHVScan()
       double errSignal  = h_mFstScanClustersSignal[i_hv][i_sensor]->GetMeanError();
       double meanNoise   = h_mFstScanClustersNoise[i_hv][i_sensor]->GetMean();
       double meanSNRatio = h_mFstScanClustersSNRatio[i_hv][i_sensor]->GetMean();
+      double errSNRatio = h_mFstScanClustersSNRatio[i_hv][i_sensor]->GetMeanError();
       g_mMeanFstScanClustersSignal[i_sensor]->SetPoint(i_hv,highVolt[i_hv],meanSignal);
-      // g_mMeanFstScanClustersSignal[i_sensor]->SetPointError(i_hv,0.0,0.0,errSignal,errSignal);
+      g_mMeanFstScanClustersSignal[i_sensor]->SetPointError(i_hv,0.0,0.0,errSignal,errSignal);
       g_mMeanFstScanClustersNoise[i_sensor]->SetPoint(i_hv,highVolt[i_hv],meanNoise);
       g_mMeanFstScanClustersSNRatio[i_sensor]->SetPoint(i_hv,highVolt[i_hv],meanSNRatio);
+      g_mMeanFstScanClustersSNRatio[i_sensor]->SetPointError(i_hv,0.0,0.0,errSNRatio,errSNRatio);
     }
   }
 

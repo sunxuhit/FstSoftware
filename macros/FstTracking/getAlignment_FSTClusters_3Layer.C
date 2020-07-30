@@ -46,7 +46,7 @@ double gaussian(double *var, double *par)
   return y;
 }
 
-int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, int sensorId = 0)
+int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, int sensorId = 2, string mod = "Mod03")
 {
   gStyle->SetOptStat(111111);
   gStyle->SetOptFit(1001);
@@ -79,7 +79,7 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
   const double x3_shift = 0.45811;
   const double y3_shift = 1.0116;
 
-  std::string inputlist = Form("../../list/FST/alignment/FstCluster_Th%1.1fTb%d_InOut.list",nFstHitsCut,numOfUsedTimeBins);
+  std::string inputlist = Form("../../list/FST/alignment/FstCluster_%s_Th%1.1fTb%d.list",mod.c_str(),nFstHitsCut,numOfUsedTimeBins);
   cout << "input list set to: " << inputlist.c_str() << endl;
   TChain *mChainInPut = new TChain("mTree_FstEvent");
   if (!inputlist.empty())   // if input file is ok

@@ -125,12 +125,12 @@ void plotNoiseQA(string module = "Mod03", string hv = "HV70V", string mode = "Pe
       h_mPedSigma_FST[i_rstrip][i_tb]->SetStats(0);
       h_mPedSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetRangeUser(-0.5,127.5);
       h_mPedSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetLabelSize(0.06);
-      h_mPedSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetRangeUser(0,40);
+      h_mPedSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetRangeUser(0,80);
       h_mPedSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetLabelSize(0.06);
       h_mPedSigma_FST[i_rstrip][i_tb]->Draw();
-      PlotLine(31.5, 31.5,0,40,2,1,2);
-      PlotLine(63.5, 63.5,0,40,2,1,2);
-      PlotLine(95.5, 95.5,0,40,2,1,2);
+      PlotLine(31.5, 31.5,0,80,2,1,2);
+      PlotLine(63.5, 63.5,0,80,2,1,2);
+      PlotLine(95.5, 95.5,0,80,2,1,2);
     }
     if(i_rstrip == 3 || i_rstrip == FST::numRStrip-1)
     {
@@ -151,12 +151,12 @@ void plotNoiseQA(string module = "Mod03", string hv = "HV70V", string mode = "Pe
       h_mCMNSigma_FST[i_rstrip][i_tb]->SetStats(0);
       h_mCMNSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetRangeUser(-0.5,127.5);
       h_mCMNSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetLabelSize(0.06);
-      h_mCMNSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetRangeUser(0,40);
+      h_mCMNSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetRangeUser(0,80);
       h_mCMNSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetLabelSize(0.06);
       h_mCMNSigma_FST[i_rstrip][i_tb]->Draw();
-      PlotLine(31.5, 31.5,0,40,2,1,2);
-      PlotLine(63.5, 63.5,0,40,2,1,2);
-      PlotLine(95.5, 95.5,0,40,2,1,2);
+      PlotLine(31.5, 31.5,0,80,2,1,2);
+      PlotLine(63.5, 63.5,0,80,2,1,2);
+      PlotLine(95.5, 95.5,0,80,2,1,2);
     }
     if(i_rstrip == 3 || i_rstrip == FST::numRStrip-1)
     {
@@ -177,12 +177,12 @@ void plotNoiseQA(string module = "Mod03", string hv = "HV70V", string mode = "Pe
       h_mRanSigma_FST[i_rstrip][i_tb]->SetStats(0);
       h_mRanSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetRangeUser(-0.5,127.5);
       h_mRanSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetLabelSize(0.06);
-      h_mRanSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetRangeUser(0,40);
+      h_mRanSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetRangeUser(0,80);
       h_mRanSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetLabelSize(0.06);
       h_mRanSigma_FST[i_rstrip][i_tb]->Draw();
-      PlotLine(31.5, 31.5,0,40,2,1,2);
-      PlotLine(63.5, 63.5,0,40,2,1,2);
-      PlotLine(95.5, 95.5,0,40,2,1,2);
+      PlotLine(31.5, 31.5,0,80,2,1,2);
+      PlotLine(63.5, 63.5,0,80,2,1,2);
+      PlotLine(95.5, 95.5,0,80,2,1,2);
     }
     if(i_rstrip == 3 || i_rstrip == FST::numRStrip-1)
     {

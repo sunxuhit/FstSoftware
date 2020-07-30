@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotNoiseHVScan()
+void plotNoiseHVScan(string mod = "Mod03")
 {
   const int defTimeBin = 0;
   const int numOfHV = 16;
@@ -29,7 +29,7 @@ void plotNoiseHVScan()
   // read in noise histograms
   for(int i_hv = 0; i_hv < numOfHV; ++i_hv)
   {
-    string input_Sensor = Form("../../output/noise/FstPedNoise_Mod03_%s.root",hv[i_hv].c_str());
+    string input_Sensor = Form("../../output/noise/FstPedNoise_%s_%s.root",mod.c_str(),hv[i_hv].c_str());
     File_InPut[i_hv] = TFile::Open(input_Sensor.c_str());
     for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
     {

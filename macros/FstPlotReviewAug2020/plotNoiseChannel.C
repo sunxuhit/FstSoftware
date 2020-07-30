@@ -15,11 +15,11 @@
 
 using namespace std;
 
-void plotNoiseChannel(string hv = "HV70V")
+void plotNoiseChannel(string mod = "Mod03", string hv = "HV70V")
 {
   const int defTimeBin = 0;
 
-  string input_Sensor = Form("../../output/noise/FstPedNoise_Mod03_%s.root",hv.c_str());
+  string input_Sensor = Form("../../output/noise/FstPedNoise_%s_%s.root",mod.c_str(),hv.c_str());
   TFile *File_Sensor = TFile::Open(input_Sensor.c_str());
   TH1F *h_mPedSigma_Sensor[FST::numRStrip][FST::numTBins];
   TH1F *h_mRanSigma_Sensor[FST::numRStrip][FST::numTBins];
@@ -34,8 +34,24 @@ void plotNoiseChannel(string hv = "HV70V")
       h_mRanSigma_Sensor[i_rstrip][i_tb] = (TH1F*)File_Sensor->Get(HistName.c_str());
     }
   }
+
+  string input_Sensor0V = "../../output/noise/FstPedNoise_Mod03_HV0V.root";
+  TFile *File_Sensor0V = TFile::Open(input_Sensor0V.c_str());
+  TH1F *h_mPedSigma_Sensor0V[FST::numRStrip][FST::numTBins];
+  TH1F *h_mRanSigma_Sensor0V[FST::numRStrip][FST::numTBins];
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+  {
+    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+    {
+      std::string HistName;
+      HistName = Form("h_mPedSigma_FST_RStrip%d_TimeBin%d",i_rstrip,i_tb);
+      h_mPedSigma_Sensor0V[i_rstrip][i_tb] = (TH1F*)File_Sensor0V->Get(HistName.c_str());
+      HistName = Form("h_mRanSigma_FST_RStrip%d_TimeBin%d",i_rstrip,i_tb);
+      h_mRanSigma_Sensor0V[i_rstrip][i_tb] = (TH1F*)File_Sensor0V->Get(HistName.c_str());
+    }
+  }
   
-  string input_InnerChip = "../../output/noise/FstChipNoise_Mod03_Inner.root";
+  string input_InnerChip = Form("../../output/noise/FstChipNoise_%s_Inner.root",mod.c_str());
   TFile *File_InnerChip = TFile::Open(input_InnerChip.c_str());
   TH1F *h_mPedSigma_InnerChip[FST::numRStrip][FST::numTBins];
   TH1F *h_mRanSigma_InnerChip[FST::numRStrip][FST::numTBins];
@@ -51,7 +67,7 @@ void plotNoiseChannel(string hv = "HV70V")
     }
   }
   
-  string input_OuterChip = "../../output/noise/FstChipNoise_Mod03_Outer.root";
+  string input_OuterChip = Form("../../output/noise/FstChipNoise_%s_Outer.root",mod.c_str());
   TFile *File_OuterChip = TFile::Open(input_OuterChip.c_str());
   TH1F *h_mPedSigma_OuterChip[FST::numRStrip][FST::numTBins];
   TH1F *h_mRanSigma_OuterChip[FST::numRStrip][FST::numTBins];
@@ -86,7 +102,7 @@ void plotNoiseChannel(string hv = "HV70V")
     h_mPedSigma_Sensor[i_rstrip][defTimeBin]->GetXaxis()->SetTitle("Channel");
     h_mPedSigma_Sensor[i_rstrip][defTimeBin]->GetXaxis()->SetTitleSize(0.06);
     h_mPedSigma_Sensor[i_rstrip][defTimeBin]->GetXaxis()->SetLabelSize(0.06);
-    h_mPedSigma_Sensor[i_rstrip][defTimeBin]->GetYaxis()->SetRangeUser(-1.5,50.0);
+    h_mPedSigma_Sensor[i_rstrip][defTimeBin]->GetYaxis()->SetRangeUser(-1.5,90.0);
     h_mPedSigma_Sensor[i_rstrip][defTimeBin]->GetYaxis()->SetTitle("ADC");
     h_mPedSigma_Sensor[i_rstrip][defTimeBin]->GetYaxis()->SetTitleSize(0.06);
     h_mPedSigma_Sensor[i_rstrip][defTimeBin]->GetYaxis()->SetLabelSize(0.06);
@@ -94,6 +110,10 @@ void plotNoiseChannel(string hv = "HV70V")
     h_mPedSigma_Sensor[i_rstrip][defTimeBin]->SetMarkerSize(1.0);
     h_mPedSigma_Sensor[i_rstrip][defTimeBin]->SetMarkerColor(1);
     h_mPedSigma_Sensor[i_rstrip][defTimeBin]->Draw("p");
+    h_mPedSigma_Sensor0V[i_rstrip][defTimeBin]->SetMarkerStyle(24);
+    h_mPedSigma_Sensor0V[i_rstrip][defTimeBin]->SetMarkerSize(1.0);
+    h_mPedSigma_Sensor0V[i_rstrip][defTimeBin]->SetMarkerColor(4);
+    h_mPedSigma_Sensor0V[i_rstrip][defTimeBin]->Draw("p same");
     h_mPedSigma_InnerChip[i_rstrip][defTimeBin]->SetMarkerStyle(24);
     h_mPedSigma_InnerChip[i_rstrip][defTimeBin]->SetMarkerSize(1.0);
     h_mPedSigma_InnerChip[i_rstrip][defTimeBin]->SetMarkerColor(2);
@@ -120,6 +140,7 @@ void plotNoiseChannel(string hv = "HV70V")
     leg->SetFillColor(0);
     // leg->SetNColumns(2);
     leg->AddEntry(h_mPedSigma_InnerChip[i_rstrip][defTimeBin],"W/O Sensors","P");
+    leg->AddEntry(h_mPedSigma_Sensor0V[i_rstrip][defTimeBin],"With Sensors (HV0V)","P");
     leg->AddEntry(h_mPedSigma_Sensor[i_rstrip][defTimeBin],leg_HV.c_str(),"P");
     leg->Draw("same");
   }
@@ -145,7 +166,7 @@ void plotNoiseChannel(string hv = "HV70V")
     h_mRanSigma_Sensor[i_rstrip][defTimeBin]->GetXaxis()->SetTitle("Channel");
     h_mRanSigma_Sensor[i_rstrip][defTimeBin]->GetXaxis()->SetTitleSize(0.06);
     h_mRanSigma_Sensor[i_rstrip][defTimeBin]->GetXaxis()->SetLabelSize(0.06);
-    h_mRanSigma_Sensor[i_rstrip][defTimeBin]->GetYaxis()->SetRangeUser(-1.5,50.0);
+    h_mRanSigma_Sensor[i_rstrip][defTimeBin]->GetYaxis()->SetRangeUser(-1.5,90.0);
     h_mRanSigma_Sensor[i_rstrip][defTimeBin]->GetYaxis()->SetTitle("ADC");
     h_mRanSigma_Sensor[i_rstrip][defTimeBin]->GetYaxis()->SetTitleSize(0.06);
     h_mRanSigma_Sensor[i_rstrip][defTimeBin]->GetYaxis()->SetLabelSize(0.06);
@@ -153,6 +174,10 @@ void plotNoiseChannel(string hv = "HV70V")
     h_mRanSigma_Sensor[i_rstrip][defTimeBin]->SetMarkerSize(1.0);
     h_mRanSigma_Sensor[i_rstrip][defTimeBin]->SetMarkerColor(1);
     h_mRanSigma_Sensor[i_rstrip][defTimeBin]->Draw("p");
+    h_mRanSigma_Sensor0V[i_rstrip][defTimeBin]->SetMarkerStyle(24);
+    h_mRanSigma_Sensor0V[i_rstrip][defTimeBin]->SetMarkerSize(1.0);
+    h_mRanSigma_Sensor0V[i_rstrip][defTimeBin]->SetMarkerColor(4);
+    h_mRanSigma_Sensor0V[i_rstrip][defTimeBin]->Draw("p same");
     h_mRanSigma_InnerChip[i_rstrip][defTimeBin]->SetMarkerStyle(24);
     h_mRanSigma_InnerChip[i_rstrip][defTimeBin]->SetMarkerSize(1.0);
     h_mRanSigma_InnerChip[i_rstrip][defTimeBin]->SetMarkerColor(2);
@@ -180,6 +205,7 @@ void plotNoiseChannel(string hv = "HV70V")
     leg->SetMargin(0.1);
     // leg->SetNColumns(2);
     leg->AddEntry(h_mRanSigma_InnerChip[i_rstrip][defTimeBin],"W/O Sensors","P");
+    leg->AddEntry(h_mRanSigma_Sensor0V[i_rstrip][defTimeBin],"With Sensors (HV0V)","P");
     leg->AddEntry(h_mRanSigma_Sensor[i_rstrip][defTimeBin],leg_HV.c_str(),"P");
     leg->Draw("same");
   }
