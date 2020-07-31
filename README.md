@@ -76,24 +76,25 @@
 1. compile the code
 2. generate data list for the module and HV
 3. `FstClusterMaker`: root -l -b -q makeFstCluster.C
-  - produce TTree with FstEvent
-  - loopAll.sh to loop over all configurations
-  - output file can be sepcified in the macro
+>  - produce TTree with FstEvent
+>  - loopAll.sh to loop over all configurations
+>  - output file can be sepcified in the macro
 4. generate cluster list for Tracking and QA
 5. `FstTracking`
-  - use getAlignment\_FSTClusters\_3Layer.C to extract alignment parameters for each sensor
+>  - use getAlignment\_FSTClusters\_3Layer.C to extract alignment parameters for each sensor
 6. update alignment paramters in `src/FstUtil/FstCons.h`
 7. re-compile the code and run `FstClusterMaker` with updated alignment parameters 
-  - loopAll.sh to loop over all configurations
+>  - loopAll.sh to loop over all configurations
 8. `FstTracking`: root -l -b -q doFstTracking.C
-  - produce histograms for residual and efficiency
-  - output file canbe sepcified in the macro
-  - loopAll.sh to loop over all configurations
+>  - produce histograms for residual and efficiency
+>  - output file canbe sepcified in the macro
+>  - loopAll.sh to loop over all configurations
 9. `FstQAStudy`: root -l -b -q doFstQAStudy.C
-  - generate TTree for EventDisplay
-  - output file canbe sepcified in the macro
-  - loopAll.sh to loop over all configurations
+>  - generate TTree for EventDisplay
+>  - output file canbe sepcified in the macro
+>  - loopAll.sh to loop over all configurations
 10. `FstPlotMacro`: . ./plotQA.sh
-  - change **hv** and **config** in `plotQA.sh` for different HV and configuration
-  - all QA plots can be found in **figures/module\_hv\_config**
+>  - change **hv** and **config** in `plotQA.sh` for different HV and configuration
+>  - all QA plots can be found in **figures/module\_hv\_config**
+>  - loopAll.sh to loop over all configurations
 
