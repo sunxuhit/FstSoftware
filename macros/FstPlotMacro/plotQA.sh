@@ -31,12 +31,16 @@ then
   mv ./figures/SignalQA_Sensor2.pdf ${folder}/SignalQA_Sensor2_${mod}_${hv}_Th${nFstHitsCut}Tb${numOfUsedTimeBins}Ped2.5Ped3.5_${config}.pdf
 
   # echo "Plot Ped Noise QA!!"
-  root -l -b -q plotNoiseQA.C\(\"${mod}\",\"${hv}\",\"Ped\"\)
-  mv ./figures/PedNoiseQA.pdf ${folder}/PedNoiseQA_${mod}_${hv}_Th${nFstHitsCut}Tb${numOfUsedTimeBins}Ped2.5Ped3.5_${config}.pdf
+  root -l -b -q plotSensorPedNoiseQA.C\(\"${mod}\",\"${hv}\"\)
+  mv ./figures/PedNoiseQA_${mod}_${hv}.pdf ${folder}/PedNoiseQA_${mod}_${hv}.pdf
 
   # echo "Plot Data Noise QA!!"
-  root -l -b -q plotNoiseQA.C\(\"${mod}\",\"${hv}\",\"Data\"\)
-  mv ./figures/DataNoiseQA.pdf ${folder}/DataNoiseQA_${mod}_${hv}_Th${nFstHitsCut}Tb${numOfUsedTimeBins}Ped2.5Ped3.5_${config}.pdf
+  InPutNoise=../../list/FST/Date_${mod}_${hv}.list
+  for item in `cat $InPutNoise`
+  do
+    root -l -b -q plotSensorDataNoiseQA.C\(\"${mod}\",\"${hv}\",\"${item}\"\)
+    mv ./figures/DataNoiseQA_${mod}_${hv}_${item}.pdf ${folder}/DataNoiseQA_${mod}_${hv}_${item}.pdf
+  done
 
   # echo "Plot Residual of Fst Cluster Tracks from 2-Layer tracking!!"
   root -l -b -q plotResidual_FSTClusterTracks_2Layer.C\(\"${mod}\",\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},${numOfUsedTimeBins},2.5,3.5\)

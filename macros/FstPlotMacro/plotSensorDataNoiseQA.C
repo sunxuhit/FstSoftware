@@ -15,12 +15,12 @@
 
 using namespace std;
 
-void plotNoiseQA(string module = "Mod03", string hv = "HV70V", string mode = "Ped")
+void plotSensorDataNoiseQA(string module = "Mod03", string hv = "HV70V", string date = "07122020")
 {
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
   gStyle->SetStatW(0.35); gStyle->SetStatH(0.35);
 
-  string inputfile = Form("../../output/noise/Fst%sNoise_%s_%s.root",mode.c_str(),module.c_str(),hv.c_str());
+  string inputfile = Form("../../output/noise/FstDataNoise_%s_%s_%s.root",module.c_str(),hv.c_str(),date.c_str());
   TFile *File_InPut = TFile::Open(inputfile.c_str());
 
   TH2F *h_mPedDisplay[4][FST::numTBins];
@@ -56,7 +56,7 @@ void plotNoiseQA(string module = "Mod03", string hv = "HV70V", string mode = "Pe
     }
   }
 
-  string outputname = Form("./figures/%sNoiseQA.pdf",mode.c_str());
+  string outputname = Form("./figures/DataNoiseQA_%s_%s_%s.pdf",module.c_str(),hv.c_str(),date.c_str());
 
   TCanvas *c_Noise = new TCanvas("c_Noise","c_Noise",10,10,1800,800);
   c_Noise->Divide(9,4);
@@ -69,7 +69,7 @@ void plotNoiseQA(string module = "Mod03", string hv = "HV70V", string mode = "Pe
     c_Noise->cd(i_pad+1)->SetGrid(0,0);
   }
 
-  string output_start = Form("./figures/%sNoiseQA.pdf[",mode.c_str());
+  string output_start = Form("./figures/DataNoiseQA_%s_%s_%s.pdf[",module.c_str(),hv.c_str(),date.c_str());
   c_Noise->Print(output_start.c_str()); // open pdf file
 
   for(int i_layer = 0; i_layer < 4; ++i_layer)
@@ -858,7 +858,7 @@ void plotNoiseQA(string module = "Mod03", string hv = "HV70V", string mode = "Pe
 #endif
 
 
-  string output_stop = Form("./figures/%sNoiseQA.pdf]",mode.c_str());
+  string output_stop = Form("./figures/DataNoiseQA_%s_%s_%s.pdf]",module.c_str(),hv.c_str(),date.c_str());
   c_Noise->Print(output_stop.c_str()); // open pdf file
 }
 
