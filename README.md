@@ -2,10 +2,9 @@
 
 #### list
 - run list for FST cosmic test stand
-> - FstPed\_*HV*.list: raw ped scan list
-> - FstData\_*HV*.list: raw data list
-> - FstTracking\_*HV*.list: list for tracking study
-> - FstQAStudy\_*HV*.list: list for QA study
+> - FstPed\_*Mod*\_*HV*.list: raw ped scan list
+> - FstData\_*Mod*\_*HV*.list: raw data list
+> - FstCluster\_*Mod*\_*HV*.list: list for QA & tracking study
 
 ---------------
 
@@ -39,7 +38,7 @@
 - group raw hits into clusters
 - find tracking based on hits and clusters in IST1 & IST3
 - save all information to FstEvent
-- Thershold and number of used time bins can be changed in `src/FstUtil/FstCons.h`
+- Thershold and number of used time bins can be adjusted as an input argument in `macros/FstClusterMaker/makeFstCluster.C`
 
 ##### FstTracking
 - read in FstEvent
@@ -58,18 +57,9 @@
 - `IstTracking` extract IST position dependent tracking resolution and efficiency.
 - `FstUtil` test FstRawHit, FstCluster, FstTrack and FstEvent classes.
 - `FstClusterMaker` analyze raw data and produce RawHits, Clusters and Tracks.
-  - root -l -b -q makeFstCluster.C
-- `FstTracking` 
->  - doFstTracking.C: produce tracking (Hits & Clusters) from FstClusterMaker
->  - getAlignment\_ISTClusters.C: get alignment parameters of IST1 & IST3 w.r.t. IST2 from IST Clusters 
->  - plotResidual\_ISTClusters.C: plot residuals of IST2 before and after alignment
->  - getAlignment\_FSTClusters.C: get alignment parameters of IST2 w.r.t FST with 2-Layer tracking
->  - plotResidual\_FSTClusters\_2Layer.C: plot residuals of FST before and after alignment based on 2-Layer tracking
->  - plotResidual\_FSTClusters\_3Layer.C: plot residuals of FST before and after alignment based on 3-Layer tracking
-
+- `FstTracking` do the alignment and generate track resolution and efficiency histograms
 - `FstQAStudy`: generate Event Display histograms
-- `FstPlotMacro`:
->  - plotQA.sh: produce all QA plots for one specific configuration => Threshold & NumOfTimeBins
+- `FstPlotMacro`: produce all QA plots for one specific configuration => Threshold & NumOfTimeBins
 
 ---------------
 
@@ -84,20 +74,26 @@
 
 #### analysis work flow
 1. compile the code
-2. `FstClusterMaker`: root -l -b -q makeFstCluster.C
+2. generate data list for the module and HV
+3. `FstClusterMaker`: root -l -b -q makeFstCluster.C
   - produce TTree with FstEvent
-  - output file canbe sepcified in the macro
-3. rename the output with configuration
-  - default output file name is *FstClusters\_HV140V\_withPed.root*
-  - rename it with configurations: **FstClusters\_HV140V\_withPed\_Th4o5Tb3.root**
-    - Th4o5Tb3 stands for 4.5 threshold and 3 used time bins
-4. `FstTracking`: root -l -b -q doFstTracking.C
+  - loopAll.sh to loop over all configurations
+  - output file can be sepcified in the macro
+4. generate cluster list for Tracking and QA
+5. `FstTracking`
+  - use getAlignment\_FSTClusters\_3Layer.C to extract alignment parameters for each sensor
+6. update alignment paramters in `src/FstUtil/FstCons.h`
+7. re-compile the code and run `FstClusterMaker` with updated alignment parameters 
+  - loopAll.sh to loop over all configurations
+8. `FstTracking`: root -l -b -q doFstTracking.C
   - produce histograms for residual and efficiency
   - output file canbe sepcified in the macro
-5. `FstQAStudy`: root -l -b -q doFstQAStudy.C
+  - loopAll.sh to loop over all configurations
+9. `FstQAStudy`: root -l -b -q doFstQAStudy.C
   - generate TTree for EventDisplay
   - output file canbe sepcified in the macro
-6. `FstPlotMacro`: . ./plotQA.sh
+  - loopAll.sh to loop over all configurations
+10. `FstPlotMacro`: . ./plotQA.sh
   - change **hv** and **config** in `plotQA.sh` for different HV and configuration
-  - all QA plots can be found in **figures/hv\_config**
+  - all QA plots can be found in **figures/module\_hv\_config**
 
