@@ -9,5 +9,5 @@ then
   hv=$2
   rm FstPed_${mod}_${hv}.list
   touch FstPed_${mod}_${hv}.list
-  ls ../../data/FstCosmicTestStand_*/ped/FstInnerTracking*${mod}*_${hv}_ped_*.root >> FstPed_${mod}_${hv}.list
+  ls ../../data/FstCosmicTestStand_*/ped/FstInOuterSensor*${mod}*_${hv}_ped_*.root >> FstPed_${mod}_${hv}.list
 fi

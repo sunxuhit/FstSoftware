@@ -138,13 +138,12 @@ void plotNoiseChannel(string mod = "Mod03", string hv = "HV70V")
     TLegend *leg = new TLegend(0.15,0.65,0.85,0.85);
     leg->SetBorderSize(0);
     leg->SetFillColor(0);
-    // leg->SetNColumns(2);
     leg->AddEntry(h_mPedSigma_InnerChip[i_rstrip][defTimeBin],"W/O Sensors","P");
     leg->AddEntry(h_mPedSigma_Sensor0V[i_rstrip][defTimeBin],"With Sensors (HV0V)","P");
     leg->AddEntry(h_mPedSigma_Sensor[i_rstrip][defTimeBin],leg_HV.c_str(),"P");
     leg->Draw("same");
   }
-  string FigName_Ped = Form("./figures/c_PedSigma_%s.eps",hv.c_str());
+  string FigName_Ped = Form("./figures/c_PedSigma_%s_%s.eps",mod.c_str(),hv.c_str());
   c_PedSigma->SaveAs(FigName_Ped.c_str());
 
   TCanvas *c_RanSigma = new TCanvas("c_RanSigma","c_RanSigma",10,10,1600,800);
@@ -203,12 +202,11 @@ void plotNoiseChannel(string mod = "Mod03", string hv = "HV70V")
     leg->SetBorderSize(0);
     leg->SetFillColor(0);
     leg->SetMargin(0.1);
-    // leg->SetNColumns(2);
     leg->AddEntry(h_mRanSigma_InnerChip[i_rstrip][defTimeBin],"W/O Sensors","P");
     leg->AddEntry(h_mRanSigma_Sensor0V[i_rstrip][defTimeBin],"With Sensors (HV0V)","P");
     leg->AddEntry(h_mRanSigma_Sensor[i_rstrip][defTimeBin],leg_HV.c_str(),"P");
     leg->Draw("same");
   }
-  string FigName_Ran = Form("./figures/c_RanSigma_%s.eps",hv.c_str());
+  string FigName_Ran = Form("./figures/c_RanSigma_%s_%s.eps",mod.c_str(),hv.c_str());
   c_RanSigma->SaveAs(FigName_Ran.c_str());
 }

@@ -4,16 +4,16 @@
 
 R__LOAD_LIBRARY(../../lib/libFstNoiseStudy.dylib)
 
-int doFstSensorNoiseStudy(string module = "Mod03", string hv = "HV140V", string mode = "Ped")
+int doFstSensorPedNoiseStudy(string module = "Mod04", string hv = "HV70V")
 {
   std::cout << "gSystem::Load <- libFstNoiseStudy.dylib" << endl;
 
   FstNoiseStudy *fst = new FstNoiseStudy();
 
-  std::string inputlist = Form("../../list/FST/Fst%s_%s_%s.list",mode.c_str(),module.c_str(),hv.c_str());
+  std::string inputlist = Form("../../list/FST/FstPed_%s_%s.list",module.c_str(),hv.c_str());
   cout << "input list set to: " << inputlist.c_str() << endl;
 
-  std::string outputfile = Form("../../output/noise/Fst%sNoise_%s_%s.root",mode.c_str(),module.c_str(),hv.c_str());
+  std::string outputfile = Form("../../output/noise/FstPedNoise_%s_%s.root",module.c_str(),hv.c_str());
   cout << "output file set to: " << outputfile.c_str() << endl;
 
   fst->set_list(inputlist.c_str());

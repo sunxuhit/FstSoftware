@@ -113,7 +113,7 @@ void plotEfficiencyHV(string mod = "Mod03")
     leg->AddEntry(h_mSensorScanClustersTrackFstEffR_2Layer[3][i_sensor][0],hv[3].c_str(),"P");
     leg->Draw("same");
   }
-  c_EfficiencyR->SaveAs("./figures/c_EfficiencyRHVScan.png");
+  c_EfficiencyR->SaveAs("./figures/c_EfficiencyRHVScan.eps");
 
   TH1F *h_playPhi = new TH1F("h_playPhi","h_playPhi",100,-0.5,0.5);
   for(int i_bin = 0; i_bin < 100; ++i_bin)
@@ -172,5 +172,5 @@ void plotEfficiencyHV(string mod = "Mod03")
     leg->AddEntry(h_mSensorScanClustersTrackFstEffPhi_2Layer[3][i_sensor][0],hv[3].c_str(),"P");
     leg->Draw("same");
   }
-  c_EfficiencyPhi->SaveAs("./figures/c_EfficiencyPhiHVScan.png");
+  c_EfficiencyPhi->SaveAs("./figures/c_EfficiencyPhiHVScan.eps");
 }
