@@ -37,6 +37,9 @@ void plotSensorDataNoiseQA(string module = "Mod03", string hv = "HV70V", string 
   TH1F *h_mPedSigma_FST[FST::numRStrip][FST::numTBins];
   TH1F *h_mCMNSigma_FST[FST::numRStrip][FST::numTBins];
   TH1F *h_mRanSigma_FST[FST::numRStrip][FST::numTBins];
+  TH1F *h_mDisplayPedSigma_FST[FST::numRStrip][FST::numTBins];
+  TH1F *h_mDisplayCMNSigma_FST[FST::numRStrip][FST::numTBins];
+  TH1F *h_mDisplayRanSigma_FST[FST::numRStrip][FST::numTBins];
   for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
   {
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
@@ -53,6 +56,15 @@ void plotSensorDataNoiseQA(string module = "Mod03", string hv = "HV70V", string 
 
       HistName = Form("h_mRanSigma_FST_RStrip%d_TimeBin%d",i_rstrip,i_tb);
       h_mRanSigma_FST[i_rstrip][i_tb] = (TH1F*)File_InPut->Get(HistName.c_str());
+
+      HistName = Form("h_mDisplayPedSigma_FST_RStrip%d_TimeBin%d",i_rstrip,i_tb);
+      h_mDisplayPedSigma_FST[i_rstrip][i_tb] = (TH1F*)File_InPut->Get(HistName.c_str());
+
+      HistName = Form("h_mDisplayCMNSigma_FST_RStrip%d_TimeBin%d",i_rstrip,i_tb);
+      h_mDisplayCMNSigma_FST[i_rstrip][i_tb] = (TH1F*)File_InPut->Get(HistName.c_str());
+
+      HistName = Form("h_mDisplayRanSigma_FST_RStrip%d_TimeBin%d",i_rstrip,i_tb);
+      h_mDisplayRanSigma_FST[i_rstrip][i_tb] = (TH1F*)File_InPut->Get(HistName.c_str());
     }
   }
 
@@ -99,8 +111,10 @@ void plotSensorDataNoiseQA(string module = "Mod03", string hv = "HV70V", string 
       h_mPedMean_FST[i_rstrip][i_tb]->SetStats(0);
       h_mPedMean_FST[i_rstrip][i_tb]->GetXaxis()->SetRangeUser(-0.5,127.5);
       h_mPedMean_FST[i_rstrip][i_tb]->GetXaxis()->SetLabelSize(0.06);
+      h_mPedMean_FST[i_rstrip][i_tb]->GetXaxis()->SetTitle("channel");
       h_mPedMean_FST[i_rstrip][i_tb]->GetYaxis()->SetRangeUser(200,1000);
       h_mPedMean_FST[i_rstrip][i_tb]->GetYaxis()->SetLabelSize(0.06);
+      h_mPedMean_FST[i_rstrip][i_tb]->GetYaxis()->SetTitle("ADC");
       h_mPedMean_FST[i_rstrip][i_tb]->Draw();
       PlotLine(31.5, 31.5,200,1000,2,1,2);
       PlotLine(63.5, 63.5,200,1000,2,1,2);
@@ -108,6 +122,11 @@ void plotSensorDataNoiseQA(string module = "Mod03", string hv = "HV70V", string 
     }
     if(i_rstrip == 3 || i_rstrip == FST::numRStrip-1)
     {
+      c_Noise->cd();
+      string TitleName = "Pedestal";
+      TPaveLabel* canvas_title = new TPaveLabel(0.0,0.98,0.055,1.0,TitleName.c_str());
+      canvas_title->SetBorderSize(1);
+      canvas_title->Draw();
       c_Noise->Update();
       c_Noise->Print(outputname.c_str());
     }
@@ -125,8 +144,10 @@ void plotSensorDataNoiseQA(string module = "Mod03", string hv = "HV70V", string 
       h_mPedSigma_FST[i_rstrip][i_tb]->SetStats(0);
       h_mPedSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetRangeUser(-0.5,127.5);
       h_mPedSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetLabelSize(0.06);
+      h_mPedSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetTitle("channel");
       h_mPedSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetRangeUser(0,80);
       h_mPedSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetLabelSize(0.06);
+      h_mPedSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetTitle("ADC");
       h_mPedSigma_FST[i_rstrip][i_tb]->Draw();
       PlotLine(31.5, 31.5,0,80,2,1,2);
       PlotLine(63.5, 63.5,0,80,2,1,2);
@@ -134,6 +155,11 @@ void plotSensorDataNoiseQA(string module = "Mod03", string hv = "HV70V", string 
     }
     if(i_rstrip == 3 || i_rstrip == FST::numRStrip-1)
     {
+      c_Noise->cd();
+      string TitleName = "Total Noise";
+      TPaveLabel* canvas_title = new TPaveLabel(0.0,0.98,0.055,1.0,TitleName.c_str());
+      canvas_title->SetBorderSize(1);
+      canvas_title->Draw();
       c_Noise->Update();
       c_Noise->Print(outputname.c_str());
     }
@@ -151,8 +177,10 @@ void plotSensorDataNoiseQA(string module = "Mod03", string hv = "HV70V", string 
       h_mCMNSigma_FST[i_rstrip][i_tb]->SetStats(0);
       h_mCMNSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetRangeUser(-0.5,127.5);
       h_mCMNSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetLabelSize(0.06);
+      h_mCMNSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetTitle("channel");
       h_mCMNSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetRangeUser(0,80);
       h_mCMNSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetLabelSize(0.06);
+      h_mCMNSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetTitle("ADC");
       h_mCMNSigma_FST[i_rstrip][i_tb]->Draw();
       PlotLine(31.5, 31.5,0,80,2,1,2);
       PlotLine(63.5, 63.5,0,80,2,1,2);
@@ -160,6 +188,11 @@ void plotSensorDataNoiseQA(string module = "Mod03", string hv = "HV70V", string 
     }
     if(i_rstrip == 3 || i_rstrip == FST::numRStrip-1)
     {
+      c_Noise->cd();
+      string TitleName = "Common Mode Noise";
+      TPaveLabel* canvas_title = new TPaveLabel(0.0,0.98,0.055,1.0,TitleName.c_str());
+      canvas_title->SetBorderSize(1);
+      canvas_title->Draw();
       c_Noise->Update();
       c_Noise->Print(outputname.c_str());
     }
@@ -177,8 +210,10 @@ void plotSensorDataNoiseQA(string module = "Mod03", string hv = "HV70V", string 
       h_mRanSigma_FST[i_rstrip][i_tb]->SetStats(0);
       h_mRanSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetRangeUser(-0.5,127.5);
       h_mRanSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetLabelSize(0.06);
+      h_mRanSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetTitle("channel");
       h_mRanSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetRangeUser(0,80);
       h_mRanSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetLabelSize(0.06);
+      h_mRanSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetTitle("ADC");
       h_mRanSigma_FST[i_rstrip][i_tb]->Draw();
       PlotLine(31.5, 31.5,0,80,2,1,2);
       PlotLine(63.5, 63.5,0,80,2,1,2);
@@ -186,6 +221,93 @@ void plotSensorDataNoiseQA(string module = "Mod03", string hv = "HV70V", string 
     }
     if(i_rstrip == 3 || i_rstrip == FST::numRStrip-1)
     {
+      c_Noise->cd();
+      string TitleName = "Random Noise";
+      TPaveLabel* canvas_title = new TPaveLabel(0.0,0.98,0.055,1.0,TitleName.c_str());
+      canvas_title->SetBorderSize(1);
+      canvas_title->Draw();
+      c_Noise->Update();
+      c_Noise->Print(outputname.c_str());
+    }
+  }
+
+  // noise distribution
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+  {
+    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+    {
+      int i_pad = i_rstrip*9 + i_tb;
+      if(i_rstrip > 3) i_pad = (i_rstrip-4)*9 + i_tb;
+      c_Noise->cd(i_pad+1);
+      string title = Form("RStrip%d & TB%d",i_rstrip,i_tb);
+      h_mDisplayPedSigma_FST[i_rstrip][i_tb]->SetTitle(title.c_str());
+      // h_mDisplayPedSigma_FST[i_rstrip][i_tb]->SetStats(0);
+      h_mDisplayPedSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetLabelSize(0.06);
+      h_mDisplayPedSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetTitle("ADC");
+      h_mDisplayPedSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetLabelSize(0.06);
+      h_mDisplayPedSigma_FST[i_rstrip][i_tb]->Draw();
+    }
+    if(i_rstrip == 3 || i_rstrip == FST::numRStrip-1)
+    {
+      c_Noise->cd();
+      string TitleName = "Total Noise";
+      TPaveLabel* canvas_title = new TPaveLabel(0.0,0.98,0.055,1.0,TitleName.c_str());
+      canvas_title->SetBorderSize(1);
+      canvas_title->Draw();
+      c_Noise->Update();
+      c_Noise->Print(outputname.c_str());
+    }
+  }
+
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+  {
+    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+    {
+      int i_pad = i_rstrip*9 + i_tb;
+      if(i_rstrip > 3) i_pad = (i_rstrip-4)*9 + i_tb;
+      c_Noise->cd(i_pad+1);
+      string title = Form("RStrip%d & TB%d",i_rstrip,i_tb);
+      h_mDisplayCMNSigma_FST[i_rstrip][i_tb]->SetTitle(title.c_str());
+      // h_mDisplayCMNSigma_FST[i_rstrip][i_tb]->SetStats(0);
+      h_mDisplayCMNSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetLabelSize(0.06);
+      h_mDisplayCMNSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetTitle("ADC");
+      h_mDisplayCMNSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetLabelSize(0.06);
+      h_mDisplayCMNSigma_FST[i_rstrip][i_tb]->Draw();
+    }
+    if(i_rstrip == 3 || i_rstrip == FST::numRStrip-1)
+    {
+      c_Noise->cd();
+      string TitleName = "Common Mode Noise";
+      TPaveLabel* canvas_title = new TPaveLabel(0.0,0.98,0.055,1.0,TitleName.c_str());
+      canvas_title->SetBorderSize(1);
+      canvas_title->Draw();
+      c_Noise->Update();
+      c_Noise->Print(outputname.c_str());
+    }
+  }
+
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+  {
+    for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+    {
+      int i_pad = i_rstrip*9 + i_tb;
+      if(i_rstrip > 3) i_pad = (i_rstrip-4)*9 + i_tb;
+      c_Noise->cd(i_pad+1);
+      string title = Form("RStrip%d & TB%d",i_rstrip,i_tb);
+      h_mDisplayRanSigma_FST[i_rstrip][i_tb]->SetTitle(title.c_str());
+      // h_mDisplayRanSigma_FST[i_rstrip][i_tb]->SetStats(0);
+      h_mDisplayRanSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetLabelSize(0.06);
+      h_mDisplayRanSigma_FST[i_rstrip][i_tb]->GetXaxis()->SetTitle("ADC");
+      h_mDisplayRanSigma_FST[i_rstrip][i_tb]->GetYaxis()->SetLabelSize(0.06);
+      h_mDisplayRanSigma_FST[i_rstrip][i_tb]->Draw();
+    }
+    if(i_rstrip == 3 || i_rstrip == FST::numRStrip-1)
+    {
+      c_Noise->cd();
+      string TitleName = "Random Noise";
+      TPaveLabel* canvas_title = new TPaveLabel(0.0,0.98,0.055,1.0,TitleName.c_str());
+      canvas_title->SetBorderSize(1);
+      canvas_title->Draw();
       c_Noise->Update();
       c_Noise->Print(outputname.c_str());
     }

@@ -42,6 +42,9 @@ then
     mv ./figures/DataNoiseQA_${mod}_${hv}_${item}.pdf ${folder}/DataNoiseQA_${mod}_${hv}_${item}.pdf
   done
 
+  root -l -b -q plotSensorDataNoiseDate.C\(\"${mod}\",\"${hv}\"\)
+  mv ./figures/DataNoiseDate_${mod}_${hv}.pdf ${folder}/DataNoiseDate_${mod}_${hv}.pdf
+
   # echo "Plot Residual of Fst Cluster Tracks from 2-Layer tracking!!"
   root -l -b -q plotResidual_FSTClusterTracks_2Layer.C\(\"${mod}\",\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},${numOfUsedTimeBins},2.5,3.5\)
   mv ./figures/Residual_FSTClusterTracks_2Layer.pdf ${folder}/Residual_FSTClusterTracks_2Layer_${mod}_${hv}_Th${nFstHitsCut}Tb${numOfUsedTimeBins}Ped2.5Ped3.5_${config}.pdf

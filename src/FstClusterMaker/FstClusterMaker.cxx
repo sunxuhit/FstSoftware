@@ -1273,35 +1273,35 @@ bool FstClusterMaker::calPedestal()
 	}
       }
     }
-    for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+  }
+  for(int i_arm = 0; i_arm < FST::numARMs; ++i_arm)
+  {
+    for(int i_port = 0; i_port < FST::numPorts; ++i_port)
     {
-      for(int i_port = 0; i_port < FST::numPorts; ++i_port)
+      for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
       {
-	for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+	for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
 	{
-	  for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+	  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
 	  {
-	    for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+	    if(counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb] > 0) // eject bad channels
 	    {
-	      if(counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb] > 0) // eject bad channels
-	      {
-		double meanCMN = sumValues_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]/counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb];
-		mCMNMean[i_arm][i_port][i_apv][i_rstrip][i_tb] = sqrt((sumValuesSquared_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]-(double)counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]*meanCMN*meanCMN)/(double)(counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]-1));
-	      }
+	      double meanCMN = sumValues_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]/counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb];
+	      mCMNMean[i_arm][i_port][i_apv][i_rstrip][i_tb] = sqrt((sumValuesSquared_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]-(double)counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]*meanCMN*meanCMN)/(double)(counters_CMN[i_arm][i_port][i_apv][i_rstrip][i_tb]-1));
 	    }
-	    for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
-	    {
-	      int layer = this->getLayer(i_arm,i_port);
-	      int col = this->getColumn(i_arm,i_port,i_apv,i_ch);
-	      if(layer > 0) col = col%2;
-	      int row = this->getRow(i_arm,i_port,i_apv,i_ch);
-	      if(counters_CMN[i_arm][i_port][i_apv][col][i_tb] > 0 && col > -1)
-	      { // set CMN for each channel
-		mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb] = mCMNMean[i_arm][i_port][i_apv][col][i_tb];
-	      }
-	      g_mCMNSigma[layer][i_tb]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
-	      if(layer == 0 && col > -1) h_mCMNSigma_FST[col][i_tb]->SetBinContent(row+1,mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	  }
+	  for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+	  {
+	    int layer = this->getLayer(i_arm,i_port);
+	    int col = this->getColumn(i_arm,i_port,i_apv,i_ch);
+	    if(layer > 0) col = col%2;
+	    int row = this->getRow(i_arm,i_port,i_apv,i_ch);
+	    if(counters_CMN[i_arm][i_port][i_apv][col][i_tb] > 0 && col > -1)
+	    { // set CMN for each channel
+	      mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb] = mCMNMean[i_arm][i_port][i_apv][col][i_tb];
 	    }
+	    g_mCMNSigma[layer][i_tb]->SetPoint(i_apv*FST::numChannels+i_ch,i_apv*FST::numChannels+i_ch,mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
+	    if(layer == 0 && col > -1) h_mCMNSigma_FST[col][i_tb]->SetBinContent(row+1,mCMNStdDev[i_arm][i_port][i_apv][i_ch][i_tb]);
 	  }
 	}
       }

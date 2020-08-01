@@ -76,6 +76,10 @@ class FstNoiseStudy : public TObject
     TH1F *h_mCMNSigma_FST[FST::numRStrip][FST::numTBins];
     TH1F *h_mRanSigma_FST[FST::numRStrip][FST::numTBins];
 
+    TH1F *h_mDisplayPedSigma_FST[FST::numRStrip][FST::numTBins];
+    TH1F *h_mDisplayCMNSigma_FST[FST::numRStrip][FST::numTBins];
+    TH1F *h_mDisplayRanSigma_FST[FST::numRStrip][FST::numTBins];
+
     int mRoChannelMap[128];
     TGraph *g_mRoPedMean[4][FST::numTBins]; // 0 for FST & 1-3 for IST | i_ro (0-127) & i_tb (0-8)
     TGraph *g_mRoPedSigma[4][FST::numTBins];
