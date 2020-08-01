@@ -6,12 +6,12 @@ if [ $# -eq 0 ]
 then
   mod=Mod03
 
-  # echo "Time Sequence Study for HV70V"
-  # InPutDate_HV70V=../../list/FST/Date_${mod}_HV70V.list
-  # for item in `cat $InPutDate_HV70V`
-  # do
-  #  . ./fstSensorDataNoiseStudy.sh ${mod} HV70V $item 
-  # done
+  echo "Time Sequence Study for HV70V"
+  InPutDate_HV70V=../../list/FST/Date_${mod}_HV70V.list
+  for item in `cat $InPutDate_HV70V`
+  do
+   . ./fstSensorDataNoiseStudy.sh ${mod} HV70V $item 
+  done
 
   echo "Time Sequence Study for HV100V"
   InPutDate_HV100V=../../list/FST/Date_${mod}_HV100V.list
