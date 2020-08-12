@@ -6,15 +6,13 @@ if [ $# -eq 2 ]
 then
   mod=$1
   hv=$2
-  InPutList=FstData_${mod}_${hv}.list
-  InPutDate=Date_${mod}_${hv}.list
-
-  mkdir -p timesequence
+  InPutList=data/${mod}/FstData_${mod}_${hv}.list
+  InPutDate=data/${mod}/Date_${mod}_${hv}.list
 
   for item in `cat $InPutDate`
   do
     echo $item
-    OutPutList=./timesequence/FstData_${mod}_${hv}_${item}.list
+    OutPutList=./data/${mod}/FstData_${mod}_${hv}_${item}.list
     rm $OutPutList
     touch $OutPutList
     cat $InPutList | grep $item >> $OutPutList

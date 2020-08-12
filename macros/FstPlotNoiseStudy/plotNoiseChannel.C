@@ -10,7 +10,7 @@
 #include <TProfile2D.h>
 #include <TGraph.h>
 #include <TStyle.h>
-#include "../FstPlotMacro/draw.h"
+#include "./draw.h"
 #include "../../src/FstUtil/FstCons.h"
 
 using namespace std;

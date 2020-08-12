@@ -15,14 +15,14 @@
 
 using namespace std;
 
-void plotSensorDataNoiseQA(string module = "Mod03", string hv = "HV70V", string date = "07122020")
+void plotSensorDataNoiseQA(string module = "Mod01", string hv = "HV70V", string date = "04062020")
 {
   gStyle->SetOptStat(111111);
   // gStyle->SetOptFit(1001);
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
   gStyle->SetStatW(0.35); gStyle->SetStatH(0.35);
 
-  string inputfile = Form("../../output/noise/FstDataNoise_%s_%s_%s.root",module.c_str(),hv.c_str(),date.c_str());
+  string inputfile = Form("../../output/noise/%s/FstDataNoise_%s_%s_%s.root",module.c_str(),module.c_str(),hv.c_str(),date.c_str());
   TFile *File_InPut = TFile::Open(inputfile.c_str());
 
   TH2F *h_mPedDisplay[4][FST::numTBins];
@@ -70,7 +70,7 @@ void plotSensorDataNoiseQA(string module = "Mod03", string hv = "HV70V", string 
     }
   }
 
-  string outputname = Form("./figures/DataNoiseQA_%s_%s_%s.pdf",module.c_str(),hv.c_str(),date.c_str());
+  string outputname = Form("./figures/%s/DataNoiseQA_%s_%s_%s.pdf",module.c_str(),module.c_str(),hv.c_str(),date.c_str());
 
   TCanvas *c_Noise = new TCanvas("c_Noise","c_Noise",10,10,1800,800);
   c_Noise->Divide(9,4);
@@ -83,7 +83,7 @@ void plotSensorDataNoiseQA(string module = "Mod03", string hv = "HV70V", string 
     c_Noise->cd(i_pad+1)->SetGrid(0,0);
   }
 
-  string output_start = Form("./figures/DataNoiseQA_%s_%s_%s.pdf[",module.c_str(),hv.c_str(),date.c_str());
+  string output_start = Form("./figures/%s/DataNoiseQA_%s_%s_%s.pdf[",module.c_str(),module.c_str(),hv.c_str(),date.c_str());
   c_Noise->Print(output_start.c_str()); // open pdf file
 
   for(int i_layer = 0; i_layer < 4; ++i_layer)
@@ -1139,7 +1139,7 @@ void plotSensorDataNoiseQA(string module = "Mod03", string hv = "HV70V", string 
 #endif
 
 
-  string output_stop = Form("./figures/DataNoiseQA_%s_%s_%s.pdf]",module.c_str(),hv.c_str(),date.c_str());
+  string output_stop = Form("./figures/%s/DataNoiseQA_%s_%s_%s.pdf]",module.c_str(),module.c_str(),hv.c_str(),date.c_str());
   c_Noise->Print(output_stop.c_str()); // open pdf file
 }
 

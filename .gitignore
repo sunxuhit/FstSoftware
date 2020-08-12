@@ -13,6 +13,7 @@ macros/*.root
 macros/*/*.root
 macros/*/figures/*.eps
 macros/*/figures/*.pdf
+macros/*/figures/*.png
 macros/*/figures/*/*.eps
 macros/*/figures/*/*.pdf
 macros/*/figures/*/*/*.pdf
@@ -23,9 +24,9 @@ data/*/*/*.root
 output/*.root
 output/*/*.root
 output/*/*/*.root
+output/*/*/*/*.root
 
 # ignore some of list
 list/FST/*.list
-list/FST/configuration/*.list
-list/FST/timesequence/*.list
-list/FST/alignment/*.list
+list/FST/*/*.list
+list/FST/*/*/*.list

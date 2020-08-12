@@ -15,13 +15,13 @@
 
 using namespace std;
 
-void plotSensorPedNoiseQA(string module = "Mod03", string hv = "HV70V")
+void plotChipNoiseQA(string module = "Mod03", string sector = "Outer")
 {
   gStyle->SetOptStat(111111);
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
   gStyle->SetStatW(0.35); gStyle->SetStatH(0.35);
 
-  string inputfile = Form("../../output/noise/FstPedNoise_%s_%s.root",module.c_str(),hv.c_str());
+  string inputfile = Form("../../output/noise/%s/FstChipNoise_%s_%s.root",module.c_str(),module.c_str(),sector.c_str());
   TFile *File_InPut = TFile::Open(inputfile.c_str());
 
   TH2F *h_mPedDisplay[4][FST::numTBins];
@@ -69,7 +69,7 @@ void plotSensorPedNoiseQA(string module = "Mod03", string hv = "HV70V")
     }
   }
 
-  string outputname = Form("./figures/PedNoiseQA_%s_%s.pdf",module.c_str(),hv.c_str());
+  string outputname = Form("./figures/%s/ChipNoiseQA_%s_%s.pdf",module.c_str(),module.c_str(),sector.c_str());
 
   TCanvas *c_Noise = new TCanvas("c_Noise","c_Noise",10,10,1800,800);
   c_Noise->Divide(9,4);
@@ -82,7 +82,7 @@ void plotSensorPedNoiseQA(string module = "Mod03", string hv = "HV70V")
     c_Noise->cd(i_pad+1)->SetGrid(0,0);
   }
 
-  string output_start = Form("./figures/PedNoiseQA_%s_%s.pdf[",module.c_str(),hv.c_str());
+  string output_start = Form("./figures/%s/ChipNoiseQA_%s_%s.pdf[",module.c_str(),module.c_str(),sector.c_str());
   c_Noise->Print(output_start.c_str()); // open pdf file
 
   for(int i_layer = 0; i_layer < 4; ++i_layer)
@@ -462,7 +462,7 @@ void plotSensorPedNoiseQA(string module = "Mod03", string hv = "HV70V")
     h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetTitle("<Noise_{Total}>");
     h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
     h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
-    h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(5.0,30.0);
+    h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(0.0,20.0);
     h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
     h_mMeanPedSigma_RStrip[i_rstrip]->SetLineColor(i_rstrip+1);
 
@@ -485,7 +485,7 @@ void plotSensorPedNoiseQA(string module = "Mod03", string hv = "HV70V")
     h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetTitle("<Noise_{CMN}>");
     h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
     h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
-    h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(5.0,30.0);
+    h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(0.0,20.0);
     h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
     h_mMeanCMNSigma_RStrip[i_rstrip]->SetLineColor(i_rstrip+1);
 
@@ -504,7 +504,7 @@ void plotSensorPedNoiseQA(string module = "Mod03", string hv = "HV70V")
     h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetTitle("<Noise_{Ran}>");
     h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
     h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
-    h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(5.0,20.0);
+    h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(0.0,15.0);
     h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
     h_mMeanRanSigma_RStrip[i_rstrip]->SetLineColor(i_rstrip+1);
 
@@ -1138,7 +1138,7 @@ void plotSensorPedNoiseQA(string module = "Mod03", string hv = "HV70V")
 #endif
 
 
-  string output_stop = Form("./figures/PedNoiseQA_%s_%s.pdf]",module.c_str(),hv.c_str());
+  string output_stop = Form("./figures/%s/ChipNoiseQA_%s_%s.pdf]",module.c_str(),module.c_str(),sector.c_str());
   c_Noise->Print(output_stop.c_str()); // open pdf file
 }
 

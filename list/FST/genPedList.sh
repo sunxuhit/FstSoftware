@@ -7,7 +7,10 @@ if [ $# -eq 2 ]
 then
   mod=$1
   hv=$2
-  rm FstPed_${mod}_${hv}.list
-  touch FstPed_${mod}_${hv}.list
-  ls ../../data/FstCosmicTestStand_*/ped/FstInOuterSensor*${mod}*_${hv}_ped_*.root >> FstPed_${mod}_${hv}.list
+
+  mkdir -p noise/${mod}
+
+  rm noise/${mod}/FstPed_${mod}_${hv}.list
+  touch noise/${mod}/FstPed_${mod}_${hv}.list
+  ls ../../data/FstCosmicTestStand_*/ped/FstOuterTracking*${mod}*_${hv}_ped_*.root >> noise/${mod}/FstPed_${mod}_${hv}.list
 fi

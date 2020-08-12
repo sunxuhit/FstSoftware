@@ -10,17 +10,24 @@
 #include <TProfile2D.h>
 #include <TGraph.h>
 #include <TStyle.h>
-#include "../FstPlotMacro/draw.h"
+#include "./draw.h"
 #include "../../src/FstUtil/FstCons.h"
 
 using namespace std;
 
-void plotNoiseHVScan(string mod = "Mod03")
+void plotNoiseHVScan(string mod = "Mod01")
 {
   const int defTimeBin = 0;
-  const int numOfHV = 16;
+
+  const int numOfHV = 12; // Mod01
+  string hv[numOfHV] = {"HVOff","HV40V","HV50V","HV60V","HV70V","HV80V","HV100V","HV120V","HV140V","HV160V","HV180V","HV200V"};
+  int highVolt[numOfHV] = {0,40,50,60,70,80,100,120,140,160,180,200};
+
+  /*
+  const int numOfHV = 16; // Mod03
   string hv[numOfHV] = {"HV0V","HV5V","HV10V","HV20V","HV30V","HV40V","HV50V","HV60V","HV70V","HV80V","HV90V","HV100V","HV110V","HV120V","HV130V","HV140V"};
   int highVolt[numOfHV] = {0,5,10,20,30,40,50,60,70,80,90,100,110,120,130,140};
+  */
 
   TFile *File_InPut[numOfHV];
   TH1F *h_mPedSigma[numOfHV][FST::numRStrip][FST::numTBins];
@@ -137,14 +144,14 @@ void plotNoiseHVScan(string mod = "Mod03")
     c_NoiseDiff->cd(i_pad+1)->SetGrid(0,0);
   }
 
-  TH1F *h_play = new TH1F("h_play","h_play",200,-9.5,190.5);
-  for(int i_bin = 0; i_bin < 200; ++i_bin)
+  TH1F *h_play = new TH1F("h_play","h_play",250,-9.5,240.5);
+  for(int i_bin = 0; i_bin < 250; ++i_bin)
   {
     h_play->SetBinContent(i_bin+1,-10.0);
     h_play->SetBinError(i_bin+1,1.0);
   }
   h_play->SetStats(0);
-  h_play->GetXaxis()->SetRangeUser(-1.5,160.5);
+  h_play->GetXaxis()->SetRangeUser(-5.5,220.5);
   h_play->GetXaxis()->SetTitle("High Voltage (V)");
   h_play->GetXaxis()->SetTitleSize(0.06);
   h_play->GetXaxis()->SetNdivisions(505);
@@ -158,10 +165,10 @@ void plotNoiseHVScan(string mod = "Mod03")
   for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
   {
     c_NoiseDiff->cd(i_sensor+1);
-    string title = Form("Noise vs. HV: Sensor%d",i_sensor);
+    string title = Form("Noise vs. HV: %s Sensor%d",mod.c_str(),i_sensor);
     h_play->SetTitle(title.c_str());
     h_play->DrawCopy("hE");
-    PlotLine(-1.5, 160.5,0.0,0.0,1,1,2);
+    PlotLine(-5.5, 220.5,0.0,0.0,1,1,2);
     g_mMeanPedSigma[i_sensor]->SetMarkerStyle(24);
     g_mMeanPedSigma[i_sensor]->SetMarkerSize(1.0);
     g_mMeanPedSigma[i_sensor]->SetMarkerColor(2);
@@ -178,7 +185,9 @@ void plotNoiseHVScan(string mod = "Mod03")
     leg->AddEntry(g_mMeanRanSigma[i_sensor],"Random Noise","P");
     leg->Draw("same");
   }
-  c_NoiseDiff->SaveAs("./figures/c_SingalChannelNoiseHVScanDiff.eps");
+
+  string FigName = Form("./figures/c_NoiseHVScanDiff_%s_SingelChannel.eps",mod.c_str());
+  c_NoiseDiff->SaveAs(FigName.c_str());
 
   const int markerColor[3] = {kGray+2, 2, 4};
   const int markerStyle[3] = {20, 24, 24};
@@ -187,11 +196,12 @@ void plotNoiseHVScan(string mod = "Mod03")
   c_Noise->cd()->SetBottomMargin(0.15);
   c_Noise->cd()->SetTicks(1,1);
   c_Noise->cd()->SetGrid(0,0);
-  h_play->SetTitle("Single Channel Random Noise vs. HV");
-  h_play->GetXaxis()->SetRangeUser(-4.5,145.5);
+  string title = Form("Single Channel Random Noise vs. HV @ %s",mod.c_str());
+  h_play->SetTitle(title.c_str());
+  h_play->GetXaxis()->SetRangeUser(-5.5,220.5);
   h_play->GetYaxis()->SetTitle("Singal Channel Noise (ADC)");
   h_play->DrawCopy("hE");
-  PlotLine(-4.5, 145.5,0.0,0.0,1,1,2);
+  PlotLine(-5.5, 220.5,0.0,0.0,1,1,2);
   for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
   {
     g_mMeanRanSigma[i_sensor]->SetMarkerStyle(markerStyle[i_sensor]);
@@ -208,5 +218,7 @@ void plotNoiseHVScan(string mod = "Mod03")
   leg->AddEntry(g_mMeanRanSigma[1],"Sensor1 (Outer Sector)","P");
   leg->AddEntry(g_mMeanRanSigma[2],"Sensor2 (Outer Sector)","P");
   leg->Draw("same");
-  c_Noise->SaveAs("./figures/c_SingalChannelNoiseHVScan.eps");
+
+  FigName = Form("./figures/c_NoiseHVScan_%s_SingelChannel.eps",mod.c_str());
+  c_Noise->SaveAs(FigName.c_str());
 }

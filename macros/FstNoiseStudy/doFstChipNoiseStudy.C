@@ -10,10 +10,10 @@ int doFstChipNoiseStudy(string module = "Mod03", string mode = "Outer")
 
   FstNoiseStudy *fst = new FstNoiseStudy();
 
-  std::string inputlist = Form("../../list/FST/FstChipPed_%s_%s.list",module.c_str(),mode.c_str());
+  std::string inputlist = Form("../../list/FST/noise/%s/FstChipPed_%s_%s.list",module.c_str(),module.c_str(),mode.c_str());
   cout << "input list set to: " << inputlist.c_str() << endl;
 
-  std::string outputfile = Form("../../output/noise/FstChipNoise_%s_%s.root",module.c_str(),mode.c_str());
+  std::string outputfile = Form("../../output/noise/%s/FstChipNoise_%s_%s.root",module.c_str(),module.c_str(),mode.c_str());
   cout << "output file set to: " << outputfile.c_str() << endl;
 
   fst->set_list(inputlist.c_str());
