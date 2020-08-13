@@ -15,13 +15,13 @@
 
 using namespace std;
 
-void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
+void plotIstChipNoiseQA(string module = "Mod27")
 {
   gStyle->SetOptStat(111111);
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
   gStyle->SetStatW(0.35); gStyle->SetStatH(0.35);
 
-  string inputfile = Form("../../output/noise/%s/FstChipNoise_%s_%s.root",module.c_str(),module.c_str(),sector.c_str());
+  string inputfile = Form("../../output/noise/Ist%s/IstChipNoise_%s.root",module.c_str(),module.c_str());
   TFile *File_InPut = TFile::Open(inputfile.c_str());
 
   TH2F *h_mPedDisplay[4][FST::numTBins];
@@ -69,7 +69,7 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
     }
   }
 
-  string outputname = Form("./figures/%s/ChipNoiseQA_%s_%s.pdf",module.c_str(),module.c_str(),sector.c_str());
+  string outputname = Form("./figures/Ist%s/IstChipNoiseQA_%s.pdf",module.c_str(),module.c_str());
 
   TCanvas *c_Noise = new TCanvas("c_Noise","c_Noise",10,10,1800,800);
   c_Noise->Divide(9,4);
@@ -82,7 +82,7 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
     c_Noise->cd(i_pad+1)->SetGrid(0,0);
   }
 
-  string output_start = Form("./figures/%s/ChipNoiseQA_%s_%s.pdf[",module.c_str(),module.c_str(),sector.c_str());
+  string output_start = Form("./figures/Ist%s/IstChipNoiseQA_%s.pdf[",module.c_str(),module.c_str());
   c_Noise->Print(output_start.c_str()); // open pdf file
 
   for(int i_layer = 0; i_layer < 4; ++i_layer)
@@ -462,7 +462,7 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
     h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetTitle("<Noise_{Total}>");
     h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
     h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
-    h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(0.0,30.0);
+    h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(0.0,20.0);
     h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
     h_mMeanPedSigma_RStrip[i_rstrip]->SetLineColor(i_rstrip+1);
 
@@ -485,7 +485,7 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
     h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetTitle("<Noise_{CMN}>");
     h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
     h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
-    h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(0.0,30.0);
+    h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(0.0,20.0);
     h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
     h_mMeanCMNSigma_RStrip[i_rstrip]->SetLineColor(i_rstrip+1);
 
@@ -504,7 +504,7 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
     h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetTitle("<Noise_{Ran}>");
     h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
     h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
-    h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(0.0,30.0);
+    h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(0.0,15.0);
     h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
     h_mMeanRanSigma_RStrip[i_rstrip]->SetLineColor(i_rstrip+1);
 
@@ -538,13 +538,13 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
       double noise_cmn = -1.0;
       double noise_tot = -1.0;
       int count_even = 0;
-      double sum_ran_even = 0.0;
-      double sum_cmn_even = 0.0;
-      double sum_tot_even = 0.0;
+      double sum_ran_even = 0.0; double sqr_ran_even = 0.0;
+      double sum_cmn_even = 0.0; double sqr_cmn_even = 0.0;
+      double sum_tot_even = 0.0; double sqr_tot_even = 0.0;
       int count_odd = 0;
-      double sum_ran_odd = 0.0;
-      double sum_cmn_odd = 0.0;
-      double sum_tot_odd = 0.0;
+      double sum_ran_odd = 0.0; double sqr_ran_odd = 0.0;
+      double sum_cmn_odd = 0.0; double sqr_cmn_odd = 0.0;
+      double sum_tot_odd = 0.0; double sqr_tot_odd = 0.0;
       for(int i_point = 0; i_point < g_mRanSigma[i_layer][i_tb]->GetN(); ++i_point)
       {
 	g_mRanSigma[i_layer][i_tb]->GetPoint(i_point,ch,noise_ran);
@@ -557,15 +557,21 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
 	    if(i_point >= 0 + 128*i_col && i_point < 64 + 128*i_col)
 	    {
 	      sum_ran_even += noise_ran;
+	      sqr_ran_even += noise_ran*noise_ran;
 	      sum_cmn_even += noise_cmn;
+	      sqr_cmn_even += noise_cmn*noise_cmn;
 	      sum_tot_even += noise_tot;
+	      sqr_tot_even += noise_tot*noise_tot;
 	      count_even++;
 	    }
 	    if(i_point >= 64 + 128*i_col && i_point < 128 + 128*i_col)
 	    {
 	      sum_ran_odd += noise_ran;
+	      sqr_ran_odd += noise_ran*noise_ran;
 	      sum_cmn_odd += noise_cmn;
+	      sqr_cmn_odd += noise_cmn*noise_cmn;
 	      sum_tot_odd += noise_tot;
+	      sqr_tot_odd += noise_tot*noise_tot;
 	      count_odd++;
 	    }
 	  }
@@ -574,24 +580,41 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
       // cout << "i_layer = " << i_layer << ", i_tb = " << i_tb << ", count_even = " << count_even << ", count_odd = " << count_odd << endl;
       if(count_even > 0) 
       {
+	double std_ran_even = sqrt((sqr_ran_even-sum_ran_even*sum_ran_even/(double)count_even)/(double)(count_even-1));
 	h_mMeanRanSigma_IST[i_layer][0]->SetBinContent(i_tb+1,sum_ran_even/count_even);
+	h_mMeanRanSigma_IST[i_layer][0]->SetBinError(i_tb+1,std_ran_even/sqrt(count_even));
+
+	double std_cmn_even = sqrt((sqr_cmn_even-sum_cmn_even*sum_cmn_even/(double)count_even)/(double)(count_even-1));
 	h_mMeanCMNSigma_IST[i_layer][0]->SetBinContent(i_tb+1,sum_cmn_even/count_even);
+	h_mMeanCMNSigma_IST[i_layer][0]->SetBinError(i_tb+1,std_cmn_even/sqrt(count_even));
+
+	double std_tot_even = sqrt((sqr_tot_even-sum_tot_even*sum_tot_even/(double)count_even)/(double)(count_even-1));
 	h_mMeanPedSigma_IST[i_layer][0]->SetBinContent(i_tb+1,sum_tot_even/count_even);
+	h_mMeanPedSigma_IST[i_layer][0]->SetBinError(i_tb+1,std_tot_even/sqrt(count_even));
       }
       if(count_odd > 0) 
       {
+	double std_ran_odd = sqrt((sqr_ran_odd-sum_ran_odd*sum_ran_odd/(double)count_odd)/(double)(count_odd-1));
 	h_mMeanRanSigma_IST[i_layer][1]->SetBinContent(i_tb+1,sum_ran_odd/count_odd);
+	h_mMeanRanSigma_IST[i_layer][1]->SetBinError(i_tb+1,std_ran_odd/sqrt(count_odd));
+
+	double std_cmn_odd = sqrt((sqr_cmn_odd-sum_cmn_odd*sum_cmn_odd/(double)count_odd)/(double)(count_odd-1));
 	h_mMeanCMNSigma_IST[i_layer][1]->SetBinContent(i_tb+1,sum_cmn_odd/count_odd);
+	h_mMeanCMNSigma_IST[i_layer][1]->SetBinError(i_tb+1,std_cmn_odd/sqrt(count_odd));
+
+	double std_tot_odd = sqrt((sqr_tot_odd-sum_tot_odd*sum_tot_odd/(double)count_odd)/(double)(count_odd-1));
 	h_mMeanPedSigma_IST[i_layer][1]->SetBinContent(i_tb+1,sum_tot_odd/count_odd);
+	h_mMeanPedSigma_IST[i_layer][1]->SetBinError(i_tb+1,std_tot_odd/sqrt(count_odd));
       }
     }
   }
   
   for(int i_layer = 1; i_layer < 4; ++i_layer)
   {
-    TLegend *leg_IST = new TLegend(0.6,0.2,0.8,0.5);
+    TLegend *leg_IST = new TLegend(0.2,0.7,0.7,0.8);
     leg_IST->SetBorderSize(0);
     leg_IST->SetFillColor(10);
+    leg_IST->SetNColumns(2);
 
     c_NoiseMean->cd(1);
     for(int i_col = 0; i_col < 2; ++i_col)
@@ -605,13 +628,13 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
       h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetTitle("<Noise_{Total}>");
       h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleOffset(0.5);
-      h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.0,50.0);
+      h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.0,30.0);
       h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetNdivisions(505);
       h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetLabelSize(0.08);
       h_mMeanPedSigma_IST[i_layer][i_col]->SetLineColor(i_col+1);
 
-      if(i_col == 0) h_mMeanPedSigma_IST[i_layer][i_col]->Draw();
-      else h_mMeanPedSigma_IST[i_layer][i_col]->Draw("same");
+      if(i_col == 0) h_mMeanPedSigma_IST[i_layer][i_col]->Draw("hE");
+      else h_mMeanPedSigma_IST[i_layer][i_col]->Draw("hE same");
 
       string LegName; 
       if(i_col == 0) LegName = "column even";
@@ -632,13 +655,13 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
       h_mMeanCMNSigma_IST[i_layer][i_col]->GetYaxis()->SetTitle("<Noise_{CMN}>");
       h_mMeanCMNSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanCMNSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleOffset(0.5);
-      h_mMeanCMNSigma_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.0,15.0);
+      h_mMeanCMNSigma_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.0,30.0);
       h_mMeanCMNSigma_IST[i_layer][i_col]->GetYaxis()->SetNdivisions(505);
       h_mMeanCMNSigma_IST[i_layer][i_col]->GetYaxis()->SetLabelSize(0.08);
       h_mMeanCMNSigma_IST[i_layer][i_col]->SetLineColor(i_col+1);
 
-      if(i_col == 0) h_mMeanCMNSigma_IST[i_layer][i_col]->Draw();
-      else h_mMeanCMNSigma_IST[i_layer][i_col]->Draw("same");
+      if(i_col == 0) h_mMeanCMNSigma_IST[i_layer][i_col]->Draw("hE");
+      else h_mMeanCMNSigma_IST[i_layer][i_col]->Draw("hE same");
     }
     leg_IST->Draw("same");
 
@@ -654,13 +677,13 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
       h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetTitle("<Noise_{Ran}>");
       h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleOffset(0.5);
-      h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.0,50.0);
+      h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.0,30.0);
       h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetNdivisions(505);
       h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetLabelSize(0.08);
       h_mMeanRanSigma_IST[i_layer][i_col]->SetLineColor(i_col+1);
 
-      if(i_col == 0) h_mMeanRanSigma_IST[i_layer][i_col]->Draw();
-      else h_mMeanRanSigma_IST[i_layer][i_col]->Draw("same");
+      if(i_col == 0) h_mMeanRanSigma_IST[i_layer][i_col]->Draw("hE");
+      else h_mMeanRanSigma_IST[i_layer][i_col]->Draw("hE same");
     }
     leg_IST->Draw("same");
 
@@ -742,7 +765,7 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
     h_meanRatio_Rstrip[i_rstrip]->GetYaxis()->SetTitle("Noise_{Diff}/Noise_{Total}");
     h_meanRatio_Rstrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
     h_meanRatio_Rstrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
-    h_meanRatio_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(0.5,1.0);
+    h_meanRatio_Rstrip[i_rstrip]->GetYaxis()->SetRangeUser(0.0,1.0);
     h_meanRatio_Rstrip[i_rstrip]->GetYaxis()->SetNdivisions(505);
     h_meanRatio_Rstrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
     h_meanRatio_Rstrip[i_rstrip]->SetLineColor(i_rstrip+1);
@@ -796,9 +819,10 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
     }
   }
   
-  TLegend *leg_IST = new TLegend(0.6,0.2,0.8,0.5);
+  TLegend *leg_IST = new TLegend(0.2,0.7,0.7,0.8);
   leg_IST->SetBorderSize(0);
   leg_IST->SetFillColor(10);
+  leg_IST->SetNColumns(2);
   for(int i_layer = 1; i_layer < 4; ++i_layer)
   {
     for(int i_col = 0; i_col < 2; ++i_col)
@@ -813,7 +837,7 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
       h_meanRatio_IST[i_layer][i_col]->GetYaxis()->SetTitle("Noise_{Diff}/Noise_{Total}");
       h_meanRatio_IST[i_layer][i_col]->GetYaxis()->SetTitleSize(0.10);
       h_meanRatio_IST[i_layer][i_col]->GetYaxis()->SetTitleOffset(0.5);
-      h_meanRatio_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.5,1.0);
+      h_meanRatio_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.0,1.0);
       h_meanRatio_IST[i_layer][i_col]->GetYaxis()->SetNdivisions(505);
       h_meanRatio_IST[i_layer][i_col]->GetYaxis()->SetLabelSize(0.08);
       h_meanRatio_IST[i_layer][i_col]->SetLineColor(i_col+1);
@@ -1138,7 +1162,7 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
 #endif
 
 
-  string output_stop = Form("./figures/%s/ChipNoiseQA_%s_%s.pdf]",module.c_str(),module.c_str(),sector.c_str());
+  string output_stop = Form("./figures/Ist%s/IstChipNoiseQA_%s.pdf]",module.c_str(),module.c_str());
   c_Noise->Print(output_stop.c_str()); // open pdf file
 }
 

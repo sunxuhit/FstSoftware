@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotSensorPedNoiseQA(string module = "Mod01", string hv = "HV200V")
+void plotSensorPedNoiseQA(string module = "Mod04", string hv = "HV70V")
 {
   gStyle->SetOptStat(111111);
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
@@ -462,7 +462,7 @@ void plotSensorPedNoiseQA(string module = "Mod01", string hv = "HV200V")
     h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetTitle("<Noise_{Total}>");
     h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
     h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
-    h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(5.0,30.0);
+    h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(0.0,30.0);
     h_mMeanPedSigma_RStrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
     h_mMeanPedSigma_RStrip[i_rstrip]->SetLineColor(i_rstrip+1);
 
@@ -485,7 +485,7 @@ void plotSensorPedNoiseQA(string module = "Mod01", string hv = "HV200V")
     h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetTitle("<Noise_{CMN}>");
     h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
     h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
-    h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(5.0,30.0);
+    h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(0.0,30.0);
     h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
     h_mMeanCMNSigma_RStrip[i_rstrip]->SetLineColor(i_rstrip+1);
 
@@ -504,7 +504,7 @@ void plotSensorPedNoiseQA(string module = "Mod01", string hv = "HV200V")
     h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetTitle("<Noise_{Ran}>");
     h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleSize(0.10);
     h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleOffset(0.5);
-    h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(5.0,20.0);
+    h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(0.0,30.0);
     h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetLabelSize(0.08);
     h_mMeanRanSigma_RStrip[i_rstrip]->SetLineColor(i_rstrip+1);
 
@@ -602,7 +602,7 @@ void plotSensorPedNoiseQA(string module = "Mod01", string hv = "HV200V")
       h_mMeanPedSigma_IST[i_layer][i_col]->GetXaxis()->SetTitle("Time Bin");
       h_mMeanPedSigma_IST[i_layer][i_col]->GetXaxis()->SetTitleSize(0.06);
       h_mMeanPedSigma_IST[i_layer][i_col]->GetXaxis()->SetLabelSize(0.06);
-      h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetTitle("<Noise_{CMN}>");
+      h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetTitle("<Noise_{Total}>");
       h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleOffset(0.5);
       h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.0,50.0);
@@ -651,7 +651,7 @@ void plotSensorPedNoiseQA(string module = "Mod01", string hv = "HV200V")
       h_mMeanRanSigma_IST[i_layer][i_col]->GetXaxis()->SetTitle("Time Bin");
       h_mMeanRanSigma_IST[i_layer][i_col]->GetXaxis()->SetTitleSize(0.06);
       h_mMeanRanSigma_IST[i_layer][i_col]->GetXaxis()->SetLabelSize(0.06);
-      h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetTitle("<Noise_{CMN}>");
+      h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetTitle("<Noise_{Ran}>");
       h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleOffset(0.5);
       h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.0,50.0);

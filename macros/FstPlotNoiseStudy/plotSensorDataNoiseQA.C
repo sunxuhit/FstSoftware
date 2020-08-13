@@ -603,7 +603,7 @@ void plotSensorDataNoiseQA(string module = "Mod01", string hv = "HV70V", string 
       h_mMeanPedSigma_IST[i_layer][i_col]->GetXaxis()->SetTitle("Time Bin");
       h_mMeanPedSigma_IST[i_layer][i_col]->GetXaxis()->SetTitleSize(0.06);
       h_mMeanPedSigma_IST[i_layer][i_col]->GetXaxis()->SetLabelSize(0.06);
-      h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetTitle("<Noise_{CMN}>");
+      h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetTitle("<Noise_{Total}>");
       h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleOffset(0.5);
       h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.0,20.0);
@@ -652,7 +652,7 @@ void plotSensorDataNoiseQA(string module = "Mod01", string hv = "HV70V", string 
       h_mMeanRanSigma_IST[i_layer][i_col]->GetXaxis()->SetTitle("Time Bin");
       h_mMeanRanSigma_IST[i_layer][i_col]->GetXaxis()->SetTitleSize(0.06);
       h_mMeanRanSigma_IST[i_layer][i_col]->GetXaxis()->SetLabelSize(0.06);
-      h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetTitle("<Noise_{CMN}>");
+      h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetTitle("<Noise_{Ran}>");
       h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleOffset(0.5);
       h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.0,20.0);

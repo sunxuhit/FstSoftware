@@ -20,6 +20,7 @@ macros/*/figures/*/*/*.pdf
 macros/*/figures_woCMNSubtraction/*/*.pdf
 
 # ignore intput and output root file
+data/*/*.root
 data/*/*/*.root
 output/*.root
 output/*/*.root
@@ -30,3 +31,6 @@ output/*/*/*/*.root
 list/FST/*.list
 list/FST/*/*.list
 list/FST/*/*/*.list
+list/IST/*.list
+list/IST/*/*.list
+list/IST/*/*/*.list

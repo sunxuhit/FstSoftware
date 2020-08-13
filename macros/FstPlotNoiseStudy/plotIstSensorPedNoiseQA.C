@@ -15,13 +15,13 @@
 
 using namespace std;
 
-void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
+void plotIstSensorPedNoiseQA(string module = "Mod27", string hv = "HV60V")
 {
   gStyle->SetOptStat(111111);
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
   gStyle->SetStatW(0.35); gStyle->SetStatH(0.35);
 
-  string inputfile = Form("../../output/noise/%s/FstChipNoise_%s_%s.root",module.c_str(),module.c_str(),sector.c_str());
+  string inputfile = Form("../../output/noise/Ist%s/IstPedNoise_%s_%s.root",module.c_str(),module.c_str(),hv.c_str());
   TFile *File_InPut = TFile::Open(inputfile.c_str());
 
   TH2F *h_mPedDisplay[4][FST::numTBins];
@@ -69,7 +69,7 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
     }
   }
 
-  string outputname = Form("./figures/%s/ChipNoiseQA_%s_%s.pdf",module.c_str(),module.c_str(),sector.c_str());
+  string outputname = Form("./figures/Ist%s/IstPedNoiseQA_%s_%s.pdf",module.c_str(),module.c_str(),hv.c_str());
 
   TCanvas *c_Noise = new TCanvas("c_Noise","c_Noise",10,10,1800,800);
   c_Noise->Divide(9,4);
@@ -82,7 +82,7 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
     c_Noise->cd(i_pad+1)->SetGrid(0,0);
   }
 
-  string output_start = Form("./figures/%s/ChipNoiseQA_%s_%s.pdf[",module.c_str(),module.c_str(),sector.c_str());
+  string output_start = Form("./figures/Ist%s/IstPedNoiseQA_%s_%s.pdf[",module.c_str(),module.c_str(),hv.c_str());
   c_Noise->Print(output_start.c_str()); // open pdf file
 
   for(int i_layer = 0; i_layer < 4; ++i_layer)
@@ -589,9 +589,10 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
   
   for(int i_layer = 1; i_layer < 4; ++i_layer)
   {
-    TLegend *leg_IST = new TLegend(0.6,0.2,0.8,0.5);
+    TLegend *leg_IST = new TLegend(0.2,0.2,0.7,0.35);
     leg_IST->SetBorderSize(0);
     leg_IST->SetFillColor(10);
+    leg_IST->SetNColumns(2);
 
     c_NoiseMean->cd(1);
     for(int i_col = 0; i_col < 2; ++i_col)
@@ -605,7 +606,7 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
       h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetTitle("<Noise_{Total}>");
       h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleOffset(0.5);
-      h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.0,50.0);
+      h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.0,30.0);
       h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetNdivisions(505);
       h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetLabelSize(0.08);
       h_mMeanPedSigma_IST[i_layer][i_col]->SetLineColor(i_col+1);
@@ -632,7 +633,7 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
       h_mMeanCMNSigma_IST[i_layer][i_col]->GetYaxis()->SetTitle("<Noise_{CMN}>");
       h_mMeanCMNSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanCMNSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleOffset(0.5);
-      h_mMeanCMNSigma_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.0,15.0);
+      h_mMeanCMNSigma_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.0,30.0);
       h_mMeanCMNSigma_IST[i_layer][i_col]->GetYaxis()->SetNdivisions(505);
       h_mMeanCMNSigma_IST[i_layer][i_col]->GetYaxis()->SetLabelSize(0.08);
       h_mMeanCMNSigma_IST[i_layer][i_col]->SetLineColor(i_col+1);
@@ -654,7 +655,7 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
       h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetTitle("<Noise_{Ran}>");
       h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleSize(0.10);
       h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleOffset(0.5);
-      h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.0,50.0);
+      h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.0,30.0);
       h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetNdivisions(505);
       h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetLabelSize(0.08);
       h_mMeanRanSigma_IST[i_layer][i_col]->SetLineColor(i_col+1);
@@ -796,9 +797,10 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
     }
   }
   
-  TLegend *leg_IST = new TLegend(0.6,0.2,0.8,0.5);
+  TLegend *leg_IST = new TLegend(0.2,0.3,0.7,0.5);
   leg_IST->SetBorderSize(0);
   leg_IST->SetFillColor(10);
+  leg_IST->SetNColumns(2);
   for(int i_layer = 1; i_layer < 4; ++i_layer)
   {
     for(int i_col = 0; i_col < 2; ++i_col)
@@ -1138,7 +1140,7 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
 #endif
 
 
-  string output_stop = Form("./figures/%s/ChipNoiseQA_%s_%s.pdf]",module.c_str(),module.c_str(),sector.c_str());
+  string output_stop = Form("./figures/Ist%s/IstPedNoiseQA_%s_%s.pdf]",module.c_str(),module.c_str(),hv.c_str());
   c_Noise->Print(output_stop.c_str()); // open pdf file
 }
 
