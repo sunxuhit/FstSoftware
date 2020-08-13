@@ -1,21 +1,19 @@
 #!/bin/bash
 # date
 
-#. ./splitCluster_config.sh Mod03 HV70V 4.0 2 withPed_withCMNCorr
-if [ $# -eq 5 ]
+#. ./splitCluster.sh Mod03 HV70V
+if [ $# -eq 2 ]
 then
   mod=$1
   hv=$2
-  nFstHitsCut=$3
-  numOfUsedTimeBins=$4
-  config=$5
+  nFstHitsCut=4.0
+  numOfUsedTimeBins=2
+  config=withPed_withCMNCorr
 
-  InPutList=FstCluster_${mod}_${hv}.list
-  InPutDate=Date_${mod}_${hv}.list
+  InPutList=cluster/${mod}/FstCluster_${mod}_${hv}.list
+  InPutDate=data/${mod}/Date_${mod}_${hv}.list
 
-  mkdir -p configuration
-
-  OutPutList=./configuration/FstCluster_${mod}_${hv}_Th${nFstHitsCut}Tb${numOfUsedTimeBins}Ped2.5Ped3.5_${config}.list
+  OutPutList=./cluster/${mod}/FstCluster_${mod}_${hv}_Th${nFstHitsCut}Tb${numOfUsedTimeBins}Ped2.5Ped3.5_${config}.list
   echo "OutPut list is: ${OutPutList}"
   rm $OutPutList
   touch $OutPutList

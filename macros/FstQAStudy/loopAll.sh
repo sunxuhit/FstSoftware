@@ -4,10 +4,13 @@
 
 if [ $# -eq 0 ]
 then
-  mod=Mod03
-  # echo "apply CMN correction"
-  . ./fstQAStudy.sh ${mod} true 4.0
+  mod=Mod01
 
-  # echo "not apply CMN correction"
-  # . ./fstQAStudy.sh ${mod} false 4.0
+  InPutHV=../../list/FST/data/${mod}/HighVoltage_${mod}.list
+  for hv in `cat $InPutHV`
+  do
+    echo "Do QA Study for ${hv}"
+    . ./fstQAStudy.sh ${mod} ${hv}
+  done
+
 fi

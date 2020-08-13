@@ -10,16 +10,19 @@
 #include <TProfile2D.h>
 #include <TGraph.h>
 #include <TStyle.h>
-#include "../FstPlotMacro/draw.h"
+#include "./draw.h"
 #include "../../src/FstUtil/FstCons.h"
 
 using namespace std;
 
-void plotHitSignalHVScan(string mod = "Mod03")
+void plotHitSignalHVScan(string mod = "Mod01")
 {
-  const int numOfHV = 4;
-  string hv[numOfHV] = {"HV70V","HV100V","HV120V","HV140V"};
-  double highVolt[numOfHV] = {70.0,100.0,120.0,140.0};
+  const int numOfHV = 11;
+  string hv[numOfHV] = {"HV40V","HV50V","HV60V","HV70V","HV80V","HV100V","HV120V","HV140V","HV160V","HV180V","HV200V"};
+  double highVolt[numOfHV] = {40.0,50.0,60.0,70.0,80.0,100.0,120.0,140.0,160.0,180.0,200.0};
+  // const int numOfHV = 4;
+  // string hv[numOfHV] = {"HV70V","HV100V","HV120V","HV140V"};
+  // double highVolt[numOfHV] = {70.0,100.0,120.0,140.0};
   TFile *File_InPut[numOfHV];
   TH1F *h_mFstHitsSignal[numOfHV][FST::mFstNumSensorsPerModule];
   TH1F *h_mFstHitsNoise[numOfHV][FST::mFstNumSensorsPerModule];
@@ -28,7 +31,7 @@ void plotHitSignalHVScan(string mod = "Mod03")
   // read in signal histograms
   for(int i_hv = 0; i_hv < numOfHV; ++i_hv)
   {
-    string inputfile = Form("../../output/configuration/FstQAStudy_%s_%s_Th4.0Tb2Ped2.5Ped3.5_withPed_withCMNCorr.root",mod.c_str(),hv[i_hv].c_str());
+    string inputfile = Form("../../output/signal/%s/HVScan/FstQAStudy_%s_%s_Th4.0Tb2Ped2.5Ped3.5_withPed_withCMNCorr.root",mod.c_str(),mod.c_str(),hv[i_hv].c_str());
     File_InPut[i_hv] = TFile::Open(inputfile.c_str());
     for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
     {

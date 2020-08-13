@@ -10,16 +10,16 @@
 #include <TProfile2D.h>
 #include <TGraph.h>
 #include <TStyle.h>
-#include "../FstPlotMacro/draw.h"
+#include "./draw.h"
 #include "../../src/FstUtil/FstCons.h"
 
 using namespace std;
 
-void plotSignalHVScan(string mod = "Mod03")
+void plotSignalHVScan(string mod = "Mod01")
 {
-  const int numOfHV = 4;
-  string hv[numOfHV] = {"HV70V","HV100V","HV120V","HV140V"};
-  double highVolt[numOfHV] = {70.0,100.0,120.0,140.0};
+  const int numOfHV = 11;
+  string hv[numOfHV] = {"HV40V","HV50V","HV60V","HV70V","HV80V","HV100V","HV120V","HV140V","HV160V","HV180V","HV200V"};
+  double highVolt[numOfHV] = {40.0,50.0,60.0,70.0,80.0,100.0,120.0,140.0,160.0,180.0,200.0};
   TFile *File_InPut[numOfHV];
   TH1F *h_mFstScanClustersSignal[numOfHV][FST::mFstNumSensorsPerModule];
   TH1F *h_mFstScanClustersNoise[numOfHV][FST::mFstNumSensorsPerModule];
@@ -28,7 +28,7 @@ void plotSignalHVScan(string mod = "Mod03")
   // read in signal histograms
   for(int i_hv = 0; i_hv < numOfHV; ++i_hv)
   {
-    string inputfile = Form("../../output/configuration/FstQAStudy_%s_%s_Th4.0Tb2Ped2.5Ped3.5_withPed_withCMNCorr.root",mod.c_str(),hv[i_hv].c_str());
+    string inputfile = Form("../../output/signal/%s/HVScan/FstQAStudy_%s_%s_Th4.0Tb2Ped2.5Ped3.5_withPed_withCMNCorr.root",mod.c_str(),mod.c_str(),hv[i_hv].c_str());
     File_InPut[i_hv] = TFile::Open(inputfile.c_str());
     for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
     {
@@ -80,8 +80,8 @@ void plotSignalHVScan(string mod = "Mod03")
     }
   }
 
-  TH1F *h_play = new TH1F("h_play","h_play",200,-9.5,190.5);
-  for(int i_bin = 0; i_bin < 200; ++i_bin)
+  TH1F *h_play = new TH1F("h_play","h_play",250,-9.5,240.5);
+  for(int i_bin = 0; i_bin < 250; ++i_bin)
   {
     h_play->SetBinContent(i_bin+1,-10.0);
     h_play->SetBinError(i_bin+1,1.0);
@@ -96,85 +96,6 @@ void plotSignalHVScan(string mod = "Mod03")
   h_play->GetYaxis()->SetTitleSize(0.06);
   h_play->GetYaxis()->SetLabelSize(0.04);
 
-  // mean signal
-  TCanvas *c_SignalDiff = new TCanvas("c_SignalDiff","c_SignalDiff",10,10,400,1200);
-  c_SignalDiff->Divide(1,3);
-  for(int i_pad = 0; i_pad < 3; ++i_pad)
-  {
-    c_SignalDiff->cd(i_pad+1)->SetLeftMargin(0.15);
-    c_SignalDiff->cd(i_pad+1)->SetBottomMargin(0.15);
-    c_SignalDiff->cd(i_pad+1)->SetTicks(1,1);
-    c_SignalDiff->cd(i_pad+1)->SetGrid(0,0);
-  }
-  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
-  {
-    c_SignalDiff->cd(i_sensor+1);
-    string title = Form("Signal vs. HV: Sensor%d",i_sensor);
-    h_play->SetTitle(title.c_str());
-    h_play->SetTitleSize(0.06);
-    h_play->GetXaxis()->SetRangeUser(-1.5,160.5);
-    h_play->GetYaxis()->SetRangeUser(350.0,500.0);
-    h_play->DrawCopy("hE");
-    g_mMeanFstScanClustersSignal[i_sensor]->SetMarkerStyle(20);
-    g_mMeanFstScanClustersSignal[i_sensor]->SetMarkerSize(1.4);
-    g_mMeanFstScanClustersSignal[i_sensor]->SetMarkerColor(kGray+2);
-    g_mMeanFstScanClustersSignal[i_sensor]->Draw("p");
-  }
-  c_SignalDiff->SaveAs("./figures/c_SignalDiffHVScan.eps");
-
-  // mean noise
-  TCanvas *c_NoiseDiff = new TCanvas("c_NoiseDiff","c_NoiseDiff",10,10,400,1200);
-  c_NoiseDiff->Divide(1,3);
-  for(int i_pad = 0; i_pad < 3; ++i_pad)
-  {
-    c_NoiseDiff->cd(i_pad+1)->SetLeftMargin(0.15);
-    c_NoiseDiff->cd(i_pad+1)->SetBottomMargin(0.15);
-    c_NoiseDiff->cd(i_pad+1)->SetTicks(1,1);
-    c_NoiseDiff->cd(i_pad+1)->SetGrid(0,0);
-  }
-  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
-  {
-    c_NoiseDiff->cd(i_sensor+1);
-    string title = Form("Noise vs. HV: Sensor%d",i_sensor);
-    h_play->SetTitle(title.c_str());
-    h_play->SetTitleSize(0.06);
-    h_play->GetXaxis()->SetRangeUser(-1.5,160.5);
-    h_play->GetYaxis()->SetRangeUser(5.0,30.0);
-    h_play->DrawCopy("hE");
-    g_mMeanFstScanClustersNoise[i_sensor]->SetMarkerStyle(20);
-    g_mMeanFstScanClustersNoise[i_sensor]->SetMarkerSize(1.4);
-    g_mMeanFstScanClustersNoise[i_sensor]->SetMarkerColor(kGray+2);
-    g_mMeanFstScanClustersNoise[i_sensor]->Draw("p");
-  }
-  c_NoiseDiff->SaveAs("./figures/c_NoiseDiffHVScan.eps");
-
-  // mean S/N ratio
-  TCanvas *c_SNRatioDiff = new TCanvas("c_SNRatioDiff","c_SNRatioDiff",10,10,400,1200);
-  c_SNRatioDiff->Divide(1,3);
-  for(int i_pad = 0; i_pad < 3; ++i_pad)
-  {
-    c_SNRatioDiff->cd(i_pad+1)->SetLeftMargin(0.15);
-    c_SNRatioDiff->cd(i_pad+1)->SetBottomMargin(0.15);
-    c_SNRatioDiff->cd(i_pad+1)->SetTicks(1,1);
-    c_SNRatioDiff->cd(i_pad+1)->SetGrid(0,0);
-  }
-  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
-  {
-    c_SNRatioDiff->cd(i_sensor+1);
-    string title = Form("S/N vs. HV: Sensor%d",i_sensor);
-    h_play->SetTitle(title.c_str());
-    h_play->SetTitleSize(0.06);
-    h_play->GetXaxis()->SetRangeUser(-1.5,160.5);
-    h_play->GetYaxis()->SetTitle("S/N");
-    h_play->GetYaxis()->SetRangeUser(15.0,35.0);
-    h_play->DrawCopy("hE");
-    g_mMeanFstScanClustersSNRatio[i_sensor]->SetMarkerStyle(20);
-    g_mMeanFstScanClustersSNRatio[i_sensor]->SetMarkerSize(1.4);
-    g_mMeanFstScanClustersSNRatio[i_sensor]->SetMarkerColor(kGray+2);
-    g_mMeanFstScanClustersSNRatio[i_sensor]->Draw("p");
-  }
-  c_SNRatioDiff->SaveAs("./figures/c_SNRatioDiffHVScan.eps");
-
   const int markerColor[3] = {kGray+2, 2, 4};
   const int markerStyle[3] = {20, 24, 24};
   // mean signal
@@ -185,9 +106,9 @@ void plotSignalHVScan(string mod = "Mod03")
   c_Signal->cd()->SetGrid(0,0);
   h_play->SetTitle("Cluster Signal vs. HV");
   // h_play->SetTitleSize(0.06);
-  h_play->GetXaxis()->SetRangeUser(-4.5,145.5);
+  h_play->GetXaxis()->SetRangeUser(-4.5,220.5);
   h_play->GetYaxis()->SetTitle("Cluster Signal (ADC)");
-  h_play->GetYaxis()->SetRangeUser(350.0,500.0);
+  h_play->GetYaxis()->SetRangeUser(50.0,800.0);
   h_play->DrawCopy("hE");
   for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
   {
@@ -215,7 +136,7 @@ void plotSignalHVScan(string mod = "Mod03")
   c_Noise->cd()->SetGrid(0,0);
   h_play->SetTitle("Cluster Noise vs. HV");
   // h_play->SetTitleSize(0.06);
-  h_play->GetXaxis()->SetRangeUser(-4.5,145.5);
+  h_play->GetXaxis()->SetRangeUser(-4.5,200.5);
   h_play->GetYaxis()->SetTitle("Cluster Noise (ADC)");
   h_play->GetYaxis()->SetRangeUser(5.0,30.0);
   h_play->DrawCopy("hE");
@@ -237,9 +158,9 @@ void plotSignalHVScan(string mod = "Mod03")
   c_SNRatio->cd()->SetGrid(0,0);
   h_play->SetTitle("Cluster S/N vs. HV");
   // h_play->SetTitleSize(0.06);
-  h_play->GetXaxis()->SetRangeUser(-1.5,160.5);
+  h_play->GetXaxis()->SetRangeUser(-1.5,220.5);
   h_play->GetYaxis()->SetTitle("S/N");
-  h_play->GetYaxis()->SetRangeUser(20.0,35.0);
+  h_play->GetYaxis()->SetRangeUser(5.0,50.0);
   h_play->DrawCopy("hE");
   for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
   {
