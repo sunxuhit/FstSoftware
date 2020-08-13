@@ -515,36 +515,29 @@ void plotSensorPedNoiseQA(string module = "Mod04", string hv = "HV70V")
   c_NoiseMean->Print(outputname.c_str());
 
   // mean IST
-  TH1F *h_mMeanPedSigma_IST[3][2];
-  TH1F *h_mMeanCMNSigma_IST[3][2];
-  TH1F *h_mMeanRanSigma_IST[3][2];
+  TH1F *h_mMeanPedSigma_IST[3];
+  TH1F *h_mMeanCMNSigma_IST[3];
+  TH1F *h_mMeanRanSigma_IST[3];
   for(int i_layer = 1; i_layer < 4; ++i_layer)
   {
-    for(int i_col = 0; i_col < 2; ++i_col)
-    {
-      string HistName = Form("h_mMeanPedSigma_IST%d_Col%d",i_layer,i_col);
-      h_mMeanPedSigma_IST[i_layer][i_col] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numTBins,-0.5,FST::numTBins-0.5);
+    string HistName = Form("h_mMeanPedSigma_IST%d",i_layer);
+    h_mMeanPedSigma_IST[i_layer] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numTBins,-0.5,FST::numTBins-0.5);
 
-      HistName = Form("h_mMeanCMNSigma_IST%d_Col%d",i_layer,i_col);
-      h_mMeanCMNSigma_IST[i_layer][i_col] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numTBins,-0.5,FST::numTBins-0.5);
+    HistName = Form("h_mMeanCMNSigma_IST%d",i_layer);
+    h_mMeanCMNSigma_IST[i_layer] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numTBins,-0.5,FST::numTBins-0.5);
 
-      HistName = Form("h_mMeanRanSigma_IST%d_Col%d",i_layer,i_col);
-      h_mMeanRanSigma_IST[i_layer][i_col] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numTBins,-0.5,FST::numTBins-0.5);
-    }
+    HistName = Form("h_mMeanRanSigma_IST%d",i_layer);
+    h_mMeanRanSigma_IST[i_layer] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numTBins,-0.5,FST::numTBins-0.5);
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
     {
       double ch = -1.0;
       double noise_ran = -1.0;
       double noise_cmn = -1.0;
       double noise_tot = -1.0;
-      int count_even = 0;
-      double sum_ran_even = 0.0;
-      double sum_cmn_even = 0.0;
-      double sum_tot_even = 0.0;
-      int count_odd = 0;
-      double sum_ran_odd = 0.0;
-      double sum_cmn_odd = 0.0;
-      double sum_tot_odd = 0.0;
+      int counts = 0;
+      double sum_ran = 0.0; double sqr_ran = 0.0;
+      double sum_cmn = 0.0; double sqr_cmn = 0.0;
+      double sum_tot = 0.0; double sqr_tot = 0.0;
       for(int i_point = 0; i_point < g_mRanSigma[i_layer][i_tb]->GetN(); ++i_point)
       {
 	g_mRanSigma[i_layer][i_tb]->GetPoint(i_point,ch,noise_ran);
@@ -552,117 +545,82 @@ void plotSensorPedNoiseQA(string module = "Mod04", string hv = "HV70V")
 	g_mPedSigma[i_layer][i_tb]->GetPoint(i_point,ch,noise_tot);
 	if(noise_tot > 0)
 	{
-	  for(int i_col = 0; i_col < 12; ++i_col)
-	  {
-	    if(i_point >= 0 + 128*i_col && i_point < 64 + 128*i_col)
-	    {
-	      sum_ran_even += noise_ran;
-	      sum_cmn_even += noise_cmn;
-	      sum_tot_even += noise_tot;
-	      count_even++;
-	    }
-	    if(i_point >= 64 + 128*i_col && i_point < 128 + 128*i_col)
-	    {
-	      sum_ran_odd += noise_ran;
-	      sum_cmn_odd += noise_cmn;
-	      sum_tot_odd += noise_tot;
-	      count_odd++;
-	    }
-	  }
+	  sum_ran += noise_ran;
+	  sqr_ran += noise_ran*noise_ran;
+	  sum_cmn += noise_cmn;
+	  sqr_cmn += noise_cmn*noise_cmn;
+	  sum_tot += noise_tot;
+	  sqr_tot += noise_tot*noise_tot;
+	  counts++;
 	}
       }
       // cout << "i_layer = " << i_layer << ", i_tb = " << i_tb << ", count_even = " << count_even << ", count_odd = " << count_odd << endl;
-      if(count_even > 0) 
+      if(counts > 0) 
       {
-	h_mMeanRanSigma_IST[i_layer][0]->SetBinContent(i_tb+1,sum_ran_even/count_even);
-	h_mMeanCMNSigma_IST[i_layer][0]->SetBinContent(i_tb+1,sum_cmn_even/count_even);
-	h_mMeanPedSigma_IST[i_layer][0]->SetBinContent(i_tb+1,sum_tot_even/count_even);
-      }
-      if(count_odd > 0) 
-      {
-	h_mMeanRanSigma_IST[i_layer][1]->SetBinContent(i_tb+1,sum_ran_odd/count_odd);
-	h_mMeanCMNSigma_IST[i_layer][1]->SetBinContent(i_tb+1,sum_cmn_odd/count_odd);
-	h_mMeanPedSigma_IST[i_layer][1]->SetBinContent(i_tb+1,sum_tot_odd/count_odd);
+	h_mMeanRanSigma_IST[i_layer]->SetBinContent(i_tb+1,sum_ran/counts);
+	// double std_ran = sqrt((sqr_ran-sum_ran*sum_ran/(double)counts)/(double)(counts-1));
+	// h_mMeanRanSigma_IST[i_layer]->SetBinError(i_tb+1,std_ran/sqrt(counts));
+
+	h_mMeanCMNSigma_IST[i_layer]->SetBinContent(i_tb+1,sum_cmn/counts);
+	// double std_cmn = sqrt((sqr_cmn-sum_cmn*sum_cmn/(double)counts)/(double)(counts-1));
+	// h_mMeanCMNSigma_IST[i_layer]->SetBinError(i_tb+1,std_cmn/sqrt(counts));
+
+	h_mMeanPedSigma_IST[i_layer]->SetBinContent(i_tb+1,sum_tot/counts);
+	// double std_tot = sqrt((sqr_tot-sum_tot*sum_tot/(double)counts)/(double)(counts-1));
+	// h_mMeanPedSigma_IST[i_layer]->SetBinError(i_tb+1,std_tot/sqrt(counts));
       }
     }
   }
   
   for(int i_layer = 1; i_layer < 4; ++i_layer)
   {
-    TLegend *leg_IST = new TLegend(0.6,0.2,0.8,0.5);
-    leg_IST->SetBorderSize(0);
-    leg_IST->SetFillColor(10);
-
     c_NoiseMean->cd(1);
-    for(int i_col = 0; i_col < 2; ++i_col)
-    {
-      string title = Form("IST%d Total Noise",i_layer);
-      h_mMeanPedSigma_IST[i_layer][i_col]->SetTitle(title.c_str());
-      h_mMeanPedSigma_IST[i_layer][i_col]->SetStats(0);
-      h_mMeanPedSigma_IST[i_layer][i_col]->GetXaxis()->SetTitle("Time Bin");
-      h_mMeanPedSigma_IST[i_layer][i_col]->GetXaxis()->SetTitleSize(0.06);
-      h_mMeanPedSigma_IST[i_layer][i_col]->GetXaxis()->SetLabelSize(0.06);
-      h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetTitle("<Noise_{Total}>");
-      h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleSize(0.10);
-      h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleOffset(0.5);
-      h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.0,50.0);
-      h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetNdivisions(505);
-      h_mMeanPedSigma_IST[i_layer][i_col]->GetYaxis()->SetLabelSize(0.08);
-      h_mMeanPedSigma_IST[i_layer][i_col]->SetLineColor(i_col+1);
-
-      if(i_col == 0) h_mMeanPedSigma_IST[i_layer][i_col]->Draw();
-      else h_mMeanPedSigma_IST[i_layer][i_col]->Draw("same");
-
-      string LegName; 
-      if(i_col == 0) LegName = "column even";
-      if(i_col == 1) LegName = "column odd";
-      leg_IST->AddEntry(h_mMeanCMNSigma_IST[i_layer][i_col],LegName.c_str(),"L");
-    }
-    leg_IST->Draw("same");
+    string title = Form("IST%d Total Noise",i_layer);
+    h_mMeanPedSigma_IST[i_layer]->SetTitle(title.c_str());
+    h_mMeanPedSigma_IST[i_layer]->SetStats(0);
+    h_mMeanPedSigma_IST[i_layer]->GetXaxis()->SetTitle("Time Bin");
+    h_mMeanPedSigma_IST[i_layer]->GetXaxis()->SetTitleSize(0.06);
+    h_mMeanPedSigma_IST[i_layer]->GetXaxis()->SetLabelSize(0.06);
+    h_mMeanPedSigma_IST[i_layer]->GetYaxis()->SetTitle("<Noise_{Total}>");
+    h_mMeanPedSigma_IST[i_layer]->GetYaxis()->SetTitleSize(0.10);
+    h_mMeanPedSigma_IST[i_layer]->GetYaxis()->SetTitleOffset(0.5);
+    h_mMeanPedSigma_IST[i_layer]->GetYaxis()->SetRangeUser(0.0,30.0);
+    h_mMeanPedSigma_IST[i_layer]->GetYaxis()->SetNdivisions(505);
+    h_mMeanPedSigma_IST[i_layer]->GetYaxis()->SetLabelSize(0.08);
+    h_mMeanPedSigma_IST[i_layer]->SetLineColor(1);
+    h_mMeanPedSigma_IST[i_layer]->Draw("h");
 
     c_NoiseMean->cd(2);
-    for(int i_col = 0; i_col < 2; ++i_col)
-    {
-      string title = Form("IST%d Common Mode Noise",i_layer);
-      h_mMeanCMNSigma_IST[i_layer][i_col]->SetTitle(title.c_str());
-      h_mMeanCMNSigma_IST[i_layer][i_col]->SetStats(0);
-      h_mMeanCMNSigma_IST[i_layer][i_col]->GetXaxis()->SetTitle("Time Bin");
-      h_mMeanCMNSigma_IST[i_layer][i_col]->GetXaxis()->SetTitleSize(0.06);
-      h_mMeanCMNSigma_IST[i_layer][i_col]->GetXaxis()->SetLabelSize(0.06);
-      h_mMeanCMNSigma_IST[i_layer][i_col]->GetYaxis()->SetTitle("<Noise_{CMN}>");
-      h_mMeanCMNSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleSize(0.10);
-      h_mMeanCMNSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleOffset(0.5);
-      h_mMeanCMNSigma_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.0,15.0);
-      h_mMeanCMNSigma_IST[i_layer][i_col]->GetYaxis()->SetNdivisions(505);
-      h_mMeanCMNSigma_IST[i_layer][i_col]->GetYaxis()->SetLabelSize(0.08);
-      h_mMeanCMNSigma_IST[i_layer][i_col]->SetLineColor(i_col+1);
-
-      if(i_col == 0) h_mMeanCMNSigma_IST[i_layer][i_col]->Draw();
-      else h_mMeanCMNSigma_IST[i_layer][i_col]->Draw("same");
-    }
-    leg_IST->Draw("same");
+    title = Form("IST%d Common Mode Noise",i_layer);
+    h_mMeanCMNSigma_IST[i_layer]->SetTitle(title.c_str());
+    h_mMeanCMNSigma_IST[i_layer]->SetStats(0);
+    h_mMeanCMNSigma_IST[i_layer]->GetXaxis()->SetTitle("Time Bin");
+    h_mMeanCMNSigma_IST[i_layer]->GetXaxis()->SetTitleSize(0.06);
+    h_mMeanCMNSigma_IST[i_layer]->GetXaxis()->SetLabelSize(0.06);
+    h_mMeanCMNSigma_IST[i_layer]->GetYaxis()->SetTitle("<Noise_{CMN}>");
+    h_mMeanCMNSigma_IST[i_layer]->GetYaxis()->SetTitleSize(0.10);
+    h_mMeanCMNSigma_IST[i_layer]->GetYaxis()->SetTitleOffset(0.5);
+    h_mMeanCMNSigma_IST[i_layer]->GetYaxis()->SetRangeUser(0.0,30.0);
+    h_mMeanCMNSigma_IST[i_layer]->GetYaxis()->SetNdivisions(505);
+    h_mMeanCMNSigma_IST[i_layer]->GetYaxis()->SetLabelSize(0.08);
+    h_mMeanCMNSigma_IST[i_layer]->SetLineColor(1);
+    h_mMeanCMNSigma_IST[i_layer]->Draw("h");
 
     c_NoiseMean->cd(3);
-    for(int i_col = 0; i_col < 2; ++i_col)
-    {
-      string title = Form("IST%d Differential Noise",i_layer);
-      h_mMeanRanSigma_IST[i_layer][i_col]->SetTitle(title.c_str());
-      h_mMeanRanSigma_IST[i_layer][i_col]->SetStats(0);
-      h_mMeanRanSigma_IST[i_layer][i_col]->GetXaxis()->SetTitle("Time Bin");
-      h_mMeanRanSigma_IST[i_layer][i_col]->GetXaxis()->SetTitleSize(0.06);
-      h_mMeanRanSigma_IST[i_layer][i_col]->GetXaxis()->SetLabelSize(0.06);
-      h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetTitle("<Noise_{Ran}>");
-      h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleSize(0.10);
-      h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetTitleOffset(0.5);
-      h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.0,50.0);
-      h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetNdivisions(505);
-      h_mMeanRanSigma_IST[i_layer][i_col]->GetYaxis()->SetLabelSize(0.08);
-      h_mMeanRanSigma_IST[i_layer][i_col]->SetLineColor(i_col+1);
-
-      if(i_col == 0) h_mMeanRanSigma_IST[i_layer][i_col]->Draw();
-      else h_mMeanRanSigma_IST[i_layer][i_col]->Draw("same");
-    }
-    leg_IST->Draw("same");
+    title = Form("IST%d Differential Noise",i_layer);
+    h_mMeanRanSigma_IST[i_layer]->SetTitle(title.c_str());
+    h_mMeanRanSigma_IST[i_layer]->SetStats(0);
+    h_mMeanRanSigma_IST[i_layer]->GetXaxis()->SetTitle("Time Bin");
+    h_mMeanRanSigma_IST[i_layer]->GetXaxis()->SetTitleSize(0.06);
+    h_mMeanRanSigma_IST[i_layer]->GetXaxis()->SetLabelSize(0.06);
+    h_mMeanRanSigma_IST[i_layer]->GetYaxis()->SetTitle("<Noise_{Ran}>");
+    h_mMeanRanSigma_IST[i_layer]->GetYaxis()->SetTitleSize(0.10);
+    h_mMeanRanSigma_IST[i_layer]->GetYaxis()->SetTitleOffset(0.5);
+    h_mMeanRanSigma_IST[i_layer]->GetYaxis()->SetRangeUser(0.0,30.0);
+    h_mMeanRanSigma_IST[i_layer]->GetYaxis()->SetNdivisions(505);
+    h_mMeanRanSigma_IST[i_layer]->GetYaxis()->SetLabelSize(0.08);
+    h_mMeanRanSigma_IST[i_layer]->SetLineColor(1);
+    h_mMeanRanSigma_IST[i_layer]->Draw("h");
 
     c_NoiseMean->Update();
     c_NoiseMean->Print(outputname.c_str());
@@ -752,84 +710,49 @@ void plotSensorPedNoiseQA(string module = "Mod04", string hv = "HV70V")
   }
   leg_mean->Draw("same");
 
-  TH1F *h_meanRatio_IST[3][2]; // even col and odd col
+  TH1F *h_meanRatio_IST[3]; // even col and odd col
   for(int i_layer = 1; i_layer < 4; ++i_layer)
   {
-    for(int i_col = 0; i_col < 2; ++i_col)
-    {
-      string HistName = Form("h_meanRatio_IST%d_Col%d",i_layer,i_col);
-      h_meanRatio_IST[i_layer][i_col] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numTBins,-0.5,FST::numTBins-0.5);
-    }
+    string HistName = Form("h_meanRatio_IST%d",i_layer);
+    h_meanRatio_IST[i_layer] = new TH1F(HistName.c_str(),HistName.c_str(),FST::numTBins,-0.5,FST::numTBins-0.5);
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
     {
       double ch = -1.0;
       double noise_ran = -1.0;
       double noise_tot = -1.0;
-      int count_even = 0;
-      double sum_even = 0.0;
-      int count_odd = 0;
-      double sum_odd = 0.0;
+      int counts = 0;
+      double sum = 0.0;
       for(int i_point = 0; i_point < g_mRanSigma[i_layer][i_tb]->GetN(); ++i_point)
       {
 	g_mRanSigma[i_layer][i_tb]->GetPoint(i_point,ch,noise_ran);
 	g_mPedSigma[i_layer][i_tb]->GetPoint(i_point,ch,noise_tot);
 	if(noise_tot > 0)
 	{
-	  for(int i_col = 0; i_col < 12; ++i_col)
-	  {
-	    if(i_point >= 0 + 128*i_col && i_point < 64 + 128*i_col)
-	    {
-	      sum_even += noise_ran/noise_tot;
-	      count_even++;
-	    }
-	    if(i_point >= 64 + 128*i_col && i_point < 128 + 128*i_col)
-	    {
-	      sum_odd += noise_ran/noise_tot;
-	      count_odd++;
-	    }
-	  }
+	  sum += noise_ran/noise_tot;
+	  counts++;
 	}
       }
-      // cout << "i_layer = " << i_layer << ", i_tb = " << i_tb << ", count_even = " << count_even << ", count_odd = " << count_odd << endl;
-      if(count_even > 0) h_meanRatio_IST[i_layer][0]->SetBinContent(i_tb+1,sum_even/count_even);
-      if(count_odd > 0) h_meanRatio_IST[i_layer][1]->SetBinContent(i_tb+1,sum_odd/count_odd);
+      if(counts > 0) h_meanRatio_IST[i_layer]->SetBinContent(i_tb+1,sum/counts);
     }
   }
   
-  TLegend *leg_IST = new TLegend(0.6,0.2,0.8,0.5);
-  leg_IST->SetBorderSize(0);
-  leg_IST->SetFillColor(10);
   for(int i_layer = 1; i_layer < 4; ++i_layer)
   {
-    for(int i_col = 0; i_col < 2; ++i_col)
-    {
-      c_NoiseMean->cd(i_layer+1);
-      string title = Form("IST%d Noise",i_layer);
-      h_meanRatio_IST[i_layer][i_col]->SetTitle(title.c_str());
-      h_meanRatio_IST[i_layer][i_col]->SetStats(0);
-      h_meanRatio_IST[i_layer][i_col]->GetXaxis()->SetTitle("Time Bin");
-      h_meanRatio_IST[i_layer][i_col]->GetXaxis()->SetTitleSize(0.06);
-      h_meanRatio_IST[i_layer][i_col]->GetXaxis()->SetLabelSize(0.06);
-      h_meanRatio_IST[i_layer][i_col]->GetYaxis()->SetTitle("Noise_{Diff}/Noise_{Total}");
-      h_meanRatio_IST[i_layer][i_col]->GetYaxis()->SetTitleSize(0.10);
-      h_meanRatio_IST[i_layer][i_col]->GetYaxis()->SetTitleOffset(0.5);
-      h_meanRatio_IST[i_layer][i_col]->GetYaxis()->SetRangeUser(0.5,1.0);
-      h_meanRatio_IST[i_layer][i_col]->GetYaxis()->SetNdivisions(505);
-      h_meanRatio_IST[i_layer][i_col]->GetYaxis()->SetLabelSize(0.08);
-      h_meanRatio_IST[i_layer][i_col]->SetLineColor(i_col+1);
-
-      if(i_col == 0) h_meanRatio_IST[i_layer][i_col]->Draw();
-      else h_meanRatio_IST[i_layer][i_col]->Draw("same");
-
-      if(i_layer == 1)
-      {
-	string LegName; 
-	if(i_col == 0) LegName = "column even";
-	if(i_col == 1) LegName = "column odd";
-	leg_IST->AddEntry(h_meanRatio_IST[i_layer][i_col],LegName.c_str(),"L");
-      }
-    }
-    if(i_layer == 1) leg_IST->Draw("same");
+    c_NoiseMean->cd(i_layer+1);
+    string title = Form("IST%d Noise",i_layer);
+    h_meanRatio_IST[i_layer]->SetTitle(title.c_str());
+    h_meanRatio_IST[i_layer]->SetStats(0);
+    h_meanRatio_IST[i_layer]->GetXaxis()->SetTitle("Time Bin");
+    h_meanRatio_IST[i_layer]->GetXaxis()->SetTitleSize(0.06);
+    h_meanRatio_IST[i_layer]->GetXaxis()->SetLabelSize(0.06);
+    h_meanRatio_IST[i_layer]->GetYaxis()->SetTitle("Noise_{Diff}/Noise_{Total}");
+    h_meanRatio_IST[i_layer]->GetYaxis()->SetTitleSize(0.10);
+    h_meanRatio_IST[i_layer]->GetYaxis()->SetTitleOffset(0.5);
+    h_meanRatio_IST[i_layer]->GetYaxis()->SetRangeUser(0.0,1.0);
+    h_meanRatio_IST[i_layer]->GetYaxis()->SetNdivisions(505);
+    h_meanRatio_IST[i_layer]->GetYaxis()->SetLabelSize(0.08);
+    h_meanRatio_IST[i_layer]->SetLineColor(1);
+    h_meanRatio_IST[i_layer]->Draw();
   }
   c_NoiseMean->Update();
   c_NoiseMean->Print(outputname.c_str());
@@ -1140,5 +1063,16 @@ void plotSensorPedNoiseQA(string module = "Mod04", string hv = "HV70V")
 
   string output_stop = Form("./figures/%s/PedNoiseQA_%s_%s.pdf]",module.c_str(),module.c_str(),hv.c_str());
   c_Noise->Print(output_stop.c_str()); // open pdf file
+
+  string outputfile = Form("../../output/noise/%s/FstPedMeanNoise_%s_%s.root",module.c_str(),module.c_str(),hv.c_str());
+  TFile *File_OutPut = new TFile(outputfile.c_str(),"RECREATE");
+  File_OutPut->cd();
+  for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
+  {
+    h_mMeanPedSigma_RStrip[i_rstrip]->Write();
+    h_mMeanCMNSigma_RStrip[i_rstrip]->Write();
+    h_mMeanRanSigma_RStrip[i_rstrip]->Write();
+  }
+  File_OutPut->Close();
 }
 
