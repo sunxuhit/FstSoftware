@@ -1064,6 +1064,7 @@ void plotIstSensorPedNoiseQA(string module = "Mod36", string hv = "HV60V")
   string output_stop = Form("./figures/Ist%s/IstPedNoiseQA_%s_%s.pdf]",module.c_str(),module.c_str(),hv.c_str());
   c_Noise->Print(output_stop.c_str()); // open pdf file
 
+  /*
   string outputfile = Form("../../output/noise/Ist%s/IstPedMeanNoise_%s_%s.root",module.c_str(),module.c_str(),hv.c_str());
   TFile *File_OutPut = new TFile(outputfile.c_str(),"RECREATE");
   File_OutPut->cd();
@@ -1074,5 +1075,5 @@ void plotIstSensorPedNoiseQA(string module = "Mod36", string hv = "HV60V")
     h_mMeanRanSigma_IST[i_layer]->Write();
   }
   File_OutPut->Close();
+  */
 }
-

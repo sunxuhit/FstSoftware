@@ -4,7 +4,7 @@
 
 R__LOAD_LIBRARY(../../lib/libFstNoiseStudy.dylib)
 
-int doFstSensorPedNoiseStudy(string module = "Mod04", string hv = "HV70V")
+int doFstSensorPedNoiseStudy(string module = "Mod01", string hv = "HV70V")
 {
   std::cout << "gSystem::Load <- libFstNoiseStudy.dylib" << endl;
 

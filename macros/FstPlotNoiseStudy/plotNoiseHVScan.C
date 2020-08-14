@@ -36,7 +36,7 @@ void plotNoiseHVScan(string mod = "Mod01")
   // read in noise histograms
   for(int i_hv = 0; i_hv < numOfHV; ++i_hv)
   {
-    string input_Sensor = Form("../../output/noise/FstPedNoise_%s_%s.root",mod.c_str(),hv[i_hv].c_str());
+    string input_Sensor = Form("../../output/noise/%s/HVScan/FstPedNoise_%s_%s.root",mod.c_str(),mod.c_str(),hv[i_hv].c_str());
     File_InPut[i_hv] = TFile::Open(input_Sensor.c_str());
     for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
     {
@@ -134,16 +134,6 @@ void plotNoiseHVScan(string mod = "Mod01")
     }
   }
 
-  TCanvas *c_NoiseDiff = new TCanvas("c_NoiseDiff","c_NoiseDiff",10,10,400,1200);
-  c_NoiseDiff->Divide(1,3);
-  for(int i_pad = 0; i_pad < 3; ++i_pad)
-  {
-    c_NoiseDiff->cd(i_pad+1)->SetLeftMargin(0.15);
-    c_NoiseDiff->cd(i_pad+1)->SetBottomMargin(0.15);
-    c_NoiseDiff->cd(i_pad+1)->SetTicks(1,1);
-    c_NoiseDiff->cd(i_pad+1)->SetGrid(0,0);
-  }
-
   TH1F *h_play = new TH1F("h_play","h_play",250,-9.5,240.5);
   for(int i_bin = 0; i_bin < 250; ++i_bin)
   {
@@ -161,33 +151,6 @@ void plotNoiseHVScan(string mod = "Mod01")
   h_play->GetYaxis()->SetNdivisions(505);
   h_play->GetYaxis()->SetTitleSize(0.06);
   h_play->GetYaxis()->SetLabelSize(0.04);
-
-  for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
-  {
-    c_NoiseDiff->cd(i_sensor+1);
-    string title = Form("Noise vs. HV: %s Sensor%d",mod.c_str(),i_sensor);
-    h_play->SetTitle(title.c_str());
-    h_play->DrawCopy("hE");
-    PlotLine(-5.5, 220.5,0.0,0.0,1,1,2);
-    g_mMeanPedSigma[i_sensor]->SetMarkerStyle(24);
-    g_mMeanPedSigma[i_sensor]->SetMarkerSize(1.0);
-    g_mMeanPedSigma[i_sensor]->SetMarkerColor(2);
-    g_mMeanPedSigma[i_sensor]->Draw("p");
-    g_mMeanRanSigma[i_sensor]->SetMarkerStyle(20);
-    g_mMeanRanSigma[i_sensor]->SetMarkerSize(1.0);
-    g_mMeanRanSigma[i_sensor]->SetMarkerColor(kGray+2);
-    g_mMeanRanSigma[i_sensor]->Draw("P same");
-    TLegend *leg = new TLegend(0.20,0.65,0.75,0.85);
-    leg->SetBorderSize(0);
-    leg->SetFillColor(0);
-    // leg->SetNColumns(2);
-    leg->AddEntry(g_mMeanPedSigma[i_sensor],"Total Noise","P");
-    leg->AddEntry(g_mMeanRanSigma[i_sensor],"Random Noise","P");
-    leg->Draw("same");
-  }
-
-  string FigName = Form("./figures/c_NoiseHVScanDiff_%s_SingelChannel.eps",mod.c_str());
-  c_NoiseDiff->SaveAs(FigName.c_str());
 
   const int markerColor[3] = {kGray+2, 2, 4};
   const int markerStyle[3] = {20, 24, 24};
@@ -219,6 +182,6 @@ void plotNoiseHVScan(string mod = "Mod01")
   leg->AddEntry(g_mMeanRanSigma[2],"Sensor2 (Outer Sector)","P");
   leg->Draw("same");
 
-  FigName = Form("./figures/c_NoiseHVScan_%s_SingelChannel.eps",mod.c_str());
+  string FigName = Form("./figures/%s/NoiseHVScan_%s_SingelChannel.eps",mod.c_str(),mod.c_str());
   c_Noise->SaveAs(FigName.c_str());
 }

@@ -1064,6 +1064,7 @@ void plotIstChipNoiseQA(string module = "Mod36")
   string output_stop = Form("./figures/Ist%s/IstChipNoiseQA_%s.pdf]",module.c_str(),module.c_str());
   c_Noise->Print(output_stop.c_str()); // open pdf file
 
+  /*
   string outputfile = Form("../../output/noise/Ist%s/IstChipMeanNoise_%s.root",module.c_str(),module.c_str());
   TFile *File_OutPut = new TFile(outputfile.c_str(),"RECREATE");
   File_OutPut->cd();
@@ -1074,5 +1075,6 @@ void plotIstChipNoiseQA(string module = "Mod36")
     h_mMeanRanSigma_IST[i_layer]->Write();
   }
   File_OutPut->Close();
+  */
 }
 

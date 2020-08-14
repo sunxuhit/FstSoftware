@@ -10,12 +10,12 @@
 #include <TProfile2D.h>
 #include <TGraph.h>
 #include <TStyle.h>
-#include "../FstPlotConfiguration/draw.h"
+#include "./draw.h"
 #include "../../src/FstUtil/FstCons.h"
 
 using namespace std;
 
-void plotEfficiencyHV(string mod = "Mod03")
+void plotEfficiencyHV(string mod = "Mod01")
 {
   bool isSavePed          = true;
   bool isApplyCMNCorr     = true;
@@ -38,7 +38,7 @@ void plotEfficiencyHV(string mod = "Mod03")
 
   for(int i_hv = 0; i_hv < numOfHV; ++i_hv)
   {
-    string inputfile = Form("../../output/configuration/FstEfficiency_%s_%s_Th%1.1fTb%dPed%1.1fPed%1.1f_%s_%s.root",mod.c_str(),hv[i_hv].c_str(),nFstHitsCut,numOfUsedTimeBins,nFstThresholdCut2,nFstThresholdCut1,pedMode.c_str(),cmnMode.c_str());
+    string inputfile = Form("../../output/signal/%s/FstEfficiency_%s_%s_Th%1.1fTb%dPed%1.1fPed%1.1f_%s_%s.root",mod.c_str(),mod.c_str(),hv[i_hv].c_str(),nFstHitsCut,numOfUsedTimeBins,nFstThresholdCut2,nFstThresholdCut1,pedMode.c_str(),cmnMode.c_str());
     File_InPut[i_hv] = TFile::Open(inputfile.c_str());
     for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
     {

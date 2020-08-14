@@ -15,11 +15,11 @@
 
 using namespace std;
 
-void plotNoiseChannel(string mod = "Mod03", string hv = "HV70V")
+void plotNoiseChannel(string mod = "Mod01", string hv = "HV70V")
 {
   const int defTimeBin = 0;
 
-  string input_Sensor = Form("../../output/noise/%s/FstPedNoise_%s_%s.root",mod.c_str(),mod.c_str(),hv.c_str());
+  string input_Sensor = Form("../../output/noise/%s/HVScan/FstPedNoise_%s_%s.root",mod.c_str(),mod.c_str(),hv.c_str());
   TFile *File_Sensor = TFile::Open(input_Sensor.c_str());
   TH1F *h_mPedSigma_Sensor[FST::numRStrip][FST::numTBins];
   TH1F *h_mRanSigma_Sensor[FST::numRStrip][FST::numTBins];
@@ -35,8 +35,7 @@ void plotNoiseChannel(string mod = "Mod03", string hv = "HV70V")
     }
   }
 
-  /*
-  string input_Sensor0V = "../../output/noise/FstPedNoise_Mod03_HV0V.root";
+  string input_Sensor0V = Form("../../output/noise/%s/HVScan/FstPedNoise_%s_HVOff.root",mod.c_str(),mod.c_str());
   TFile *File_Sensor0V = TFile::Open(input_Sensor0V.c_str());
   TH1F *h_mPedSigma_Sensor0V[FST::numRStrip][FST::numTBins];
   TH1F *h_mRanSigma_Sensor0V[FST::numRStrip][FST::numTBins];
@@ -51,7 +50,6 @@ void plotNoiseChannel(string mod = "Mod03", string hv = "HV70V")
       h_mRanSigma_Sensor0V[i_rstrip][i_tb] = (TH1F*)File_Sensor0V->Get(HistName.c_str());
     }
   }
-  */
   
   string input_InnerChip = Form("../../output/noise/%s/FstChipNoise_%s_Inner.root",mod.c_str(),mod.c_str());
   TFile *File_InnerChip = TFile::Open(input_InnerChip.c_str());

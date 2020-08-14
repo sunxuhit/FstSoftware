@@ -12,7 +12,5 @@ then
   nFstHitsCut=$4
   date=$5
 
-  # root -l -b -q makeFstCluster.C\(\"${mod}\",\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},3,2.5,3.5,\"${date}\"\)
   root -l -b -q makeFstCluster.C\(\"${mod}\",\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,2.5,3.5,\"${date}\"\)
-  # root -l -b -q makeFstCluster.C\(\"${mod}\",\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},1,2.5,3.5,\"${date}\"\)
 fi

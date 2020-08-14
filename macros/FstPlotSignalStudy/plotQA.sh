@@ -1,19 +1,19 @@
 #!/bin/bash
 date
 
-#. ./plotQA.sh hv config
+#. ./plotQA.sh Mod01 HV70V
 
-if [ $# -eq 7 ]
+if [ $# -eq 2 ]
 then
   mod=$1
   hv=$2
-  isSavePed=$3
-  isApplyCMNCorr=$4
-  nFstHitsCut=$5
-  numOfUsedTimeBins=$6
-  config=$7
+  isSavePed=true
+  isApplyCMNCorr=true
+  nFstHitsCut=4.0
+  numOfUsedTimeBins=2
+  config=withPed_withCMNCorr
 
-  folder=./figures/${mod}_${hv}_Th${nFstHitsCut}Tb${numOfUsedTimeBins}Ped2.5Ped3.5_${config}
+  folder=./figures/${mod}/${hv}_Th${nFstHitsCut}Tb${numOfUsedTimeBins}Ped2.5Ped3.5_${config}
   mkdir -p ${folder} 
 
   # echo "Plot Number of Raw Hits!!"
@@ -29,21 +29,6 @@ then
 
   root -l -b -q plotSignalQA.C\(\"${mod}\",\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},${numOfUsedTimeBins},2.5,3.5,2\)
   mv ./figures/SignalQA_Sensor2.pdf ${folder}/SignalQA_Sensor2_${mod}_${hv}_Th${nFstHitsCut}Tb${numOfUsedTimeBins}Ped2.5Ped3.5_${config}.pdf
-
-  # echo "Plot Ped Noise QA!!"
-  root -l -b -q plotSensorPedNoiseQA.C\(\"${mod}\",\"${hv}\"\)
-  mv ./figures/PedNoiseQA_${mod}_${hv}.pdf ${folder}/PedNoiseQA_${mod}_${hv}.pdf
-
-  # echo "Plot Data Noise QA!!"
-  InPutNoise=../../list/FST/Date_${mod}_${hv}.list
-  for item in `cat $InPutNoise`
-  do
-    root -l -b -q plotSensorDataNoiseQA.C\(\"${mod}\",\"${hv}\",\"${item}\"\)
-    mv ./figures/DataNoiseQA_${mod}_${hv}_${item}.pdf ${folder}/DataNoiseQA_${mod}_${hv}_${item}.pdf
-  done
-
-  root -l -b -q plotSensorDataNoiseDate.C\(\"${mod}\",\"${hv}\"\)
-  mv ./figures/DataNoiseDate_${mod}_${hv}.pdf ${folder}/DataNoiseDate_${mod}_${hv}.pdf
 
   # echo "Plot Residual of Fst Cluster Tracks from 2-Layer tracking!!"
   root -l -b -q plotResidual_FSTClusterTracks_2Layer.C\(\"${mod}\",\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},${numOfUsedTimeBins},2.5,3.5\)

@@ -12,5 +12,4 @@ then
     echo "Do QA Study for ${hv}"
     . ./fstQAStudy.sh ${mod} ${hv}
   done
-
 fi

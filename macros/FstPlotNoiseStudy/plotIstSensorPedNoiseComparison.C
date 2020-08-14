@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotSensorPedNoiseComparison(string module = "Mod04", string istMod = "Mod36")
+void plotIstSensorPedNoiseComparison(string module = "Mod04", string istMod = "Mod36")
 {
   TH1F *h_mMeanPedSigma_RStrip[FST::numRStrip];
   TH1F *h_mMeanCMNSigma_RStrip[FST::numRStrip];

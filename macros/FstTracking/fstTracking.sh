@@ -3,25 +3,13 @@ date
 
 #. ./fstTracking.sh mod isApplyCMNCorr nFstHitsCut
 
-if [ $# -eq 3 ]
+if [ $# -eq 2 ]
 then
   mod=$1
+  hv=$2
   isSavePed=true
-  isApplyCMNCorr=$2
-  nFstHitsCut=$3
+  isApplyCMNCorr=true
+  nFstHitsCut=4.0
 
-  # HV70V
-  root -l -b -q doFstTracking.C\(\"${mod}\",\"HV70V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,2.5,3.5\)
-
-  # HV100V
-  # root -l -b -q doFstTracking.C\(\"${mod}\",\"HV100V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,2.5,3.5\)
-
-  # HV120V
-  # root -l -b -q doFstTracking.C\(\"${mod}\",\"HV120V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,2.5,3.5\)
-
-  # HV140V
-  # root -l -b -q doFstTracking.C\(\"${mod}\",\"HV140V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,2.5,3.5\)
-
-  # HV200V
-  # root -l -b -q doFstTracking.C\(\"${mod}\",\"HV200V\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,2.5,3.5\)
+  root -l -b -q doFstTracking.C\(\"${mod}\",\"${hv}\",${isSavePed},${isApplyCMNCorr},${nFstHitsCut},2,2.5,3.5\)
 fi

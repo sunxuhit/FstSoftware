@@ -17,7 +17,7 @@ macros/*/figures/*.png
 macros/*/figures/*/*.eps
 macros/*/figures/*/*.pdf
 macros/*/figures/*/*/*.pdf
-macros/*/figures_woCMNSubtraction/*/*.pdf
+macros/*/figures/*/*/*.eps
 
 # ignore intput and output root file
 data/*/*.root

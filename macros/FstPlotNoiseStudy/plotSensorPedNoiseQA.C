@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotSensorPedNoiseQA(string module = "Mod04", string hv = "HV70V")
+void plotSensorPedNoiseQA(string module = "Mod01", string hv = "HV70V")
 {
   gStyle->SetOptStat(111111);
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
@@ -1064,6 +1064,7 @@ void plotSensorPedNoiseQA(string module = "Mod04", string hv = "HV70V")
   string output_stop = Form("./figures/%s/PedNoiseQA_%s_%s.pdf]",module.c_str(),module.c_str(),hv.c_str());
   c_Noise->Print(output_stop.c_str()); // open pdf file
 
+  /*
   string outputfile = Form("../../output/noise/%s/FstPedMeanNoise_%s_%s.root",module.c_str(),module.c_str(),hv.c_str());
   TFile *File_OutPut = new TFile(outputfile.c_str(),"RECREATE");
   File_OutPut->cd();
@@ -1074,5 +1075,5 @@ void plotSensorPedNoiseQA(string module = "Mod04", string hv = "HV70V")
     h_mMeanRanSigma_RStrip[i_rstrip]->Write();
   }
   File_OutPut->Close();
+  */
 }
-

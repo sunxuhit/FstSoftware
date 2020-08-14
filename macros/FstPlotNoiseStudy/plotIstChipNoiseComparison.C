@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotChipNoiseComparison(string module = "Mod04", string istMod = "Mod36")
+void plotIstChipNoiseComparison(string module = "Mod04", string istMod = "Mod36")
 {
   TH1F *h_mMeanPedSigma_RStrip[FST::numRStrip];
   TH1F *h_mMeanCMNSigma_RStrip[FST::numRStrip];
@@ -94,7 +94,7 @@ void plotChipNoiseComparison(string module = "Mod04", string istMod = "Mod36")
     h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleSize(0.06);
     h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleOffset(1.0);
     h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetLabelSize(0.04);
-    h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(2.0,15.0);
+    h_mMeanCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(4.0,18.0);
     h_mMeanCMNSigma_RStrip[i_rstrip]->SetLineColor(i_rstrip+1);
     h_mMeanCMNSigma_RStrip[i_rstrip]->SetLineWidth(3);
 
@@ -124,18 +124,19 @@ void plotChipNoiseComparison(string module = "Mod04", string istMod = "Mod36")
     h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleSize(0.06);
     h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleOffset(1.0);
     h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetLabelSize(0.04);
-    h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(2.0,15.0);
+    h_mMeanRanSigma_RStrip[i_rstrip]->GetYaxis()->SetRangeUser(4.0,18.0);
     h_mMeanRanSigma_RStrip[i_rstrip]->SetLineColor(i_rstrip+1);
     h_mMeanRanSigma_RStrip[i_rstrip]->SetLineWidth(3);
 
     if(i_rstrip == 0) h_mMeanRanSigma_RStrip[i_rstrip]->Draw();
     else h_mMeanRanSigma_RStrip[i_rstrip]->Draw("same");
-
-    h_mMeanRanSigma_IST[1]->SetMarkerStyle(24);
-    h_mMeanRanSigma_IST[1]->SetMarkerColor(kGray+2);
-    h_mMeanRanSigma_IST[1]->SetMarkerSize(1.0);
-    h_mMeanRanSigma_IST[1]->Draw("p same");
   }
+
+  h_mMeanRanSigma_IST[1]->SetMarkerStyle(24);
+  h_mMeanRanSigma_IST[1]->SetMarkerColor(kGray+2);
+  h_mMeanRanSigma_IST[1]->SetMarkerSize(1.0);
+  h_mMeanRanSigma_IST[1]->Draw("p same");
+  leg_mean->Draw("same");
   
   c_NoiseMean->SaveAs("./figures/ChipNoiseComparison.eps");
 }

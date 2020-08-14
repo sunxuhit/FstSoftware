@@ -105,10 +105,9 @@ void plotSignalHVScan(string mod = "Mod01")
   c_Signal->cd()->SetTicks(1,1);
   c_Signal->cd()->SetGrid(0,0);
   h_play->SetTitle("Cluster Signal vs. HV");
-  // h_play->SetTitleSize(0.06);
   h_play->GetXaxis()->SetRangeUser(-4.5,220.5);
   h_play->GetYaxis()->SetTitle("Cluster Signal (ADC)");
-  h_play->GetYaxis()->SetRangeUser(50.0,800.0);
+  h_play->GetYaxis()->SetRangeUser(200.0,700.0);
   h_play->DrawCopy("hE");
   for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
   {
@@ -117,7 +116,7 @@ void plotSignalHVScan(string mod = "Mod01")
     g_mMeanFstScanClustersSignal[i_sensor]->SetMarkerColor(markerColor[i_sensor]);
     g_mMeanFstScanClustersSignal[i_sensor]->Draw("p same");
   }
-  TLegend *leg = new TLegend(0.20,0.65,0.65,0.85);
+  TLegend *leg = new TLegend(0.20,0.70,0.65,0.85);
   leg->SetBorderSize(0);
   leg->SetFillColor(0);
   leg->SetMargin(0.1);
@@ -126,7 +125,9 @@ void plotSignalHVScan(string mod = "Mod01")
   leg->AddEntry(g_mMeanFstScanClustersSignal[1],"Sensor1 (Outer Sector)","P");
   leg->AddEntry(g_mMeanFstScanClustersSignal[2],"Sensor2 (Outer Sector)","P");
   leg->Draw("same");
-  c_Signal->SaveAs("./figures/c_SignalHVScan.eps");
+
+  string FigName = Form("./figures/%s/HVScan/SignalHVScan_%s_ScanCluster.eps",mod.c_str(),mod.c_str());
+  c_Signal->SaveAs(FigName.c_str());
 
   // mean noise
   TCanvas *c_Noise = new TCanvas("c_Noise","c_Noise",10,10,800,800);
@@ -148,7 +149,9 @@ void plotSignalHVScan(string mod = "Mod01")
     g_mMeanFstScanClustersNoise[i_sensor]->Draw("p same");
   }
   leg->Draw("same");
-  c_Noise->SaveAs("./figures/c_NoiseHVScan.eps");
+
+  FigName = Form("./figures/%s/HVScan/NoiseHVScan_%s_ScanCluster.eps",mod.c_str(),mod.c_str());
+  c_Noise->SaveAs(FigName.c_str());
 
   // mean S/N ratio
   TCanvas *c_SNRatio = new TCanvas("c_SNRatio","c_SNRatio",10,10,800,800);
@@ -170,5 +173,7 @@ void plotSignalHVScan(string mod = "Mod01")
     g_mMeanFstScanClustersSNRatio[i_sensor]->Draw("p same");
   }
   leg->Draw("same");
-  c_SNRatio->SaveAs("./figures/c_SNRatioHVScan.eps");
+
+  FigName = Form("./figures/%s/HVScan/SNRatioHVScan_%s_ScanCluster.eps",mod.c_str(),mod.c_str());
+  c_SNRatio->SaveAs(FigName.c_str());
 }

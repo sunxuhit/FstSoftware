@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
+void plotChipNoiseQA(string module = "Mod04", string sector = "Outer")
 {
   gStyle->SetOptStat(111111);
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
@@ -426,12 +426,15 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
       for(int i_bin = 0; i_bin < FST::numPhiSeg; ++i_bin)
       // for(int i_bin = 0; i_bin < 64; ++i_bin)
       {
-	sum_Ped += h_mPedSigma_FST[i_rstrip][i_tb]->GetBinContent(i_bin+1);
-	counter_Ped++;
-	sum_CMN += h_mCMNSigma_FST[i_rstrip][i_tb]->GetBinContent(i_bin+1);
-	counter_CMN++;
-	sum_Ran += h_mRanSigma_FST[i_rstrip][i_tb]->GetBinContent(i_bin+1);
-	counter_Ran++;
+	if(h_mPedSigma_FST[i_rstrip][i_tb]->GetBinContent(i_bin+1) > 0.0)
+	{
+	  sum_Ped += h_mPedSigma_FST[i_rstrip][i_tb]->GetBinContent(i_bin+1);
+	  counter_Ped++;
+	  sum_CMN += h_mCMNSigma_FST[i_rstrip][i_tb]->GetBinContent(i_bin+1);
+	  counter_CMN++;
+	  sum_Ran += h_mRanSigma_FST[i_rstrip][i_tb]->GetBinContent(i_bin+1);
+	  counter_Ran++;
+	}
       }
       if(counter_Ped > 0) h_mMeanPedSigma_RStrip[i_rstrip]->SetBinContent(i_tb+1,sum_Ped/counter_Ped);
       if(counter_CMN > 0) h_mMeanCMNSigma_RStrip[i_rstrip]->SetBinContent(i_tb+1,sum_CMN/counter_CMN);
@@ -1064,6 +1067,7 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
   string output_stop = Form("./figures/%s/ChipNoiseQA_%s_%s.pdf]",module.c_str(),module.c_str(),sector.c_str());
   c_Noise->Print(output_stop.c_str()); // open pdf file
 
+  /*
   string outputfile = Form("../../output/noise/%s/FstChipMeanNoise_%s_%s.root",module.c_str(),module.c_str(),sector.c_str());
   TFile *File_OutPut = new TFile(outputfile.c_str(),"RECREATE");
   File_OutPut->cd();
@@ -1074,5 +1078,5 @@ void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
     h_mMeanRanSigma_RStrip[i_rstrip]->Write();
   }
   File_OutPut->Close();
+  */
 }
-
