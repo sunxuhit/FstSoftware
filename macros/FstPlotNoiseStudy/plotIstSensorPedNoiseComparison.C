@@ -149,5 +149,5 @@ void plotIstSensorPedNoiseComparison(string module = "Mod03", string istMod = "M
 
   leg_mean->Draw("same");
   
-  c_NoiseMean->SaveAs("./figures/SensorPedNoiseComparison.eps");
+  c_NoiseMean->SaveAs("./figures/Comparison/SensorPedNoiseComparison.eps");
 }

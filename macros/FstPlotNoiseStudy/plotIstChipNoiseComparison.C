@@ -138,5 +138,5 @@ void plotIstChipNoiseComparison(string module = "Mod03", string istMod = "Mod36"
   h_mMeanRanSigma_IST[1]->Draw("p same");
   leg_mean->Draw("same");
   
-  c_NoiseMean->SaveAs("./figures/ChipNoiseComparison.eps");
+  c_NoiseMean->SaveAs("./figures/Comparison/ChipNoiseComparison.eps");
 }
