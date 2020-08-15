@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotNoiseChannel(string mod = "Mod01", string hv = "HV70V")
+void plotNoiseChannel(string mod = "Mod03", string hv = "HV70V")
 {
   const int defTimeBin = 0;
 
@@ -35,7 +35,7 @@ void plotNoiseChannel(string mod = "Mod01", string hv = "HV70V")
     }
   }
 
-  string input_Sensor0V = Form("../../output/noise/%s/HVScan/FstPedNoise_%s_HVOff.root",mod.c_str(),mod.c_str());
+  string input_Sensor0V = Form("../../output/noise/%s/HVScan/FstPedNoise_%s_HV0V.root",mod.c_str(),mod.c_str());
   TFile *File_Sensor0V = TFile::Open(input_Sensor0V.c_str());
   TH1F *h_mPedSigma_Sensor0V[FST::numRStrip][FST::numTBins];
   TH1F *h_mRanSigma_Sensor0V[FST::numRStrip][FST::numTBins];
@@ -110,10 +110,10 @@ void plotNoiseChannel(string mod = "Mod01", string hv = "HV70V")
     h_mPedSigma_Sensor[i_rstrip][defTimeBin]->SetMarkerSize(1.0);
     h_mPedSigma_Sensor[i_rstrip][defTimeBin]->SetMarkerColor(1);
     h_mPedSigma_Sensor[i_rstrip][defTimeBin]->Draw("p");
-    // h_mPedSigma_Sensor0V[i_rstrip][defTimeBin]->SetMarkerStyle(24);
-    // h_mPedSigma_Sensor0V[i_rstrip][defTimeBin]->SetMarkerSize(1.0);
-    // h_mPedSigma_Sensor0V[i_rstrip][defTimeBin]->SetMarkerColor(4);
-    // h_mPedSigma_Sensor0V[i_rstrip][defTimeBin]->Draw("p same");
+    h_mPedSigma_Sensor0V[i_rstrip][defTimeBin]->SetMarkerStyle(24);
+    h_mPedSigma_Sensor0V[i_rstrip][defTimeBin]->SetMarkerSize(1.0);
+    h_mPedSigma_Sensor0V[i_rstrip][defTimeBin]->SetMarkerColor(4);
+    h_mPedSigma_Sensor0V[i_rstrip][defTimeBin]->Draw("p same");
     h_mPedSigma_InnerChip[i_rstrip][defTimeBin]->SetMarkerStyle(24);
     h_mPedSigma_InnerChip[i_rstrip][defTimeBin]->SetMarkerSize(1.0);
     h_mPedSigma_InnerChip[i_rstrip][defTimeBin]->SetMarkerColor(2);
@@ -139,11 +139,11 @@ void plotNoiseChannel(string mod = "Mod01", string hv = "HV70V")
     leg->SetBorderSize(0);
     leg->SetFillColor(0);
     leg->AddEntry(h_mPedSigma_InnerChip[i_rstrip][defTimeBin],"W/O Sensors","P");
-    // leg->AddEntry(h_mPedSigma_Sensor0V[i_rstrip][defTimeBin],"With Sensors (HV0V)","P");
+    leg->AddEntry(h_mPedSigma_Sensor0V[i_rstrip][defTimeBin],"With Sensors (HV0V)","P");
     leg->AddEntry(h_mPedSigma_Sensor[i_rstrip][defTimeBin],leg_HV.c_str(),"P");
     leg->Draw("same");
   }
-  string FigName_Ped = Form("./figures/c_PedSigma_%s_%s.eps",mod.c_str(),hv.c_str());
+  string FigName_Ped = Form("./figures/%s/c_PedSigma_%s_%s.eps",mod.c_str(),mod.c_str(),hv.c_str());
   c_PedSigma->SaveAs(FigName_Ped.c_str());
 
   TCanvas *c_RanSigma = new TCanvas("c_RanSigma","c_RanSigma",10,10,1600,800);
@@ -173,10 +173,10 @@ void plotNoiseChannel(string mod = "Mod01", string hv = "HV70V")
     h_mRanSigma_Sensor[i_rstrip][defTimeBin]->SetMarkerSize(1.0);
     h_mRanSigma_Sensor[i_rstrip][defTimeBin]->SetMarkerColor(1);
     h_mRanSigma_Sensor[i_rstrip][defTimeBin]->Draw("p");
-    // h_mRanSigma_Sensor0V[i_rstrip][defTimeBin]->SetMarkerStyle(24);
-    // h_mRanSigma_Sensor0V[i_rstrip][defTimeBin]->SetMarkerSize(1.0);
-    // h_mRanSigma_Sensor0V[i_rstrip][defTimeBin]->SetMarkerColor(4);
-    // h_mRanSigma_Sensor0V[i_rstrip][defTimeBin]->Draw("p same");
+    h_mRanSigma_Sensor0V[i_rstrip][defTimeBin]->SetMarkerStyle(24);
+    h_mRanSigma_Sensor0V[i_rstrip][defTimeBin]->SetMarkerSize(1.0);
+    h_mRanSigma_Sensor0V[i_rstrip][defTimeBin]->SetMarkerColor(4);
+    h_mRanSigma_Sensor0V[i_rstrip][defTimeBin]->Draw("p same");
     h_mRanSigma_InnerChip[i_rstrip][defTimeBin]->SetMarkerStyle(24);
     h_mRanSigma_InnerChip[i_rstrip][defTimeBin]->SetMarkerSize(1.0);
     h_mRanSigma_InnerChip[i_rstrip][defTimeBin]->SetMarkerColor(2);
@@ -203,10 +203,10 @@ void plotNoiseChannel(string mod = "Mod01", string hv = "HV70V")
     leg->SetFillColor(0);
     leg->SetMargin(0.1);
     leg->AddEntry(h_mRanSigma_InnerChip[i_rstrip][defTimeBin],"W/O Sensors","P");
-    // leg->AddEntry(h_mRanSigma_Sensor0V[i_rstrip][defTimeBin],"With Sensors (HV0V)","P");
+    leg->AddEntry(h_mRanSigma_Sensor0V[i_rstrip][defTimeBin],"With Sensors (HV0V)","P");
     leg->AddEntry(h_mRanSigma_Sensor[i_rstrip][defTimeBin],leg_HV.c_str(),"P");
     leg->Draw("same");
   }
-  string FigName_Ran = Form("./figures/c_RanSigma_%s_%s.eps",mod.c_str(),hv.c_str());
+  string FigName_Ran = Form("./figures/%s/c_RanSigma_%s_%s.eps",mod.c_str(),mod.c_str(),hv.c_str());
   c_RanSigma->SaveAs(FigName_Ran.c_str());
 }

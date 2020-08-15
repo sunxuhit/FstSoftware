@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotIstChipNoiseComparison(string module = "Mod04", string istMod = "Mod36")
+void plotIstChipNoiseComparison(string module = "Mod03", string istMod = "Mod36")
 {
   TH1F *h_mMeanPedSigma_RStrip[FST::numRStrip];
   TH1F *h_mMeanCMNSigma_RStrip[FST::numRStrip];

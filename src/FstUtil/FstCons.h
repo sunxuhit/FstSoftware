@@ -61,20 +61,20 @@ namespace FST
   const double y3_shift     = 1.0116;
 
   // alignment from IST2 to each sensor of FST01
-  const int mDefSenorId = 1; // default FST sensor for alignment (phi_rot, x_shift and y_shift | z_shift is from the sensorId to be aligned)
-  const double delta_x = 0.0;
-  const double phi_rot[mFstNumSensorsPerModule] = {0.0, 0.0311535, 0.0};
-  const double x_shift[mFstNumSensorsPerModule] = {0.0, 141.268,   0.0}; 
-  const double y_shift[mFstNumSensorsPerModule] = {0.0, -19.7014,  0.0};
-  const double z_shift[mFstNumSensorsPerModule] = {0.0, 0.644155,  0.0};
+  // const int mDefSenorId = 1; // default FST sensor for alignment (phi_rot, x_shift and y_shift | z_shift is from the sensorId to be aligned)
+  // const double delta_x = 0.0;
+  // const double phi_rot[mFstNumSensorsPerModule] = {0.0, 0.0311535, 0.0};
+  // const double x_shift[mFstNumSensorsPerModule] = {0.0, 141.268,   0.0}; 
+  // const double y_shift[mFstNumSensorsPerModule] = {0.0, -19.7014,  0.0};
+  // const double z_shift[mFstNumSensorsPerModule] = {0.0, 0.644155,  0.0};
 
   // alignment from IST2 to each sensor of FST03 HV70V-HV120V
-  // const int mDefSenorId = 0; // default FST sensor for alignment (phi_rot, x_shift and y_shift | z_shift is from the sensorId to be aligned)
-  // const double delta_x = 3.0;
-  // const double phi_rot[mFstNumSensorsPerModule] = {3.16613, 3.15984, 3.16009};
-  // const double x_shift[mFstNumSensorsPerModule] = {216.908+delta_x, 221.566+delta_x, 222.031+delta_x};
-  // const double y_shift[mFstNumSensorsPerModule] = {33.5933, 34.1950, 33.7715};
-  // const double z_shift[mFstNumSensorsPerModule] = {22.9890, 10.3229, 11.4462};
+  const int mDefSenorId = 0; // default FST sensor for alignment (phi_rot, x_shift and y_shift | z_shift is from the sensorId to be aligned)
+  const double delta_x = 3.0;
+  const double phi_rot[mFstNumSensorsPerModule] = {3.16555, 3.16037, 3.1592};
+  const double x_shift[mFstNumSensorsPerModule] = {216.997+delta_x, 220.998+delta_x, 221.685+delta_x};
+  const double y_shift[mFstNumSensorsPerModule] = {33.6829, 34.2155, 33.8473};
+  const double z_shift[mFstNumSensorsPerModule] = {23.1678, 10.7764, 11.8905};
 
   // alignment from IST2 to each sensor of FST03 HV140V
   // const int mDefSenorId = 0; // default FST sensor for alignment (phi_rot, x_shift and y_shift | z_shift is from the sensorId to be aligned)

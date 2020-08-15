@@ -18,7 +18,7 @@
 #include "../../src/FstUtil/FstCluster.h"
 #include "../../src/FstUtil/FstTrack.h"
 #include "../../src/FstUtil/FstEvent.h"
-#include "../FstPlotConfiguration/draw.h"
+#include "./draw.h"
 
 R__LOAD_LIBRARY(../../lib/libFstEvent.dylib)
 
@@ -46,7 +46,7 @@ double gaussian(double *var, double *par)
   return y;
 }
 
-int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, int sensorId = 2, string mod = "Mod03")
+int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, int sensorId = 0, string mod = "Mod03")
 {
   gStyle->SetOptStat(111111);
   gStyle->SetOptFit(1001);
@@ -79,7 +79,7 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
   const double x3_shift = 0.45811;
   const double y3_shift = 1.0116;
 
-  std::string inputlist = Form("../../list/FST/alignment/FstCluster_%s_Th%1.1fTb%d.list",mod.c_str(),nFstHitsCut,numOfUsedTimeBins);
+  std::string inputlist = Form("../../list/FST/alignment/%s/FstAlignment_%s.list",mod.c_str(),mod.c_str());
   cout << "input list set to: " << inputlist.c_str() << endl;
   TChain *mChainInPut = new TChain("mTree_FstEvent");
   if (!inputlist.empty())   // if input file is ok
@@ -140,11 +140,11 @@ int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBi
       { // use Scan cluster
 	clusterVec_fst.push_back(fstCluster);
       }
-      if(fstCluster->getLayer() == 1)
+      if(fstCluster->getLayer() == 1 && fstCluster->getClusterType() == 1)
       {
 	clusterVec_ist1.push_back(fstCluster);
       }
-      if(fstCluster->getLayer() == 3)
+      if(fstCluster->getLayer() == 3 && fstCluster->getClusterType() == 1)
       {
 	clusterVec_ist3.push_back(fstCluster);
       }

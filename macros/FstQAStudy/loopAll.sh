@@ -4,7 +4,7 @@
 
 if [ $# -eq 0 ]
 then
-  mod=Mod01
+  mod=Mod03
 
   InPutHV=../../list/FST/data/${mod}/HighVoltage_${mod}.list
   for hv in `cat $InPutHV`

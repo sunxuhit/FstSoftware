@@ -15,19 +15,17 @@
 
 using namespace std;
 
-void plotNoiseHVScan(string mod = "Mod01")
+void plotNoiseHVScan(string mod = "Mod03")
 {
   const int defTimeBin = 0;
 
-  const int numOfHV = 12; // Mod01
-  string hv[numOfHV] = {"HVOff","HV40V","HV50V","HV60V","HV70V","HV80V","HV100V","HV120V","HV140V","HV160V","HV180V","HV200V"};
-  int highVolt[numOfHV] = {0,40,50,60,70,80,100,120,140,160,180,200};
+  // const int numOfHV = 12; // Mod01
+  // string hv[numOfHV] = {"HVOff","HV40V","HV50V","HV60V","HV70V","HV80V","HV100V","HV120V","HV140V","HV160V","HV180V","HV200V"};
+  // int highVolt[numOfHV] = {0,40,50,60,70,80,100,120,140,160,180,200};
 
-  /*
   const int numOfHV = 16; // Mod03
   string hv[numOfHV] = {"HV0V","HV5V","HV10V","HV20V","HV30V","HV40V","HV50V","HV60V","HV70V","HV80V","HV90V","HV100V","HV110V","HV120V","HV130V","HV140V"};
   int highVolt[numOfHV] = {0,5,10,20,30,40,50,60,70,80,90,100,110,120,130,140};
-  */
 
   TFile *File_InPut[numOfHV];
   TH1F *h_mPedSigma[numOfHV][FST::numRStrip][FST::numTBins];

@@ -4,7 +4,7 @@
 
 R__LOAD_LIBRARY(../../lib/libFstNoiseStudy.dylib)
 
-int doFstChipNoiseStudy(string module = "Mod04", string mode = "Inner")
+int doFstChipNoiseStudy(string module = "Mod03", string mode = "Outer")
 {
   std::cout << "gSystem::Load <- libFstNoiseStudy.dylib" << endl;
 
