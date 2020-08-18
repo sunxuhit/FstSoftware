@@ -69,12 +69,12 @@ namespace FST
   // const double z_shift[mFstNumSensorsPerModule] = {0.0, 0.644155,  0.0};
 
   // alignment from IST2 to each sensor of FST03 HV70V-HV120V
-  const int mDefSenorId = 0; // default FST sensor for alignment (phi_rot, x_shift and y_shift | z_shift is from the sensorId to be aligned)
-  const double delta_x = 3.0;
-  const double phi_rot[mFstNumSensorsPerModule] = {3.16555, 3.16037, 3.1592};
-  const double x_shift[mFstNumSensorsPerModule] = {216.997+delta_x, 220.998+delta_x, 221.685+delta_x};
-  const double y_shift[mFstNumSensorsPerModule] = {33.6829, 34.2155, 33.8473};
-  const double z_shift[mFstNumSensorsPerModule] = {23.1678, 10.7764, 11.8905};
+  // const int mDefSenorId = 0; // default FST sensor for alignment (phi_rot, x_shift and y_shift | z_shift is from the sensorId to be aligned)
+  // const double delta_x = 3.0;
+  // const double phi_rot[mFstNumSensorsPerModule] = {3.16555, 3.16037, 3.1592};
+  // const double x_shift[mFstNumSensorsPerModule] = {216.997+delta_x, 220.998+delta_x, 221.685+delta_x};
+  // const double y_shift[mFstNumSensorsPerModule] = {33.6829, 34.2155, 33.8473};
+  // const double z_shift[mFstNumSensorsPerModule] = {23.1678, 10.7764, 11.8905};
 
   // alignment from IST2 to each sensor of FST03 HV140V
   // const int mDefSenorId = 0; // default FST sensor for alignment (phi_rot, x_shift and y_shift | z_shift is from the sensorId to be aligned)
@@ -83,6 +83,14 @@ namespace FST
   // const double x_shift[mFstNumSensorsPerModule] = {266.293+delta_x, 270.505+delta_x, 269.488+delta_x};
   // const double y_shift[mFstNumSensorsPerModule] = {34.2772, 35.3617, 34.8087};
   // const double z_shift[mFstNumSensorsPerModule] = {22.1754, 10.5996, 8.84978};
+
+  // alignment from IST2 to each sensor of FST04
+  const int mDefSenorId = 0; // default FST sensor for alignment (phi_rot, x_shift and y_shift | z_shift is from the sensorId to be aligned)
+  const double delta_x = 0.0;
+  const double phi_rot[mFstNumSensorsPerModule] = {3.16808, 3.1693, 3.16574};
+  const double x_shift[mFstNumSensorsPerModule] = {231.2+delta_x, 236.307+delta_x, 235.429+delta_x};
+  const double y_shift[mFstNumSensorsPerModule] = {32.4077, 32.6921, 32.1978};
+  const double z_shift[mFstNumSensorsPerModule] = {19.7436, 3.43424, 3.83875};
 
   // Hits Selection
   const float nFstPedsCut      = 3.0; // used for ped

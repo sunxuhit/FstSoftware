@@ -4,7 +4,7 @@
 
 if [ $# -eq 0 ]
 then
-  mod=Mod03
+  mod=Mod04
   isApplyCMNCorr=true
   # isApplyCMNCorr=false
 

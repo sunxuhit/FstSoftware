@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotChipNoiseQA(string module = "Mod03", string sector = "Inner")
+void plotChipNoiseQA(string module = "Mod04", string sector = "Inner")
 {
   gStyle->SetOptStat(111111);
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);

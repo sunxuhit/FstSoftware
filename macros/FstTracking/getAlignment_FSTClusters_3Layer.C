@@ -46,7 +46,7 @@ double gaussian(double *var, double *par)
   return y;
 }
 
-int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, int sensorId = 0, string mod = "Mod03")
+int getAlignment_FSTClusters_3Layer(float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, int sensorId = 0, string mod = "Mod04")
 {
   gStyle->SetOptStat(111111);
   gStyle->SetOptFit(1001);
