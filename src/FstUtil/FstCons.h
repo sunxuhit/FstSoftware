@@ -86,7 +86,7 @@ namespace FST
 
   // alignment from IST2 to each sensor of FST04
   const int mDefSenorId = 0; // default FST sensor for alignment (phi_rot, x_shift and y_shift | z_shift is from the sensorId to be aligned)
-  const double delta_x = 0.0;
+  const double delta_x = 2.0;
   const double phi_rot[mFstNumSensorsPerModule] = {3.16808, 3.1693, 3.16574};
   const double x_shift[mFstNumSensorsPerModule] = {231.2+delta_x, 236.307+delta_x, 235.429+delta_x};
   const double y_shift[mFstNumSensorsPerModule] = {32.4077, 32.6921, 32.1978};

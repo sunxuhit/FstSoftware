@@ -145,7 +145,7 @@ void plotNoiseRatioComparison(string module = "Mod03", string istMod = "Mod36")
     h_mRatioCMNSigma_RStrip[i_rstrip]->GetXaxis()->SetTitle("Time Bin");
     h_mRatioCMNSigma_RStrip[i_rstrip]->GetXaxis()->SetTitleSize(0.04);
     h_mRatioCMNSigma_RStrip[i_rstrip]->GetXaxis()->SetLabelSize(0.04);
-    h_mRatioCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetTitle("<Noise_{CMN}>");
+    h_mRatioCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetTitle("<Noise^{Sensor}_{CMN}>/<Noise^{Chip}_{CMN}>");
     h_mRatioCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleSize(0.06);
     h_mRatioCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleOffset(1.0);
     h_mRatioCMNSigma_RStrip[i_rstrip]->GetYaxis()->SetLabelSize(0.04);
@@ -175,7 +175,7 @@ void plotNoiseRatioComparison(string module = "Mod03", string istMod = "Mod36")
     h_mRatioRanSigma_RStrip[i_rstrip]->GetXaxis()->SetTitle("Time Bin");
     h_mRatioRanSigma_RStrip[i_rstrip]->GetXaxis()->SetTitleSize(0.04);
     h_mRatioRanSigma_RStrip[i_rstrip]->GetXaxis()->SetLabelSize(0.04);
-    h_mRatioRanSigma_RStrip[i_rstrip]->GetYaxis()->SetTitle("<Noise_{Ran}>");
+    h_mRatioRanSigma_RStrip[i_rstrip]->GetYaxis()->SetTitle("<Noise^{Sensor}_{Ran}>/<Noise^{Chip}_{Ran}>");
     h_mRatioRanSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleSize(0.06);
     h_mRatioRanSigma_RStrip[i_rstrip]->GetYaxis()->SetTitleOffset(1.0);
     h_mRatioRanSigma_RStrip[i_rstrip]->GetYaxis()->SetLabelSize(0.04);
