@@ -104,17 +104,17 @@ void plotIstSensorPedNoiseComparison(string module = "Mod03", string istMod = "M
     string LegName = Form("R_strip %d",i_rstrip);
     leg_mean->AddEntry(h_mMeanCMNSigma_RStrip[i_rstrip],LegName.c_str(),"L");
   }
-  h_mMeanCMNSigma_ist[0]->SetMarkerStyle(20);
-  h_mMeanCMNSigma_ist[0]->SetMarkerColor(2);
-  h_mMeanCMNSigma_ist[0]->SetMarkerSize(1.0);
-  h_mMeanCMNSigma_ist[0]->Draw("p same");
-  leg_mean->AddEntry(h_mMeanCMNSigma_ist[0],"IST Current","p");
-
   h_mMeanCMNSigma_IST[1]->SetMarkerStyle(20);
   h_mMeanCMNSigma_IST[1]->SetMarkerColor(kGray+2);
   h_mMeanCMNSigma_IST[1]->SetMarkerSize(1.0);
   h_mMeanCMNSigma_IST[1]->Draw("p same");
   leg_mean->AddEntry(h_mMeanCMNSigma_IST[1],"IST 2013","p");
+
+  h_mMeanCMNSigma_ist[0]->SetMarkerStyle(20);
+  h_mMeanCMNSigma_ist[0]->SetMarkerColor(2);
+  h_mMeanCMNSigma_ist[0]->SetMarkerSize(1.0);
+  h_mMeanCMNSigma_ist[0]->Draw("p same");
+  leg_mean->AddEntry(h_mMeanCMNSigma_ist[0],"IST Current","p");
   leg_mean->Draw("same");
 
   c_NoiseMean->cd(2);

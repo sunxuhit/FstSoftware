@@ -460,9 +460,10 @@ void FstQAStudy::initEventDisplay_TrackClusters()
 
   mTree_EventDisplay->SetAutoSave(50000000);
 
-  h_mNumFstRawHitsDisplay = new TH1F("h_mNumFstRawHitsDisplay","h_mNumFstRawHitsDisplay",100,-0.5,99.5);
-  h_mNumFstSimpleClustersDisplay = new TH1F("h_mNumFstSimpleClustersDisplay","h_mNumFstSimpleClustersDisplay",100,-0.5,99.5);
-  h_mNumFstScanClustersDisplay = new TH1F("h_mNumFstScanClustersDisplay","h_mNumFstScanClustersDisplay",100,-0.5,99.5);
+  h_mNumFstSimpleClusters = new TH1F("h_mNumFstSimpleClusters","h_mNumFstSimpleClusters",100,-0.5,99.5);
+  h_mNumFstRawHitsSimpleCluster = new TH1F("h_mNumFstRawHitsSimpleCluster","h_mNumFstRawHitsSimpleCluster",50,-0.5,49.5);
+  h_mNumFstScanClusters = new TH1F("h_mNumFstScanClusters","h_mNumFstScanClusters",100,-0.5,99.5);
+  h_mNumFstRawHitsScanCluster = new TH1F("h_mNumFstRawHitsScanCluster","h_mNumFstRawHitsScanCluster",50,-0.5,49.5);
 }
 
 void FstQAStudy::clearEventDisplay_TrackClusters()
@@ -545,8 +546,6 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
     if(fstRawHit->getLayer() == 2) mNumOfIst2RawHits++;
     if(fstRawHit->getLayer() == 3) mNumOfIst3RawHits++;
   }
-  // cout << "mNumOfFstRawHits = " << mNumOfFstRawHits << ", fstEvent->getNumRawHits = " << fstEvent->getNumFstClusters() << endl;
-  h_mNumFstRawHitsDisplay->Fill(mNumOfFstRawHits);
 
   for(int i_cluster = 0; i_cluster < fstEvent->getNumClusters(); ++i_cluster)
   { // fill Clusters Display
@@ -556,6 +555,8 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
       if( fstCluster->getIsSeed() ) // select cluste with seed
       {
 	mNumOfFstSimpleClusters++;
+	h_mNumFstRawHitsSimpleCluster->Fill(fstCluster->getNumRawHits());
+
 	int sensorId    = fstCluster->getSensor();
 	double r_orig   = fstCluster->getMeanX(); // r for fst in sensorId frame
 	double phi_orig = fstCluster->getMeanY(); // phi for fst in sensorId frame
@@ -577,6 +578,8 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
       if( fstCluster->getIsSeed() ) // select cluste with seed
       {
 	mNumOfFstScanClusters++;
+	h_mNumFstRawHitsScanCluster->Fill(fstCluster->getNumRawHits());
+
 	int sensorId    = fstCluster->getSensor();
 	double r_orig   = fstCluster->getMeanX(); // r for fst in sensorId frame
 	double phi_orig = fstCluster->getMeanY(); // phi for fst in sensorId frame
@@ -610,9 +613,8 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
       }
     }
   }
-  // cout << "mNumOfFstSimpleClusters = " << mNumOfFstSimpleClusters << ", fstEvent->getNumClusters = " << fstEvent->getNumFstClusters() << endl;
-  h_mNumFstSimpleClustersDisplay->Fill(mNumOfFstSimpleClusters);
-  h_mNumFstScanClustersDisplay->Fill(mNumOfFstScanClusters);
+  h_mNumFstSimpleClusters->Fill(mNumOfFstSimpleClusters);
+  h_mNumFstScanClusters->Fill(mNumOfFstScanClusters);
 
   for(int i_track = 0; i_track < mFstEvent_InPut->getNumTracks(); ++i_track)
   { // fill Tracks Display
@@ -675,9 +677,11 @@ void FstQAStudy::fillEventDisplay_TrackClusters(FstEvent *fstEvent)
 void FstQAStudy::writeEventDisplay_TrackClusters()
 {
   mTree_EventDisplay->Write();
-  h_mNumFstRawHitsDisplay->Write();
-  h_mNumFstSimpleClustersDisplay->Write();
-  h_mNumFstScanClustersDisplay->Write();
+
+  h_mNumFstSimpleClusters->Write();
+  h_mNumFstRawHitsSimpleCluster->Write();
+  h_mNumFstScanClusters->Write();
+  h_mNumFstRawHitsScanCluster->Write();
 }
 //--------------Event Display---------------------
 

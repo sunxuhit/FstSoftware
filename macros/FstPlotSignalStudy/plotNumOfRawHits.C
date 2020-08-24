@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotNumOfRawHits(string mod = "Mod01", string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, float nFstThresholdCut2 = 2.5, float nFstThresholdCut1 = 3.5)
+void plotNumOfRawHits(string mod = "Mod04", string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 3.5, int numOfUsedTimeBins = 2, float nFstThresholdCut2 = 2.5, float nFstThresholdCut1 = 3.5)
 {
   std::string pedMode = "withPed";
   if(!isSavePed) pedMode = "woPed";
@@ -25,9 +25,10 @@ void plotNumOfRawHits(string mod = "Mod01", string hv = "HV70V", bool isSavePed 
   string inputfile = Form("../../output/signal/%s/FstQAStudy_%s_%s_Th%1.1fTb%dPed%1.1fPed%1.1f_%s_%s.root",mod.c_str(),mod.c_str(),hv.c_str(),nFstHitsCut,numOfUsedTimeBins,nFstThresholdCut2,nFstThresholdCut1,pedMode.c_str(),cmnMode.c_str());
 
   TFile *File_InPut = TFile::Open(inputfile.c_str());
-  TH1F *h_mNumFstRawHitsDisplay = (TH1F*)File_InPut->Get("h_mNumFstRawHitsDisplay");
-  TH1F *h_mNumFstSimpleClustersDisplay = (TH1F*)File_InPut->Get("h_mNumFstSimpleClustersDisplay");
-  TH1F *h_mNumFstScanClustersDisplay = (TH1F*)File_InPut->Get("h_mNumFstScanClustersDisplay");
+  TH1F *h_mNumFstSimpleClusters = (TH1F*)File_InPut->Get("h_mNumFstSimpleClusters");
+  TH1F *h_mNumFstRawHitsSimpleCluster = (TH1F*)File_InPut->Get("h_mNumFstRawHitsSimpleCluster");
+  TH1F *h_mNumFstScanClusters = (TH1F*)File_InPut->Get("h_mNumFstScanClusters");
+  TH1F *h_mNumFstRawHitsScanCluster = (TH1F*)File_InPut->Get("h_mNumFstRawHitsScanCluster");
 
   TCanvas *c_EventDisplay = new TCanvas("c_EventDisplay","c_EventDisplay",10,10,800,400);
   c_EventDisplay->Divide(2,1);
@@ -42,30 +43,31 @@ void plotNumOfRawHits(string mod = "Mod01", string hv = "HV70V", bool isSavePed 
   }
 
   c_EventDisplay->cd(1);
-  h_mNumFstRawHitsDisplay->SetTitle("Number of Raw Hits");
-  // h_mNumFstRawHitsDisplay->SetStats(0);
-  h_mNumFstRawHitsDisplay->GetXaxis()->SetTitle("# Raw Hits");
-  h_mNumFstRawHitsDisplay->GetXaxis()->SetTitleSize(0.06);
-  h_mNumFstRawHitsDisplay->GetXaxis()->SetRangeUser(-0.5,44.5);
-  h_mNumFstRawHitsDisplay->Draw();
-
-  c_EventDisplay->cd(2);
-  h_mNumFstSimpleClustersDisplay->SetTitle("Number of Clusters");
-  // h_mNumFstSimpleClustersDisplay->SetStats(0);
-  h_mNumFstSimpleClustersDisplay->GetXaxis()->SetTitle("# Clusters");
-  h_mNumFstSimpleClustersDisplay->GetXaxis()->SetTitleSize(0.06);
-  h_mNumFstSimpleClustersDisplay->GetXaxis()->SetRangeUser(-0.5,44.5);
-  h_mNumFstSimpleClustersDisplay->SetLineColor(1);
-  h_mNumFstSimpleClustersDisplay->Draw();
-  h_mNumFstScanClustersDisplay->SetLineColor(2);
-  h_mNumFstScanClustersDisplay->Draw("same");
+  h_mNumFstSimpleClusters->SetTitle("Number of Clusters");
+  h_mNumFstSimpleClusters->GetXaxis()->SetTitle("# Clusters");
+  h_mNumFstSimpleClusters->GetXaxis()->SetTitleSize(0.06);
+  h_mNumFstSimpleClusters->GetXaxis()->SetRangeUser(-0.5,44.5);
+  h_mNumFstSimpleClusters->SetLineColor(1);
+  h_mNumFstSimpleClusters->Draw();
+  h_mNumFstScanClusters->SetLineColor(2);
+  h_mNumFstScanClusters->Draw("same");
 
   TLegend *leg = new TLegend(0.4,0.6,0.85,0.8);
   leg->SetBorderSize(0);
   leg->SetFillColor(10);
-  leg->AddEntry(h_mNumFstSimpleClustersDisplay,"Simple Cluster","L");
-  leg->AddEntry(h_mNumFstScanClustersDisplay,"Scan Cluster","L");
+  leg->AddEntry(h_mNumFstSimpleClusters,"Simple Cluster","L");
+  leg->AddEntry(h_mNumFstScanClusters,"Scan Cluster","L");
   leg->Draw("same");
+
+  c_EventDisplay->cd(2);
+  h_mNumFstRawHitsSimpleCluster->SetTitle("Number of RawHits per Cluster");
+  h_mNumFstRawHitsSimpleCluster->GetXaxis()->SetTitle("# RawHits per Cluster");
+  h_mNumFstRawHitsSimpleCluster->GetXaxis()->SetTitleSize(0.06);
+  h_mNumFstRawHitsSimpleCluster->GetXaxis()->SetRangeUser(-0.5,44.5);
+  h_mNumFstRawHitsSimpleCluster->SetLineColor(1);
+  h_mNumFstRawHitsSimpleCluster->Draw();
+  h_mNumFstRawHitsScanCluster->SetLineColor(2);
+  h_mNumFstRawHitsScanCluster->Draw("same");
 
   c_EventDisplay->SaveAs("./figures/NumOfRawHits.pdf");
 }

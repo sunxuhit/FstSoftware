@@ -10,14 +10,14 @@
 
 using namespace std;
 
-void calTrackClusterEfficiencyModule_2Layer(string mod = "Mod03", string hv = "HV70V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, float nFstThresholdCut2 = 2.5, float nFstThresholdCut1 = 3.5)
+void calTrackClusterEfficiencyModule_2Layer(string mod = "Mod04", string hv = "HV140V", bool isSavePed = true, bool isApplyCMNCorr = true, float nFstHitsCut = 4.0, int numOfUsedTimeBins = 2, float nFstThresholdCut2 = 2.5, float nFstThresholdCut1 = 3.5)
 {
   std::string pedMode = "withPed";
   if(!isSavePed) pedMode = "woPed";
   std::string cmnMode = "withCMNCorr";
   if(!isApplyCMNCorr) cmnMode = "woCMNCorr";
 
-  string inputfile = Form("../../output/configuration/FstTracking_%s_%s_Th%1.1fTb%dPed%1.1fPed%1.1f_%s_%s.root",mod.c_str(),hv.c_str(),nFstHitsCut,numOfUsedTimeBins,nFstThresholdCut2,nFstThresholdCut1,pedMode.c_str(),cmnMode.c_str());
+  string inputfile = Form("../../output/signal/%s/FstTracking_%s_%s_Th%1.1fTb%dPed%1.1fPed%1.1f_%s_%s.root",mod.c_str(),mod.c_str(),hv.c_str(),nFstHitsCut,numOfUsedTimeBins,nFstThresholdCut2,nFstThresholdCut1,pedMode.c_str(),cmnMode.c_str());
 
   TFile *File_InPut = TFile::Open(inputfile.c_str());
 
@@ -335,7 +335,7 @@ void calTrackClusterEfficiencyModule_2Layer(string mod = "Mod03", string hv = "H
   string output_stop = "./figures/ModuleEfficiency_TrackCluster_2Layer.pdf]";
   c_play->Print(output_stop.c_str()); // open pdf file
 
-  string outputfile = Form("../../output/configuration/FstModuleEff_%s_Th%1.1fTb%dPed%1.1fPed%1.1f_%s_%s.root",hv.c_str(),nFstHitsCut,numOfUsedTimeBins,nFstThresholdCut2,nFstThresholdCut1,pedMode.c_str(),cmnMode.c_str());
+  string outputfile = Form("../../output/signal/%s/FstModuleEff_%s_Th%1.1fTb%dPed%1.1fPed%1.1f_%s_%s.root",mod.c_str(),hv.c_str(),nFstHitsCut,numOfUsedTimeBins,nFstThresholdCut2,nFstThresholdCut1,pedMode.c_str(),cmnMode.c_str());
   TFile *File_OutPut = new TFile(outputfile.c_str(),"RECREATE");
   File_OutPut->cd();
   for(int i_match = 0; i_match < FST::mFstNumMatching; ++i_match)

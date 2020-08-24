@@ -137,9 +137,10 @@ class FstQAStudy : public TObject
     TGraph *g_mHitTracksDisplay;
     TGraph *g_mClusterTracksDisplay;
 
-    TH1F *h_mNumFstRawHitsDisplay;
-    TH1F *h_mNumFstSimpleClustersDisplay;
-    TH1F *h_mNumFstScanClustersDisplay;
+    TH1F *h_mNumFstSimpleClusters;
+    TH1F *h_mNumFstRawHitsSimpleCluster;
+    TH1F *h_mNumFstScanClusters;
+    TH1F *h_mNumFstRawHitsScanCluster;
 
     // Input TChain for hits and clusters
     TChain *mChainInPut; // input TTree

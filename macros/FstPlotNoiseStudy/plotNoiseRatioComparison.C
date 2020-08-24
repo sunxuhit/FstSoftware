@@ -160,11 +160,11 @@ void plotNoiseRatioComparison(string module = "Mod03", string istMod = "Mod36")
     leg_mean->AddEntry(h_mRatioCMNSigma_RStrip[i_rstrip],LegName.c_str(),"L");
   }
 
-  h_mRatioCMNSigma_IST[1]->SetMarkerStyle(24);
+  h_mRatioCMNSigma_IST[1]->SetMarkerStyle(20);
   h_mRatioCMNSigma_IST[1]->SetMarkerColor(kGray+2);
   h_mRatioCMNSigma_IST[1]->SetMarkerSize(1.0);
   h_mRatioCMNSigma_IST[1]->Draw("p same");
-  leg_mean->AddEntry(h_mRatioCMNSigma_IST[1],"IST","p");
+  leg_mean->AddEntry(h_mRatioCMNSigma_IST[1],"IST 2013","p");
   leg_mean->Draw("same");
 
   c_NoiseRatio->cd(2);
@@ -187,7 +187,7 @@ void plotNoiseRatioComparison(string module = "Mod03", string istMod = "Mod36")
     else h_mRatioRanSigma_RStrip[i_rstrip]->Draw("same");
   }
 
-  h_mRatioRanSigma_IST[1]->SetMarkerStyle(24);
+  h_mRatioRanSigma_IST[1]->SetMarkerStyle(20);
   h_mRatioRanSigma_IST[1]->SetMarkerColor(kGray+2);
   h_mRatioRanSigma_IST[1]->SetMarkerSize(1.0);
   h_mRatioRanSigma_IST[1]->Draw("p same");

@@ -105,11 +105,11 @@ void plotIstChipNoiseComparison(string module = "Mod03", string istMod = "Mod36"
     leg_mean->AddEntry(h_mMeanCMNSigma_RStrip[i_rstrip],LegName.c_str(),"L");
   }
 
-  h_mMeanCMNSigma_IST[1]->SetMarkerStyle(24);
+  h_mMeanCMNSigma_IST[1]->SetMarkerStyle(20);
   h_mMeanCMNSigma_IST[1]->SetMarkerColor(kGray+2);
   h_mMeanCMNSigma_IST[1]->SetMarkerSize(1.0);
   h_mMeanCMNSigma_IST[1]->Draw("p same");
-  leg_mean->AddEntry(h_mMeanCMNSigma_IST[1],"IST","p");
+  leg_mean->AddEntry(h_mMeanCMNSigma_IST[1],"IST 2013","p");
   leg_mean->Draw("same");
 
   c_NoiseMean->cd(2);
@@ -132,7 +132,7 @@ void plotIstChipNoiseComparison(string module = "Mod03", string istMod = "Mod36"
     else h_mMeanRanSigma_RStrip[i_rstrip]->Draw("same");
   }
 
-  h_mMeanRanSigma_IST[1]->SetMarkerStyle(24);
+  h_mMeanRanSigma_IST[1]->SetMarkerStyle(20);
   h_mMeanRanSigma_IST[1]->SetMarkerColor(kGray+2);
   h_mMeanRanSigma_IST[1]->SetMarkerSize(1.0);
   h_mMeanRanSigma_IST[1]->Draw("p same");
