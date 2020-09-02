@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void plotNoiseHVScan(string mod = "Mod03")
+void plotNoiseHVScan(string mod = "Mod04")
 {
   const int defTimeBin = 0;
 
