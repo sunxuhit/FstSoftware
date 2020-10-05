@@ -9,7 +9,7 @@ void plotMcProjection(int sensorId = 0, string mod = "Mod03", string hv = "HV140
 {
   string mode = "Scan";
   // string mode = "Simple";
-  string inputname = Form("../../output/simulation/FstMcProjection_Sensor%d.root",sensorId);
+  string inputname = Form("../../output/simulation/%s/FstMcProjection_Sensor%d.root",mod.c_str(),sensorId);
   TFile *File_InPut = TFile::Open(inputname.c_str());
   TH1F *h_mFstProjResR_2Layer    = (TH1F*)File_InPut->Get("h_mFstProjResR_2Layer");
   TH1F *h_mFstProjResPhi_2Layer  = (TH1F*)File_InPut->Get("h_mFstProjResPhi_2Layer");
@@ -144,7 +144,7 @@ void plotMcProjection(int sensorId = 0, string mod = "Mod03", string hv = "HV140
   h_mClustersTrackFstResPhi_2Layer->Draw("pE same");
   leg->Draw("same");
 
-  string FigName = Form("./figures/c_Residual_%s_%s_Sensor%d.eps",mode.c_str(),hv.c_str(),sensorId);
+  string FigName = Form("./figures/%s/c_Residual_%s_%s_Sensor%d.eps",mod.c_str(),mode.c_str(),hv.c_str(),sensorId);
   c_Residual->SaveAs(FigName.c_str());
 
   TCanvas *c_ResDiff = new TCanvas("c_ResDiff","c_ResDiff",10,10,900,1200);
@@ -212,6 +212,6 @@ void plotMcProjection(int sensorId = 0, string mod = "Mod03", string hv = "HV140
     leg->Draw("same");
   }
 
-  FigName = Form("./figures/c_ResDiff_%s_%s_Sensor%d.eps",mode.c_str(),hv.c_str(),sensorId);
+  FigName = Form("./figures/%s/c_ResDiff_%s_%s_Sensor%d.eps",mod.c_str(),mode.c_str(),hv.c_str(),sensorId);
   c_ResDiff->SaveAs(FigName.c_str());
 }

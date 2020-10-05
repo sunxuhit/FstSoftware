@@ -18,7 +18,7 @@ TVector3 getIstAlignedPos(TVector3 vPosIst, double deltaX, double deltaY); // ge
 TVector3 getReadOut(TVector3 vPosHit, TH2F *h_pixel, bool isFST, int sensorId); // get readout position from a real hit | return (x,y) for IST & (r,phi) for FST
 int findCrossTalkBin(double r_hit, int sensorId);
 
-void FstMcProjection_Sensor(int sensorId = 1, int numOfTracks = 500000)
+void FstMcProjection_Sensor(int sensorId = 0, int numOfTracks = 500000)
 {
   printAlignmentInfo();
 

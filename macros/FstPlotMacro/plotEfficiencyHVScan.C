@@ -75,7 +75,7 @@ void plotEfficiencyHVScan(string mod = "Mod03", int sensorId = 0)
   }
   legR->Draw("same");
 
-  string FigNameR = Form("./figures/c_EfficiencyR_%s_Sensor%d.eps",mod.c_str(),sensorId);
+  string FigNameR = Form("./figures/%s/c_EfficiencyR_%s_Sensor%d.eps",mod.c_str(),mod.c_str(),sensorId);
   c_EfficiencyR->SaveAs(FigNameR.c_str());
 
   TCanvas *c_EfficiencyPhi = new TCanvas("c_EfficiencyPhi","c_EfficiencyPhi",10,10,800,800);
@@ -114,6 +114,6 @@ void plotEfficiencyHVScan(string mod = "Mod03", int sensorId = 0)
   }
   legPhi->Draw("same");
 
-  string FigNamePhi = Form("./figures/c_EfficiencyPhi_%s_Sensor%d.eps",mod.c_str(),sensorId);
+  string FigNamePhi = Form("./figures/%s/c_EfficiencyPhi_%s_Sensor%d.eps",mod.c_str(),mod.c_str(),sensorId);
   c_EfficiencyPhi->SaveAs(FigNamePhi.c_str());
 }
