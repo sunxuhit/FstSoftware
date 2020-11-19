@@ -155,6 +155,16 @@ class FstTracking : public TObject
     // whole module
     TH2F *h_mScanClustersTrackIstCountsModule_2Layer[FST::mFstNumMatching]; // position on FST from IST projection
     TH2F *h_mScanClustersTrackFstCountsModule_2Layer[FST::mFstNumMatching]; // position on FST from FST measurement
+    
+    TH1F *h_mMatchedScanSignal[FST::mFstNumSensorsPerModule][FST::mFstNumMatching];
+    TH1F *h_mMatchedAngleCorrectedScanSignal[FST::mFstNumSensorsPerModule][FST::mFstNumMatching];  
+    TH1F *h_mMatchedScanSignal_Rstrips[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor][FST::mFstNumMatching];
+    TH1F *h_mMatchedAngleCorrectedScanSignal_Rstrips[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor][FST::mFstNumMatching];
+    
+    TH1F *h_mMatchedScanSignalModule[FST::mFstNumMatching];
+    TH1F *h_mMatchedAngleCorrectedScanSignalModule[FST::mFstNumMatching];  
+    TH1F *h_mMatchedScanSignalModule_Rstrips[FST::mFstNumRstripPerSensor][FST::mFstNumMatching];
+    TH1F *h_mMatchedAngleCorrectedScanSignalModule_Rstrips[FST::mFstNumRstripPerSensor][FST::mFstNumMatching]; 
 
     // Input TChain for hits and clusters
     TChain *mChainInPut; // input TTree

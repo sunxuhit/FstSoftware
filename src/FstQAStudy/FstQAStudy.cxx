@@ -163,6 +163,8 @@ void FstQAStudy::initSignalQA()
     h_mFstScanClustersNoise[i_sensor] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,99.5);
     HistName = Form("h_mFstScanClustersSNRatio_Sensor%d",i_sensor);
     h_mFstScanClustersSNRatio[i_sensor] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,99.5);
+    HistName = Form("h_mFstScanClustersCMN_Sensor%d",i_sensor);
+    h_mFstScanClustersCMN[i_sensor] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,99.5);
 
     for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
     {
@@ -317,17 +319,21 @@ void FstQAStudy::fillSignalQA(FstEvent *fstEvent)
       if(fstClusterVec[i_cluster]->getClusterType() == 2 && fstClusterVec[i_cluster]->getIsSeed())
       { // Scan Clusters
 	double noise = 0.0;
+	double CMN = 0.0;
 	for(int i_hit = 0; i_hit < fstClusterVec[i_cluster]->getNumRawHits(); ++i_hit)
 	{ // fill hits display for clusters with hit
 	  FstRawHit *fstRawHit = fstClusterVec[i_cluster]->getRawHit(i_hit);
 	  int maxTb_hit = fstRawHit->getMaxTb();
 	  double ped_hit = fstRawHit->getPedStdDev(maxTb_hit); // pedStdDev
+	  double CMN_hit = fstRawHit->getCMNStdDev(maxTb_hit); // CMNStdDev
 	  if(mApplyCMNCorr) ped_hit = fstRawHit->getRanStdDev(maxTb_hit); // ranStdDev
 	  noise += ped_hit*ped_hit;
+	  CMN += CMN_hit*CMN_hit;
 	}
 	h_mFstScanClustersSignal[sensorId]->Fill(signal);
 	h_mFstScanClustersNoise[sensorId]->Fill(TMath::Sqrt(noise));
 	h_mFstScanClustersSNRatio[sensorId]->Fill(signal/TMath::Sqrt(noise));
+	h_mFstScanClustersCMN[sensorId]->Fill(TMath::Sqrt(CMN));
 
 	int column = -1;
 	if(meanColumn > -0.5 && meanColumn <= 0.5) column = 0;
@@ -366,6 +372,7 @@ void FstQAStudy::writeSignalQA()
     h_mFstScanClustersSignal[i_sensor]->Write();
     h_mFstScanClustersNoise[i_sensor]->Write();
     h_mFstScanClustersSNRatio[i_sensor]->Write();
+    h_mFstScanClustersCMN[i_sensor]->Write();
 
     for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
     {

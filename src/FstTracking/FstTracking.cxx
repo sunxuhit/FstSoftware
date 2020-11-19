@@ -1069,6 +1069,18 @@ void FstTracking::initEfficiency_Clusters()
       h_mScanClustersTrackIstCounts_2Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
       HistName = Form("h_mScanClustersTrackFstCounts_2Layer_Sensor%d_SF%d",i_sensor,i_match);
       h_mScanClustersTrackFstCounts_2Layer[i_sensor][i_match] = new TH2F(HistName.c_str(),HistName.c_str(),30,FST::rMin[i_sensor],FST::rMax[i_sensor],40,FST::phiMin[i_sensor],FST::phiMax[i_sensor]);
+      
+      HistName = Form("h_mMatchedScanSignal_Sensor%d_SF%d",i_sensor,i_match);
+      h_mMatchedScanSignal[i_sensor][i_match] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+      HistName = Form("h_mMatchedAngleCorrectedScanSignal_Sensor%d_SF%d",i_sensor,i_match);
+      h_mMatchedAngleCorrectedScanSignal[i_sensor][i_match] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+    
+      for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip){
+        HistName = Form("h_mMatchedScanSignal_Sensor%d_Rstrip%d_SF%d",i_sensor,i_rstrip,i_match);
+        h_mMatchedScanSignal_Rstrips[i_sensor][i_rstrip][i_match] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+        HistName = Form("h_mMatchedAngleCorrectedScanSignal_Sensor%d_Rstrip%d_SF%d",i_sensor,i_rstrip,i_match);
+        h_mMatchedAngleCorrectedScanSignal_Rstrips[i_sensor][i_rstrip][i_match] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+      }
     }
   }
   for(int i_match = 0; i_match < FST::mFstNumMatching; ++i_match)
@@ -1085,6 +1097,18 @@ void FstTracking::initEfficiency_Clusters()
     h_mScanClustersTrackIstCountsModule_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),50,FST::rMin[0],FST::rMax[1],80,FST::phiMin[2],FST::phiMax[1]);
     HistName = Form("h_mScanClustersTrackFstCountsModule_2Layer_SF%d",i_match);
     h_mScanClustersTrackFstCountsModule_2Layer[i_match] = new TH2F(HistName.c_str(),HistName.c_str(),50,FST::rMin[0],FST::rMax[1],80,FST::phiMin[2],FST::phiMax[1]);
+    
+    HistName = Form("h_mMatchedScanSignal_SF%d",i_match);
+    h_mMatchedScanSignalModule[i_match] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+    HistName = Form("h_mMatchedAngleCorrectedScanSignal_SF%d",i_match);
+    h_mMatchedAngleCorrectedScanSignalModule[i_match] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+    
+    for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip){
+      HistName = Form("h_mMatchedScanSignal_Rstrip%d_SF%d",i_rstrip,i_match);
+      h_mMatchedScanSignalModule_Rstrips[i_rstrip][i_match] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+      HistName = Form("h_mMatchedAngleCorrectedScanSignal_Rstrip%d_SF%d",i_rstrip,i_match);
+      h_mMatchedAngleCorrectedScanSignalModule_Rstrips[i_rstrip][i_match] = new TH1F(HistName.c_str(),HistName.c_str(),200,-0.5,1999.5);
+    }
   }
 }
 
@@ -1235,6 +1259,8 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
   if(trackClusterVec.size() == 1)
   { // only event with 1 track is used
     // fill Efficiency Histograms with 2-Layer Tracking
+    double pAngle = 0.0;
+    double signal = 0.0;
     for(int i_track = 0; i_track < trackClusterVec.size(); ++i_track)
     {
       TVector3 pos_ist1 = trackClusterVec[i_track]->getOrigPosIst1();
@@ -1244,6 +1270,13 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
 
       if( abs(y1_ist-y3_ist) < 17.0*FST::pitchRow )
       {
+        TVector3 pos_ist1 = trackClusterVec[i_track]->getAlignedIst1();
+        TVector3 pos_ist3 = trackClusterVec[i_track]->getAlignedIst3();
+        TVector3 istTrack = pos_ist1-pos_ist3;
+        TVector3 normVec;
+        normVec.SetXYZ(0.0,0.0,pos_ist1.Z()-pos_ist3.Z());
+        pAngle = istTrack.Angle(normVec);
+      
 	for(int i_sensor = 0; i_sensor < FST::mFstNumSensorsPerModule; ++i_sensor)
 	{
 	  TVector3 proj_fst = trackClusterVec[i_track]->getProjFst(i_sensor);
@@ -1286,10 +1319,18 @@ void FstTracking::calEfficiency_ScanClusters(FstEvent *fstEvent)
 		    {
 		      nMatchedTrack++;
 		    }
+		    signal = clusterVec_fst[i_sensor][i_cluster]->getTotCharge();
 		  }
 		}
 	      }
-	      if(nMatchedTrack > 0) h_mScanClustersTrackFstCounts_2Layer[i_sensor][i_match]->Fill(r_proj,phi_proj);
+	      if(nMatchedTrack > 0) 
+	      {
+	        h_mScanClustersTrackFstCounts_2Layer[i_sensor][i_match]->Fill(r_proj,phi_proj);
+	        h_mMatchedScanSignal[i_sensor][i_match]->Fill(signal);
+	        h_mMatchedAngleCorrectedScanSignal[i_sensor][i_match]->Fill(TMath::Cos(pAngle)*signal);
+	        h_mMatchedScanSignal_Rstrips[i_sensor][rStrip][i_match]->Fill(signal);
+	        h_mMatchedAngleCorrectedScanSignal_Rstrips[i_sensor][rStrip][i_match]->Fill(TMath::Cos(pAngle)*signal);
+	      }
 	    }
 	  }
 	}
@@ -1447,6 +1488,8 @@ void FstTracking::calEfficiencyModule_ScanClusters(FstEvent *fstEvent)
   if(trackClusterVec.size() == 1)
   { // only event with 1 track is used
     // fill Efficiency Histograms with 2-Layer Tracking
+    double pAngle = 0.0;
+    double signal = 0.0;
     for(int i_track = 0; i_track < trackClusterVec.size(); ++i_track)
     {
       TVector3 pos_ist1 = trackClusterVec[i_track]->getOrigPosIst1();
@@ -1456,12 +1499,20 @@ void FstTracking::calEfficiencyModule_ScanClusters(FstEvent *fstEvent)
 
       if( abs(y1_ist-y3_ist) < 17.0*FST::pitchRow )
       {
+        TVector3 pos_ist1 = trackClusterVec[i_track]->getAlignedIst1();
+        TVector3 pos_ist3 = trackClusterVec[i_track]->getAlignedIst3();
+        TVector3 istTrack = pos_ist1-pos_ist3;
+        TVector3 normVec;
+        normVec.SetXYZ(0.0,0.0,pos_ist1.Z()-pos_ist3.Z());
+        pAngle = istTrack.Angle(normVec);
+      
 	TVector3 proj_fst = trackClusterVec[i_track]->getProjFst(FST::mDefSenorId); // use mDefSenorId for start
 	double r_proj     = proj_fst.X(); // get aligned projected position w.r.t. FST
 	double phi_proj   = proj_fst.Y(); // r & phi for fst
 
 	if(r_proj >= FST::rMin[0] && r_proj <= FST::rMax[1] && phi_proj >= FST::phiMin[2] && phi_proj <= FST::phiMax[1])
 	{ // used for efficiency only if the projected position is within FST acceptance
+	  int rStrip = -1;
 	  for(int i_match = 0; i_match < FST::mFstNumMatching; ++i_match)
 	  {
 	    int nMatchedTrack = 0;
@@ -1484,7 +1535,7 @@ void FstTracking::calEfficiencyModule_ScanClusters(FstEvent *fstEvent)
 		  phi_proj = proj_fst.Y();
 
 		  // get projected rStrip
-		  int rStrip = -1;
+		  // int rStrip = -1;
 		  if(r_proj > FST::rMin[sensorId] && r_proj <= FST::mFstRMin[sensorId]) rStrip = 0;
 		  for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip)
 		  {
@@ -1503,6 +1554,7 @@ void FstTracking::calEfficiencyModule_ScanClusters(FstEvent *fstEvent)
 		  {
 		    nMatchedTrack++;
 		  }
+		  signal = clusterVec_fst[i_cluster]->getTotCharge(); 
 		}
 	      }
 	    }
@@ -1510,7 +1562,14 @@ void FstTracking::calEfficiencyModule_ScanClusters(FstEvent *fstEvent)
 	    proj_fst = trackClusterVec[i_track]->getProjFst(FST::mDefSenorId);
 	    r_proj   = proj_fst.X();
 	    phi_proj = proj_fst.Y();
-	    if(nMatchedTrack > 0) h_mScanClustersTrackFstCountsModule_2Layer[i_match]->Fill(r_proj,phi_proj);
+	    if(nMatchedTrack > 0) 
+	    {
+	      h_mScanClustersTrackFstCountsModule_2Layer[i_match]->Fill(r_proj,phi_proj);
+	      h_mMatchedScanSignalModule[i_match]->Fill(signal);
+	      h_mMatchedAngleCorrectedScanSignalModule[i_match]->Fill(TMath::Cos(pAngle)*signal);
+	      h_mMatchedScanSignalModule_Rstrips[rStrip][i_match]->Fill(signal);
+	      h_mMatchedAngleCorrectedScanSignalModule_Rstrips[rStrip][i_match]->Fill(TMath::Cos(pAngle)*signal);
+	    }
 	    h_mScanClustersTrackIstCountsModule_2Layer[i_match]->Fill(r_proj,phi_proj);
 	  }
 	}
@@ -1532,6 +1591,14 @@ void FstTracking::writeEfficiency_Clusters()
       // scan clusters
       h_mScanClustersTrackIstCounts_2Layer[i_sensor][i_match]->Write();
       h_mScanClustersTrackFstCounts_2Layer[i_sensor][i_match]->Write();
+      
+      h_mMatchedScanSignal[i_sensor][i_match]->Write();
+      h_mMatchedAngleCorrectedScanSignal[i_sensor][i_match]->Write();
+      
+      for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip){
+        h_mMatchedScanSignal_Rstrips[i_sensor][i_rstrip][i_match]->Write();
+        h_mMatchedAngleCorrectedScanSignal_Rstrips[i_sensor][i_rstrip][i_match]->Write();
+      }
     }
   }
   for(int i_match = 0; i_match < FST::mFstNumMatching; ++i_match)
@@ -1541,6 +1608,14 @@ void FstTracking::writeEfficiency_Clusters()
 
     h_mScanClustersTrackIstCountsModule_2Layer[i_match]->Write();
     h_mScanClustersTrackFstCountsModule_2Layer[i_match]->Write();
+    
+    h_mMatchedScanSignalModule[i_match]->Write();
+    h_mMatchedAngleCorrectedScanSignalModule[i_match]->Write();
+      
+    for(int i_rstrip = 0; i_rstrip < FST::mFstNumRstripPerSensor; ++i_rstrip){
+      h_mMatchedScanSignalModule_Rstrips[i_rstrip][i_match]->Write();
+      h_mMatchedAngleCorrectedScanSignalModule_Rstrips[i_rstrip][i_match]->Write();
+    }
   }
 }
 //--------------Efficiency with Clusters---------------------

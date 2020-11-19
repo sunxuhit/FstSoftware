@@ -2589,10 +2589,20 @@ void FstClusterMaker::writeTree()
 //--------------Utility---------------------
 int FstClusterMaker::getLayer(int arm, int port)
 {
+  // !! Assignment of arm and port changed after wire-bonds were encapsulated, this must be manually changed to ensure proper assignment.
+  // !! Make sure to also change assignment in function FstClusterMaker::isBadAPV
+  
+  // // original assignment pre-encapsulation (March2020-Sep2020)
   if(arm == 0 && port == 0) return 1; // top IST
   if(arm == 0 && port == 1) return 2; // middle IST
   if(arm == 1 && port == 0) return 3; // bottom IST
   if(arm == 1 && port == 1) return 0; // FST module
+
+  // assignment for encapsulation data (Oct2020-Nov2020)
+  //if(arm == 0 && port == 0) return 1; // top IST
+  //if(arm == 1 && port == 0) return 2; // FST01 module (laser) 
+  //if(arm == 0 && port == 1) return 3; // bottom IST
+  //if(arm == 1 && port == 1) return 0; // FST module
 
   return -1;
 }
@@ -2722,12 +2732,20 @@ double FstClusterMaker::getPosY(int arm, int port, int apv, int ch)
 bool FstClusterMaker::isBadAPV(int arm, int port, int apv)
 {
   bool bAPV = false;
-
+  // !! Assignment of arm and port changed after wire-bonds were encapsulated, this must be manually changed to ensure proper assignment.
+  
+  // original assignment pre-encapsulation (March2020 - Sep2020)
   if(arm == 0 && port==0 && (apv == 1 || apv == 5||apv == 6)) bAPV = true;
   if(arm == 0 && port==1 && (apv <= 9)) bAPV = true;
   // if(arm == 1 && port==0 && (apv == 0||apv == 1)) bAPV = true;
   if(arm == 1 && port==0 && (apv == 0)) bAPV = true;
   if(arm == 1 && port==1 && (apv > 7)) bAPV = true;
+  
+  // assignment for encapsulation data (Oct2020-present)
+  //if(arm == 0 && port==0 && (apv == 1 || apv == 5||apv == 6)) bAPV = true;
+  //if(arm == 1 && port==0 && (apv <= 9)) bAPV = true;
+  //if(arm == 0 && port==1 && (apv == 0)) bAPV = true;
+  //if(arm == 1 && port==1 && (apv > 7)) bAPV = true;
 
   return bAPV;
 }
