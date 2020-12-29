@@ -13,4 +13,5 @@ then
   rm noise/${mod}/FstPed_${mod}_${hv}.list
   touch noise/${mod}/FstPed_${mod}_${hv}.list
   ls ../../data/FstCosmicTestStand_*/ped/FstInOuterSensor*${mod}*_${hv}_ped_*.root >> noise/${mod}/FstPed_${mod}_${hv}.list
+  # ls ../../data/FstDaq*_*/ped/FstIntegrationTest*${mod}*_${hv}*_ped_*.root >> noise/${mod}/FstPed_${mod}_${hv}.list
 fi

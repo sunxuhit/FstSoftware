@@ -26,6 +26,8 @@ output/*.root
 output/*/*.root
 output/*/*/*.root
 output/*/*/*/*.root
+output/*/*/*/*.root.*
+output/*/*/*/*/*.root
 
 # ignore some of list
 list/FST/*.list

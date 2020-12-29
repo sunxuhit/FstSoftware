@@ -15,13 +15,14 @@
 
 using namespace std;
 
-void plotSensorPedNoiseQA(string module = "Mod03", string hv = "HV70V")
+void plotSensorPedNoiseQA(string module = "Mod04", string hv = "HV0V")
 {
   gStyle->SetOptStat(111111);
   gStyle->SetStatX(0.95); gStyle->SetStatY(0.95);
   gStyle->SetStatW(0.35); gStyle->SetStatH(0.35);
 
-  string inputfile = Form("../../output/noise/%s/HVScan/FstPedNoise_%s_%s.root",module.c_str(),module.c_str(),hv.c_str());
+  // string inputfile = Form("../../output/noise/%s/HVScan/FstPedNoise_%s_%s.root",module.c_str(),module.c_str(),hv.c_str());
+  string inputfile = Form("../../output/noise/%s/FstPedNoise_%s_%s.root",module.c_str(),module.c_str(),hv.c_str());
   TFile *File_InPut = TFile::Open(inputfile.c_str());
 
   TH2F *h_mPedDisplay[4][FST::numTBins];

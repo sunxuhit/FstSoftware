@@ -9,8 +9,10 @@ namespace FST
   const int numPorts       = 2;  // note that the readout just gives 24 APVs on a single ARM, there is
   const int numAPVs        = 12; // no actual Port information, we just introduce Port information ourselves
   const int numROChannels  = 1152; // numFstChannels*numFstTBins
+  // const int numROChannels  = 512; // numFstChannels*numFstTBins => for DAQ
   const int numChannels    = 128;
   const int numTBins       = 9;
+  // const int numTBins       = 4; // => for DAQ
   const int pedTimeBin     = 3; // time bin used for pedestal calculation
   const int defaultTimeBin = 3; // default time bin
 

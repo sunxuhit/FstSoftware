@@ -27,6 +27,10 @@ void plotNoiseHVScan(string mod = "Mod04")
   string hv[numOfHV] = {"HV0V","HV5V","HV10V","HV20V","HV30V","HV40V","HV50V","HV60V","HV70V","HV80V","HV90V","HV100V","HV110V","HV120V","HV130V","HV140V"};
   int highVolt[numOfHV] = {0,5,10,20,30,40,50,60,70,80,90,100,110,120,130,140};
 
+  // const int numOfHV = 9; // Mod04 Integration Test
+  // string hv[numOfHV] = {"HV0V","HV5V","HV10V","HV20V","HV30V","HV40V","HV50V","HV60V","HV70V"};
+  // int highVolt[numOfHV] = {0,5,10,20,30,40,50,60,70};
+
   TFile *File_InPut[numOfHV];
   TH1F *h_mPedSigma[numOfHV][FST::numRStrip][FST::numTBins];
   TH1F *h_mRanSigma[numOfHV][FST::numRStrip][FST::numTBins];
@@ -34,7 +38,7 @@ void plotNoiseHVScan(string mod = "Mod04")
   // read in noise histograms
   for(int i_hv = 0; i_hv < numOfHV; ++i_hv)
   {
-    string input_Sensor = Form("../../output/noise/%s/HVScan/FstPedNoise_%s_%s.root",mod.c_str(),mod.c_str(),hv[i_hv].c_str());
+    string input_Sensor = Form("../../output/noise/%s/HVScan/DAQ/FstPedNoise_%s_%s.root",mod.c_str(),mod.c_str(),hv[i_hv].c_str());
     File_InPut[i_hv] = TFile::Open(input_Sensor.c_str());
     for(int i_rstrip = 0; i_rstrip < FST::numRStrip; ++i_rstrip)
     {

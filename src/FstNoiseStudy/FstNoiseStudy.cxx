@@ -250,6 +250,19 @@ bool FstNoiseStudy::initPedestal()
     }
   }
 
+  for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+  {
+    for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+    {
+      for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+      {
+	std::string HistName = Form("h_mAdc_FST_Apv%d_Ch%d_Tb%d",i_apv,i_ch,i_tb);
+	h_mAdc_FST[i_apv][i_ch][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),5000,-0.5,4999.5);
+	// h_mAdc_FST[i_apv][i_ch][i_tb] = new TH1F(HistName.c_str(),HistName.c_str(),1000,-0.5,4999.5);
+      }
+    }
+  }
+
   for(int i_layer = 0; i_layer < 4; ++i_layer)
   {
     for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
@@ -281,7 +294,7 @@ bool FstNoiseStudy::calPedestal()
   cout << " Only use first 1000 event for Pedstal Calculation!" << endl;
 
   int NumOfEvents = (int)mChainInPut->GetEntries();
-  if(NumOfEvents > 1000) NumOfEvents = 1000;
+  if(NumOfEvents > 50000) NumOfEvents = 50000;
   // const int NumOfEvents = 1000;
   mChainInPut->GetEntry(0);
 
@@ -330,6 +343,7 @@ bool FstNoiseStudy::calPedestal()
 
 	  // NOTE THAT RDO/ARM/PORT ARE HARDWIRED HERE!!!
 	  bool pass = ( ( rdo == 1 ) && ( (arm == 0) || (arm == 1 ) ) && ( (port == 0) || (port == 1) ) &&  ( apv >= 0 ) && ( apv < FST::numAPVs ) ) ;
+	  // bool pass = ( ( rdo == 3 ) && ( (arm == 0) || (arm == 1 ) ) && ( (port == 0) || (port == 1) ) &&  ( apv >= 0 ) && ( apv < FST::numAPVs ) ) ; // for DAQ
 	  bool bAPV = isBadAPV(arm,port,apv);
 	  if(pass && !bAPV)
 	  {
@@ -411,6 +425,7 @@ bool FstNoiseStudy::calPedestal()
 
 	  // NOTE THAT RDO/ARM/PORT ARE HARDWIRED HERE!!!
 	  bool pass = ( ( rdo == 1 ) && ( (arm == 0) || (arm == 1 ) ) && ( (port == 0) || (port == 1) ) &&  ( apv >= 0 ) && ( apv < FST::numAPVs ) ) ;
+	  // bool pass = ( ( rdo == 3 ) && ( (arm == 0) || (arm == 1 ) ) && ( (port == 0) || (port == 1) ) &&  ( apv >= 0 ) && ( apv < FST::numAPVs ) ) ; // for DAQ
 	  bool bAPV = isBadAPV(arm,port,apv);
 	  if(pass && !bAPV)
 	  {
@@ -542,6 +557,7 @@ bool FstNoiseStudy::calPedestal()
 
 	  // NOTE THAT RDO/ARM/PORT ARE HARDWIRED HERE!!!
 	  bool pass = ( ( rdo == 1 ) && ( (arm == 0) || (arm == 1 ) ) && ( (port == 0) || (port == 1) ) &&  ( apv >= 0 ) && ( apv < FST::numAPVs ) ) ;
+	  // bool pass = ( ( rdo == 3 ) && ( (arm == 0) || (arm == 1 ) ) && ( (port == 0) || (port == 1) ) &&  ( apv >= 0 ) && ( apv < FST::numAPVs ) ) ; // for DAQ
 	  bool bAPV = isBadAPV(arm,port,apv);
 	  if(pass && !bAPV)
 	  {
@@ -692,6 +708,7 @@ bool FstNoiseStudy::calPedestal()
 
 	  // NOTE THAT RDO/ARM/PORT ARE HARDWIRED HERE!!!
 	  bool pass = ( ( rdo == 1 ) && ( (arm == 0) || (arm == 1 ) ) && ( (port == 0) || (port == 1) ) &&  ( apv >= 0 ) && ( apv < FST::numAPVs ) ) ;
+	  // bool pass = ( ( rdo == 3 ) && ( (arm == 0) || (arm == 1 ) ) && ( (port == 0) || (port == 1) ) &&  ( apv >= 0 ) && ( apv < FST::numAPVs ) ) ; // for DAQ
 	  bool bAPV = isBadAPV(arm,port,apv);
 	  if(pass && !bAPV)
 	  {
@@ -762,6 +779,7 @@ bool FstNoiseStudy::calPedestal()
 
 	  // NOTE THAT RDO/ARM/PORT ARE HARDWIRED HERE!!!
 	  bool pass = ( ( rdo == 1 ) && ( (arm == 0) || (arm == 1 ) ) && ( (port == 0) || (port == 1) ) &&  ( apv >= 0 ) && ( apv < FST::numAPVs ) ) ;
+	  // bool pass = ( ( rdo == 3 ) && ( (arm == 0) || (arm == 1 ) ) && ( (port == 0) || (port == 1) ) &&  ( apv >= 0 ) && ( apv < FST::numAPVs ) ) ; // for DAQ
 	  bool bAPV = isBadAPV(arm,port,apv);
 	  if(pass && !bAPV)
 	  {
@@ -780,6 +798,7 @@ bool FstNoiseStudy::calPedestal()
 		int col = this->getColumn(arm,port,apv,ch);
 		if(arm == 1 && port == 1 && col > -1) h_mDisplayRanSigma_FST[col][tb]->Fill(adc-mPed[arm][port][apv][ch][tb]-mCMNStdDev_Evt[arm][port][apv][ch][tb]);
 	      }
+	      if(arm == 1 && port == 1) h_mAdc_FST[apv][ch][tb]->Fill(adc);
 	    }
 	  }
 	}
@@ -849,6 +868,17 @@ void FstNoiseStudy::writePedestal()
       h_mDisplayPedSigma_FST[i_rstrip][i_tb]->Write();
       h_mDisplayCMNSigma_FST[i_rstrip][i_tb]->Write();
       h_mDisplayRanSigma_FST[i_rstrip][i_tb]->Write();
+    }
+  }
+
+  for(int i_apv = 0; i_apv < FST::numAPVs; ++i_apv)
+  {
+    for(int i_ch = 0; i_ch < FST::numChannels; ++i_ch)
+    {
+      for(int i_tb = 0; i_tb < FST::numTBins; ++i_tb)
+      {
+	h_mAdc_FST[i_apv][i_ch][i_tb]->Write();
+      }
     }
   }
 
