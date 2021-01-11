@@ -92,6 +92,7 @@ class FstQAStudy : public TObject
     TH1F *h_mFstScanClustersSignal[FST::mFstNumSensorsPerModule];
     TH1F *h_mFstScanClustersNoise[FST::mFstNumSensorsPerModule];
     TH1F *h_mFstScanClustersSNRatio[FST::mFstNumSensorsPerModule];
+    TH1F *h_mFstScanClustersCMN[FST::mFstNumSensorsPerModule];
     TH1F *h_mFstScanClustersSignal_Rstrip[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor];
     TH1F *h_mFstScanClustersMaxTb_Rstrip[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor];
     TH1F *h_mFstScanClustersSignal_Rstrip_TimeBin[FST::mFstNumSensorsPerModule][FST::mFstNumRstripPerSensor][FST::numTBins];
