@@ -1,0 +1,88 @@
+record(ai, "$(SYSTEM):trip_status_$(SLOT)$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "1 second")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::outputStatus.$(SLOT)$(ID) BITS: 2 ")
+ field(ADEL, "1")
+ field(FLNK,"$(SYSTEM):$(SLOT)$(ID):Trip.INPA PP NMS")
+}
+
+record(ao,"$(SYSTEM):$(SLOT)$(ID):setCurrent") {
+	field(PREC,"3")
+}
+record(ao,"$(SYSTEM):$(SLOT)$(ID):pwrControl") {
+	field(PREC,"1")
+}
+record(ao,"$(SYSTEM):$(SLOT)$(ID):cycleCount") {
+	field(PREC,"0")
+	field(VAL,"10")
+}
+record(ao,"$(SYSTEM):$(SLOT)$(ID):maxCycles") {
+	field(PREC,"0")
+	field(VAL,"5")
+}
+record(mbbo,"$(SYSTEM):$(SLOT)$(ID):AutoResetEnable"){
+	field(DTYP,"Raw Soft Channel")
+	field(ZRVL,"0x0") 
+	field(ZRST,"Disabled") 
+	field(ONVL,"0x1") 
+	field(ONST,"AutoReset") 
+}
+record(calcout,"$(SYSTEM):$(SLOT)$(ID):Trip"){
+	field(CALC,"(A = 4) ?1:0")
+	field(SCAN,"Passive")
+	field(OOPT,"Transition To Non-zero")
+	field(INPA,"$(SYSTEM):trip_status_$(SLOT)$(ID).VAL PP MS")
+	field(FLNK,"$(SYSTEM):$(SLOT)$(ID):ResetCalc.INPB PP NMS")
+}
+record(calcout,"$(SYSTEM):$(SLOT)$(ID):incTripCount"){
+	field(CALC,"A + 1")
+	field(SCAN,"Passive")
+	field(INPA,"$(SYSTEM):$(SLOT)$(ID):cycleCount.VAL PP MS")
+	field(INPB,"$(SYSTEM):$(SLOT)$(ID):Trip.VAL PP MS")
+	field(INPC,"$(SYSTEM):$(SLOT)$(ID):ControlSQ.VAL PP MS")
+	field(OUT,"$(SYSTEM):$(SLOT)$(ID):cycleCount.VAL PP MS")
+	field(VAL,"10")
+}
+record(calcout,"$(SYSTEM):$(SLOT)$(ID):ResetCalc"){
+	field(CALC,"(A = 1 && B = 1 && C >= 1 && D<E) ?2:0 ")
+	field(SCAN,"Passive")
+	field(OOPT,"Transition To Non-zero")
+	field(INPA,"$(SYSTEM):$(SLOT)$(ID):Trip.VAL PP MS")
+	field(INPB,"$(SYSTEM):$(SLOT)$(ID):AutoResetEnable.VAL NPP MS")
+	field(INPC,"$(SYSTEM):$(SLOT)$(ID):Control.VAL PP MS")
+	field(INPD,"$(SYSTEM):$(SLOT)$(ID):cycleCount.VAL NPP MS")
+	field(INPE,"$(SYSTEM):$(SLOT)$(ID):maxCycles.VAL NPP MS")
+	field(OUT,"$(SYSTEM):$(SLOT)$(ID):Control.VAL PP MS")
+}
+
+record(mbbo,"$(SYSTEM):$(SLOT)$(ID):Control") {
+	field(DTYP,"Raw Soft Channel")
+	field(FLNK,"$(SYSTEM):$(SLOT)$(ID):ControlSQ NPP MS")
+	field(ZRVL,"0x0") 
+	field(ZRST,"Off") 
+	field(ONVL,"0x0") 
+	field(ONST,"ON") 
+	field(TWVL,"0xff") 
+	field(TWST,"Cycle") 
+	field(VAL,"1")
+}
+record(seq,"$(SYSTEM):$(SLOT)$(ID):ControlSQ") {
+        field(SELM,"Mask")
+	field(PREC,"3")
+	field(SELL,"$(SYSTEM):$(SLOT)$(ID):Control.RVAL NPP NMS")
+	field(DLY1,"0")
+	field(DOL1,"1")
+	field(LNK1,"$(SYSTEM):$(SLOT)$(ID):incTripCount PP MS")
+	field(DLY2,"0")
+	field(DOL2,"1")
+	field(LNK2,"$(SYSTEM):$(SLOT)$(ID):Control PP MS")
+	field(DLY3,"1")
+	field(DOL3,"10")
+	field(LNK3,"$(SYSTEM):output_switch_$(SLOT)$(ID).VAL PP NMS")
+	field(DLY4,"10")
+	field(DOL4,"1")
+	field(LNK4,"$(SYSTEM):output_switch_$(SLOT)$(ID).VAL PP NMS")
+}

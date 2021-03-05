@@ -1,0 +1,197 @@
+record(stringin, "$(SYSTEM):$(SLOT)$(ID):ramp_state_text")
+{
+ field(DESC, "Ramp State")
+ field(SCAN,"Passive")
+ field(VAL,"Undefined")
+}
+
+record(ao, "$(SYSTEM):target_voltage_$(SLOT)$(ID)")
+{
+ field(DESC,"Intermediate voltage value")
+ field(VAL,"0")
+}
+record(ao, "$(SYSTEM):physics_voltage_$(SLOT)$(ID)")
+{
+ field(DESC,"Voltage Setpoint for Physics Running")
+ field(VAL,"0")
+}
+
+record(ao, "$(SYSTEM):physics_ramp_rate_$(SLOT)$(ID)")
+{
+ field(DESC,"slow Ramp Rate")
+ field(VAL,"10")
+}
+
+record(ao, "$(SYSTEM):standby_voltage_$(SLOT)$(ID)")
+{
+ field(DESC,"Voltage Setpoint for Standby")
+ field(VAL,"0")
+}
+
+record(ao, "$(SYSTEM):standby_ramp_rate_$(SLOT)$(ID)")
+{
+ field(DESC,"fast Ramp Rate")
+ field(VAL,"60")
+}
+
+record(ao, "$(SYSTEM):conditioning_delay_$(SLOT)$(ID)")
+{
+ field(DESC,"delay time(s) between ramp up steps")
+ field(VAL,"60")
+}
+
+record(ao, "$(SYSTEM):conditioning_voltage_step_$(SLOT)$(ID)")
+{
+ field(DESC,"site of conditioning ramp up steps")
+ field(VAL,"0")
+}
+
+record(ao, "$(SYSTEM):$(SLOT)$(ID):sw_enabled")
+{
+ field(DESC,"Software enable Switch")
+ field(VAL,"0")
+}
+
+record(longout, "$(SYSTEM):output_switch_$(SLOT)$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) seCrET WIENER-CRATE-MIB::outputSwitch.$(SLOT)$(ID) ( 100 i")
+ field(ADEL, "1")
+}
+
+
+
+record(ai, "$(SYSTEM):measurement_current_$(SLOT)$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "6")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::outputMeasurementCurrent.$(SLOT)$(ID) Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "$(SYSTEM):output_current_$(SLOT)$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) seCrET WIENER-CRATE-MIB::outputCurrent.$(SLOT)$(ID) Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ao, "$(SYSTEM):output_triptime_$(SLOT)$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "0")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) seCrET WIENER-CRATE-MIB::outputTripTimeMaxCurrent.$(SLOT)$(ID) INTEGER: 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "$(SYSTEM):output_rise_rate_$(SLOT)$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "0")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) seCrET WIENER-CRATE-MIB::outputVoltageRiseRate.$(SLOT)$(ID) Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ao, "$(SYSTEM):output_fall_rate_$(SLOT)$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "1")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) seCrET WIENER-CRATE-MIB::outputVoltageFallRate.$(SLOT)$(ID) Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "$(SYSTEM):output_sense_voltage_$(SLOT)$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::outputMeasurementSenseVoltage.$(SLOT)$(ID) Float: 100")
+ field(ADEL, "1")
+ field(LOPR, "-20")
+ field(HOPR, "200")
+ field(HIHI, "150")
+ field(LOLO, "-10")
+ field(HHSV,"MAJOR")
+ field(HSV,"MINOR")
+ field(LLSV,"MAJOR")
+ field(LSV,"MINOR")
+}
+
+record(ao, "$(SYSTEM):output_voltage_$(SLOT)$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) seCrET WIENER-CRATE-MIB::outputVoltage.$(SLOT)$(ID) Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longin, "$(SYSTEM):output_supervision_behavior_$(SLOT)$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "5 second")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::outputSupervisionBehavior.$(SLOT)$(ID) INTEGER: 100")
+ field(ADEL, "1")
+ field(FLNK,"$(SYSTEM):$(SLOT)$(ID):checkTripSetup PP MS")
+}
+
+record(longout, "$(SYSTEM):set_output_supervision_behavior_$(SLOT)$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(PINI, "YES")
+ field(VAL, "4224")
+ field(HOPR, "4224")
+ field(LOPR, "4224")
+ field(OUT,  "@$(HOST) seCrET WIENER-CRATE-MIB::outputSupervisionBehavior.$(SLOT)$(ID) INTEGER: 100 i ")
+ field(ADEL, "1")
+}
+
+record(stringin, "$(SYSTEM):status_bits_$(SLOT)$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::outputStatus.$(SLOT)$(ID) BITS: 200")
+}
+
+record(longin, "$(SYSTEM):temp_$(SLOT)$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "5 second")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::outputMeasurementTemperature.$(SLOT)$(ID) INTEGER: 100 ")
+ field(ADEL, "1")
+}
+
+include "db/iseg_autoreset.db"
+include "db/iseg_tripsetting.db"
+

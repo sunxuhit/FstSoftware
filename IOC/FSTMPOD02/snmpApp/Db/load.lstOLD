@@ -1,0 +1,17 @@
+MEM:epicsSNMP0:mem:Label_si
+MEM:epicsSNMP0:mem:Per_calc
+MEM:epicsSNMP0:mem:Bs_li
+MEM:epicsSNMP0:mem:Size_li
+MEM:epicsSNMP0:mem:Used_li
+NET:epicsSNMP0:IF:Ucast_calc
+NET:epicsSNMP0:IF:Ucast_li
+DSK:epicsSNMP0:root:Label_si
+DSK:epicsSNMP0:root:Per_calc
+DSK:epicsSNMP0:root:Bs_li
+DSK:epicsSNMP0:root:Size_li
+DSK:epicsSNMP0:root:Used_li
+PROC:epicsSNMP0:number_li
+CPU:epicsSNMP0:av_load_li
+NET:epicsSNMP0:tcpConn_li
+NET:kryknet02:RMON:Bcast_calc
+NET:kryknet02:RMON:Bcast_li

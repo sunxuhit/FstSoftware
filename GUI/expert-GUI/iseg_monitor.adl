@@ -1,0 +1,154 @@
+
+file {
+	name="/star/u/sysuser/users/xusun/FstSlowControl/expert-GUI/iseg_monitor.adl"
+	version=030102
+}
+display {
+	object {
+		x=36
+		y=57
+		width=733
+		height=856
+	}
+	clr=14
+	bclr=4
+	cmap=""
+	gridSpacing=5
+	gridOn=0
+	snapToGrid=0
+}
+"color map" {
+	ncolors=65
+	colors {
+		ffffff,
+		ececec,
+		dadada,
+		c8c8c8,
+		bbbbbb,
+		aeaeae,
+		9e9e9e,
+		919191,
+		858585,
+		787878,
+		696969,
+		5a5a5a,
+		464646,
+		2d2d2d,
+		000000,
+		00d800,
+		1ebb00,
+		339900,
+		2d7f00,
+		216c00,
+		fd0000,
+		de1309,
+		be190b,
+		a01207,
+		820400,
+		5893ff,
+		597ee1,
+		4b6ec7,
+		3a5eab,
+		27548d,
+		fbf34a,
+		f9da3c,
+		eeb62b,
+		e19015,
+		cd6100,
+		ffb0ff,
+		d67fe2,
+		ae4ebc,
+		8b1a96,
+		610a75,
+		a4aaff,
+		8793e2,
+		6a73c1,
+		4d52a4,
+		343386,
+		c7bb6d,
+		b79d5c,
+		a47e3c,
+		7d5627,
+		58340f,
+		99ffff,
+		73dfff,
+		4ea5f9,
+		2a63e4,
+		0a00b8,
+		ebf1b5,
+		d4db9d,
+		bbc187,
+		a6a462,
+		8b8239,
+		73ff6b,
+		52da3b,
+		3cb420,
+		289315,
+		1a7309,
+	}
+}
+"strip chart" {
+	object {
+		x=14
+		y=13
+		width=699
+		height=402
+	}
+	plotcom {
+		title="Voltage"
+		xlabel="time (minutes)"
+		ylabel="voltage"
+		clr=14
+		bclr=4
+	}
+	period=10.000000
+	units="minute"
+	pen[0] {
+		chan="$(SYSTEM):output_sense_voltage_$(U)"
+		clr=34
+		limits {
+			hoprSrc="default"
+			hoprDefault=200
+		}
+	}
+}
+"strip chart" {
+	object {
+		x=17
+		y=442
+		width=699
+		height=402
+	}
+	plotcom {
+		title="Current"
+		xlabel="time (minutes)"
+		ylabel="current"
+		clr=14
+		bclr=4
+	}
+	period=10.000000
+	units="minute"
+	pen[0] {
+		chan="$(SYSTEM):measurement_current_$(U)"
+		clr=17
+		limits {
+			hoprSrc="default"
+			hoprDefault=0.000005
+			loprSrc="default"
+			loprDefault=-0.000001
+		}
+	}
+}
+text {
+	object {
+		x=299
+		y=419
+		width=134
+		height=19
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Channel $(U)"
+	align="horiz. centered"
+}

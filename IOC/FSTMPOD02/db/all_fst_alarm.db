@@ -1,0 +1,175 @@
+# Edited/adopted by L. C. De Silva for IST-TEST crate testing purposes. 03/05/2014.
+
+record(calc, "$(SYSTEM1):rbk_v_alm_$(SLOT)"){
+  field(SCAN, "1 second")
+  field(INPA, "$(SYSTEM1):output_sense_voltage_$(SLOT)0.VAL PP MS")
+  field(INPB, "$(SYSTEM1):output_sense_voltage_$(SLOT)1.VAL PP MS")
+  field(INPC, "$(SYSTEM1):output_sense_voltage_$(SLOT)2.VAL PP MS")
+  field(INPD, "$(SYSTEM1):output_sense_voltage_$(SLOT)3.VAL PP MS")
+  field(INPE, "$(SYSTEM1):output_sense_voltage_$(SLOT)4.VAL PP MS")
+  field(INPF, "$(SYSTEM1):output_sense_voltage_$(SLOT)5.VAL PP MS")
+  field(INPG, "$(SYSTEM1):output_sense_voltage_$(SLOT)6.VAL PP MS")
+  field(INPH, "$(SYSTEM1):output_sense_voltage_$(SLOT)7.VAL PP MS")
+  field(INPJ, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPK, "69")
+  field(INPL, "71")
+  field(CALC, "J=1&A>K&A<L&B>K&B<L&C>K&C<L&D>K&D<L&E>K&E<L&F>K&F<L&G>K&G<L&H>K&H<L")
+  field(PREC, "4")
+  field(HIHI,"1")
+  field(HHSV,"MAJOR")
+  field(FLNK, "$(SYSTEM1):crate_voltage_status")
+}
+
+record(calc, $(SYSTEM1):crate_voltage_status){
+  field(SCAN, "1 second")
+  field(INPA, "$(SYSTEM1):rbk_v_alm_u")
+  field(INPB, "$(SYSTEM1):rbk_v_alm_u10")
+  field(INPC, "$(SYSTEM1):rbk_v_alm_u20")
+  field(INPJ, "$(SYSTEM1):pwr_reading")
+  field(CALC, "J=1?A&&B&&C:0")
+  field(FLNK, "istON_crate_voltage_status")
+}
+
+#Below variable is added for debugging the ShiftGui Script.
+record(calc, $(SYSTEM1):crate_status_panic){
+  field(DESC, "Script status")
+}
+
+record(calc, "$(SYSTEM2):rbk_v_alm_$(SLOT)"){
+  field(SCAN, "1 second")
+  field(INPA, "$(SYSTEM2):output_sense_voltage_$(SLOT)0.VAL PP MS")
+  field(INPB, "$(SYSTEM2):output_sense_voltage_$(SLOT)1.VAL PP MS")
+  field(INPC, "$(SYSTEM2):output_sense_voltage_$(SLOT)2.VAL PP MS")
+  field(INPD, "$(SYSTEM2):output_sense_voltage_$(SLOT)3.VAL PP MS")
+  field(INPE, "$(SYSTEM2):output_sense_voltage_$(SLOT)4.VAL PP MS")
+  field(INPF, "$(SYSTEM2):output_sense_voltage_$(SLOT)5.VAL PP MS")
+  field(INPG, "$(SYSTEM2):output_sense_voltage_$(SLOT)6.VAL PP MS")
+  field(INPH, "$(SYSTEM2):output_sense_voltage_$(SLOT)7.VAL PP MS")
+  field(INPJ, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPK, "69")
+  field(INPL, "71")
+  field(CALC, "J=1&A>K&A<L&B>K&B<L&C>K&C<L&D>K&D<L&E>K&E<L&F>K&F<L&G>K&G<L&H>K&H<L")
+  field(PREC, "4")
+  field(HIHI,"1")
+  field(HHSV,"MAJOR")
+  field(FLNK, "$(SYSTEM2):crate_voltage_status")
+}
+
+record(calc, $(SYSTEM2):crate_voltage_status){
+  field(SCAN, "1 second")
+  field(INPA, "$(SYSTEM2):rbk_v_alm_u")
+  field(INPB, "$(SYSTEM2):rbk_v_alm_u10")
+  field(INPC, "$(SYSTEM2):rbk_v_alm_u20")
+  field(INPJ, "$(SYSTEM2):pwr_reading")
+  field(CALC, "J=1?A&&B&&C:0")
+  field(FLNK, "istON_crate_voltage_status")
+}
+
+#Below variable is added for debugging the ShiftGui Script.
+record(calc, $(SYSTEM2):crate_status_panic){
+  field(DESC, "Script status")
+}
+
+record(calc, "$(SYSTEM3):rbk_v_alm_$(SLOT)"){
+  field(SCAN, "1 second")
+  field(INPA, "$(SYSTEM3):output_sense_voltage_$(SLOT)0.VAL PP MS")
+  field(INPB, "$(SYSTEM3):output_sense_voltage_$(SLOT)1.VAL PP MS")
+  field(INPC, "$(SYSTEM3):output_sense_voltage_$(SLOT)2.VAL PP MS")
+  field(INPD, "$(SYSTEM3):output_sense_voltage_$(SLOT)3.VAL PP MS")
+  field(INPE, "$(SYSTEM3):output_sense_voltage_$(SLOT)4.VAL PP MS")
+  field(INPF, "$(SYSTEM3):output_sense_voltage_$(SLOT)5.VAL PP MS")
+  field(INPG, "$(SYSTEM3):output_sense_voltage_$(SLOT)6.VAL PP MS")
+  field(INPH, "$(SYSTEM3):output_sense_voltage_$(SLOT)7.VAL PP MS")
+  field(INPJ, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPK, "69")
+  field(INPL, "71")
+  field(CALC, "J=1&A>K&A<L&B>K&B<L&C>K&C<L&D>K&D<L&E>K&E<L&F>K&F<L&G>K&G<L&H>K&H<L")
+  field(PREC, "4")
+  field(HIHI,"1")
+  field(HHSV,"MAJOR")
+  field(FLNK, "$(SYSTEM3):crate_voltage_status")
+}
+
+record(calc, $(SYSTEM3):crate_voltage_status){
+  field(SCAN, "1 second")
+  field(INPA, "$(SYSTEM3):rbk_v_alm_u")
+  field(INPB, "$(SYSTEM3):rbk_v_alm_u10")
+  field(INPC, "$(SYSTEM3):rbk_v_alm_u20")
+  field(INPJ, "$(SYSTEM3):pwr_reading")
+  field(CALC, "J=1?A&&B&&C:0")
+  field(FLNK, "istON_crate_voltage_status")
+}
+
+#Below variable is added for debugging the ShiftGui Script.
+record(calc, $(SYSTEM3):crate_status_panic){
+  field(DESC, "Script status")
+}
+
+record(calc, ist_crate_status_ON){
+  field(DESC, "Used in the alarm mechanism")
+}
+
+record(calc, ist_script_voltage_alarm){
+  field(DESC, "Used in the script alarm mechanism")
+}
+
+record(calc, ist_script_off_alarm){
+  field(DESC, "Used in the script alarm mechanism")
+}
+
+record(calc, ist_power_status_trans){
+  field(DESC, "Transient alarm")
+}
+
+record(calc, istON_crate_voltage_status){
+ field(SCAN, "1 second")
+ field(INPA, "$(SYSTEM1):crate_voltage_status")
+ field(INPB, "$(SYSTEM2):crate_voltage_status")
+ field(INPC, "$(SYSTEM3):crate_voltage_status")
+ field(INPD, "1")
+ field(CALC, "D=1?A&&B&&C:0")
+ field(FLNK, "ist_general_alarm_onStatus")
+}
+
+record(calc, istOFF_crate_voltage_status){
+ field(SCAN, "1 second")
+ field(INPA, "$(SYSTEM1):pwr_reading")
+ field(INPB, "$(SYSTEM2):pwr_reading")
+ field(INPC, "$(SYSTEM3):pwr_reading")
+ field(CALC, "(A||B||C)=1?1:0")
+ field(FLNK, "ist_general_alarm_offStatus")
+}
+
+record(calc, ist_crate_status_panic){
+ field(SCAN, "1 second")
+ field(INPA, "$(SYSTEM1):crate_status_panic")
+ field(INPB, "$(SYSTEM2):crate_status_panic")
+ field(INPC, "$(SYSTEM3):crate_status_panic")
+ field(CALC, "(A&&B&&C)=1?1:0")
+}
+
+record(calc, ist_general_alarm_onStatus){
+  field(DESC, "Alarm handler alarm")
+  field(SCAN, "1 second")
+  field(INPA, "istON_crate_voltage_status")
+  field(INPB, "ist_crate_status_ON")
+  field(INPC, "ist_power_status_trans")
+  field(CALC, "C=0?(!A)&&B:0")
+  field(HIHI, "1")
+  field(HIGH, "1")
+  field(HHSV, "MAJOR")
+  field(HSV, "MAJOR")
+}
+
+record(calc, ist_general_alarm_offStatus){
+  field(DESC, "Alarm handler alarm")
+  field(SCAN, "1 second")
+  field(INPA, "istOFF_crate_voltage_status")
+  field(INPB, "ist_crate_status_ON")
+  field(INPC, "ist_power_status_trans")
+  field(CALC, "C=0?A&&(!B):0")
+  field(HIHI, "1")
+  field(HIGH, "1")
+  field(HHSV, "MAJOR")
+  field(HSV, "MAJOR")
+}
