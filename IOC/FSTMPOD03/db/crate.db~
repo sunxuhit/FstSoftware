@@ -1,0 +1,357 @@
+record(longout, "$(SYSTEM):group_0")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(PINI, "YES")
+ field(OUT,  "@$(HOST) seCrET WIENER-CRATE-MIB::groupsSwitch.0 INTEGER: 100 i")
+ field(ADEL, "1")
+ field(VAL, "5")
+ field(DRVH, "5")
+ field(DRVL, "5")
+}
+
+#groupsSwitch.64 value of 5 sets crate setting required for tripping - "Emergency Off" setup.
+record(longout, "$(SYSTEM):group_64")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(PINI, "YES")
+ field(OUT,  "@$(HOST) seCrET WIENER-CRATE-MIB::groupsSwitch.64 INTEGER: 100 i ")
+ field(ADEL, "1")
+ field(VAL, "5")
+}
+
+
+record(longin, "$(SYSTEM):group_0_reading")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "2 second")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::groupsSwitch.0 ( 100 i )")
+ field(ADEL, "1")
+}
+
+
+
+record(longout, "$(SYSTEM):group_1000")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) seCrET WIENER-CRATE-MIB::groupsSwitch.1000 INTEGER: 100 i")
+ field(ADEL, "1")
+}
+
+record(longout, "$(SYSTEM):groups_index")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) seCrET WIENER-CRATE-MIB::groupsIndex.0 INTEGER: 100 i")
+ field(ADEL, "1")
+}
+
+record(longin, "$(SYSTEM):pwr_reading")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "2 second")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::sysMainSwitch.0 ( 100")
+ field(ADEL, "1")
+}
+
+record(longin, "$(SYSTEM):groups_switch64")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "10 second")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::groupsSwitch.64 ( 100")
+ field(ADEL, "1")
+}
+
+record(longout, "$(SYSTEM):pwr_setting")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) seCrET WIENER-CRATE-MIB::sysMainSwitch.0 ( 100 i")
+ field(ADEL, "1")
+ field(FLNK, "$(SYSTEM):group_0")
+}
+
+record(stringin, "$(SYSTEM):status")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "5 second")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::sysStatus.0 BITS: 200")
+}
+
+record(stringin, "$(SYSTEM):FIRMWARE_REVISION")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "5 second")
+ field(INP,  "@$(HOST) seCrET sysDescr.0 , 100")
+}
+
+record(stringin, "$(SYSTEM):IP_DYNAMIC_ADDR")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "5 second")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB:ipDynamicAddress.0 IpAddress: 200")
+}
+
+record(stringin, "$(SYSTEM):IP_STATIC_ADDR")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "5 second")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB:ipStaticAddress.0 IpAddress: 100")
+}
+
+record(stringin, "$(SYSTEM):MAC_ADDR")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "5 second")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::macAddress.0 Hex-STRING: 100")
+}
+
+record(stringin, "$(SYSTEM):OPERATING_TIME")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "5 second")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::psOperatingTime.0 INTEGER: 100")
+}
+
+record(stringin, "$(SYSTEM):SNMP_PORT")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "5 second")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::snmpPort.0 INTEGER: 100")
+}
+
+record(stringin, "$(SYSTEM):SERIAL_NUMBER")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "5 second")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::psSerialNumber.0 STRING: 100")
+}
+
+record(ai, "$(SYSTEM):ps_voltage0")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::psAuxiliaryMeasurementVoltage.u0 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "$(SYSTEM):ps_voltage1")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::psAuxiliaryMeasurementVoltage.u1 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "$(SYSTEM):ps_voltage2")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::psAuxiliaryMeasurementVoltage.u2 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "$(SYSTEM):ps_voltage3")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::psAuxiliaryMeasurementVoltage.u3 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "$(SYSTEM):ps_voltage4")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::psAuxiliaryMeasurementVoltage.u4 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "$(SYSTEM):ps_voltage5")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::psAuxiliaryMeasurementVoltage.u5 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "$(SYSTEM):ps_voltage6")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::psAuxiliaryMeasurementVoltage.u6 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "$(SYSTEM):ps_voltage7")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::psAuxiliaryMeasurementVoltage.u7 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "$(SYSTEM):ps_current0")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::psAuxiliaryMeasurementCurrent.u0 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "$(SYSTEM):ps_current1")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::psAuxiliaryMeasurementCurrent.u1 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "$(SYSTEM):ps_current2")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::psAuxiliaryMeasurementCurrent.u2 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "$(SYSTEM):ps_current3")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::psAuxiliaryMeasurementCurrent.u3 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "$(SYSTEM):ps_current4")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::psAuxiliaryMeasurementCurrent.u4 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "$(SYSTEM):ps_current5")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::psAuxiliaryMeasurementCurrent.u5 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "$(SYSTEM):ps_current6")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::psAuxiliaryMeasurementCurrent.u6 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "$(SYSTEM):ps_current7")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::psAuxiliaryMeasurementCurrent.u7 Float: 100")
+ field(ADEL, "1")
+}
+
+
+record(longin, "$(SYSTEM):ps_fan")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "2 second")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) seCrET WIENER-CRATE-MIB::fanNominalSpeed.0 INTEGER: 100")
+ field(ADEL, "1")
+}
+
+
+record(longout, "$(SYSTEM):ps_fan_control")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) seCrET WIENER-CRATE-MIB::fanNominalSpeed.0 INTEGER: 100 i")
+ field(ADEL, "3200")
+ field(LOPR, "0")
+ field(HOPR, "3200")
+}
+
+
+

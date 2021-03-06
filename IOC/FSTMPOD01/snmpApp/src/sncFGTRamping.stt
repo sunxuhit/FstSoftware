@@ -1,0 +1,553 @@
+program sncFGTRamping ("deviceName=(null)")
+%{
+
+#include <stdio.h>
+#include <string.h>
+
+}%
+
+option +r;
+long chan;
+int v;
+long i;
+long j;
+long doneRampingToStandby;
+long endRamp;  /* 1 = ramping step done, 0 = continue ramping */
+int control;  /* 0 = uninitialiazed, 1 = OFF, 2 = STANDBY, 3 = PHYSICS */
+int power;
+long real_power_state;
+
+assign control to "{SYSTEM}:ramp_control_switch";
+monitor control;
+
+assign v to "{SYSTEM}:master_control_switch";
+monitor v;
+
+assign power to "{SYSTEM}:pwr_reading";
+monitor power;
+
+
+double targetVoltage[32];
+double physicsVoltageSetting[32];
+double standbyVoltageSetting[32];
+double physicsRampRate[32];
+double standbyRampRate[32];
+double conditioningDelay[32];
+double conditioningVoltageStep[32];
+
+double voltageSetting[32];
+double voltageReading[32];
+double powerSwitch[32];
+double channelEnabled[32];
+double currentSetting[32];
+double rampRate[32];
+double autoResetDelay[32];
+double autoResetEnabled[32];
+double maxCycles[32];
+double tripStatus[32];
+
+string statusText;
+assign statusText to "{SYSTEM}:{SLOT}0:ramp_state_text";
+monitor statusText;
+
+assign targetVoltage[0] to "{SYSTEM}:physics_voltage_{SLOT}0";
+assign targetVoltage[1] to "{SYSTEM}:physics_voltage_{SLOT}1";
+assign targetVoltage[2] to "{SYSTEM}:physics_voltage_{SLOT}2";
+assign targetVoltage[3] to "{SYSTEM}:physics_voltage_{SLOT}3";
+assign targetVoltage[4] to "{SYSTEM}:physics_voltage_{SLOT}4";
+assign targetVoltage[5] to "{SYSTEM}:physics_voltage_{SLOT}5";
+assign targetVoltage[6] to "{SYSTEM}:physics_voltage_{SLOT}6";
+assign targetVoltage[7] to "{SYSTEM}:physics_voltage_{SLOT}7";
+assign physicsVoltageSetting[0] to "{SYSTEM}:physics_voltage_{SLOT}0";
+assign physicsVoltageSetting[1] to "{SYSTEM}:physics_voltage_{SLOT}1";
+assign physicsVoltageSetting[2] to "{SYSTEM}:physics_voltage_{SLOT}2";
+assign physicsVoltageSetting[3] to "{SYSTEM}:physics_voltage_{SLOT}3";
+assign physicsVoltageSetting[4] to "{SYSTEM}:physics_voltage_{SLOT}4";
+assign physicsVoltageSetting[5] to "{SYSTEM}:physics_voltage_{SLOT}5";
+assign physicsVoltageSetting[6] to "{SYSTEM}:physics_voltage_{SLOT}6";
+assign physicsVoltageSetting[7] to "{SYSTEM}:physics_voltage_{SLOT}7";
+assign standbyVoltageSetting[0] to "{SYSTEM}:standby_voltage_{SLOT}0";
+assign standbyVoltageSetting[1] to "{SYSTEM}:standby_voltage_{SLOT}1";
+assign standbyVoltageSetting[2] to "{SYSTEM}:standby_voltage_{SLOT}2";
+assign standbyVoltageSetting[3] to "{SYSTEM}:standby_voltage_{SLOT}3";
+assign standbyVoltageSetting[4] to "{SYSTEM}:standby_voltage_{SLOT}4";
+assign standbyVoltageSetting[5] to "{SYSTEM}:standby_voltage_{SLOT}5";
+assign standbyVoltageSetting[6] to "{SYSTEM}:standby_voltage_{SLOT}6";
+assign standbyVoltageSetting[7] to "{SYSTEM}:standby_voltage_{SLOT}7";
+assign physicsRampRate[0] to "{SYSTEM}:physics_ramp_rate_{SLOT}0";
+assign physicsRampRate[1] to "{SYSTEM}:physics_ramp_rate_{SLOT}1";
+assign physicsRampRate[2] to "{SYSTEM}:physics_ramp_rate_{SLOT}2";
+assign physicsRampRate[3] to "{SYSTEM}:physics_ramp_rate_{SLOT}3";
+assign physicsRampRate[4] to "{SYSTEM}:physics_ramp_rate_{SLOT}4";
+assign physicsRampRate[5] to "{SYSTEM}:physics_ramp_rate_{SLOT}5";
+assign physicsRampRate[6] to "{SYSTEM}:physics_ramp_rate_{SLOT}6";
+assign physicsRampRate[7] to "{SYSTEM}:physics_ramp_rate_{SLOT}7";
+assign standbyRampRate[0] to "{SYSTEM}:standby_ramp_rate_{SLOT}0";
+assign standbyRampRate[1] to "{SYSTEM}:standby_ramp_rate_{SLOT}1";
+assign standbyRampRate[2] to "{SYSTEM}:standby_ramp_rate_{SLOT}2";
+assign standbyRampRate[3] to "{SYSTEM}:standby_ramp_rate_{SLOT}3";
+assign standbyRampRate[4] to "{SYSTEM}:standby_ramp_rate_{SLOT}4";
+assign standbyRampRate[5] to "{SYSTEM}:standby_ramp_rate_{SLOT}5";
+assign standbyRampRate[6] to "{SYSTEM}:standby_ramp_rate_{SLOT}6";
+assign standbyRampRate[7] to "{SYSTEM}:standby_ramp_rate_{SLOT}7";
+assign conditioningDelay[0] to "{SYSTEM}:conditioning_delay_{SLOT}0";
+assign conditioningDelay[1] to "{SYSTEM}:conditioning_delay_{SLOT}1";
+assign conditioningDelay[2] to "{SYSTEM}:conditioning_delay_{SLOT}2";
+assign conditioningDelay[3] to "{SYSTEM}:conditioning_delay_{SLOT}3";
+assign conditioningDelay[4] to "{SYSTEM}:conditioning_delay_{SLOT}4";
+assign conditioningDelay[5] to "{SYSTEM}:conditioning_delay_{SLOT}5";
+assign conditioningDelay[6] to "{SYSTEM}:conditioning_delay_{SLOT}6";
+assign conditioningDelay[7] to "{SYSTEM}:conditioning_delay_{SLOT}7";
+assign conditioningVoltageStep[0] to "{SYSTEM}:conditioning_voltage_step_{SLOT}0";
+assign conditioningVoltageStep[1] to "{SYSTEM}:conditioning_voltage_step_{SLOT}1";
+assign conditioningVoltageStep[2] to "{SYSTEM}:conditioning_voltage_step_{SLOT}2";
+assign conditioningVoltageStep[3] to "{SYSTEM}:conditioning_voltage_step_{SLOT}3";
+assign conditioningVoltageStep[4] to "{SYSTEM}:conditioning_voltage_step_{SLOT}4";
+assign conditioningVoltageStep[5] to "{SYSTEM}:conditioning_voltage_step_{SLOT}5";
+assign conditioningVoltageStep[6] to "{SYSTEM}:conditioning_voltage_step_{SLOT}6";
+assign conditioningVoltageStep[7] to "{SYSTEM}:conditioning_voltage_step_{SLOT}7";
+assign voltageSetting[0] to "{SYSTEM}:output_voltage_{SLOT}0";
+assign voltageSetting[1] to "{SYSTEM}:output_voltage_{SLOT}1";
+assign voltageSetting[2] to "{SYSTEM}:output_voltage_{SLOT}2";
+assign voltageSetting[3] to "{SYSTEM}:output_voltage_{SLOT}3";
+assign voltageSetting[4] to "{SYSTEM}:output_voltage_{SLOT}4";
+assign voltageSetting[5] to "{SYSTEM}:output_voltage_{SLOT}5";
+assign voltageSetting[6] to "{SYSTEM}:output_voltage_{SLOT}6";
+assign voltageSetting[7] to "{SYSTEM}:output_voltage_{SLOT}7";
+assign voltageReading[0] to "{SYSTEM}:output_sense_voltage_{SLOT}0";
+assign voltageReading[1] to "{SYSTEM}:output_sense_voltage_{SLOT}1";
+assign voltageReading[2] to "{SYSTEM}:output_sense_voltage_{SLOT}2";
+assign voltageReading[3] to "{SYSTEM}:output_sense_voltage_{SLOT}3";
+assign voltageReading[4] to "{SYSTEM}:output_sense_voltage_{SLOT}4";
+assign voltageReading[5] to "{SYSTEM}:output_sense_voltage_{SLOT}5";
+assign voltageReading[6] to "{SYSTEM}:output_sense_voltage_{SLOT}6";
+assign voltageReading[7] to "{SYSTEM}:output_sense_voltage_{SLOT}7";
+assign currentSetting[0] to "{SYSTEM}:output_current_{SLOT}0";
+assign currentSetting[1] to "{SYSTEM}:output_current_{SLOT}1";
+assign currentSetting[2] to "{SYSTEM}:output_current_{SLOT}2";
+assign currentSetting[3] to "{SYSTEM}:output_current_{SLOT}3";
+assign currentSetting[4] to "{SYSTEM}:output_current_{SLOT}4";
+assign currentSetting[5] to "{SYSTEM}:output_current_{SLOT}5";
+assign currentSetting[6] to "{SYSTEM}:output_current_{SLOT}6";
+assign currentSetting[7] to "{SYSTEM}:output_current_{SLOT}7";
+assign rampRate[0] to "{SYSTEM}:output_rise_rate_{SLOT}0";
+assign rampRate[1] to "{SYSTEM}:output_rise_rate_{SLOT}1";
+assign rampRate[2] to "{SYSTEM}:output_rise_rate_{SLOT}2";
+assign rampRate[3] to "{SYSTEM}:output_rise_rate_{SLOT}3";
+assign rampRate[4] to "{SYSTEM}:output_rise_rate_{SLOT}4";
+assign rampRate[5] to "{SYSTEM}:output_rise_rate_{SLOT}5";
+assign rampRate[6] to "{SYSTEM}:output_rise_rate_{SLOT}6";
+assign rampRate[7] to "{SYSTEM}:output_rise_rate_{SLOT}7";
+assign autoResetDelay[0] to "{SYSTEM}:{SLOT}0:ControlSQ.DLY4";
+assign autoResetDelay[1] to "{SYSTEM}:{SLOT}1:ControlSQ.DLY4";
+assign autoResetDelay[2] to "{SYSTEM}:{SLOT}2:ControlSQ.DLY4";
+assign autoResetDelay[3] to "{SYSTEM}:{SLOT}3:ControlSQ.DLY4";
+assign autoResetDelay[4] to "{SYSTEM}:{SLOT}4:ControlSQ.DLY4";
+assign autoResetDelay[5] to "{SYSTEM}:{SLOT}5:ControlSQ.DLY4";
+assign autoResetDelay[6] to "{SYSTEM}:{SLOT}6:ControlSQ.DLY4";
+assign autoResetDelay[7] to "{SYSTEM}:{SLOT}7:ControlSQ.DLY4";
+assign autoResetEnabled[0] to "{SYSTEM}:{SLOT}0:AutoResetEnable";
+assign autoResetEnabled[1] to "{SYSTEM}:{SLOT}1:AutoResetEnable";
+assign autoResetEnabled[2] to "{SYSTEM}:{SLOT}2:AutoResetEnable";
+assign autoResetEnabled[3] to "{SYSTEM}:{SLOT}3:AutoResetEnable";
+assign autoResetEnabled[4] to "{SYSTEM}:{SLOT}4:AutoResetEnable";
+assign autoResetEnabled[5] to "{SYSTEM}:{SLOT}5:AutoResetEnable";
+assign autoResetEnabled[6] to "{SYSTEM}:{SLOT}6:AutoResetEnable";
+assign autoResetEnabled[7] to "{SYSTEM}:{SLOT}7:AutoResetEnable";
+assign maxCycles[0] to "{SYSTEM}:{SLOT}0:maxCycles";
+assign maxCycles[1] to "{SYSTEM}:{SLOT}1:maxCycles";
+assign maxCycles[2] to "{SYSTEM}:{SLOT}2:maxCycles";
+assign maxCycles[3] to "{SYSTEM}:{SLOT}3:maxCycles";
+assign maxCycles[4] to "{SYSTEM}:{SLOT}4:maxCycles";
+assign maxCycles[5] to "{SYSTEM}:{SLOT}5:maxCycles";
+assign maxCycles[6] to "{SYSTEM}:{SLOT}6:maxCycles";
+assign maxCycles[7] to "{SYSTEM}:{SLOT}7:maxCycles";
+assign channelEnabled[0] to "{SYSTEM}:{SLOT}0:sw_enabled";
+assign channelEnabled[1] to "{SYSTEM}:{SLOT}1:sw_enabled";
+assign channelEnabled[2] to "{SYSTEM}:{SLOT}2:sw_enabled";
+assign channelEnabled[3] to "{SYSTEM}:{SLOT}3:sw_enabled";
+assign channelEnabled[4] to "{SYSTEM}:{SLOT}4:sw_enabled";
+assign channelEnabled[5] to "{SYSTEM}:{SLOT}5:sw_enabled";
+assign channelEnabled[6] to "{SYSTEM}:{SLOT}6:sw_enabled";
+assign channelEnabled[7] to "{SYSTEM}:{SLOT}7:sw_enabled";
+assign powerSwitch[0] to "{SYSTEM}:output_switch_{SLOT}0";
+assign powerSwitch[1] to "{SYSTEM}:output_switch_{SLOT}1";
+assign powerSwitch[2] to "{SYSTEM}:output_switch_{SLOT}2";
+assign powerSwitch[3] to "{SYSTEM}:output_switch_{SLOT}3";
+assign powerSwitch[4] to "{SYSTEM}:output_switch_{SLOT}4";
+assign powerSwitch[5] to "{SYSTEM}:output_switch_{SLOT}5";
+assign powerSwitch[6] to "{SYSTEM}:output_switch_{SLOT}6";
+assign powerSwitch[7] to "{SYSTEM}:output_switch_{SLOT}7";
+assign tripStatus[0] to "{SYSTEM}:trip_status_{SLOT}0";
+assign tripStatus[1] to "{SYSTEM}:trip_status_{SLOT}1";
+assign tripStatus[2] to "{SYSTEM}:trip_status_{SLOT}2";
+assign tripStatus[3] to "{SYSTEM}:trip_status_{SLOT}3";
+assign tripStatus[4] to "{SYSTEM}:trip_status_{SLOT}4";
+assign tripStatus[5] to "{SYSTEM}:trip_status_{SLOT}5";
+assign tripStatus[6] to "{SYSTEM}:trip_status_{SLOT}6";
+assign tripStatus[7] to "{SYSTEM}:trip_status_{SLOT}7";
+
+ss power_status {
+	state init {
+	  when(power == 0) {
+	  } state off
+	  when(power == 1) {
+	  } state on
+	}
+	
+	state on {
+          entry {
+            real_power_state = 1;
+          }
+	  when(power == 0) {
+	  } state check_off_level1
+	}
+	state off {
+          entry {
+            real_power_state = 0;
+          }
+	  when(power ==1) {
+	  } state check_on_level1
+        }
+	state check_off_level1 {
+          when(power == 1) {
+	  } state check_on_level1
+	  when(power == 0 && delay(7)) {
+	  } state check_off_level2
+ 	}
+	state check_off_level2 {
+          when(power == 1) {
+          } state check_on_level1
+          when(power == 0 && delay(7)) {
+          } state off
+        }
+        state check_on_level1 {
+          when(power == 0) {
+          } state check_off_level1
+          when(power == 1 && delay(7)) {
+          } state on
+        }
+}
+
+ss ramp1 {
+
+    state init {
+        entry {
+	    /* printf("sncFGTRamping: initializing\n"); */
+        }
+	when (delay(10)) {
+	    /* printf("sncFGTRamping: Startup delay over\n"); */
+            for (chan = 0; chan < 8; chan++) {
+                pvMonitor(voltageSetting[chan]);
+                pvMonitor(voltageReading[chan]);
+                pvMonitor(channelEnabled[chan]); 
+                pvMonitor(powerSwitch[chan]); 
+                pvMonitor(currentSetting[chan]);
+                pvMonitor(rampRate[chan]);
+                pvMonitor(autoResetDelay[chan]);
+                pvMonitor(autoResetEnabled[chan]);
+                pvMonitor(maxCycles[chan]);
+                pvMonitor(tripStatus[chan]);
+                pvMonitor(physicsVoltageSetting[chan]);
+                pvMonitor(standbyVoltageSetting[chan]);
+                pvMonitor(physicsRampRate[chan]);
+                pvMonitor(standbyRampRate[chan]);
+                pvMonitor(conditioningDelay[chan]);
+                pvMonitor(conditioningVoltageStep[chan]);
+            }
+	} state set_entry_state
+    }
+    state set_entry_state {
+        entry {
+	        sprintf(statusText,"UNKNOWN"); 
+	        pvPut(statusText);
+		control = 0;
+		pvPut(control);
+        }
+	when (control == 1) {
+	} state off
+	when (control == 2) {
+	} state standby
+	when (control == 3) {
+	} state physics
+    }
+    state prepare_to_ramp {
+        entry {
+	    /* printf("prepare to ramp\n"); */
+        }
+	when (real_power_state == 0) {
+		/* printf("main power switch %d\n", power);*/
+		control = 1;
+		pvPut(control, SYNC);
+	} state set_to_off
+	when (control == 1) {
+		/* printf("turning OFF all channels\n"); */
+        } state set_to_off
+	when (control == 2) {
+		/* printf("ramping all channels to STANDBY\n"); */
+        } state ramp_to_standby
+	when (control == 3) {
+		/* printf("ramping all channels to PHYSICS\n"); */
+        } state ramp_to_physics
+    }
+    state set_to_off {
+        entry {
+            /* printf("set to off\n"); */
+            sprintf(statusText,"Turning Off");
+            pvPut(statusText);
+	    for(i = 0; i < 8; i++) {
+	        powerSwitch[i] = 0;
+                pvPut(powerSwitch[i]);
+            }
+            for(i=0;i<8;i++) {
+              rampRate[i] = standbyRampRate[i];
+              pvPut(rampRate[i]);
+            }
+        } 
+        when (1 && delay(5)) {
+            for(i=0;i<8;i++) {
+              targetVoltage[i] = 0.0;
+              voltageSetting[i] = 0.0;
+              pvPut(voltageSetting[i],SYNC);
+              rampRate[i] = standbyRampRate[i];
+              pvPut(rampRate[i],SYNC);
+            }
+        } state off
+    }
+    state ramp_to_standby {
+        entry {
+            /* printf("ramp to standby\n"); */
+            sprintf(statusText,"Ramping to Standby");
+            pvPut(statusText);
+            for(i=0;i<8;i++) {
+              if(channelEnabled[i] == 1 && tripStatus[i] != 4) {
+                if(voltageSetting[i] < standbyVoltageSetting[i]) {
+                  targetVoltage[i] = ((voltageSetting[i] / conditioningVoltageStep[i]) + 1) * conditioningVoltageStep[i];
+                  if (targetVoltage[i] > standbyVoltageSetting[i]) {
+		      targetVoltage[i] = standbyVoltageSetting[i];  /* ramping up, increment voltage by voltage step */
+                  }
+                } else if (voltageSetting[i] > standbyVoltageSetting[i]) {
+                  targetVoltage[i] = standbyVoltageSetting[i];  /* ramping down, go directly to standby voltage */
+                }
+              } else {
+                targetVoltage[i] = 0;  /* channel is disabled, set voltage to zero */
+              }
+              voltageSetting[i] = targetVoltage[i];
+              pvPut(voltageSetting[i],SYNC);
+            }
+            for(i=0;i<8;i++) {
+              if(channelEnabled[i] == 1 && tripStatus[i] != 4) {
+                powerSwitch[i] = 1;
+                pvPut(powerSwitch[i],SYNC);
+               }
+            }
+            for(i=0;i<8;i++) {
+              rampRate[i] = standbyRampRate[i];
+              pvPut(rampRate[i]);
+            }
+        } 
+        when (1) {
+        } state standby_ramping_delay
+
+    }
+
+    state standby_ramping_delay {
+        entry {
+            /* printf("standby_ramping_delay\n");*/
+        }
+        when(delay(5)) {
+        } state check_standby_rampup
+        when (control !=3 && control != 2) {  /* if we're not in the process of ramping to physics or standby, quit this process */
+        } state prepare_to_ramp
+    }
+    state check_standby_rampup {
+        entry {
+            /* printf("check_standby_rampup\n");*/
+            sprintf(statusText,"Ramping");
+            pvPut(statusText);
+            endRamp = 1;
+            for(i=0;i<8;i++) {
+              if(channelEnabled[i] == 1 && tripStatus[i] != 4) {
+                if(targetVoltage[i] != 0) {
+                  /* printf("target: %f reading: %f reading/target: %f\n", voltageReading[i], targetVoltage[i], voltageReading[i]/targetVoltage[i]);*/
+                  if(voltageReading[i]/targetVoltage[i] < 0.97 || voltageReading[i]/targetVoltage[i] > 1.03) {
+                    endRamp = 0;
+                  }
+                }
+              }
+            }
+        }
+        when (control != 2 && control !=3 || real_power_state == 0) {  /* if we're not in the process of ramping to physics or standby, quit this process */
+        } state prepare_to_ramp
+        when (endRamp == 1) {
+        } state standby_ramping_step_finished
+        when (endRamp == 0) {
+        } state standby_ramping_delay
+    }
+    state standby_ramping_step_finished {
+        entry {
+            /* printf("standby_ramping_step_finished\n");*/
+            sprintf(statusText,"Ramp Step Finished");
+            pvPut(statusText);
+            endRamp = 1;
+            for(i=0;i<8;i++) {
+              if(channelEnabled[i] == 1 && tripStatus[i] != 4) {
+                if(targetVoltage[i] != standbyVoltageSetting[i]) {
+                  endRamp = 0;
+                }
+              }
+            }
+        }
+        when (control == 2 && endRamp == 1)  {
+        } state standby
+        when (delay(conditioningDelay[0]) && endRamp == 1)  {
+        } state standby
+        when (delay(conditioningDelay[0]) && endRamp == 0) {
+        } state ramp_to_standby
+        when (control != 2 && control !=3 || real_power_state == 0) {  /* if we're not in the process of ramping to physics or standby, quit this process */
+        } state prepare_to_ramp
+    }
+
+
+    state ramp_to_physics {
+        entry {
+            doneRampingToStandby = 1;
+            for(i=0;i<8;i++) {
+              if(channelEnabled[i] == 1 && tripStatus[i] != 4) {
+                if(voltageSetting[i] < standbyVoltageSetting[i]) {
+                  doneRampingToStandby = 0;
+                }
+              }
+            }
+        } 
+        when (doneRampingToStandby == 1) {
+        } state begin_physics_ramp
+        when(doneRampingToStandby == 0) {
+        } state ramp_to_standby
+    }
+    state begin_physics_ramp {
+       entry {
+            /* printf("ramp to physics\n");*/
+            sprintf(statusText,"Ramping to Physics");
+            pvPut(statusText);
+            for(i=0;i<8;i++) {
+              if(channelEnabled[i] == 1 && tripStatus[i] != 4) {
+                if(voltageSetting[i] < physicsVoltageSetting[i]) {
+                  targetVoltage[i] = ((voltageSetting[i] / conditioningVoltageStep[i]) + 1) * conditioningVoltageStep[i];
+                  if (targetVoltage[i] > physicsVoltageSetting[i]) {
+                      targetVoltage[i] = physicsVoltageSetting[i];  /* ramping up, increment voltage by voltage step */
+                  }
+                } else if (voltageSetting[i] > physicsVoltageSetting[i]) {
+                  targetVoltage[i] = physicsVoltageSetting[i];  /* ramping down, go directly to physics voltage */
+                }
+              } else {
+                targetVoltage[i] = 0;  /* channel is disabled, set voltage to zero */
+              }
+              voltageSetting[i] = targetVoltage[i];
+              pvPut(voltageSetting[i]);
+              if(channelEnabled[i] == 1 && tripStatus[i] != 4) {
+                if ( (physicsVoltageSetting[i] - targetVoltage[i]) <= conditioningVoltageStep[i]) {
+                    rampRate[i] = physicsRampRate[1];
+                } else {
+                    rampRate[i] = standbyRampRate[1];
+                }
+                pvPut(rampRate[i]);
+              }
+            }
+            for(i=0;i<8;i++) {
+              if(channelEnabled[i] == 1 && powerSwitch[i] == 0 && tripStatus[i] != 4) {
+                powerSwitch[i] = 1;
+                pvPut(powerSwitch[i]);
+               }
+            }
+        }
+        when (1) {
+        } state physics_ramping_delay
+    }
+
+    state physics_ramping_delay {
+        entry {
+            /* printf("physics_ramping_delay\n");*/
+        }
+        when(delay(5)) { 
+        } state check_physics_rampup
+        when (control !=3 || real_power_state == 0) {  /* if we're not in the process of ramping to physics or standby, quit this process */
+        } state prepare_to_ramp
+    }
+    state check_physics_rampup {
+        entry {
+            /* printf("check_physics_rampup\n");*/
+            sprintf(statusText,"Ramping");
+            pvPut(statusText);
+            endRamp = 1;
+            for(i=0;i<8;i++) {
+              if(channelEnabled[i] == 1 && tripStatus[i] != 4) {
+                if(targetVoltage[i] != 0) {
+                  /* printf("target: %f reading: %f reading/target: %f\n", voltageReading[i], targetVoltage[i], voltageReading[i]/targetVoltage[i]);*/
+                  if(voltageReading[i]/targetVoltage[i] < 0.97) {
+                    endRamp = 0;
+                  }
+                }
+              }
+            }
+        }
+        when (control != 2 && control !=3 || real_power_state == 0) {  /* if we're not in the process of ramping to physics or standby, quit this process */
+        } state prepare_to_ramp
+        when (endRamp == 1) {
+        } state physics_ramping_step_finished
+        when (endRamp == 0) {
+        } state physics_ramping_delay
+    }
+    state physics_ramping_step_finished {
+        entry {
+            /* printf("physics_ramping_step_finished\n");*/
+            sprintf(statusText,"Ramp Step Finished");
+            pvPut(statusText);
+            endRamp = 1;
+            for(i=0;i<8;i++) {
+              if(channelEnabled[i] == 1 && tripStatus[i] != 4) {
+                if(targetVoltage[i] != physicsVoltageSetting[i]) {
+                  endRamp = 0;
+                }
+              }
+            }
+        }
+        when (endRamp == 1)  {
+        } state physics
+        when (delay(conditioningDelay[0]) && endRamp == 0) {
+        } state begin_physics_ramp
+        when (control != 2 && control !=3 || real_power_state == 0) {  /* if we're not in the process of ramping to physics or standby, quit this process */
+        } state prepare_to_ramp
+    }
+
+    state off {
+        entry {
+            sprintf(statusText,"OFF");
+            pvPut(statusText);
+            /* printf("off state\n"); */
+        } 
+        when (control!=1) {
+        } state prepare_to_ramp
+    }
+    state standby {
+        entry {
+            sprintf(statusText,"STANDBY");
+            pvPut(statusText);
+            /* printf("standby state\n");*/
+        } 
+        when (control!=2 || real_power_state == 0) {
+        } state prepare_to_ramp
+    }
+    state physics {
+        entry {
+            sprintf(statusText,"PHYSICS");
+            pvPut(statusText);
+            /* printf("physics state\n"); */
+        } 
+        when (control!=3 || real_power_state == 0) {
+        } state prepare_to_ramp
+    }
+
+}
+   
+

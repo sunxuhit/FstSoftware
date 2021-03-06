@@ -1,0 +1,5 @@
+#!/bin/csh
+cd /home/sysuser/iocTop/FST/FSTMPOD03/iocBoot/iocsnmp
+source ../../setup_independent_env 
+
+screen -L -d -m -S fst-mpod03 -h 1000 ./iocstart

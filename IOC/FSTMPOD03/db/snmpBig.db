@@ -1,0 +1,693 @@
+#      record(longin,"CPU:epicsa:av_load_li")  {
+#            field(DESC,"cpuLoad")
+#            field(SCAN,"10 second")
+#            field(DTYP,"Snmp")
+#            field(INP,"@epicsa public UCD-SNMP-MIB::laLoadInt.1 INTEGER: 11")
+#            field(EGU,"%")
+#            field(HOPR,"100")
+#            field(ADEL,"1")
+#            field(MDEL,"1")
+#      }
+#      record(longin,"CPU:epicsb:av_load_li")  {
+#            field(DESC,"cpuLoad")
+#            field(SCAN,"10 second")
+#            field(DTYP,"Snmp")
+#            field(INP,"@epicsb public UCD-SNMP-MIB::laLoadInt.1 INTEGER: 11")
+#            field(EGU,"%")
+#            field(HOPR,"100")
+#            field(ADEL,"1")
+#            field(MDEL,"1")
+#      }
+#
+#      record(longin,"CPU:epicsc:av_load_li")  {
+#            field(DESC,"cpuLoad")
+#            field(SCAN,"10 second")
+#            field(DTYP,"Snmp")
+#            field(INP,"@epicsc public UCD-SNMP-MIB::laLoadInt.1 INTEGER: 11")
+#            field(EGU,"%")
+#            field(HOPR,"100")
+#            field(ADEL,"1")
+#            field(MDEL,"1")
+#      }
+#      record(longin,"CPU:epicsd:av_load_li")  {
+#            field(DESC,"cpuLoad")
+#            field(SCAN,"10 second")
+#            field(DTYP,"Snmp")
+#            field(INP,"@epicsd public UCD-SNMP-MIB::laLoadInt.1 INTEGER: 11")
+#            field(EGU,"%")
+#            field(HOPR,"100")
+#            field(ADEL,"1")
+#            field(MDEL,"1")
+#      }
+#      record(longin,"CPU:epicse:av_load_li")  {
+#            field(DESC,"cpuLoad")
+#            field(SCAN,"10 second")
+#            field(DTYP,"Snmp")
+#            field(INP,"@epicse public UCD-SNMP-MIB::laLoadInt.1 INTEGER: 11")
+#            field(EGU,"%")
+#            field(HOPR,"100")
+#            field(ADEL,"1")
+#            field(MDEL,"1")
+#      }
+#      record(longin,"CPU:epicsg:av_load_li")  {
+#            field(DESC,"cpuLoad")
+#            field(SCAN,"10 second")
+#            field(DTYP,"Snmp")
+#            field(INP,"@epicsg public UCD-SNMP-MIB::laLoadInt.1 INTEGER: 11")
+#            field(EGU,"%")
+#            field(HOPR,"100")
+#            field(ADEL,"1")
+#            field(MDEL,"1")
+#      }
+#
+#      record(longin,"CPU:epicsh:av_load_li")  {
+#            field(DESC,"cpuLoad")
+#            field(SCAN,"10 second")
+#            field(DTYP,"Snmp")
+#            field(INP,"@epicsh public UCD-SNMP-MIB::laLoadInt.1 INTEGER: 11")
+#            field(EGU,"%")
+#            field(HOPR,"100")
+#            field(ADEL,"1")
+#            field(MDEL,"1")
+#      }
+#
+#      record(longin,"CPU:epicsj:av_load_li")  {
+#            field(DESC,"cpuLoad")
+#            field(SCAN,"10 second")
+#            field(DTYP,"Snmp")
+#            field(INP,"@epicsj public UCD-SNMP-MIB::laLoadInt.1 INTEGER: 11")
+#            field(EGU,"%")
+#            field(HOPR,"100")
+#            field(ADEL,"1")
+#            field(MDEL,"1")
+#      }
+#
+#      record(longin,"CPU:epicsk:av_load_li")  {
+#            field(DESC,"cpuLoad")
+#            field(SCAN,"10 second")
+#            field(DTYP,"Snmp")
+#            field(INP,"@epicsk public UCD-SNMP-MIB::laLoadInt.1 INTEGER: 11")
+#            field(EGU,"%")
+#            field(HOPR,"100")
+#            field(ADEL,"1")
+#            field(MDEL,"1")
+#      }
+#
+
+
+
+      record(calc,"NET:epicsSNMP0:IF:Ucast_calc")  {
+            field(DESC,"NetTrafic")
+            field(SCAN,"10 second")
+            field(CALC,"(B <= 0)?0:((A-B)/10)")
+            field(INPA,"NET:epicsSNMP0:IF:Ucast_li.VAL NPP NMS")
+            field(INPB,"NET:epicsSNMP0:IF:Ucast_calc.LA NPP NMS")
+            field(EGU,"percent")
+            field(PREC,"2")
+            field(HOPR,"100")
+            field(HIHI,"95")
+            field(HIGH,"90")
+            field(HHSV,"MAJOR")
+            field(HSV,"MINOR")
+            field(ADEL,"0.5")
+            field(MDEL,"0.1")
+      }
+      record(longin,"NET:epicsSNMP0:IF:Ucast_li")  {
+            field(DESC,"IF: Ucast")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public IF-MIB::ifInUcastPkts.1 Counter32: 11")
+            field(EGU,"Packets")
+            field(ADEL,"1000")
+            field(MDEL,"1000")
+      }
+
+
+
+      record(longin,"PROC:epicsSNMP0:number_li")  {
+            field(DESC,"number of proc")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrSystemProcesses.0 Gauge32: 1")
+            field(EGU,"Packets")
+            field(ADEL,"1")
+            field(MDEL,"1")
+      }
+      record(longin,"CPU:epicsSNMP0:av_load_li")  {
+            field(DESC,"cpuLoad")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public UCD-SNMP-MIB::laLoadInt.1 INTEGER: 11")
+            field(EGU,"%")
+            field(HOPR,"100")
+            field(ADEL,"1")
+            field(MDEL,"1")
+      }
+      record(longin,"NET:epicsSNMP0:tcpConn_li")  {
+            field(DESC,"num of tcp-connection")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public TCP-MIB::tcpCurrEstab.0 Gauge32: 11")
+            field(ADEL,"1")
+            field(MDEL,"1")
+      }
+# kryknetX session
+      record(calc,"NET:kryknet02:RMON:Bcast_calc")  {
+            field(DESC,"NetTrafic")
+            field(SCAN,"10 second")
+            field(CALC,"(B <= 0)?0:((A-B)/10)")
+            field(INPA,"NET:kryknet02:RMON:Bcast_li.VAL NPP NMS")
+            field(INPB,"NET:kryknet02:RMON:Bcast_calc.LA NPP NMS")
+            field(EGU,"percent")
+            field(PREC,"2")
+            field(HOPR,"100")
+            field(HIHI,"95")
+            field(HIGH,"90")
+            field(HHSV,"MAJOR")
+            field(HSV,"MINOR")
+            field(ADEL,"0.5")
+            field(MDEL,"0.1")
+      }
+      record(longin,"NET:kryknet02:RMON:Bcast_li")  {
+            field(DESC,"RMON: Bcast")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@kryknet02 public RMON-MIB::etherStatsBroadcastPkts.1 Counter32: 11")
+            field(EGU,"Packets")
+            field(ADEL,"1000")
+            field(MDEL,"1000")
+      }
+# new:
+#root
+      record(stringin,"DSK:epicsSNMP0:root:Label_si")  {
+            field(DESC,"disk logical name")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageDescr.4 STRING: 30")
+      }
+      record(longin,"DSK:epicsSNMP0:root:Bs_li")  {
+            field(DESC,"hrStorageAllocationUnits")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageAllocationUnits.4 INTEGER: 11")
+            field(EGU,"bytes/block")
+            field(ADEL,"1")
+            field(MDEL,"1")
+      }
+      record(longin,"DSK:epicsSNMP0:root:Size_li")  {
+            field(DESC,"hrStorageSize")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageSize.4 INTEGER: 11")
+      }
+
+      record(longin,"DSK:epicsSNMP0:root:Used_li")  {
+            field(DESC,"hrStorageUsed")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageUsed.4 INTEGER: 11")
+            field(EGU,"blocks")
+            field(ADEL,"100")
+            field(MDEL,"100")
+      }
+
+      record(calc,"DSK:epicsSNMP0:root:Per_calc")  {
+            field(DESC,"Disk measurment")
+            field(SCAN,"10 second")
+            field(CALC,"100*A/B")
+            field(INPA,"DSK:epicsSNMP0:root:Used_li NPP NMS")
+            field(INPB,"DSK:epicsSNMP0:root:Size_li NPP NMS")
+            field(EGU,"percent")
+            field(PREC,"2")
+            field(HOPR,"100")
+            field(HIHI,"95")
+            field(HIGH,"90")
+            field(HHSV,"MAJOR")
+            field(HSV,"MINOR")
+            field(ADEL,"0.5")
+            field(MDEL,"0.1")
+      }
+
+# tmp
+
+      record(stringin,"DSK:epicsSNMP0:tmp:Label_si")  {
+            field(DESC,"disk logical name")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageDescr.7 STRING: 30")
+      }
+      record(longin,"DSK:epicsSNMP0:tmp:Bs_li")  {
+            field(DESC,"hrStorageAllocationUnits")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageAllocationUnits.7 INTEGER: 11")
+            field(EGU,"bytes/block")
+            field(ADEL,"1")
+            field(MDEL,"1")
+      }
+      record(longin,"DSK:epicsSNMP0:tmp:Size_li")  {
+            field(DESC,"hrStorageSize")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageSize.7 INTEGER: 11")
+      }
+
+      record(longin,"DSK:epicsSNMP0:tmp:Used_li")  {
+            field(DESC,"hrStorageUsed")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageUsed.7 INTEGER: 11")
+            field(EGU,"blocks")
+            field(ADEL,"100")
+            field(MDEL,"100")
+      }
+
+      record(calc,"DSK:epicsSNMP0:tmp:Per_calc")  {
+            field(DESC,"Disk measurment")
+            field(SCAN,"10 second")
+            field(CALC,"100*A/B")
+            field(INPA,"DSK:epicsSNMP0:tmp:Used_li NPP NMS")
+            field(INPB,"DSK:epicsSNMP0:tmp:Size_li NPP NMS")
+            field(EGU,"percent")
+            field(PREC,"2")
+            field(HOPR,"100")
+            field(HIHI,"95")
+            field(HIGH,"90")
+            field(HHSV,"MAJOR")
+            field(HSV,"MINOR")
+            field(ADEL,"0.5")
+            field(MDEL,"0.1")
+      }
+# app 10
+
+      record(stringin,"DSK:epicsSNMP0:applic:Label_si")  {
+            field(DESC,"disk logical name")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageDescr.10 STRING: 30")
+      }
+      record(longin,"DSK:epicsSNMP0:applic:Bs_li")  {
+            field(DESC,"hrStorageAllocationUnits")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageAllocationUnits.10 INTEGER: 11")
+            field(EGU,"bytes/block")
+            field(ADEL,"1")
+            field(MDEL,"1")
+      }
+      record(longin,"DSK:epicsSNMP0:applic:Size_li")  {
+            field(DESC,"hrStorageSize")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageSize.10 INTEGER: 11")
+      }
+
+      record(longin,"DSK:epicsSNMP0:applic:Used_li")  {
+            field(DESC,"hrStorageUsed")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageUsed.10 INTEGER: 11")
+            field(EGU,"blocks")
+            field(ADEL,"100")
+            field(MDEL,"100")
+      }
+
+      record(calc,"DSK:epicsSNMP0:applic:Per_calc")  {
+            field(DESC,"Disk measurment")
+            field(SCAN,"10 second")
+            field(CALC,"100*A/B")
+            field(INPA,"DSK:epicsSNMP0:applic:Used_li NPP NMS")
+            field(INPB,"DSK:epicsSNMP0:applic:Size_li NPP NMS")
+            field(EGU,"percent")
+            field(PREC,"2")
+            field(HOPR,"100")
+            field(HIHI,"95")
+            field(HIGH,"90")
+            field(HHSV,"MAJOR")
+            field(HSV,"MINOR")
+            field(ADEL,"0.5")
+            field(MDEL,"0.1")
+      }
+# appMKK 11
+
+      record(stringin,"DSK:epicsSNMP0:appMKK:Label_si")  {
+            field(DESC,"disk logical name")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageDescr.11 STRING: 30")
+      }
+      record(longin,"DSK:epicsSNMP0:appMKK:Bs_li")  {
+            field(DESC,"hrStorageAllocationUnits")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageAllocationUnits.11 INTEGER: 11")
+            field(EGU,"bytes/block")
+            field(ADEL,"1")
+            field(MDEL,"1")
+      }
+      record(longin,"DSK:epicsSNMP0:appMKK:Size_li")  {
+            field(DESC,"hrStorageSize")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageSize.11 INTEGER: 11")
+      }
+
+      record(longin,"DSK:epicsSNMP0:appMKK:Used_li")  {
+            field(DESC,"hrStorageUsed")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageUsed.11 INTEGER: 11")
+            field(EGU,"blocks")
+            field(ADEL,"100")
+            field(MDEL,"100")
+      }
+
+      record(calc,"DSK:epicsSNMP0:appMKK:Per_calc")  {
+            field(DESC,"Disk measurment")
+            field(SCAN,"10 second")
+            field(CALC,"100*A/B")
+            field(INPA,"DSK:epicsSNMP0:appMKK:Used_li NPP NMS")
+            field(INPB,"DSK:epicsSNMP0:appMKK:Size_li NPP NMS")
+            field(EGU,"percent")
+            field(PREC,"2")
+            field(HOPR,"100")
+            field(HIHI,"95")
+            field(HIGH,"90")
+            field(HHSV,"MAJOR")
+            field(HSV,"MINOR")
+            field(ADEL,"0.5")
+            field(MDEL,"0.1")
+      }
+# user 12
+
+      record(stringin,"DSK:epicsSNMP0:user:Label_si")  {
+            field(DESC,"disk logical name")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageDescr.12 STRING: 30")
+      }
+      record(longin,"DSK:epicsSNMP0:user:Bs_li")  {
+            field(DESC,"hrStorageAllocationUnits")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageAllocationUnits.12 INTEGER: 11")
+            field(EGU,"bytes/block")
+            field(ADEL,"1")
+            field(MDEL,"1")
+      }
+      record(longin,"DSK:epicsSNMP0:user:Size_li")  {
+            field(DESC,"hrStorageSize")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageSize.12 INTEGER: 11")
+      }
+
+      record(longin,"DSK:epicsSNMP0:user:Used_li")  {
+            field(DESC,"hrStorageUsed")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageUsed.12 INTEGER: 11")
+            field(EGU,"blocks")
+            field(ADEL,"100")
+            field(MDEL,"100")
+      }
+
+      record(calc,"DSK:epicsSNMP0:user:Per_calc")  {
+            field(DESC,"Disk measurment")
+            field(SCAN,"10 second")
+            field(CALC,"100*A/B")
+            field(INPA,"DSK:epicsSNMP0:user:Used_li NPP NMS")
+            field(INPB,"DSK:epicsSNMP0:user:Size_li NPP NMS")
+            field(EGU,"percent")
+            field(PREC,"2")
+            field(HOPR,"100")
+            field(HIHI,"95")
+            field(HIGH,"90")
+            field(HHSV,"MAJOR")
+            field(HSV,"MINOR")
+            field(ADEL,"0.5")
+            field(MDEL,"0.1")
+      }
+# vxBoot 13
+
+      record(stringin,"DSK:epicsSNMP0:vxBoot:Label_si")  {
+            field(DESC,"disk logical name")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageDescr.13 STRING: 30")
+      }
+      record(longin,"DSK:epicsSNMP0:vxBoot:Bs_li")  {
+            field(DESC,"hrStorageAllocationUnits")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageAllocationUnits.13 INTEGER: 11")
+            field(EGU,"bytes/block")
+            field(ADEL,"1")
+            field(MDEL,"1")
+      }
+      record(longin,"DSK:epicsSNMP0:vxBoot:Size_li")  {
+            field(DESC,"hrStorageSize")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageSize.13 INTEGER: 11")
+      }
+
+      record(longin,"DSK:epicsSNMP0:vxBoot:Used_li")  {
+            field(DESC,"hrStorageUsed")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageUsed.13 INTEGER: 11")
+            field(EGU,"blocks")
+            field(ADEL,"100")
+            field(MDEL,"100")
+      }
+
+      record(calc,"DSK:epicsSNMP0:vxBoot:Per_calc")  {
+            field(DESC,"Disk measurment")
+            field(SCAN,"10 second")
+            field(CALC,"100*A/B")
+            field(INPA,"DSK:epicsSNMP0:vxBoot:Used_li NPP NMS")
+            field(INPB,"DSK:epicsSNMP0:vxBoot:Size_li NPP NMS")
+            field(EGU,"percent")
+            field(PREC,"2")
+            field(HOPR,"100")
+            field(HIHI,"95")
+            field(HIGH,"90")
+            field(HHSV,"MAJOR")
+            field(HSV,"MINOR")
+            field(ADEL,"0.5")
+            field(MDEL,"0.1")
+      }
+
+# data1 14
+
+      record(stringin,"DSK:epicsSNMP0:data1:Label_si")  {
+            field(DESC,"disk logical name")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageDescr.14 STRING: 30")
+      }
+      record(longin,"DSK:epicsSNMP0:data1:Bs_li")  {
+            field(DESC,"hrStorageAllocationUnits")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageAllocationUnits.14 INTEGER: 11")
+            field(EGU,"bytes/block")
+            field(ADEL,"1")
+            field(MDEL,"1")
+      }
+      record(longin,"DSK:epicsSNMP0:data1:Size_li")  {
+            field(DESC,"hrStorageSize")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageSize.14 INTEGER: 11")
+      }
+
+      record(longin,"DSK:epicsSNMP0:data1:Used_li")  {
+            field(DESC,"hrStorageUsed")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageUsed.14 INTEGER: 11")
+            field(EGU,"blocks")
+            field(ADEL,"100")
+            field(MDEL,"100")
+      }
+
+      record(calc,"DSK:epicsSNMP0:data1:Per_calc")  {
+            field(DESC,"Disk measurment")
+            field(SCAN,"10 second")
+            field(CALC,"100*A/B")
+            field(INPA,"DSK:epicsSNMP0:data1:Used_li NPP NMS")
+            field(INPB,"DSK:epicsSNMP0:data1:Size_li NPP NMS")
+            field(EGU,"percent")
+            field(PREC,"2")
+            field(HOPR,"100")
+            field(HIHI,"95")
+            field(HIGH,"90")
+            field(HHSV,"MAJOR")
+            field(HSV,"MINOR")
+            field(ADEL,"0.5")
+            field(MDEL,"0.1")
+      }
+
+# data2 15
+
+      record(stringin,"DSK:epicsSNMP0:data2:Label_si")  {
+            field(DESC,"disk logical name")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageDescr.15 STRING: 30")
+      }
+      record(longin,"DSK:epicsSNMP0:data2:Bs_li")  {
+            field(DESC,"hrStorageAllocationUnits")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageAllocationUnits.15 INTEGER: 11")
+            field(EGU,"bytes/block")
+            field(ADEL,"1")
+            field(MDEL,"1")
+      }
+      record(longin,"DSK:epicsSNMP0:data2:Size_li")  {
+            field(DESC,"hrStorageSize")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageSize.15 INTEGER: 11")
+      }
+
+      record(longin,"DSK:epicsSNMP0:data2:Used_li")  {
+            field(DESC,"hrStorageUsed")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageUsed.15 INTEGER: 11")
+            field(EGU,"blocks")
+            field(ADEL,"100")
+            field(MDEL,"100")
+      }
+
+      record(calc,"DSK:epicsSNMP0:data2:Per_calc")  {
+            field(DESC,"Disk measurment")
+            field(SCAN,"10 second")
+            field(CALC,"100*A/B")
+            field(INPA,"DSK:epicsSNMP0:data2:Used_li NPP NMS")
+            field(INPB,"DSK:epicsSNMP0:data2:Size_li NPP NMS")
+            field(EGU,"percent")
+            field(PREC,"2")
+            field(HOPR,"100")
+            field(HIHI,"95")
+            field(HIGH,"90")
+            field(HHSV,"MAJOR")
+            field(HSV,"MINOR")
+            field(ADEL,"0.5")
+            field(MDEL,"0.1")
+      }
+
+#mem
+
+      record(stringin,"MEM:epicsSNMP0:mem:Label_si")  {
+            field(DESC,"disk logical name")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageDescr.2 STRING: 30")
+      }
+      record(calc,"MEM:epicsSNMP0:mem:Per_calc")  {
+            field(DESC,"Disk measurment")
+            field(SCAN,"10 second")
+            field(CALC,"100*A/B")
+            field(INPA,"MEM:epicsSNMP0:mem:Used_li NPP NMS")
+            field(INPB,"MEM:epicsSNMP0:mem:Size_li NPP NMS")
+            field(EGU,"percent")
+            field(PREC,"2")
+            field(HOPR,"100")
+            field(HIHI,"95")
+            field(HIGH,"90")
+            field(HHSV,"MAJOR")
+            field(HSV,"MINOR")
+            field(ADEL,"0.5")
+            field(MDEL,"0.1")
+      }
+      record(longin,"MEM:epicsSNMP0:mem:Bs_li")  {
+            field(DESC,"hrStorageAllocationUnits")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageAllocationUnits.2 INTEGER: 11")
+            field(EGU,"bytes/block")
+            field(ADEL,"1")
+            field(MDEL,"1")
+      }
+      record(longin,"MEM:epicsSNMP0:mem:Size_li")  {
+            field(DESC,"hrStorageSize")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageSize.2 INTEGER: 11")
+      }
+      record(longin,"MEM:epicsSNMP0:mem:Used_li")  {
+            field(DESC,"hrStorageUsed")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageUsed.2 INTEGER: 11")
+            field(EGU,"blocks")
+            field(ADEL,"1000")
+            field(MDEL,"1000")
+      }
+#swap
+      record(stringin,"MEM:epicsSNMP0:swap:Label_si")  {
+            field(DESC,"disk logical name")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageDescr.3 STRING: 30")
+      }
+      record(calc,"MEM:epicsSNMP0:swap:Per_calc")  {
+            field(DESC,"Disk measurment")
+            field(SCAN,"10 second")
+            field(CALC,"100*A/B")
+            field(INPA,"MEM:epicsSNMP0:swap:Used_li NPP NMS")
+            field(INPB,"MEM:epicsSNMP0:swap:Size_li NPP NMS")
+            field(EGU,"percent")
+            field(PREC,"2")
+            field(HOPR,"100")
+            field(HIHI,"95")
+            field(HIGH,"90")
+            field(HHSV,"MAJOR")
+            field(HSV,"MINOR")
+            field(ADEL,"0.5")
+            field(MDEL,"0.1")
+      }
+      record(longin,"MEM:epicsSNMP0:swap:Bs_li")  {
+            field(DESC,"hrStorageAllocationUnits")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageAllocationUnits.3 INTEGER: 11")
+            field(EGU,"bytes/block")
+            field(ADEL,"1")
+            field(MDEL,"1")
+      }
+      record(longin,"MEM:epicsSNMP0:swap:Size_li")  {
+            field(DESC,"hrStorageSize")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageSize.3 INTEGER: 11")
+      }
+      record(longin,"MEM:epicsSNMP0:swap:Used_li")  {
+            field(DESC,"hrStorageUsed")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrStorageUsed.3 INTEGER: 11")
+            field(EGU,"blocks")
+            field(ADEL,"1000")
+            field(MDEL,"1000")
+      }
+
+
+# procNum
+
+      record(longin,"PROC:epicsSNMP0:number_li")  {
+            field(DESC,"numOfProc")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@epicsSNMP0 public HOST-RESOURCES-MIB::hrSystemProcesses.0 Gauge32: 11")
+            field(EGU,"%")
+            field(ADEL,"1")
+      }
+
+
+

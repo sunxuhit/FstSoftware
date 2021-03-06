@@ -1,0 +1,14 @@
+record (longin,"snmp_li")
+{
+	field (DTYP,"Snmp")
+	field (INP,"@localhost public IF-MIB::ifInUcastPkts.1 Counter32: 11")
+        field (SCAN,"5 second")
+}
+record (stringin, "snmp_si")
+{
+        field (DTYP,"Snmp")
+        field (INP,"@localhost public system.sysDescr.0  STRING: 100")
+        field (SCAN,"5 second")
+}
+
+

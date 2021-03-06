@@ -1,0 +1,253 @@
+###############################################################################################
+NSCL modifications
+Author: John A. Priller (priller@nscl.msu.edu)
+###############################################################################################
+
+- Re-written in C++
+
+- Support added for ao, longout, stringout
+
+    Output records must be SCAN 'Passive'
+
+    Output records are polled periodically and their VAL fields updated
+    if their readback does not match their output value.  After a
+    setting is made through an output record a delay is provided before
+    performing output/readback checking to prevent value "flicker".
+
+- Added iocsh commands:
+
+    epicsSnmpSetSnmpVersion(char *host, char *versionStr)
+      sets SNMP version to use with the given host
+
+      MUST be called prior to loading database w/snmp records
+      referencing this host
+
+      host should exactly match host specified in INP/OUT fields, no
+      name/IP lookups are performed
+
+      version string must be one of the following:
+        "SNMP_VERSION_1"
+        "SNMP_VERSION_2c"
+        "SNMP_VERSION_3"
+
+      hosts that do NOT have this call made for them will default to
+      SNMP_VERSION_2c
+
+    epicsSnmpSetMaxOidsPerReq(char *host, int maxoids)
+      sets maximum number of oids driver can pack into a read request
+      for this host
+
+      can be called prior to loading databases referencing this host,
+      or at any time in IOC shell (either in startup script or "live").
+
+      host should exactly match host specified in INP/OUT fields, no
+      name/IP lookups are performed
+
+      hosts that do NOT have this call made for them will default to 32
+
+      Wiener/ISEG crates can generally handle 50 oids per read request
+
+    devSnmpSetDebug(int level)
+      set debugging-message level (0 is 'off')
+
+    snmpr(int level, char *match = NULL)
+      dumps a report to the terminal including PVs whose names include
+      the substring 'match'.  If 'match' is null then all PVs are
+      included.
+
+    snmpz()
+      zeros all counters used for reports
+
+    snmpzr(int level, char *match = NULL)
+      zeros all counters, waits 10 seconds, then issues snmpr(level,match)
+
+- changes to INP/OUT field specification
+
+    Format is now:
+       @host community oidname mask max_data_len [set_format]
+
+       Only set_format is optional, and is used only in output records
+       (ao, longout, stringout).  This is the case-sensitive single
+       character accepted by the net-snmp snmp_add_var function.  If
+       not specified it defaults to 's', or string.  Common values are
+       'F' for float and 'i' for integer.
+
+    Examples:
+      field(INP, "@35.9.57.99 guru WIENER-CRATE-MIB::psOperatingTime.0 INTEGER: 100")
+      field(OUT, "@35.9.57.99 guru WIENER-CRATE-MIB::outputVoltage.u300 Float: 100 F")
+
+    Underscore characters in mask field now match ANY character, useful
+    for masks that have spaces in them such as "Opaque: Float:" from
+    some WIENER/ISEG power supply Oids.
+
+- return values on communication failures
+
+    If a value for any record cannot be obtained for 10 seconds, the
+    record's status and severity are raised.  At NSCL it is desired
+    that input records with communications errors additionally return a
+    weird value (-999) so that operators examining only the return
+    value (or looking at archived value data) are aware that something
+    is/was wrong.
+
+    To eliminate this behavior, comment out these lines in devSnmp.cpp
+    and recompile:
+
+      #define AI_ON_READ_ERROR_VALUE  -999.999
+      #define LI_ON_READ_ERROR_VALUE  -999
+      #define SI_ON_READ_ERROR_VALUE  "INVALID"
+
+    Output records do NOT return weird values, as these might be stored
+    by bumpless-reboot code and then applied as settings later.  Their
+    status and severity are still elevated on communications timeouts.
+
+- other notes
+
+    Serialization and SCAN rates
+
+      The code assumes an SNMP host can only process one request at a
+      time (and this happens to be true for WIENER ISEG/MPOD crates).
+      The code also attempts to perform polling for PVs at
+      approximately what their SCAN rate is set to ('Passive' records
+      are polled at a slow rate).  Multiple elements are requested in
+      each poll whenever possible.
+
+      To improve polling rates for PVs where performance is important,
+      give them faster scan rates while giving slower scan rates to
+      less important PVs.
+
+      The snmpr() ioc shell command will return information on polling
+      rate performance for devices.
+
+    Oids per GET transaction
+
+      The number of Oids that can be read from a remote SNMP agent in a
+      single get transation will vary depending on the device's SNMP
+      implementation, the maximum buffer size it uses, and on the size
+      of the data each oid returns.
+
+      By default the driver assumes 50 oids can be packed into every
+      get transaction.  If the remote SNMP agent cannot handle this many
+      oids in a request or cannot handle the amount of data to be
+      returned, then read errors will occur.  If this is suspected, one
+      can try dialing back the number of oids per request by calling
+      epicsSnmpSetMaxOidsPerReq (either in the IOC's startup script or
+      at any time in the live IOC shell) with a smaller number.
+
+    Oid names
+
+      Oid names can be LONG.  At NSCL we have modified our EPICS base
+      code R3.14.9's dbStaticLib.c to allow for 256 char strings in DB
+      fields rather than the default of 80, in order to work around this.
+
+
+###############################################################################################
+# README contents from DESY 1.03 below:
+###############################################################################################
+Initial author: Richard Dabney (doesn't work in LANL anymore)
+Current support: Albert Kagarmanov (DESY)
+Version: 1.03
+Data: November 14 , 2006
+
+Currently initial snmp-devSupport from Richard Dabney organized as
+" single softIOC application"
+
+( See  Chapter 2 of http://www.aps.anl.gov/epics/base/R3-14/8-docs/AppDevGuide.pdf  about makeBaseApp.pl)
+
+You should only change file configure/RELEASE in a manner:
+
+EPICS_BASE= __your__EPICS_BASE__
+i.e. EPICS_BASE= /u/mks/kagarman/EpicsR3.14.7.2/base
+
+After that
+gmake
+cd  iocBoot/iocsnmp
+st.cmd
+
+It's all!
+Let me know if something wrong by e-mail  Albert.Kagarmanov@desy.de
+
+
+
+###############################################################################################
+#History version
+# Date                  who               vers    	reason
+
+# 11-nov-2006	Albert.Kagarmanov@desy.de 1.01	add Conter32 support by DESY_PATCH
+                                              	compilation variable. See
+						snmpApp/src/devSnmp.c for details
+
+# 12-nov-2006	Albert.Kagarmanov@desy.de 1.02	change ThreadStackSize till 128K
+						as it written in base/documentation/
+						RELEASE_NOTES.html
+
+# 14-nov-2006	Albert.Kagarmanov@desy.de 1.03	change ThreadStackSize till
+						epicsThreadGetStackSize(epicsThreadStackBig),
+                                                as it discussed at www.aps.anl.gov/
+						epics/tech-talk/2006/msg01277.php
+
+###############################################################################################
+
+######################################## COMMENT FROM Richard Dabney : #########################
+This module is the device support for
+SNMP--EPICS integration.
+To build this device support into your App:
+Modify your RELEASE file to include
+DEVSNMP=<location of devSnmp TOP>
+e.g. DEVSNMP=$(SHARE_RELEASE)/devSnmp/R1-0
+
+You must link the library (i.e. libdevSnmp.a)
+into your soft-IOC's application Makefile.
+
+Finally, you must initialize the snmp support in
+your IOC's st.cmd file after iocInit:
+
+------ st.cmd snippet ----------------------------
+iocInit()
+epicsSnmpInit
+--------------------------------------------------
+
+
+
+Requirements:
+=====================================================================================================
+1.) The driver needs to support accepting a numeric or character OID for example:
+      --- interfaces.ifTable.ifEntry.ifOutQLen.1
+      OR
+      --- .1.3.6.1.2.1.2.2.1.21.1
+2.) Need ai and longin record support.
+If the SNMP is looking at a counter it needs to be reported from EPICS as a number not a string.
+ --- String Record Support won't be enough (we need to archive data from the switch)
+ --- We need the value of the various 32-bit counters on the CISCO switch:
+      ** interfaces.ifTable.ifEntry.ifInOctets.1 = Counter32: 201908536
+      ** interfaces.ifTable.ifEntry.ifOutOctets.1 = Counter32: 126227099
+
+      ** interfaces.ifTable.ifEntry.ifInUcastPkts.1 = Counter32: 964480
+      ** interfaces.ifTable.ifEntry.ifOutUcastPkts.1 = Counter32: 967133
+
+      ** interfaces.ifTable.ifEntry.ifInNUcastPkts.1 = Counter32: 398090
+      ** interfaces.ifTable.ifEntry.ifOutNUcastPkts.1 = Counter32: 0
+
+      ** interfaces.ifTable.ifEntry.ifInDiscards.1 = Counter32: 401
+      ** interfaces.ifTable.ifEntry.ifOutDiscards.1 = Counter32: 0
+
+      ** interfaces.ifTable.ifEntry.ifInErrors.1 = Counter32: 0
+      ** interfaces.ifTable.ifEntry.ifOutErrors.1 = Counter32: 0
+
+      --- We need the value of gauges as well:
+          ** interfaces.ifTable.ifEntry.ifOutQLen.1 = Gauage32: 65533
+
+     --- We also need Timeticks for example:
+         We need the numeric vaule and also time-stamp string
+         ** system.sysUpTime.0 = Timeticks: (648150572)  75 days, 0:25:05.72
+
+
+In conclusion we have the following types that need to be support at the driver/device layer:
+-- Counters
+-- Guages
+-- Timeticks
+-- Strings
+============================================================================
+################################# END OF COMMENT FROM Richard Dabney : #########################
+
+
+

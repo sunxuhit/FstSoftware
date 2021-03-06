@@ -1,0 +1,632 @@
+program sncFGTControl
+
+option +r;
+
+int chan;
+int board;
+int channelref;
+int v;
+int i;
+int j;
+int doneRampingToStandby;
+int endRamp;  /* 1 = ramping step done, 0 = continue ramping */
+int control;  /* 0 = uninitialiazed, 1 = OFF, 2 = STANDBY, 3 = PHYSICS */
+
+char buff[1025];
+char *next;
+
+int m;
+int ii;
+
+assign control to "{SYSTEM}:ramp_control_switch";
+monitor control;
+
+assign v to "{SYSTEM}:master_control_switch";
+monitor v;
+
+string hv_filename;
+assign hv_filename to "{SYSTEM}:hv_settings";
+monitor hv_filename;
+
+double targetVoltage[32];
+double physicsVoltageSetting[32];
+double standbyVoltageSetting[32];
+double physicsRampRate[32];
+double standbyRampRate[32];
+double conditioningDelay[32];
+double conditioningVoltageStep[32];
+double tripStatus[32];
+
+double voltageSetting[32];
+double voltageReading[32];
+double powerSwitch[32];      /* this value connected to the actual PV which signals the crate */
+double channelEnabled[32];   /* software value indicates that powerSwitch should be thrown when needed */
+double currentSetting[32];
+double rampRate[32];
+double autoResetDelay[32];
+double autoResetEnabled[32];
+double maxCycles[332];
+
+assign physicsVoltageSetting[0] to "{SYSTEM}:physics_voltage_u0";
+assign physicsVoltageSetting[1] to "{SYSTEM}:physics_voltage_u1";
+assign physicsVoltageSetting[2] to "{SYSTEM}:physics_voltage_u2";
+assign physicsVoltageSetting[3] to "{SYSTEM}:physics_voltage_u3";
+assign physicsVoltageSetting[4] to "{SYSTEM}:physics_voltage_u4";
+assign physicsVoltageSetting[5] to "{SYSTEM}:physics_voltage_u5";
+assign physicsVoltageSetting[6] to "{SYSTEM}:physics_voltage_u6";
+assign physicsVoltageSetting[7] to "{SYSTEM}:physics_voltage_u7";
+assign physicsVoltageSetting[8] to "{SYSTEM}:physics_voltage_u100";
+assign physicsVoltageSetting[9] to "{SYSTEM}:physics_voltage_u101";
+assign physicsVoltageSetting[10] to "{SYSTEM}:physics_voltage_u102";
+assign physicsVoltageSetting[11] to "{SYSTEM}:physics_voltage_u103";
+assign physicsVoltageSetting[12] to "{SYSTEM}:physics_voltage_u104";
+assign physicsVoltageSetting[13] to "{SYSTEM}:physics_voltage_u105";
+assign physicsVoltageSetting[14] to "{SYSTEM}:physics_voltage_u106";
+assign physicsVoltageSetting[15] to "{SYSTEM}:physics_voltage_u107";
+assign physicsVoltageSetting[16] to "{SYSTEM}:physics_voltage_u200";
+assign physicsVoltageSetting[17] to "{SYSTEM}:physics_voltage_u201";
+assign physicsVoltageSetting[18] to "{SYSTEM}:physics_voltage_u202";
+assign physicsVoltageSetting[19] to "{SYSTEM}:physics_voltage_u203";
+assign physicsVoltageSetting[20] to "{SYSTEM}:physics_voltage_u204";
+assign physicsVoltageSetting[21] to "{SYSTEM}:physics_voltage_u205";
+assign physicsVoltageSetting[22] to "{SYSTEM}:physics_voltage_u206";
+assign physicsVoltageSetting[23] to "{SYSTEM}:physics_voltage_u207";
+assign standbyVoltageSetting[0] to "{SYSTEM}:standby_voltage_u0";
+assign standbyVoltageSetting[1] to "{SYSTEM}:standby_voltage_u1";
+assign standbyVoltageSetting[2] to "{SYSTEM}:standby_voltage_u2";
+assign standbyVoltageSetting[3] to "{SYSTEM}:standby_voltage_u3";
+assign standbyVoltageSetting[4] to "{SYSTEM}:standby_voltage_u4";
+assign standbyVoltageSetting[5] to "{SYSTEM}:standby_voltage_u5";
+assign standbyVoltageSetting[6] to "{SYSTEM}:standby_voltage_u6";
+assign standbyVoltageSetting[7] to "{SYSTEM}:standby_voltage_u7";
+assign standbyVoltageSetting[8] to "{SYSTEM}:standby_voltage_u100";
+assign standbyVoltageSetting[9] to "{SYSTEM}:standby_voltage_u101";
+assign standbyVoltageSetting[10] to "{SYSTEM}:standby_voltage_u102";
+assign standbyVoltageSetting[11] to "{SYSTEM}:standby_voltage_u103";
+assign standbyVoltageSetting[12] to "{SYSTEM}:standby_voltage_u104";
+assign standbyVoltageSetting[13] to "{SYSTEM}:standby_voltage_u105";
+assign standbyVoltageSetting[14] to "{SYSTEM}:standby_voltage_u106";
+assign standbyVoltageSetting[15] to "{SYSTEM}:standby_voltage_u107";
+assign standbyVoltageSetting[16] to "{SYSTEM}:standby_voltage_u200";
+assign standbyVoltageSetting[17] to "{SYSTEM}:standby_voltage_u201";
+assign standbyVoltageSetting[18] to "{SYSTEM}:standby_voltage_u202";
+assign standbyVoltageSetting[19] to "{SYSTEM}:standby_voltage_u203";
+assign standbyVoltageSetting[20] to "{SYSTEM}:standby_voltage_u204";
+assign standbyVoltageSetting[21] to "{SYSTEM}:standby_voltage_u205";
+assign standbyVoltageSetting[22] to "{SYSTEM}:standby_voltage_u206";
+assign standbyVoltageSetting[23] to "{SYSTEM}:standby_voltage_u207";
+assign physicsRampRate[0] to "{SYSTEM}:physics_ramp_rate_u0";
+assign physicsRampRate[1] to "{SYSTEM}:physics_ramp_rate_u1";
+assign physicsRampRate[2] to "{SYSTEM}:physics_ramp_rate_u2";
+assign physicsRampRate[3] to "{SYSTEM}:physics_ramp_rate_u3";
+assign physicsRampRate[4] to "{SYSTEM}:physics_ramp_rate_u4";
+assign physicsRampRate[5] to "{SYSTEM}:physics_ramp_rate_u5";
+assign physicsRampRate[6] to "{SYSTEM}:physics_ramp_rate_u6";
+assign physicsRampRate[7] to "{SYSTEM}:physics_ramp_rate_u7";
+assign physicsRampRate[8] to "{SYSTEM}:physics_ramp_rate_u100";
+assign physicsRampRate[9] to "{SYSTEM}:physics_ramp_rate_u101";
+assign physicsRampRate[10] to "{SYSTEM}:physics_ramp_rate_u102";
+assign physicsRampRate[11] to "{SYSTEM}:physics_ramp_rate_u103";
+assign physicsRampRate[12] to "{SYSTEM}:physics_ramp_rate_u104";
+assign physicsRampRate[13] to "{SYSTEM}:physics_ramp_rate_u105";
+assign physicsRampRate[14] to "{SYSTEM}:physics_ramp_rate_u106";
+assign physicsRampRate[15] to "{SYSTEM}:physics_ramp_rate_u107";
+assign physicsRampRate[16] to "{SYSTEM}:physics_ramp_rate_u200";
+assign physicsRampRate[17] to "{SYSTEM}:physics_ramp_rate_u201";
+assign physicsRampRate[18] to "{SYSTEM}:physics_ramp_rate_u202";
+assign physicsRampRate[19] to "{SYSTEM}:physics_ramp_rate_u203";
+assign physicsRampRate[20] to "{SYSTEM}:physics_ramp_rate_u204";
+assign physicsRampRate[21] to "{SYSTEM}:physics_ramp_rate_u205";
+assign physicsRampRate[22] to "{SYSTEM}:physics_ramp_rate_u206";
+assign physicsRampRate[23] to "{SYSTEM}:physics_ramp_rate_u207";
+assign standbyRampRate[0] to "{SYSTEM}:standby_ramp_rate_u0";
+assign standbyRampRate[1] to "{SYSTEM}:standby_ramp_rate_u1";
+assign standbyRampRate[2] to "{SYSTEM}:standby_ramp_rate_u2";
+assign standbyRampRate[3] to "{SYSTEM}:standby_ramp_rate_u3";
+assign standbyRampRate[4] to "{SYSTEM}:standby_ramp_rate_u4";
+assign standbyRampRate[5] to "{SYSTEM}:standby_ramp_rate_u5";
+assign standbyRampRate[6] to "{SYSTEM}:standby_ramp_rate_u6";
+assign standbyRampRate[7] to "{SYSTEM}:standby_ramp_rate_u7";
+assign standbyRampRate[8] to "{SYSTEM}:standby_ramp_rate_u100";
+assign standbyRampRate[9] to "{SYSTEM}:standby_ramp_rate_u101";
+assign standbyRampRate[10] to "{SYSTEM}:standby_ramp_rate_u102";
+assign standbyRampRate[11] to "{SYSTEM}:standby_ramp_rate_u103";
+assign standbyRampRate[12] to "{SYSTEM}:standby_ramp_rate_u104";
+assign standbyRampRate[13] to "{SYSTEM}:standby_ramp_rate_u105";
+assign standbyRampRate[14] to "{SYSTEM}:standby_ramp_rate_u106";
+assign standbyRampRate[15] to "{SYSTEM}:standby_ramp_rate_u107";
+assign standbyRampRate[16] to "{SYSTEM}:standby_ramp_rate_u200";
+assign standbyRampRate[17] to "{SYSTEM}:standby_ramp_rate_u201";
+assign standbyRampRate[18] to "{SYSTEM}:standby_ramp_rate_u202";
+assign standbyRampRate[19] to "{SYSTEM}:standby_ramp_rate_u203";
+assign standbyRampRate[20] to "{SYSTEM}:standby_ramp_rate_u204";
+assign standbyRampRate[21] to "{SYSTEM}:standby_ramp_rate_u205";
+assign standbyRampRate[22] to "{SYSTEM}:standby_ramp_rate_u206";
+assign standbyRampRate[23] to "{SYSTEM}:standby_ramp_rate_u207";
+assign conditioningDelay[0] to "{SYSTEM}:conditioning_delay_u0";
+assign conditioningDelay[1] to "{SYSTEM}:conditioning_delay_u1";
+assign conditioningDelay[2] to "{SYSTEM}:conditioning_delay_u2";
+assign conditioningDelay[3] to "{SYSTEM}:conditioning_delay_u3";
+assign conditioningDelay[4] to "{SYSTEM}:conditioning_delay_u4";
+assign conditioningDelay[5] to "{SYSTEM}:conditioning_delay_u5";
+assign conditioningDelay[6] to "{SYSTEM}:conditioning_delay_u6";
+assign conditioningDelay[7] to "{SYSTEM}:conditioning_delay_u7";
+assign conditioningDelay[8] to "{SYSTEM}:conditioning_delay_u100";
+assign conditioningDelay[9] to "{SYSTEM}:conditioning_delay_u101";
+assign conditioningDelay[10] to "{SYSTEM}:conditioning_delay_u102";
+assign conditioningDelay[11] to "{SYSTEM}:conditioning_delay_u103";
+assign conditioningDelay[12] to "{SYSTEM}:conditioning_delay_u104";
+assign conditioningDelay[13] to "{SYSTEM}:conditioning_delay_u105";
+assign conditioningDelay[14] to "{SYSTEM}:conditioning_delay_u106";
+assign conditioningDelay[15] to "{SYSTEM}:conditioning_delay_u107";
+assign conditioningDelay[16] to "{SYSTEM}:conditioning_delay_u200";
+assign conditioningDelay[17] to "{SYSTEM}:conditioning_delay_u201";
+assign conditioningDelay[18] to "{SYSTEM}:conditioning_delay_u202";
+assign conditioningDelay[19] to "{SYSTEM}:conditioning_delay_u203";
+assign conditioningDelay[20] to "{SYSTEM}:conditioning_delay_u204";
+assign conditioningDelay[21] to "{SYSTEM}:conditioning_delay_u205";
+assign conditioningDelay[22] to "{SYSTEM}:conditioning_delay_u206";
+assign conditioningDelay[23] to "{SYSTEM}:conditioning_delay_u207";
+assign conditioningVoltageStep[0] to "{SYSTEM}:conditioning_voltage_step_u0";
+assign conditioningVoltageStep[1] to "{SYSTEM}:conditioning_voltage_step_u1";
+assign conditioningVoltageStep[2] to "{SYSTEM}:conditioning_voltage_step_u2";
+assign conditioningVoltageStep[3] to "{SYSTEM}:conditioning_voltage_step_u3";
+assign conditioningVoltageStep[4] to "{SYSTEM}:conditioning_voltage_step_u4";
+assign conditioningVoltageStep[5] to "{SYSTEM}:conditioning_voltage_step_u5";
+assign conditioningVoltageStep[6] to "{SYSTEM}:conditioning_voltage_step_u6";
+assign conditioningVoltageStep[7] to "{SYSTEM}:conditioning_voltage_step_u7";
+assign conditioningVoltageStep[8] to "{SYSTEM}:conditioning_voltage_step_u100";
+assign conditioningVoltageStep[9] to "{SYSTEM}:conditioning_voltage_step_u101";
+assign conditioningVoltageStep[10] to "{SYSTEM}:conditioning_voltage_step_u102";
+assign conditioningVoltageStep[11] to "{SYSTEM}:conditioning_voltage_step_u103";
+assign conditioningVoltageStep[12] to "{SYSTEM}:conditioning_voltage_step_u104";
+assign conditioningVoltageStep[13] to "{SYSTEM}:conditioning_voltage_step_u105";
+assign conditioningVoltageStep[14] to "{SYSTEM}:conditioning_voltage_step_u106";
+assign conditioningVoltageStep[15] to "{SYSTEM}:conditioning_voltage_step_u107";
+assign conditioningVoltageStep[16] to "{SYSTEM}:conditioning_voltage_step_u200";
+assign conditioningVoltageStep[17] to "{SYSTEM}:conditioning_voltage_step_u201";
+assign conditioningVoltageStep[18] to "{SYSTEM}:conditioning_voltage_step_u202";
+assign conditioningVoltageStep[19] to "{SYSTEM}:conditioning_voltage_step_u203";
+assign conditioningVoltageStep[20] to "{SYSTEM}:conditioning_voltage_step_u204";
+assign conditioningVoltageStep[21] to "{SYSTEM}:conditioning_voltage_step_u205";
+assign conditioningVoltageStep[22] to "{SYSTEM}:conditioning_voltage_step_u206";
+assign conditioningVoltageStep[23] to "{SYSTEM}:conditioning_voltage_step_u207";
+assign voltageSetting[0] to "{SYSTEM}:output_voltage_u0";
+assign voltageSetting[1] to "{SYSTEM}:output_voltage_u1";
+assign voltageSetting[2] to "{SYSTEM}:output_voltage_u2";
+assign voltageSetting[3] to "{SYSTEM}:output_voltage_u3";
+assign voltageSetting[4] to "{SYSTEM}:output_voltage_u4";
+assign voltageSetting[5] to "{SYSTEM}:output_voltage_u5";
+assign voltageSetting[6] to "{SYSTEM}:output_voltage_u6";
+assign voltageSetting[7] to "{SYSTEM}:output_voltage_u7";
+assign voltageSetting[8] to "{SYSTEM}:output_voltage_u100";
+assign voltageSetting[9] to "{SYSTEM}:output_voltage_u101";
+assign voltageSetting[10] to "{SYSTEM}:output_voltage_u102";
+assign voltageSetting[11] to "{SYSTEM}:output_voltage_u103";
+assign voltageSetting[12] to "{SYSTEM}:output_voltage_u104";
+assign voltageSetting[13] to "{SYSTEM}:output_voltage_u105";
+assign voltageSetting[14] to "{SYSTEM}:output_voltage_u106";
+assign voltageSetting[15] to "{SYSTEM}:output_voltage_u107";
+assign voltageSetting[16] to "{SYSTEM}:output_voltage_u200";
+assign voltageSetting[17] to "{SYSTEM}:output_voltage_u201";
+assign voltageSetting[18] to "{SYSTEM}:output_voltage_u202";
+assign voltageSetting[19] to "{SYSTEM}:output_voltage_u203";
+assign voltageSetting[20] to "{SYSTEM}:output_voltage_u204";
+assign voltageSetting[21] to "{SYSTEM}:output_voltage_u205";
+assign voltageSetting[22] to "{SYSTEM}:output_voltage_u206";
+assign voltageSetting[23] to "{SYSTEM}:output_voltage_u207";
+assign currentSetting[0] to "{SYSTEM}:output_current_u0";
+assign currentSetting[1] to "{SYSTEM}:output_current_u1";
+assign currentSetting[2] to "{SYSTEM}:output_current_u2";
+assign currentSetting[3] to "{SYSTEM}:output_current_u3";
+assign currentSetting[4] to "{SYSTEM}:output_current_u4";
+assign currentSetting[5] to "{SYSTEM}:output_current_u5";
+assign currentSetting[6] to "{SYSTEM}:output_current_u6";
+assign currentSetting[7] to "{SYSTEM}:output_current_u7";
+assign currentSetting[8] to "{SYSTEM}:output_current_u100";
+assign currentSetting[9] to "{SYSTEM}:output_current_u101";
+assign currentSetting[10] to "{SYSTEM}:output_current_u102";
+assign currentSetting[11] to "{SYSTEM}:output_current_u103";
+assign currentSetting[12] to "{SYSTEM}:output_current_u104";
+assign currentSetting[13] to "{SYSTEM}:output_current_u105";
+assign currentSetting[14] to "{SYSTEM}:output_current_u106";
+assign currentSetting[15] to "{SYSTEM}:output_current_u107";
+assign currentSetting[16] to "{SYSTEM}:output_current_u200";
+assign currentSetting[17] to "{SYSTEM}:output_current_u201";
+assign currentSetting[18] to "{SYSTEM}:output_current_u202";
+assign currentSetting[19] to "{SYSTEM}:output_current_u203";
+assign currentSetting[20] to "{SYSTEM}:output_current_u204";
+assign currentSetting[21] to "{SYSTEM}:output_current_u205";
+assign currentSetting[22] to "{SYSTEM}:output_current_u206";
+assign currentSetting[23] to "{SYSTEM}:output_current_u207";
+assign rampRate[0] to "{SYSTEM}:output_rise_rate_u0";
+assign rampRate[1] to "{SYSTEM}:output_rise_rate_u1";
+assign rampRate[2] to "{SYSTEM}:output_rise_rate_u2";
+assign rampRate[3] to "{SYSTEM}:output_rise_rate_u3";
+assign rampRate[4] to "{SYSTEM}:output_rise_rate_u4";
+assign rampRate[5] to "{SYSTEM}:output_rise_rate_u5";
+assign rampRate[6] to "{SYSTEM}:output_rise_rate_u6";
+assign rampRate[7] to "{SYSTEM}:output_rise_rate_u7";
+assign rampRate[8] to "{SYSTEM}:output_rise_rate_u100";
+assign rampRate[9] to "{SYSTEM}:output_rise_rate_u101";
+assign rampRate[10] to "{SYSTEM}:output_rise_rate_u102";
+assign rampRate[11] to "{SYSTEM}:output_rise_rate_u103";
+assign rampRate[12] to "{SYSTEM}:output_rise_rate_u104";
+assign rampRate[13] to "{SYSTEM}:output_rise_rate_u105";
+assign rampRate[14] to "{SYSTEM}:output_rise_rate_u106";
+assign rampRate[15] to "{SYSTEM}:output_rise_rate_u107";
+assign rampRate[16] to "{SYSTEM}:output_rise_rate_u200";
+assign rampRate[17] to "{SYSTEM}:output_rise_rate_u201";
+assign rampRate[18] to "{SYSTEM}:output_rise_rate_u202";
+assign rampRate[19] to "{SYSTEM}:output_rise_rate_u203";
+assign rampRate[20] to "{SYSTEM}:output_rise_rate_u204";
+assign rampRate[21] to "{SYSTEM}:output_rise_rate_u205";
+assign rampRate[22] to "{SYSTEM}:output_rise_rate_u206";
+assign rampRate[23] to "{SYSTEM}:output_rise_rate_u207";
+assign autoResetDelay[0] to "{SYSTEM}:u0:ControlSQ.DLY4";
+assign autoResetDelay[1] to "{SYSTEM}:u1:ControlSQ.DLY4";
+assign autoResetDelay[2] to "{SYSTEM}:u2:ControlSQ.DLY4";
+assign autoResetDelay[3] to "{SYSTEM}:u3:ControlSQ.DLY4";
+assign autoResetDelay[4] to "{SYSTEM}:u4:ControlSQ.DLY4";
+assign autoResetDelay[5] to "{SYSTEM}:u5:ControlSQ.DLY4";
+assign autoResetDelay[6] to "{SYSTEM}:u6:ControlSQ.DLY4";
+assign autoResetDelay[7] to "{SYSTEM}:u7:ControlSQ.DLY4";
+assign autoResetDelay[8] to "{SYSTEM}:u100:ControlSQ.DLY4";
+assign autoResetDelay[9] to "{SYSTEM}:u101:ControlSQ.DLY4";
+assign autoResetDelay[10] to "{SYSTEM}:u102:ControlSQ.DLY4";
+assign autoResetDelay[11] to "{SYSTEM}:u103:ControlSQ.DLY4";
+assign autoResetDelay[12] to "{SYSTEM}:u104:ControlSQ.DLY4";
+assign autoResetDelay[13] to "{SYSTEM}:u105:ControlSQ.DLY4";
+assign autoResetDelay[14] to "{SYSTEM}:u106:ControlSQ.DLY4";
+assign autoResetDelay[15] to "{SYSTEM}:u107:ControlSQ.DLY4";
+assign autoResetDelay[16] to "{SYSTEM}:u200:ControlSQ.DLY4";
+assign autoResetDelay[17] to "{SYSTEM}:u201:ControlSQ.DLY4";
+assign autoResetDelay[18] to "{SYSTEM}:u202:ControlSQ.DLY4";
+assign autoResetDelay[19] to "{SYSTEM}:u203:ControlSQ.DLY4";
+assign autoResetDelay[20] to "{SYSTEM}:u204:ControlSQ.DLY4";
+assign autoResetDelay[21] to "{SYSTEM}:u205:ControlSQ.DLY4";
+assign autoResetDelay[22] to "{SYSTEM}:u206:ControlSQ.DLY4";
+assign autoResetDelay[23] to "{SYSTEM}:u207:ControlSQ.DLY4";
+assign autoResetEnabled[0] to "{SYSTEM}:u0:AutoResetEnable";
+assign autoResetEnabled[1] to "{SYSTEM}:u1:AutoResetEnable";
+assign autoResetEnabled[2] to "{SYSTEM}:u2:AutoResetEnable";
+assign autoResetEnabled[3] to "{SYSTEM}:u3:AutoResetEnable";
+assign autoResetEnabled[4] to "{SYSTEM}:u4:AutoResetEnable";
+assign autoResetEnabled[5] to "{SYSTEM}:u5:AutoResetEnable";
+assign autoResetEnabled[6] to "{SYSTEM}:u6:AutoResetEnable";
+assign autoResetEnabled[7] to "{SYSTEM}:u7:AutoResetEnable";
+assign autoResetEnabled[8] to "{SYSTEM}:u100:AutoResetEnable";
+assign autoResetEnabled[9] to "{SYSTEM}:u101:AutoResetEnable";
+assign autoResetEnabled[10] to "{SYSTEM}:u102:AutoResetEnable";
+assign autoResetEnabled[11] to "{SYSTEM}:u103:AutoResetEnable";
+assign autoResetEnabled[12] to "{SYSTEM}:u104:AutoResetEnable";
+assign autoResetEnabled[13] to "{SYSTEM}:u105:AutoResetEnable";
+assign autoResetEnabled[14] to "{SYSTEM}:u106:AutoResetEnable";
+assign autoResetEnabled[15] to "{SYSTEM}:u107:AutoResetEnable";
+assign autoResetEnabled[16] to "{SYSTEM}:u200:AutoResetEnable";
+assign autoResetEnabled[17] to "{SYSTEM}:u201:AutoResetEnable";
+assign autoResetEnabled[18] to "{SYSTEM}:u202:AutoResetEnable";
+assign autoResetEnabled[19] to "{SYSTEM}:u203:AutoResetEnable";
+assign autoResetEnabled[20] to "{SYSTEM}:u204:AutoResetEnable";
+assign autoResetEnabled[21] to "{SYSTEM}:u205:AutoResetEnable";
+assign autoResetEnabled[22] to "{SYSTEM}:u206:AutoResetEnable";
+assign autoResetEnabled[23] to "{SYSTEM}:u207:AutoResetEnable";
+assign maxCycles[0] to "{SYSTEM}:u0:maxCycles";
+assign maxCycles[1] to "{SYSTEM}:u1:maxCycles";
+assign maxCycles[2] to "{SYSTEM}:u2:maxCycles";
+assign maxCycles[3] to "{SYSTEM}:u3:maxCycles";
+assign maxCycles[4] to "{SYSTEM}:u4:maxCycles";
+assign maxCycles[5] to "{SYSTEM}:u5:maxCycles";
+assign maxCycles[6] to "{SYSTEM}:u6:maxCycles";
+assign maxCycles[7] to "{SYSTEM}:u7:maxCycles";
+assign maxCycles[8] to "{SYSTEM}:u100:maxCycles";
+assign maxCycles[9] to "{SYSTEM}:u101:maxCycles";
+assign maxCycles[10] to "{SYSTEM}:u102:maxCycles";
+assign maxCycles[11] to "{SYSTEM}:u103:maxCycles";
+assign maxCycles[12] to "{SYSTEM}:u104:maxCycles";
+assign maxCycles[13] to "{SYSTEM}:u105:maxCycles";
+assign maxCycles[14] to "{SYSTEM}:u106:maxCycles";
+assign maxCycles[15] to "{SYSTEM}:u107:maxCycles";
+assign maxCycles[16] to "{SYSTEM}:u200:maxCycles";
+assign maxCycles[17] to "{SYSTEM}:u201:maxCycles";
+assign maxCycles[18] to "{SYSTEM}:u202:maxCycles";
+assign maxCycles[19] to "{SYSTEM}:u203:maxCycles";
+assign maxCycles[20] to "{SYSTEM}:u204:maxCycles";
+assign maxCycles[21] to "{SYSTEM}:u205:maxCycles";
+assign maxCycles[22] to "{SYSTEM}:u206:maxCycles";
+assign maxCycles[23] to "{SYSTEM}:u207:maxCycles";
+assign powerSwitch[0] to "{SYSTEM}:output_switch_u0";
+assign powerSwitch[1] to "{SYSTEM}:output_switch_u1";
+assign powerSwitch[2] to "{SYSTEM}:output_switch_u2";
+assign powerSwitch[3] to "{SYSTEM}:output_switch_u3";
+assign powerSwitch[4] to "{SYSTEM}:output_switch_u4";
+assign powerSwitch[5] to "{SYSTEM}:output_switch_u5";
+assign powerSwitch[6] to "{SYSTEM}:output_switch_u6";
+assign powerSwitch[7] to "{SYSTEM}:output_switch_u7";
+assign powerSwitch[8] to "{SYSTEM}:output_switch_u100";
+assign powerSwitch[9] to "{SYSTEM}:output_switch_u101";
+assign powerSwitch[10] to "{SYSTEM}:output_switch_u102";
+assign powerSwitch[11] to "{SYSTEM}:output_switch_u103";
+assign powerSwitch[12] to "{SYSTEM}:output_switch_u104";
+assign powerSwitch[13] to "{SYSTEM}:output_switch_u105";
+assign powerSwitch[14] to "{SYSTEM}:output_switch_u106";
+assign powerSwitch[15] to "{SYSTEM}:output_switch_u107";
+assign powerSwitch[16] to "{SYSTEM}:output_switch_u200";
+assign powerSwitch[17] to "{SYSTEM}:output_switch_u201";
+assign powerSwitch[18] to "{SYSTEM}:output_switch_u202";
+assign powerSwitch[19] to "{SYSTEM}:output_switch_u203";
+assign powerSwitch[20] to "{SYSTEM}:output_switch_u204";
+assign powerSwitch[21] to "{SYSTEM}:output_switch_u205";
+assign powerSwitch[22] to "{SYSTEM}:output_switch_u206";
+assign powerSwitch[23] to "{SYSTEM}:output_switch_u207";
+assign voltageReading[0] to "{SYSTEM}:output_sense_voltage_u0";
+assign voltageReading[1] to "{SYSTEM}:output_sense_voltage_u1";
+assign voltageReading[2] to "{SYSTEM}:output_sense_voltage_u2";
+assign voltageReading[3] to "{SYSTEM}:output_sense_voltage_u3";
+assign voltageReading[4] to "{SYSTEM}:output_sense_voltage_u4";
+assign voltageReading[5] to "{SYSTEM}:output_sense_voltage_u5";
+assign voltageReading[6] to "{SYSTEM}:output_sense_voltage_u6";
+assign voltageReading[7] to "{SYSTEM}:output_sense_voltage_u7";
+assign voltageReading[8] to "{SYSTEM}:output_sense_voltage_u100";
+assign voltageReading[9] to "{SYSTEM}:output_sense_voltage_u101";
+assign voltageReading[10] to "{SYSTEM}:output_sense_voltage_u102";
+assign voltageReading[11] to "{SYSTEM}:output_sense_voltage_u103";
+assign voltageReading[12] to "{SYSTEM}:output_sense_voltage_u104";
+assign voltageReading[13] to "{SYSTEM}:output_sense_voltage_u105";
+assign voltageReading[14] to "{SYSTEM}:output_sense_voltage_u106";
+assign voltageReading[15] to "{SYSTEM}:output_sense_voltage_u107";
+assign voltageReading[16] to "{SYSTEM}:output_sense_voltage_u200";
+assign voltageReading[17] to "{SYSTEM}:output_sense_voltage_u201";
+assign voltageReading[18] to "{SYSTEM}:output_sense_voltage_u202";
+assign voltageReading[19] to "{SYSTEM}:output_sense_voltage_u203";
+assign voltageReading[20] to "{SYSTEM}:output_sense_voltage_u204";
+assign voltageReading[21] to "{SYSTEM}:output_sense_voltage_u205";
+assign voltageReading[22] to "{SYSTEM}:output_sense_voltage_u206";
+assign voltageReading[23] to "{SYSTEM}:output_sense_voltage_u207";
+assign channelEnabled[0] to "{SYSTEM}:u0:sw_enabled";
+assign channelEnabled[1] to "{SYSTEM}:u1:sw_enabled";
+assign channelEnabled[2] to "{SYSTEM}:u2:sw_enabled";
+assign channelEnabled[3] to "{SYSTEM}:u3:sw_enabled";
+assign channelEnabled[4] to "{SYSTEM}:u4:sw_enabled";
+assign channelEnabled[5] to "{SYSTEM}:u5:sw_enabled";
+assign channelEnabled[6] to "{SYSTEM}:u6:sw_enabled";
+assign channelEnabled[7] to "{SYSTEM}:u7:sw_enabled";
+assign channelEnabled[8] to "{SYSTEM}:u100:sw_enabled";
+assign channelEnabled[9] to "{SYSTEM}:u101:sw_enabled";
+assign channelEnabled[10] to "{SYSTEM}:u102:sw_enabled";
+assign channelEnabled[11] to "{SYSTEM}:u103:sw_enabled";
+assign channelEnabled[12] to "{SYSTEM}:u104:sw_enabled";
+assign channelEnabled[13] to "{SYSTEM}:u105:sw_enabled";
+assign channelEnabled[14] to "{SYSTEM}:u106:sw_enabled";
+assign channelEnabled[15] to "{SYSTEM}:u107:sw_enabled";
+assign channelEnabled[16] to "{SYSTEM}:u200:sw_enabled";
+assign channelEnabled[17] to "{SYSTEM}:u201:sw_enabled";
+assign channelEnabled[18] to "{SYSTEM}:u202:sw_enabled";
+assign channelEnabled[19] to "{SYSTEM}:u203:sw_enabled";
+assign channelEnabled[20] to "{SYSTEM}:u204:sw_enabled";
+assign channelEnabled[21] to "{SYSTEM}:u205:sw_enabled";
+assign channelEnabled[22] to "{SYSTEM}:u206:sw_enabled";
+assign channelEnabled[23] to "{SYSTEM}:u207:sw_enabled";
+assign tripStatus[0] to "{SYSTEM}:trip_status_u0";
+assign tripStatus[1] to "{SYSTEM}:trip_status_u1";
+assign tripStatus[2] to "{SYSTEM}:trip_status_u2";
+assign tripStatus[3] to "{SYSTEM}:trip_status_u3";
+assign tripStatus[4] to "{SYSTEM}:trip_status_u4";
+assign tripStatus[5] to "{SYSTEM}:trip_status_u5";
+assign tripStatus[6] to "{SYSTEM}:trip_status_u6";
+assign tripStatus[7] to "{SYSTEM}:trip_status_u7";
+assign tripStatus[8] to "{SYSTEM}:trip_status_u100";
+assign tripStatus[9] to "{SYSTEM}:trip_status_u101";
+assign tripStatus[10] to "{SYSTEM}:trip_status_u102";
+assign tripStatus[11] to "{SYSTEM}:trip_status_u103";
+assign tripStatus[12] to "{SYSTEM}:trip_status_u104";
+assign tripStatus[13] to "{SYSTEM}:trip_status_u105";
+assign tripStatus[14] to "{SYSTEM}:trip_status_u106";
+assign tripStatus[15] to "{SYSTEM}:trip_status_u107";
+assign tripStatus[16] to "{SYSTEM}:trip_status_u200";
+assign tripStatus[17] to "{SYSTEM}:trip_status_u201";
+assign tripStatus[18] to "{SYSTEM}:trip_status_u202";
+assign tripStatus[19] to "{SYSTEM}:trip_status_u203";
+assign tripStatus[20] to "{SYSTEM}:trip_status_u204";
+assign tripStatus[21] to "{SYSTEM}:trip_status_u205";
+assign tripStatus[22] to "{SYSTEM}:trip_status_u206";
+assign tripStatus[23] to "{SYSTEM}:trip_status_u207";
+
+%{
+
+#include <stdio.h>
+#include <string.h>
+char boardname[3];
+char channelName[256];
+
+FILE *fp;
+
+}%
+
+
+ss ss1 {
+    state init {
+        entry {
+            v = 1 ;
+            pvPut(v);
+	    /* printf("sncFGTControl: initializing\n"); */
+        }
+	when (delay(5)) {
+	    printf("sncFGTControl: Startup delay over\n"); 
+            v=1;
+            pvPut(v);
+            for(board = 0; board<1;board++) {
+                if (board == 0) {
+                    boardname[0] = 0;
+                } else if (board == 1) {
+                    strcpy(boardname,"10");
+                } else if (board == 2) {
+                    strcpy(boardname,"20");
+                }
+ 
+                for (channelref = 0; channelref < 24; channelref++) {
+                   pvMonitor(voltageSetting[channelref]);
+                   pvMonitor(voltageReading[channelref]);
+                   pvMonitor(channelEnabled[channelref]); 
+                   pvMonitor(powerSwitch[channelref]); 
+                   pvMonitor(currentSetting[channelref]);
+                   pvMonitor(rampRate[channelref]);
+                   pvMonitor(autoResetDelay[channelref]);
+                   pvMonitor(autoResetEnabled[channelref]);
+                   pvMonitor(maxCycles[channelref]);
+                   pvMonitor(tripStatus[channelref]);
+                   pvMonitor(physicsVoltageSetting[channelref]);
+                   pvMonitor(standbyVoltageSetting[channelref]);
+                   pvMonitor(physicsRampRate[channelref]);
+                   pvMonitor(standbyRampRate[channelref]);
+                   pvMonitor(conditioningDelay[channelref]);
+                   pvMonitor(conditioningVoltageStep[channelref]);
+                }
+            }
+	} state pause_then_load
+    }
+    state pause_then_load {
+        when(delay(5)) {
+        } state loading_all
+    }
+    state waiting {
+        entry {
+	    /* printf("waiting\n"); */
+        }
+	when (v == 3) {
+		/* printf("load config from file\n"); */
+        } state loading_all
+	when (v == 4) {
+		/* printf("write config to file\n"); */
+        } state saving_all
+	when (v == 5) {
+		/* printf("power on enabled channels\n"); */
+        } state powering_all
+    }
+    state loading_all {
+        entry {
+          pvGet(hv_filename);
+          /* printf("filename: %s\n",hv_filename); */
+
+          sprintf(buff,"%s.csv",hv_filename);
+          /* printf("%s\n",buff); */
+          fp = fopen(buff, "r");
+          if (fp) {
+            m = 0;
+
+            for (ii = 0; ii < 2;ii++) {  fgets(buff,1024,fp); } /* skip 2 lines */
+	
+            while (NULL != fgets(buff,1024,fp) && m < 24) {
+                    /*printf("%s", buff);*/
+	            next = buff;
+                    while (next[0] != ',') next++;
+                    sscanf(next+1, "%lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf",
+	                   &standbyVoltageSetting[m],
+	                   &physicsVoltageSetting[m],
+	                   &currentSetting[m],
+	                   &standbyRampRate[m],
+	                   &physicsRampRate[m],
+	                   &conditioningDelay[m],
+	                   &conditioningVoltageStep[m],
+	                   &maxCycles[m],
+	                   &autoResetDelay[m],
+	                   &autoResetEnabled[m],
+      	                   &channelEnabled[m]);
+
+                    /*printf("%f %f %f %f %f %f %f \n", 
+                           voltageSetting[m], currentSetting[m], rampRate[m],
+                           maxCycles[m], autoResetDelay[m], autoResetEnabled[m], channelEnabled[m]);*/
+  
+	            m++;
+	    }
+	    
+            fclose(fp);
+            for(i=0; i<24; i++) {
+	      pvPut(voltageSetting[i],SYNC);
+	      pvPut(currentSetting[i],SYNC);
+	      pvPut(rampRate[i],SYNC);
+	      pvPut(maxCycles[i],SYNC);
+	      pvPut(autoResetDelay[i],SYNC);
+	      pvPut(autoResetEnabled[i],SYNC);
+	      pvPut(channelEnabled[i],SYNC);
+              pvPut(physicsVoltageSetting[i],SYNC);
+              pvPut(standbyVoltageSetting[i],SYNC);
+              pvPut(physicsRampRate[i],SYNC);
+              pvPut(standbyRampRate[i],SYNC);
+              pvPut(conditioningDelay[i],SYNC);
+              pvPut(conditioningVoltageStep[i],SYNC);
+              /*printf("After Put  %f %f %f %f %f %f %f \n", 
+                     voltageSetting[i], currentSetting[i], rampRate[i],
+                     maxCycles[i], autoResetDelay[i], autoResetEnabled[i], channelEnabled[i]);*/
+            }
+          }
+        } 
+	when (delay(1)) {
+    	    v = 1;
+            pvPut(v,SYNC);
+	} state waiting
+        when (v==1) {
+        } state waiting
+    }
+    state saving_all {
+        entry {
+            /* printf("saving all values\n"); */
+            pvGet(hv_filename);
+            /* printf("filename: %s\n",hv_filename); */
+
+            sprintf(buff,"%s.csv",hv_filename);
+            /*printf("%s\n",buff);*/
+            fp = fopen(buff, "w");
+            i = 0;
+
+            fprintf(fp, "{SYSTEM} HV Settings\n");
+            fprintf(fp, "Channel(ignored), standbyV, physicsV, current limit, standbyRamp, physicsRamp, delay(s), Vstep, maxCycles, resetDelay, autoResetEnabled (0=no), channelEnabled(0=no)\n");
+	
+            for(board = 0; board<3;board++) {
+              if (board == 0) {
+                boardname[0] = 0;
+              } else if (board == 1) {
+                strcpy(boardname,"10");
+              } else if (board == 2) {
+                strcpy(boardname,"20");
+              }
+
+              for (chan = 0; chan < 8; chan++) {
+                sprintf(channelName, "u%s%c", boardname, '0'+chan);
+                /*printf("%s\n",channelName);*/
+      
+                fprintf(fp,"%s, %f, %f, %f, %f, %f, ", 
+                        channelName, standbyVoltageSetting[i], physicsVoltageSetting[i], currentSetting[i], standbyRampRate[i], physicsRampRate[i]);
+                fprintf(fp,"%f, %f, %f, %f, %f, %f\n",
+                  conditioningDelay[i], conditioningVoltageStep[i], maxCycles[i], autoResetDelay[i], autoResetEnabled[i], channelEnabled[i]);
+                                                                    /* setting value of channelEnabled from state of powerSwitch */
+                i++;
+              }
+            }
+	  
+            fclose(fp);
+            v = 1;
+            pvPut(v);
+        } 
+        when (1) {
+        } state waiting
+    }
+    state powering_all {
+        entry {
+            for(i=0;i<24;i++) {
+              if(channelEnabled[i] == 1 && powerSwitch[i] == 0 && tripStatus[i] != 4) {
+                powerSwitch[i] = 1;
+                pvPut(powerSwitch[i]);
+               }
+            }
+            /* printf("powering on all channels\n"); */
+            v = 1;
+            pvPut(v);
+        } 
+        when (1) {
+        } state waiting
+    }
+
+}
+   
+

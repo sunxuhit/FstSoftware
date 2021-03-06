@@ -1,0 +1,11 @@
+The following ports were opened in the wirewall to allow the CA server to be accessible to the BNL network.
+
+These lines were added to /etc/sysconfig/iptables:
+-A RH-Firewall-1-INPUT -p udp --sport 5064 -j ACCEPT
+-A RH-Firewall-1-INPUT -p udp --dport 5064 -j ACCEPT
+-A RH-Firewall-1-INPUT -p tcp --dport 5064 -j ACCEPT
+-A RH-Firewall-1-INPUT -p udp --dport 5065 -j ACCEPT
+-A RH-Firewall-1-INPUT -p tcp --dport 5065 -j ACCEPT
+
+And the firewall service was restarted:
+sudo /sbin/service iptables restart
