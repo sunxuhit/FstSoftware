@@ -1,0 +1,366 @@
+record(calc, $(SYSTEM1):rbk_iv_alm_$(SLOT)){
+  field(SCAN, "1 second")
+  field(INPA, "$(SYSTEM1):output_sense_voltage_$(SLOT)0.VAL PP MS")
+  field(INPB, "$(SYSTEM1):output_sense_voltage_$(SLOT)2.VAL PP MS")
+  field(INPC, "$(SYSTEM1):output_sense_voltage_$(SLOT)4.VAL PP MS")
+  field(INPD, "$(SYSTEM1):output_sense_voltage_$(SLOT)6.VAL PP MS")
+  field(INPE, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPF, "69")
+  field(INPG, "71")
+  field(CALC, "E=1&A>F&A<G&B>F&B<G&C>F&C<G&D>F&D<G")
+  field(PREC, "4")
+  field(HIHI,"1")
+  field(HHSV,"MAJOR")
+  field(FLNK, "$(SYSTEM1):crate_voltage_status")
+}
+
+record(calc, $(SYSTEM1):rbk_ov_alm_$(SLOT)){
+  field(SCAN, "1 second")
+  field(INPA, "$(SYSTEM1):output_sense_voltage_$(SLOT)1.VAL PP MS")
+  field(INPB, "$(SYSTEM1):output_sense_voltage_$(SLOT)3.VAL PP MS")
+  field(INPC, "$(SYSTEM1):output_sense_voltage_$(SLOT)5.VAL PP MS")
+  field(INPD, "$(SYSTEM1):output_sense_voltage_$(SLOT)7.VAL PP MS")
+  field(INPE, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPF, "139")
+  field(INPG, "141")
+  field(CALC, "E=1&A>F&A<G&B>F&B<G&C>F&C<G&D>F&D<G")
+  field(PREC, "4")
+  field(HIHI,"1")
+  field(HHSV,"MAJOR")
+  field(FLNK, "$(SYSTEM1):crate_voltage_status")
+}
+
+record(calc, $(SYSTEM1):crate_voltage_status){
+  field(SCAN, "1 second")
+  field(INPA, "$(SYSTEM1):rbk_iv_alm_u")
+  field(INPB, "$(SYSTEM1):rbk_iv_alm_u10")
+  field(INPC, "$(SYSTEM1):rbk_iv_alm_u20")
+  field(INPD, "$(SYSTEM1):rbk_ov_alm_u")
+  field(INPE, "$(SYSTEM1):rbk_ov_alm_u10")
+  field(INPF, "$(SYSTEM1):rbk_ov_alm_u20")
+  field(INPG, "$(SYSTEM1):pwr_reading")
+  field(CALC, "G=1?A&&B&&C&&D&&E&&F:0")
+  field(FLNK, "fstON_crate_voltage_status")
+}
+
+#Below variable is added for debugging the ShiftGui Script.
+record(calc, $(SYSTEM1):crate_status_panic){
+  field(DESC, "Script status")
+}
+
+record(calc, $(SYSTEM2):rbk_iv_alm_$(SLOT)){
+  field(SCAN, "1 second")
+  field(INPA, "$(SYSTEM2):output_sense_voltage_$(SLOT)0.VAL PP MS")
+  field(INPB, "$(SYSTEM2):output_sense_voltage_$(SLOT)2.VAL PP MS")
+  field(INPC, "$(SYSTEM2):output_sense_voltage_$(SLOT)4.VAL PP MS")
+  field(INPD, "$(SYSTEM2):output_sense_voltage_$(SLOT)6.VAL PP MS")
+  field(INPE, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPF, "69")
+  field(INPG, "71")
+  field(CALC, "E=1&A>F&A<G&B>F&B<G&C>F&C<G&D>F&D<G")
+  field(PREC, "4")
+  field(HIHI,"1")
+  field(HHSV,"MAJOR")
+  field(FLNK, "$(SYSTEM2):crate_voltage_status")
+}
+
+record(calc, $(SYSTEM2):rbk_ov_alm_$(SLOT)){
+  field(SCAN, "1 second")
+  field(INPA, "$(SYSTEM2):output_sense_voltage_$(SLOT)1.VAL PP MS")
+  field(INPB, "$(SYSTEM2):output_sense_voltage_$(SLOT)3.VAL PP MS")
+  field(INPC, "$(SYSTEM2):output_sense_voltage_$(SLOT)5.VAL PP MS")
+  field(INPD, "$(SYSTEM2):output_sense_voltage_$(SLOT)7.VAL PP MS")
+  field(INPE, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPF, "139")
+  field(INPG, "141")
+  field(CALC, "E=1&A>F&A<G&B>F&B<G&C>F&C<G&D>F&D<G")
+  field(PREC, "4")
+  field(HIHI,"1")
+  field(HHSV,"MAJOR")
+  field(FLNK, "$(SYSTEM2):crate_voltage_status")
+}
+
+record(calc, $(SYSTEM2):crate_voltage_status){
+  field(SCAN, "1 second")
+  field(INPA, "$(SYSTEM2):rbk_iv_alm_u")
+  field(INPB, "$(SYSTEM2):rbk_iv_alm_u10")
+  field(INPC, "$(SYSTEM2):rbk_iv_alm_u20")
+  field(INPD, "$(SYSTEM2):rbk_ov_alm_u")
+  field(INPE, "$(SYSTEM2):rbk_ov_alm_u10")
+  field(INPF, "$(SYSTEM2):rbk_ov_alm_u20")
+  field(INPG, "$(SYSTEM2):pwr_reading")
+  field(CALC, "G=1?A&&B&&C&&D&&E&&F:0")
+  field(FLNK, "fstON_crate_voltage_status")
+}
+
+#Below variable is added for debugging the ShiftGui Script.
+record(calc, $(SYSTEM2):crate_status_panic){
+  field(DESC, "Script status")
+}
+
+record(calc, $(SYSTEM3):rbk_iv_alm_$(SLOT)){
+  field(SCAN, "1 second")
+  field(INPA, "$(SYSTEM3):output_sense_voltage_$(SLOT)0.VAL PP MS")
+  field(INPB, "$(SYSTEM3):output_sense_voltage_$(SLOT)2.VAL PP MS")
+  field(INPC, "$(SYSTEM3):output_sense_voltage_$(SLOT)4.VAL PP MS")
+  field(INPD, "$(SYSTEM3):output_sense_voltage_$(SLOT)6.VAL PP MS")
+  field(INPE, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPF, "69")
+  field(INPG, "71")
+  field(CALC, "E=1&A>F&A<G&B>F&B<G&C>F&C<G&D>F&D<G")
+  field(PREC, "4")
+  field(HIHI,"1")
+  field(HHSV,"MAJOR")
+  field(FLNK, "$(SYSTEM3):crate_voltage_status")
+}
+
+record(calc, $(SYSTEM3):rbk_ov_alm_$(SLOT)){
+  field(SCAN, "1 second")
+  field(INPA, "$(SYSTEM3):output_sense_voltage_$(SLOT)1.VAL PP MS")
+  field(INPB, "$(SYSTEM3):output_sense_voltage_$(SLOT)3.VAL PP MS")
+  field(INPC, "$(SYSTEM3):output_sense_voltage_$(SLOT)5.VAL PP MS")
+  field(INPD, "$(SYSTEM3):output_sense_voltage_$(SLOT)7.VAL PP MS")
+  field(INPE, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPF, "139")
+  field(INPG, "141")
+  field(CALC, "E=1&A>F&A<G&B>F&B<G&C>F&C<G&D>F&D<G")
+  field(PREC, "4")
+  field(HIHI,"1")
+  field(HHSV,"MAJOR")
+  field(FLNK, "$(SYSTEM3):crate_voltage_status")
+}
+
+record(calc, $(SYSTEM3):crate_voltage_status){
+  field(SCAN, "1 second")
+  field(INPA, "$(SYSTEM3):rbk_iv_alm_u")
+  field(INPB, "$(SYSTEM3):rbk_iv_alm_u10")
+  field(INPC, "$(SYSTEM3):rbk_iv_alm_u20")
+  field(INPD, "$(SYSTEM3):rbk_ov_alm_u")
+  field(INPE, "$(SYSTEM3):rbk_ov_alm_u10")
+  field(INPF, "$(SYSTEM3):rbk_ov_alm_u20")
+  field(INPG, "$(SYSTEM3):pwr_reading")
+  field(CALC, "G=1?A&&B&&C&&D&&E&&F:0")
+  field(FLNK, "fstON_crate_voltage_status")
+}
+
+#Below variable is added for debugging the ShiftGui Script.
+record(calc, $(SYSTEM3):crate_status_panic){
+  field(DESC, "Script status")
+}
+
+record(calc, fst_crate_status_ON){
+  field(DESC, "Used in the alarm mechanism")
+}
+
+record(calc, fst_script_voltage_alarm){
+  field(DESC, "Used in the script alarm mechanism")
+}
+
+record(calc, fst_script_off_alarm){
+  field(DESC, "Used in the script alarm mechanism")
+}
+
+record(calc, fst_power_status_trans){
+  field(DESC, "Transient alarm")
+}
+
+record(calc, fstON_crate_voltage_status){
+ field(SCAN, "1 second")
+ field(INPA, "$(SYSTEM1):crate_voltage_status")
+ field(INPB, "$(SYSTEM2):crate_voltage_status")
+ field(INPC, "$(SYSTEM3):crate_voltage_status")
+ field(INPD, "1")
+ field(CALC, "D=1?A&&B&&C:0")
+ field(FLNK, "fst_general_alarm_onStatus")
+}
+
+record(calc, fstOFF_crate_voltage_status){
+ field(SCAN, "1 second")
+ field(INPA, "$(SYSTEM1):pwr_reading")
+ field(INPB, "$(SYSTEM2):pwr_reading")
+ field(INPC, "$(SYSTEM3):pwr_reading")
+ field(CALC, "(A||B||C)=1?1:0")
+ field(FLNK, "fst_general_alarm_offStatus")
+}
+
+record(calc, fst_crate_status_panic){
+ field(SCAN, "1 second")
+ field(INPA, "$(SYSTEM1):crate_status_panic")
+ field(INPB, "$(SYSTEM2):crate_status_panic")
+ field(INPC, "$(SYSTEM3):crate_status_panic")
+ field(CALC, "(A&&B&&C)=1?1:0")
+}
+
+record(calc, fst_general_alarm_onStatus){
+  field(DESC, "Alarm handler alarm")
+  field(SCAN, "1 second")
+  field(INPA, "fstON_crate_voltage_status")
+  field(INPB, "fst_crate_status_ON")
+  field(INPC, "fst_power_status_trans")
+  field(CALC, "C=0?(!A)&&B:0")
+  field(HIHI, "1")
+  field(HIGH, "1")
+  field(HHSV, "MAJOR")
+  field(HSV, "MAJOR")
+}
+
+record(calc, fst_general_alarm_offStatus){
+  field(DESC, "Alarm handler alarm")
+  field(SCAN, "1 second")
+  field(INPA, "fstOFF_crate_voltage_status")
+  field(INPB, "fst_crate_status_ON")
+  field(INPC, "fst_power_status_trans")
+  field(CALC, "C=0?A&&(!B):0")
+  field(HIHI, "1")
+  field(HIGH, "1")
+  field(HHSV, "MAJOR")
+  field(HSV, "MAJOR")
+}
+
+##below variables are added for current alarm
+
+record(calc, $(SYSTEM1):rbk_ic_alm_$(SLOT)){
+  field(SCAN, ".5 second")
+  field(INPA, "$(SYSTEM1):measurement_current_$(SLOT)0.VAL PP MS")
+  field(INPB, "$(SYSTEM1):measurement_current_$(SLOT)2.VAL PP MS")
+  field(INPC, "$(SYSTEM1):measurement_current_$(SLOT)4.VAL PP MS")
+  field(INPD, "$(SYSTEM1):measurement_current_$(SLOT)6.VAL PP MS")
+  field(INPE, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPF, "-0.000001")
+  field(INPG, "0.000002")
+  field(CALC, "E=1&A>F&A<G&B>F&B<G&C>F&C<G&D>F&D<G")
+  field(PREC, "6")
+  field(FLNK, "$(SYSTEM1):crate_current_status")
+}
+
+record(calc, $(SYSTEM1):rbk_oc_alm_$(SLOT)){
+  field(SCAN, ".5 second")
+  field(INPA, "$(SYSTEM1):measurement_current_$(SLOT)1.VAL PP MS")
+  field(INPB, "$(SYSTEM1):measurement_current_$(SLOT)3.VAL PP MS")
+  field(INPC, "$(SYSTEM1):measurement_current_$(SLOT)5.VAL PP MS")
+  field(INPD, "$(SYSTEM1):measurement_current_$(SLOT)7.VAL PP MS")
+  field(INPE, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPF, "-0.000001")
+  field(INPG, "0.000002")
+  field(CALC, "E=1&A>F&A<G&B>F&B<G&C>F&C<G&D>F&D<G")
+  field(PREC, "6")
+  field(FLNK, "$(SYSTEM1):crate_current_status")
+}
+
+record(calc, $(SYSTEM1):crate_current_status){
+  field(SCAN, ".5 second")
+  field(INPA, "$(SYSTEM1):rbk_ic_alm_u")
+  field(INPB, "$(SYSTEM1):rbk_ic_alm_u10")
+  field(INPC, "$(SYSTEM1):rbk_ic_alm_u20")
+  field(INPD, "$(SYSTEM1):rbk_oc_alm_u")
+  field(INPE, "$(SYSTEM1):rbk_oc_alm_u10")
+  field(INPF, "$(SYSTEM1):rbk_oc_alm_u20")
+  field(INPG, "$(SYSTEM1):pwr_reading")
+  field(CALC, "G=1?A&&B&&C&&D&&E&&F:0")
+  field(FLNK, "fstON_crate_current_status")
+}
+
+record(calc, $(SYSTEM2):rbk_ic_alm_$(SLOT)){
+  field(SCAN, ".5 second")
+  field(INPA, "$(SYSTEM2):measurement_current_$(SLOT)0.VAL PP MS")
+  field(INPB, "$(SYSTEM2):measurement_current_$(SLOT)2.VAL PP MS")
+  field(INPC, "$(SYSTEM2):measurement_current_$(SLOT)4.VAL PP MS")
+  field(INPD, "$(SYSTEM2):measurement_current_$(SLOT)6.VAL PP MS")
+  field(INPE, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPF, "-0.000001")
+  field(INPG, "0.000002")
+  field(CALC, "E=1&A>F&A<G&B>F&B<G&C>F&C<G&D>F&D<G")
+  field(PREC, "6")
+  field(FLNK, "$(SYSTEM2):crate_current_status")
+}
+
+record(calc, $(SYSTEM2):rbk_oc_alm_$(SLOT)){
+  field(SCAN, ".5 second")
+  field(INPA, "$(SYSTEM2):measurement_current_$(SLOT)1.VAL PP MS")
+  field(INPB, "$(SYSTEM2):measurement_current_$(SLOT)3.VAL PP MS")
+  field(INPC, "$(SYSTEM2):measurement_current_$(SLOT)5.VAL PP MS")
+  field(INPD, "$(SYSTEM2):measurement_current_$(SLOT)7.VAL PP MS")
+  field(INPE, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPF, "-0.000001")
+  field(INPG, "0.000002")
+  field(CALC, "E=1&A>F&A<G&B>F&B<G&C>F&C<G&D>F&D<G")
+  field(PREC, "6")
+  field(FLNK, "$(SYSTEM2):crate_current_status")
+}
+
+record(calc, $(SYSTEM2):crate_current_status){
+  field(SCAN, ".5 second")
+  field(INPA, "$(SYSTEM2):rbk_ic_alm_u")
+  field(INPB, "$(SYSTEM2):rbk_ic_alm_u10")
+  field(INPC, "$(SYSTEM2):rbk_ic_alm_u20")
+  field(INPD, "$(SYSTEM2):rbk_oc_alm_u")
+  field(INPE, "$(SYSTEM2):rbk_oc_alm_u10")
+  field(INPF, "$(SYSTEM2):rbk_oc_alm_u20")
+  field(INPG, "$(SYSTEM2):pwr_reading")
+  field(CALC, "G=1?A&&B&&C&&D&&E&&F:0")
+  field(FLNK, "fstON_crate_current_status")
+}
+
+record(calc, $(SYSTEM3):rbk_ic_alm_$(SLOT)){
+  field(SCAN, ".5 second")
+  field(INPA, "$(SYSTEM3):measurement_current_$(SLOT)0.VAL PP MS")
+  field(INPB, "$(SYSTEM3):measurement_current_$(SLOT)2.VAL PP MS")
+  field(INPC, "$(SYSTEM3):measurement_current_$(SLOT)4.VAL PP MS")
+  field(INPD, "$(SYSTEM3):measurement_current_$(SLOT)6.VAL PP MS")
+  field(INPE, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPF, "-0.000001")
+  field(INPG, "0.000002")
+  field(CALC, "E=1&A>F&A<G&B>F&B<G&C>F&C<G&D>F&D<G")
+  field(PREC, "6")
+  field(FLNK, "$(SYSTEM3):crate_current_status")
+}
+
+record(calc, $(SYSTEM3):rbk_oc_alm_$(SLOT)){
+  field(SCAN, ".5 second")
+  field(INPA, "$(SYSTEM3):measurement_current_$(SLOT)1.VAL PP MS")
+  field(INPB, "$(SYSTEM3):measurement_current_$(SLOT)3.VAL PP MS")
+  field(INPC, "$(SYSTEM3):measurement_current_$(SLOT)5.VAL PP MS")
+  field(INPD, "$(SYSTEM3):measurement_current_$(SLOT)7.VAL PP MS")
+  field(INPE, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPF, "-0.000001")
+  field(INPG, "0.000002")
+  field(CALC, "E=1&A>F&A<G&B>F&B<G&C>F&C<G&D>F&D<G")
+  field(PREC, "6")
+  field(FLNK, "$(SYSTEM3):crate_current_status")
+}
+
+record(calc, $(SYSTEM3):crate_current_status){
+  field(SCAN, ".5 second")
+  field(INPA, "$(SYSTEM3):rbk_ic_alm_u")
+  field(INPB, "$(SYSTEM3):rbk_ic_alm_u10")
+  field(INPC, "$(SYSTEM3):rbk_ic_alm_u20")
+  field(INPD, "$(SYSTEM3):rbk_oc_alm_u")
+  field(INPE, "$(SYSTEM3):rbk_oc_alm_u10")
+  field(INPF, "$(SYSTEM3):rbk_oc_alm_u20")
+  field(INPG, "$(SYSTEM3):pwr_reading")
+  field(CALC, "G=1?A&&B&&C&&D&&E&&F:0")
+  field(FLNK, "fstON_crate_current_status")
+}
+
+record(calc, fstON_crate_current_status){
+ field(SCAN, ".5 second")
+ field(INPA, "$(SYSTEM1):crate_current_status")
+ field(INPB, "$(SYSTEM2):crate_current_status")
+ field(INPC, "$(SYSTEM3):crate_current_status")
+ field(INPD, "1")
+ field(CALC, "D=1?A&&B&&C:0")
+ field(FLNK, "fst_current_alarm_onStatus")
+}
+
+record(calc, fst_current_alarm_onStatus){
+  field(DESC, "Alarm handler alarm")
+  field(SCAN, ".5 second")
+  field(INPA, "fstON_crate_current_status")
+  field(INPB, "fst_crate_status_ON")
+  field(INPC, "fst_power_status_trans")
+  field(CALC, "C=0?(!A)&&B:0")
+  field(HIHI, "1")
+  field(HIGH, "1")
+  field(HHSV, "MINOR")
+  field(HSV, "MINOR")
+}

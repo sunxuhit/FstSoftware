@@ -353,7 +353,4 @@ record(longout, "$(SYSTEM):ps_fan_control")
  field(HOPR, "3200")
 }
 
-record(calc, "fst-mpod2_IOC_check")
-
-
-
+record(calc, "fst-mpod03_IOC_check")
