@@ -10,7 +10,7 @@ Turnoffdelay=10
 Turnondelay=10
 TRUNONRetery="no"
 Wlines=0
-Nretry=4
+Nretry=5
 ####### crate  settings
 #ip=130.199.60.175 # BNL stand-alone test stand
 #ip1=130.199.61.3 # FSTMPOD01
@@ -18,23 +18,19 @@ Nretry=4
 #ip3=130.199.61.5 # FSTMPOD03
 ip=$2
 
-# path=/home/ptribedy/Downloads/net-snmp-5.8/share/snmp/mibs/ # BNL Test Stand
-#path=~/.snmp/mibs/ # FST Integration Test
-path=/usr/share/snmp/mibs/ # FST Integration Test
+path=/usr/share/snmp/mibs/
 channelCount=0
 # NumChennels=24 # for FST final setup
-# NumChennels=8 # for BNL test stand
-NumChennels=16 # for FST Integration test
+NumChennels=16 # for FST SC test
 declare -a x 
 # x1=(u0 u1 u2 u3 u4 u5 u6 u7 u100 u101 u102 u103 u104 u105 u106 u107 u200 u201 u202 u203 u204 u205 u206 u207) # for FST final setup
-# x1=(u0 u1 u2 u3 u4 u5 u6 u7) # for BNL test stand
-x1=(u0 u1 u2 u3 u4 u5 u6 u7 u100 u101 u102 u103 u104 u105 u106 u107) # for FST Integration test
+x1=(u0 u1 u2 u3 u4 u5 u6 u7 u100 u101 u102 u103 u104 u105 u106 u107) # for FST SC test
 
 #DO NOT chang the format
-setVoltage=0.00
-setCurrent=0.001000
+defVoltage=(70.00 140.0 70.00 140.0 70.00 140.0 70.00 140.0 70.00 140.0 70.00 140.0 70.00 140.0 70.00 140.0)
+#defVoltage=(30.00 50.0 30.00 50.0 30.00 50.0 30.00 50.0 30.00 50.0 30.00 50.0 30.00 50.0 30.00 50.0)
+setCurrent=0.000010
 setStatus=1
-#chang only 10 to 70 
 setRamp=5.0
 setFall=5.0
 ##### snmp settings
@@ -137,7 +133,7 @@ GetChennelsIndex()
 
   Gcount=0
   # until [ ${x1[23]} = ${x[23]} ] && [ ${x1[7]} = ${x[7]}] && [ ${x1[13]} = ${x[13]}] ; do
-  until [ ${x1[7]} = ${x[7]} ] ; do
+  until [ ${x1[7]} = ${x[7]} ] && [ ${x1[13]} = ${x[13]} ] ; do
     echo "Retrying to get the right ChennelsIndex ............"
     PowerRecycle
     sleep 1
@@ -187,19 +183,19 @@ SetVoltage()
 SetCurrentlimit()
 {
   iLimit="i$(snmpset $Arg1 -M $path -m +WIENER-CRATE-MIB -c seCrET $ip outputCurrent.$index F $setCurrent)"
-  m=${iLimit:5:2}
+  m=${iLimit:7:2}
   isetCurrent="i$setCurrent"
-  n=${isetCurrent:5:2}
+  n=${isetCurrent:7:2}
   settingdiff=`expr $m - $n`
   #echo "n= $n   m= $m  $settingdiff     iLimit=$iLimit  setCurrent=$setCurrent"
-  echo "SetCurrent for channel $index to ${iLimit:5:2}uA"
+  echo "SetCurrent for channel $index to ${iLimit:7:2}uA"
   Gcount=0
   until [ $settingdiff -le 2 ]; do
     sleep 1
     iLimit="i$(snmpset $Arg1 -M $path -m +WIENER-CRATE-MIB -c seCrET $ip outputCurrent.$index F $setCurrent)"
     m=${iLimit:5:2}
     isetCurrent="i$setCurrent"
-    n=${isetCurrent:5:2}
+    n=${isetCurrent:7:2}
     settingdiff=`expr $m - $n`
     echo "retrying the seting Current for channel $index to $setCurrent  "
     let Gcount=Gcount+1
@@ -339,6 +335,7 @@ DoRetryturnon()
   COUNTER=0
   while [ $COUNTER -lt $channelCount ]; do
     index=$(echo ${x[${COUNTER}]})
+    setVoltage=$(echo ${defVoltage[${COUNTER}]})
     SetVoltage
     SetCurrentlimit
     SetVoltageRiseRate
@@ -371,6 +368,7 @@ then
   COUNTER=0
   while [ $COUNTER -lt $channelCount ]; do
     index=$(echo ${x[${COUNTER}]})
+    setVoltage=$(echo ${defVoltage[${COUNTER}]})
     SetVoltage
     SetCurrentlimit
     SetVoltageRiseRate
@@ -381,11 +379,10 @@ then
   sleep 1
   SetAllHVON
   echo "The HV-channels' Voltage are ramping up"
-  outputVoltage="$(snmpget  $Arg1 -M $path -m +WIENER-CRATE-MIB -c seCrET $ip outputMeasurementTerminalVoltage.u0)"
-  #until [ ${outputVoltage%.*} -ge ${setVoltage%.*} ]
+  outputVoltage="$(snmpget  $Arg1 -M $path -m +WIENER-CRATE-MIB -c seCrET $ip outputMeasurementTerminalVoltage.u1)"
   until [ ${outputVoltage%.*} -ge `expr ${setVoltage%.*} - 1` ]
   do
-    outputVoltage="$(snmpget  $Arg1 -M $path -m +WIENER-CRATE-MIB -c seCrET $ip outputMeasurementTerminalVoltage.u0)"
+    outputVoltage="$(snmpget  $Arg1 -M $path -m +WIENER-CRATE-MIB -c seCrET $ip outputMeasurementTerminalVoltage.u1)"
     echo "Ramping up the high voltage. Current high voltage: $outputVoltage"
     sleep 1
   done
@@ -417,10 +414,10 @@ then
   sleep 1
   SetAllHVOFF
   echo "The HV-channels' Voltage are ramping down"
-  outputVoltage="$(snmpget  $Arg1 -M $path -m +WIENER-CRATE-MIB -c seCrET $ip outputMeasurementTerminalVoltage.u0)"
+  outputVoltage="$(snmpget  $Arg1 -M $path -m +WIENER-CRATE-MIB -c seCrET $ip outputMeasurementTerminalVoltage.u1)"
   until [ ${outputVoltage%.*} -le 0 ]
   do
-    outputVoltage="$(snmpget  $Arg1 -M $path -m +WIENER-CRATE-MIB -c seCrET $ip outputMeasurementTerminalVoltage.u0)"
+    outputVoltage="$(snmpget  $Arg1 -M $path -m +WIENER-CRATE-MIB -c seCrET $ip outputMeasurementTerminalVoltage.u1)"
     echo "Ramping down the high voltage. Current high voltage: $outputVoltage"
     sleep 1
   done
