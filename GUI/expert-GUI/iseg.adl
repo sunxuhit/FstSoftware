@@ -2201,7 +2201,91 @@ text {
 	"basic attribute" {
 		clr=14
 	}
-	textix="clear"
+	textix="clear trip"
+}
+text {
+	object {
+		x=123
+		y=232
+		width=15
+		height=15
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="clear trip"
+}
+text {
+	object {
+		x=125
+		y=324
+		width=15
+		height=15
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="clear trip"
+}
+text {
+	object {
+		x=125
+		y=418
+		width=15
+		height=15
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="clear trip"
+}
+text {
+	object {
+		x=124
+		y=514
+		width=15
+		height=15
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="clear trip"
+}
+text {
+	object {
+		x=123
+		y=609
+		width=15
+		height=15
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="clear trip"
+}
+text {
+	object {
+		x=124
+		y=700
+		width=15
+		height=15
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="clear trip"
+}
+text {
+	object {
+		x=124
+		y=795
+		width=15
+		height=15
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="clear trip"
 }
 text {
 	object {
