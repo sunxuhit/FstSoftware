@@ -1341,6 +1341,21 @@ text {
 	label="Load Config"
 	press_msg="3"
 }
+"message button" {
+	object {
+		x=556
+		y=363
+		width=123
+		height=25
+	}
+	control {
+		chan="$(SYSTEM):master_control_switch"
+		clr=14
+		bclr=56
+	}
+	label="Load Ramp Config"
+	press_msg="6"
+}
 "text update" {
 	object {
 		x=513

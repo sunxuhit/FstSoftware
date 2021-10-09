@@ -301,7 +301,7 @@ ss ramp1 {
             }
             for(i=0;i<8;i++) {
               rampRate[i] = standbyRampRate[i];
-              pvPut(rampRate[i]);
+              pvPut(rampRate[i],SYNC);
             }
         } 
         when (1 && delay(5)) {
@@ -343,7 +343,7 @@ ss ramp1 {
             }
             for(i=0;i<8;i++) {
               rampRate[i] = standbyRampRate[i];
-              pvPut(rampRate[i]);
+              pvPut(rampRate[i],SYNC);
             }
         } 
         when (1) {
@@ -449,9 +449,10 @@ ss ramp1 {
                 if ( (physicsVoltageSetting[i] - targetVoltage[i]) <= conditioningVoltageStep[i]) {
                     rampRate[i] = physicsRampRate[1];
                 } else {
-                    rampRate[i] = standbyRampRate[1];
+                    /*rampRate[i] = standbyRampRate[1];*/
+                    rampRate[i] = physicsRampRate[1];
                 }
-                pvPut(rampRate[i]);
+                pvPut(rampRate[i],SYNC);
               }
             }
             for(i=0;i<8;i++) {

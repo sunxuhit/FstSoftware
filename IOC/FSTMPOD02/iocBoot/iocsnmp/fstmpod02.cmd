@@ -41,25 +41,24 @@ dbLoadRecords("db/iseg.db","HOST=130.199.61.4,SYSTEM=fstmpod02,SLOT="u20",ID=5")
 dbLoadRecords("db/iseg.db","HOST=130.199.61.4,SYSTEM=fstmpod02,SLOT="u20",ID=6")
 dbLoadRecords("db/iseg.db","HOST=130.199.61.4,SYSTEM=fstmpod02,SLOT="u20",ID=7")
 ##dbLoadRecords("db/fst_alarms.db","SYSTEM=fstmpod02,SLOT="u20"")
-##dbLoadRecords("db/fgt_alarms.db","SYSTEM=fstmpod02")
 
 ## Load Control Interface db for seq
 dbLoadRecords("db/fgt_controls.db","SYSTEM=fstmpod02")
 
-dbLoadRecords("db/fee_enable.db","ID=2")
-dbLoadRecords("db/fee_enable.db","ID=3")
+##dbLoadRecords("db/fee_enable.db","ID=2")
+##dbLoadRecords("db/fee_enable.db","ID=3")
 dbLoadRecords("db/fee_temp.db","ID=2_0")
 dbLoadRecords("db/fee_temp.db","ID=2_1")
 dbLoadRecords("db/fee_temp.db","ID=2_2")
-dbLoadRecords("db/fee_temp.db","ID=2_3")
-dbLoadRecords("db/fee_temp.db","ID=2_4")
-dbLoadRecords("db/fee_temp.db","ID=2_5")
+##dbLoadRecords("db/fee_temp.db","ID=2_3")
+##dbLoadRecords("db/fee_temp.db","ID=2_4")
+##dbLoadRecords("db/fee_temp.db","ID=2_5")
 dbLoadRecords("db/fee_temp.db","ID=3_0")
 dbLoadRecords("db/fee_temp.db","ID=3_1")
 dbLoadRecords("db/fee_temp.db","ID=3_2")
-dbLoadRecords("db/fee_temp.db","ID=3_3")
-dbLoadRecords("db/fee_temp.db","ID=3_4")
-dbLoadRecords("db/fee_temp.db","ID=3_5")
+##dbLoadRecords("db/fee_temp.db","ID=3_3")
+##dbLoadRecords("db/fee_temp.db","ID=3_4")
+##dbLoadRecords("db/fee_temp.db","ID=3_5")
 
 ## Set this to see messages from mySub
 #var mySubDebug 1

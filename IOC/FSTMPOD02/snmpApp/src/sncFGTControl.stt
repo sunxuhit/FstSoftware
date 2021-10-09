@@ -502,6 +502,9 @@ ss ss1 {
 	when (v == 5) {
 		/* printf("power on enabled channels\n"); */
         } state powering_all
+	when (v == 6) {
+		/* printf("load config for ramping\n"); */
+	} state loading_ramp_all
     }
     state loading_all {
         entry {
@@ -623,6 +626,18 @@ ss ss1 {
             v = 1;
             pvPut(v);
         } 
+        when (1) {
+        } state waiting
+    }
+    state loading_ramp_all{
+        entry {
+            for(i=0; i<24; i++) {
+              currentSetting[i] = 0.000015;
+              pvPut(currentSetting[i],SYNC);
+            }
+            v = 1;
+            pvPut(v,SYNC);
+        }
         when (1) {
         } state waiting
     }

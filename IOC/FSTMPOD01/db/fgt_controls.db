@@ -16,7 +16,7 @@ record(stringout, "$(SYSTEM):hv_settings")
 {
  field(DESC, "filename for FST HV settings")
  field(SCAN, "Passive")
- field(VAL, "/home/sysuser/iocTop/FST/HV/mpod02/def")
+ field(VAL, "/home/sysuser/iocTop/FST/HV/mpod01/def")
 }
 
 

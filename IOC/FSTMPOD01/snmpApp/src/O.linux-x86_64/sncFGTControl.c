@@ -305,6 +305,13 @@ static seqBool E_ss1_0_waiting(SS_ID ssId, struct UserVar *pVar, int *pTransNum,
 		*pTransNum = 2;
 		return TRUE;
 	}
+# line 505 "../sncFGTControl.stt"
+	if (pVar->v == 6)
+	{
+		*pNextState = 6;
+		*pTransNum = 3;
+		return TRUE;
+	}
 	return FALSE;
 }
 
@@ -325,6 +332,10 @@ static void A_ss1_0_waiting(SS_ID ssId, struct UserVar *pVar, int transNum, int 
 		{
 		}
 		return;
+	case 3:
+		{
+		}
+		return;
 	}
 }
 
@@ -333,67 +344,67 @@ static void A_ss1_0_waiting(SS_ID ssId, struct UserVar *pVar, int transNum, int 
 /* Entry function for state "loading_all" in state set "ss1" */
 static void I_ss1_0_loading_all(SS_ID ssId, struct UserVar *pVar)
 {
-# line 508 "../sncFGTControl.stt"
-	seq_pvGet(ssId, 2/*hv_filename*/, 0);
 # line 511 "../sncFGTControl.stt"
-	sprintf(pVar->buff, "%s.csv", pVar->hv_filename);
-# line 513 "../sncFGTControl.stt"
-	fp = fopen(pVar->buff, "r");
+	seq_pvGet(ssId, 2/*hv_filename*/, 0);
 # line 514 "../sncFGTControl.stt"
+	sprintf(pVar->buff, "%s.csv", pVar->hv_filename);
+# line 516 "../sncFGTControl.stt"
+	fp = fopen(pVar->buff, "r");
+# line 517 "../sncFGTControl.stt"
 	if (fp)
 	{
-# line 515 "../sncFGTControl.stt"
+# line 518 "../sncFGTControl.stt"
 		pVar->m = 0;
-# line 517 "../sncFGTControl.stt"
+# line 520 "../sncFGTControl.stt"
 		for (pVar->ii = 0; pVar->ii < 2; pVar->ii++)
 		{
-# line 517 "../sncFGTControl.stt"
+# line 520 "../sncFGTControl.stt"
 			fgets(pVar->buff, 1024, fp);
 		}
-# line 519 "../sncFGTControl.stt"
+# line 522 "../sncFGTControl.stt"
 		while (NULL != fgets(pVar->buff, 1024, fp) && pVar->m < 24)
 		{
-# line 521 "../sncFGTControl.stt"
+# line 524 "../sncFGTControl.stt"
 			pVar->next = pVar->buff;
-# line 522 "../sncFGTControl.stt"
+# line 525 "../sncFGTControl.stt"
 			while (pVar->next[0] != ',')
-# line 522 "../sncFGTControl.stt"
+# line 525 "../sncFGTControl.stt"
 				pVar->next++;
-# line 534 "../sncFGTControl.stt"
+# line 537 "../sncFGTControl.stt"
 			sscanf(pVar->next + 1, "%lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf", &pVar->standbyVoltageSetting[pVar->m], &pVar->physicsVoltageSetting[pVar->m], &pVar->currentSetting[pVar->m], &pVar->standbyRampRate[pVar->m], &pVar->physicsRampRate[pVar->m], &pVar->conditioningDelay[pVar->m], &pVar->conditioningVoltageStep[pVar->m], &pVar->maxCycles[pVar->m], &pVar->autoResetDelay[pVar->m], &pVar->autoResetEnabled[pVar->m], &pVar->channelEnabled[pVar->m]);
-# line 540 "../sncFGTControl.stt"
+# line 543 "../sncFGTControl.stt"
 			pVar->m++;
 		}
-# line 543 "../sncFGTControl.stt"
+# line 546 "../sncFGTControl.stt"
 		fclose(fp);
-# line 544 "../sncFGTControl.stt"
+# line 547 "../sncFGTControl.stt"
 		for (pVar->i = 0; pVar->i < 24; pVar->i++)
 		{
-# line 545 "../sncFGTControl.stt"
-			seq_pvPut(ssId, 195/*voltageSetting*/ + (VAR_ID)(pVar->i), SYNC);
-# line 546 "../sncFGTControl.stt"
-			seq_pvPut(ssId, 227/*currentSetting*/ + (VAR_ID)(pVar->i), SYNC);
-# line 547 "../sncFGTControl.stt"
-			seq_pvPut(ssId, 259/*rampRate*/ + (VAR_ID)(pVar->i), SYNC);
 # line 548 "../sncFGTControl.stt"
-			seq_pvPut(ssId, 355/*maxCycles*/ + (VAR_ID)(pVar->i), SYNC);
+			seq_pvPut(ssId, 195/*voltageSetting*/ + (VAR_ID)(pVar->i), SYNC);
 # line 549 "../sncFGTControl.stt"
-			seq_pvPut(ssId, 291/*autoResetDelay*/ + (VAR_ID)(pVar->i), SYNC);
+			seq_pvPut(ssId, 227/*currentSetting*/ + (VAR_ID)(pVar->i), SYNC);
 # line 550 "../sncFGTControl.stt"
-			seq_pvPut(ssId, 323/*autoResetEnabled*/ + (VAR_ID)(pVar->i), SYNC);
+			seq_pvPut(ssId, 259/*rampRate*/ + (VAR_ID)(pVar->i), SYNC);
 # line 551 "../sncFGTControl.stt"
-			seq_pvPut(ssId, 751/*channelEnabled*/ + (VAR_ID)(pVar->i), SYNC);
+			seq_pvPut(ssId, 355/*maxCycles*/ + (VAR_ID)(pVar->i), SYNC);
 # line 552 "../sncFGTControl.stt"
-			seq_pvPut(ssId, 3/*physicsVoltageSetting*/ + (VAR_ID)(pVar->i), SYNC);
+			seq_pvPut(ssId, 291/*autoResetDelay*/ + (VAR_ID)(pVar->i), SYNC);
 # line 553 "../sncFGTControl.stt"
-			seq_pvPut(ssId, 35/*standbyVoltageSetting*/ + (VAR_ID)(pVar->i), SYNC);
+			seq_pvPut(ssId, 323/*autoResetEnabled*/ + (VAR_ID)(pVar->i), SYNC);
 # line 554 "../sncFGTControl.stt"
-			seq_pvPut(ssId, 67/*physicsRampRate*/ + (VAR_ID)(pVar->i), SYNC);
+			seq_pvPut(ssId, 751/*channelEnabled*/ + (VAR_ID)(pVar->i), SYNC);
 # line 555 "../sncFGTControl.stt"
-			seq_pvPut(ssId, 99/*standbyRampRate*/ + (VAR_ID)(pVar->i), SYNC);
+			seq_pvPut(ssId, 3/*physicsVoltageSetting*/ + (VAR_ID)(pVar->i), SYNC);
 # line 556 "../sncFGTControl.stt"
-			seq_pvPut(ssId, 131/*conditioningDelay*/ + (VAR_ID)(pVar->i), SYNC);
+			seq_pvPut(ssId, 35/*standbyVoltageSetting*/ + (VAR_ID)(pVar->i), SYNC);
 # line 557 "../sncFGTControl.stt"
+			seq_pvPut(ssId, 67/*physicsRampRate*/ + (VAR_ID)(pVar->i), SYNC);
+# line 558 "../sncFGTControl.stt"
+			seq_pvPut(ssId, 99/*standbyRampRate*/ + (VAR_ID)(pVar->i), SYNC);
+# line 559 "../sncFGTControl.stt"
+			seq_pvPut(ssId, 131/*conditioningDelay*/ + (VAR_ID)(pVar->i), SYNC);
+# line 560 "../sncFGTControl.stt"
 			seq_pvPut(ssId, 163/*conditioningVoltageStep*/ + (VAR_ID)(pVar->i), SYNC);
 		}
 	}
@@ -402,21 +413,21 @@ static void I_ss1_0_loading_all(SS_ID ssId, struct UserVar *pVar)
 /* Delay function for state "loading_all" in state set "ss1" */
 static void D_ss1_0_loading_all(SS_ID ssId, struct UserVar *pVar)
 {
-# line 564 "../sncFGTControl.stt"
+# line 567 "../sncFGTControl.stt"
 	seq_delayInit(ssId, 0, (1));
 }
 
 /* Event function for state "loading_all" in state set "ss1" */
 static seqBool E_ss1_0_loading_all(SS_ID ssId, struct UserVar *pVar, int *pTransNum, int *pNextState)
 {
-# line 564 "../sncFGTControl.stt"
+# line 567 "../sncFGTControl.stt"
 	if (seq_delay(ssId, 0))
 	{
 		*pNextState = 2;
 		*pTransNum = 0;
 		return TRUE;
 	}
-# line 568 "../sncFGTControl.stt"
+# line 571 "../sncFGTControl.stt"
 	if (pVar->v == 1)
 	{
 		*pNextState = 2;
@@ -433,9 +444,9 @@ static void A_ss1_0_loading_all(SS_ID ssId, struct UserVar *pVar, int transNum, 
 	{
 	case 0:
 		{
-# line 565 "../sncFGTControl.stt"
+# line 568 "../sncFGTControl.stt"
 			pVar->v = 1;
-# line 566 "../sncFGTControl.stt"
+# line 569 "../sncFGTControl.stt"
 			seq_pvPut(ssId, 1/*v*/, SYNC);
 		}
 		return;
@@ -451,59 +462,59 @@ static void A_ss1_0_loading_all(SS_ID ssId, struct UserVar *pVar, int transNum, 
 /* Entry function for state "saving_all" in state set "ss1" */
 static void I_ss1_0_saving_all(SS_ID ssId, struct UserVar *pVar)
 {
-# line 574 "../sncFGTControl.stt"
-	seq_pvGet(ssId, 2/*hv_filename*/, 0);
 # line 577 "../sncFGTControl.stt"
-	sprintf(pVar->buff, "%s.csv", pVar->hv_filename);
-# line 579 "../sncFGTControl.stt"
-	fp = fopen(pVar->buff, "w");
+	seq_pvGet(ssId, 2/*hv_filename*/, 0);
 # line 580 "../sncFGTControl.stt"
-	pVar->i = 0;
+	sprintf(pVar->buff, "%s.csv", pVar->hv_filename);
 # line 582 "../sncFGTControl.stt"
-	fprintf(fp, "{SYSTEM} HV Settings\n");
+	fp = fopen(pVar->buff, "w");
 # line 583 "../sncFGTControl.stt"
-	fprintf(fp, "Channel(ignored), standbyV, physicsV, current limit, standbyRamp, physicsRamp, delay(s), Vstep, maxCycles, resetDelay, autoResetEnabled (0=no), channelEnabled(0=no)\n");
+	pVar->i = 0;
 # line 585 "../sncFGTControl.stt"
+	fprintf(fp, "{SYSTEM} HV Settings\n");
+# line 586 "../sncFGTControl.stt"
+	fprintf(fp, "Channel(ignored), standbyV, physicsV, current limit, standbyRamp, physicsRamp, delay(s), Vstep, maxCycles, resetDelay, autoResetEnabled (0=no), channelEnabled(0=no)\n");
+# line 588 "../sncFGTControl.stt"
 	for (pVar->board = 0; pVar->board < 3; pVar->board++)
 	{
-# line 586 "../sncFGTControl.stt"
+# line 589 "../sncFGTControl.stt"
 		if (pVar->board == 0)
 		{
-# line 587 "../sncFGTControl.stt"
+# line 590 "../sncFGTControl.stt"
 			boardname[0] = 0;
 		}
 		else
-# line 588 "../sncFGTControl.stt"
+# line 591 "../sncFGTControl.stt"
 			if (pVar->board == 1)
 			{
-# line 589 "../sncFGTControl.stt"
+# line 592 "../sncFGTControl.stt"
 				strcpy(boardname, "10");
 			}
 			else
-# line 590 "../sncFGTControl.stt"
+# line 593 "../sncFGTControl.stt"
 				if (pVar->board == 2)
 				{
-# line 591 "../sncFGTControl.stt"
+# line 594 "../sncFGTControl.stt"
 					strcpy(boardname, "20");
 				}
-# line 594 "../sncFGTControl.stt"
+# line 597 "../sncFGTControl.stt"
 		for (pVar->chan = 0; pVar->chan < 8; pVar->chan++)
 		{
-# line 595 "../sncFGTControl.stt"
+# line 598 "../sncFGTControl.stt"
 			sprintf(channelName, "u%s%c", boardname, '0' + pVar->chan);
-# line 599 "../sncFGTControl.stt"
+# line 602 "../sncFGTControl.stt"
 			fprintf(fp, "%s, %f, %f, %f, %f, %f, ", channelName, pVar->standbyVoltageSetting[pVar->i], pVar->physicsVoltageSetting[pVar->i], pVar->currentSetting[pVar->i], pVar->standbyRampRate[pVar->i], pVar->physicsRampRate[pVar->i]);
-# line 601 "../sncFGTControl.stt"
+# line 604 "../sncFGTControl.stt"
 			fprintf(fp, "%f, %f, %f, %f, %f, %f\n", pVar->conditioningDelay[pVar->i], pVar->conditioningVoltageStep[pVar->i], pVar->maxCycles[pVar->i], pVar->autoResetDelay[pVar->i], pVar->autoResetEnabled[pVar->i], pVar->channelEnabled[pVar->i]);
-# line 603 "../sncFGTControl.stt"
+# line 606 "../sncFGTControl.stt"
 			pVar->i++;
 		}
 	}
-# line 607 "../sncFGTControl.stt"
+# line 610 "../sncFGTControl.stt"
 	fclose(fp);
-# line 608 "../sncFGTControl.stt"
+# line 611 "../sncFGTControl.stt"
 	pVar->v = 1;
-# line 609 "../sncFGTControl.stt"
+# line 612 "../sncFGTControl.stt"
 	seq_pvPut(ssId, 1/*v*/, 0);
 }
 
@@ -515,7 +526,7 @@ static void D_ss1_0_saving_all(SS_ID ssId, struct UserVar *pVar)
 /* Event function for state "saving_all" in state set "ss1" */
 static seqBool E_ss1_0_saving_all(SS_ID ssId, struct UserVar *pVar, int *pTransNum, int *pNextState)
 {
-# line 611 "../sncFGTControl.stt"
+# line 614 "../sncFGTControl.stt"
 	if (1)
 	{
 		*pNextState = 2;
@@ -542,21 +553,21 @@ static void A_ss1_0_saving_all(SS_ID ssId, struct UserVar *pVar, int transNum, i
 /* Entry function for state "powering_all" in state set "ss1" */
 static void I_ss1_0_powering_all(SS_ID ssId, struct UserVar *pVar)
 {
-# line 616 "../sncFGTControl.stt"
+# line 619 "../sncFGTControl.stt"
 	for (pVar->i = 0; pVar->i < 24; pVar->i++)
 	{
-# line 617 "../sncFGTControl.stt"
+# line 620 "../sncFGTControl.stt"
 		if (pVar->channelEnabled[pVar->i] == 1 && pVar->powerSwitch[pVar->i] == 0 && pVar->tripStatus[pVar->i] != 4)
 		{
-# line 618 "../sncFGTControl.stt"
+# line 621 "../sncFGTControl.stt"
 			pVar->powerSwitch[pVar->i] = 1;
-# line 619 "../sncFGTControl.stt"
+# line 622 "../sncFGTControl.stt"
 			seq_pvPut(ssId, 687/*powerSwitch*/ + (VAR_ID)(pVar->i), 0);
 		}
 	}
-# line 623 "../sncFGTControl.stt"
+# line 626 "../sncFGTControl.stt"
 	pVar->v = 1;
-# line 624 "../sncFGTControl.stt"
+# line 627 "../sncFGTControl.stt"
 	seq_pvPut(ssId, 1/*v*/, 0);
 }
 
@@ -568,7 +579,7 @@ static void D_ss1_0_powering_all(SS_ID ssId, struct UserVar *pVar)
 /* Event function for state "powering_all" in state set "ss1" */
 static seqBool E_ss1_0_powering_all(SS_ID ssId, struct UserVar *pVar, int *pTransNum, int *pNextState)
 {
-# line 626 "../sncFGTControl.stt"
+# line 629 "../sncFGTControl.stt"
 	if (1)
 	{
 		*pNextState = 2;
@@ -580,6 +591,55 @@ static seqBool E_ss1_0_powering_all(SS_ID ssId, struct UserVar *pVar, int *pTran
 
 /* Action function for state "powering_all" in state set "ss1" */
 static void A_ss1_0_powering_all(SS_ID ssId, struct UserVar *pVar, int transNum, int *pNextState)
+{
+	switch(transNum)
+	{
+	case 0:
+		{
+		}
+		return;
+	}
+}
+
+/****** Code for state "loading_ramp_all" in state set "ss1" ******/
+
+/* Entry function for state "loading_ramp_all" in state set "ss1" */
+static void I_ss1_0_loading_ramp_all(SS_ID ssId, struct UserVar *pVar)
+{
+# line 634 "../sncFGTControl.stt"
+	for (pVar->i = 0; pVar->i < 24; pVar->i++)
+	{
+# line 635 "../sncFGTControl.stt"
+		pVar->currentSetting[pVar->i] = 0.000015;
+# line 636 "../sncFGTControl.stt"
+		seq_pvPut(ssId, 227/*currentSetting*/ + (VAR_ID)(pVar->i), SYNC);
+	}
+# line 638 "../sncFGTControl.stt"
+	pVar->v = 1;
+# line 639 "../sncFGTControl.stt"
+	seq_pvPut(ssId, 1/*v*/, SYNC);
+}
+
+/* Delay function for state "loading_ramp_all" in state set "ss1" */
+static void D_ss1_0_loading_ramp_all(SS_ID ssId, struct UserVar *pVar)
+{
+}
+
+/* Event function for state "loading_ramp_all" in state set "ss1" */
+static seqBool E_ss1_0_loading_ramp_all(SS_ID ssId, struct UserVar *pVar, int *pTransNum, int *pNextState)
+{
+# line 641 "../sncFGTControl.stt"
+	if (1)
+	{
+		*pNextState = 2;
+		*pTransNum = 0;
+		return TRUE;
+	}
+	return FALSE;
+}
+
+/* Action function for state "loading_ramp_all" in state set "ss1" */
+static void A_ss1_0_loading_ramp_all(SS_ID ssId, struct UserVar *pVar, int transNum, int *pNextState)
 {
 	switch(transNum)
 	{
@@ -1581,6 +1641,34 @@ static const seqMask	EM_ss1_0_powering_all[] = {
 	0x00000000,
 	0x00000000,
 };
+static const seqMask	EM_ss1_0_loading_ramp_all[] = {
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+};
 
 /* State table for state set "ss1" */
 static seqState G_ss1_states[] = {
@@ -1644,6 +1732,16 @@ static seqState G_ss1_states[] = {
 	/* event mask array */  EM_ss1_0_powering_all,
 	/* state options */     (0)
 	},
+	{
+	/* state name */        "loading_ramp_all",
+	/* action function */   A_ss1_0_loading_ramp_all,
+	/* event function */    E_ss1_0_loading_ramp_all,
+	/* delay function */    D_ss1_0_loading_ramp_all,
+	/* entry function */    I_ss1_0_loading_ramp_all,
+	/* exit function */     0,
+	/* event mask array */  EM_ss1_0_loading_ramp_all,
+	/* state options */     (0)
+	},
 };
 
 /* State set table */
@@ -1651,7 +1749,7 @@ static seqSS G_state_sets[] = {
 	{
 	/* state set name */    "ss1",
 	/* states */            G_ss1_states,
-	/* number of states */  6,
+	/* number of states */  7,
 	/* number of delays */  1
 	},
 };

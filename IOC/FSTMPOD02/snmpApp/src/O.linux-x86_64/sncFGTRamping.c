@@ -603,9 +603,9 @@ static void I_ramp1_1_set_to_off(SS_ID ssId, struct UserVar *pVar)
 	for (pVar->i = 0; pVar->i < 8; pVar->i++)
 	{
 # line 303 "../sncFGTRamping.stt"
-		pVar->rampRate[pVar->i] = pVar->standbyRampRate[0];
+		pVar->rampRate[pVar->i] = pVar->standbyRampRate[pVar->i];
 # line 304 "../sncFGTRamping.stt"
-		seq_pvPut(ssId, 324/*rampRate*/ + (VAR_ID)(pVar->i), 0);
+		seq_pvPut(ssId, 324/*rampRate*/ + (VAR_ID)(pVar->i), SYNC);
 	}
 }
 
@@ -646,7 +646,7 @@ static void A_ramp1_1_set_to_off(SS_ID ssId, struct UserVar *pVar, int transNum,
 # line 311 "../sncFGTRamping.stt"
 				seq_pvPut(ssId, 228/*voltageSetting*/ + (VAR_ID)(pVar->i), SYNC);
 # line 312 "../sncFGTRamping.stt"
-				pVar->rampRate[pVar->i] = pVar->standbyRampRate[0];
+				pVar->rampRate[pVar->i] = pVar->standbyRampRate[pVar->i];
 # line 313 "../sncFGTRamping.stt"
 				seq_pvPut(ssId, 324/*rampRate*/ + (VAR_ID)(pVar->i), SYNC);
 			}
@@ -716,9 +716,9 @@ static void I_ramp1_1_ramp_to_standby(SS_ID ssId, struct UserVar *pVar)
 	for (pVar->i = 0; pVar->i < 8; pVar->i++)
 	{
 # line 345 "../sncFGTRamping.stt"
-		pVar->rampRate[pVar->i] = pVar->standbyRampRate[0];
+		pVar->rampRate[pVar->i] = pVar->standbyRampRate[pVar->i];
 # line 346 "../sncFGTRamping.stt"
-		seq_pvPut(ssId, 324/*rampRate*/ + (VAR_ID)(pVar->i), 0);
+		seq_pvPut(ssId, 324/*rampRate*/ + (VAR_ID)(pVar->i), SYNC);
 	}
 }
 
@@ -1094,26 +1094,26 @@ static void I_ramp1_1_begin_physics_ramp(SS_ID ssId, struct UserVar *pVar)
 			if ((pVar->physicsVoltageSetting[pVar->i] - pVar->targetVoltage[pVar->i]) <= pVar->conditioningVoltageStep[pVar->i])
 			{
 # line 450 "../sncFGTRamping.stt"
-				pVar->rampRate[pVar->i] = pVar->physicsRampRate[0];
+				pVar->rampRate[pVar->i] = pVar->physicsRampRate[1];
 			}
 			else
 			{
-# line 452 "../sncFGTRamping.stt"
-				pVar->rampRate[pVar->i] = pVar->standbyRampRate[0];
+# line 453 "../sncFGTRamping.stt"
+				pVar->rampRate[pVar->i] = pVar->physicsRampRate[1];
 			}
-# line 454 "../sncFGTRamping.stt"
-			seq_pvPut(ssId, 324/*rampRate*/ + (VAR_ID)(pVar->i), 0);
+# line 455 "../sncFGTRamping.stt"
+			seq_pvPut(ssId, 324/*rampRate*/ + (VAR_ID)(pVar->i), SYNC);
 		}
 	}
-# line 457 "../sncFGTRamping.stt"
+# line 458 "../sncFGTRamping.stt"
 	for (pVar->i = 0; pVar->i < 8; pVar->i++)
 	{
-# line 458 "../sncFGTRamping.stt"
+# line 459 "../sncFGTRamping.stt"
 		if (pVar->channelEnabled[pVar->i] == 1 && pVar->powerSwitch[pVar->i] == 0 && pVar->tripStatus[pVar->i] != 4)
 		{
-# line 459 "../sncFGTRamping.stt"
-			pVar->powerSwitch[pVar->i] = 1;
 # line 460 "../sncFGTRamping.stt"
+			pVar->powerSwitch[pVar->i] = 1;
+# line 461 "../sncFGTRamping.stt"
 			seq_pvPut(ssId, 484/*powerSwitch*/ + (VAR_ID)(pVar->i), 0);
 		}
 	}
@@ -1127,7 +1127,7 @@ static void D_ramp1_1_begin_physics_ramp(SS_ID ssId, struct UserVar *pVar)
 /* Event function for state "begin_physics_ramp" in state set "ramp1" */
 static seqBool E_ramp1_1_begin_physics_ramp(SS_ID ssId, struct UserVar *pVar, int *pTransNum, int *pNextState)
 {
-# line 464 "../sncFGTRamping.stt"
+# line 465 "../sncFGTRamping.stt"
 	if (1)
 	{
 		*pNextState = 10;
@@ -1159,21 +1159,21 @@ static void I_ramp1_1_physics_ramping_delay(SS_ID ssId, struct UserVar *pVar)
 /* Delay function for state "physics_ramping_delay" in state set "ramp1" */
 static void D_ramp1_1_physics_ramping_delay(SS_ID ssId, struct UserVar *pVar)
 {
-# line 472 "../sncFGTRamping.stt"
+# line 473 "../sncFGTRamping.stt"
 	seq_delayInit(ssId, 0, (5));
 }
 
 /* Event function for state "physics_ramping_delay" in state set "ramp1" */
 static seqBool E_ramp1_1_physics_ramping_delay(SS_ID ssId, struct UserVar *pVar, int *pTransNum, int *pNextState)
 {
-# line 472 "../sncFGTRamping.stt"
+# line 473 "../sncFGTRamping.stt"
 	if (seq_delay(ssId, 0))
 	{
 		*pNextState = 11;
 		*pTransNum = 0;
 		return TRUE;
 	}
-# line 474 "../sncFGTRamping.stt"
+# line 475 "../sncFGTRamping.stt"
 	if (pVar->control != 3 || pVar->real_power_state == 0)
 	{
 		*pNextState = 2;
@@ -1204,25 +1204,25 @@ static void A_ramp1_1_physics_ramping_delay(SS_ID ssId, struct UserVar *pVar, in
 /* Entry function for state "check_physics_rampup" in state set "ramp1" */
 static void I_ramp1_1_check_physics_rampup(SS_ID ssId, struct UserVar *pVar)
 {
-# line 480 "../sncFGTRamping.stt"
-	sprintf(pVar->statusText, "Ramping");
 # line 481 "../sncFGTRamping.stt"
-	seq_pvPut(ssId, 3/*statusText*/, 0);
+	sprintf(pVar->statusText, "Ramping");
 # line 482 "../sncFGTRamping.stt"
-	pVar->endRamp = 1;
+	seq_pvPut(ssId, 3/*statusText*/, 0);
 # line 483 "../sncFGTRamping.stt"
+	pVar->endRamp = 1;
+# line 484 "../sncFGTRamping.stt"
 	for (pVar->i = 0; pVar->i < 8; pVar->i++)
 	{
-# line 484 "../sncFGTRamping.stt"
+# line 485 "../sncFGTRamping.stt"
 		if (pVar->channelEnabled[pVar->i] == 1 && pVar->tripStatus[pVar->i] != 4)
 		{
-# line 485 "../sncFGTRamping.stt"
+# line 486 "../sncFGTRamping.stt"
 			if (pVar->targetVoltage[pVar->i] != 0)
 			{
-# line 487 "../sncFGTRamping.stt"
+# line 488 "../sncFGTRamping.stt"
 				if (pVar->voltageReading[pVar->i] / pVar->targetVoltage[pVar->i] < 0.97)
 				{
-# line 488 "../sncFGTRamping.stt"
+# line 489 "../sncFGTRamping.stt"
 					pVar->endRamp = 0;
 				}
 			}
@@ -1238,21 +1238,21 @@ static void D_ramp1_1_check_physics_rampup(SS_ID ssId, struct UserVar *pVar)
 /* Event function for state "check_physics_rampup" in state set "ramp1" */
 static seqBool E_ramp1_1_check_physics_rampup(SS_ID ssId, struct UserVar *pVar, int *pTransNum, int *pNextState)
 {
-# line 494 "../sncFGTRamping.stt"
+# line 495 "../sncFGTRamping.stt"
 	if (pVar->control != 2 && pVar->control != 3 || pVar->real_power_state == 0)
 	{
 		*pNextState = 2;
 		*pTransNum = 0;
 		return TRUE;
 	}
-# line 496 "../sncFGTRamping.stt"
+# line 497 "../sncFGTRamping.stt"
 	if (pVar->endRamp == 1)
 	{
 		*pNextState = 12;
 		*pTransNum = 1;
 		return TRUE;
 	}
-# line 498 "../sncFGTRamping.stt"
+# line 499 "../sncFGTRamping.stt"
 	if (pVar->endRamp == 0)
 	{
 		*pNextState = 10;
@@ -1287,22 +1287,22 @@ static void A_ramp1_1_check_physics_rampup(SS_ID ssId, struct UserVar *pVar, int
 /* Entry function for state "physics_ramping_step_finished" in state set "ramp1" */
 static void I_ramp1_1_physics_ramping_step_finished(SS_ID ssId, struct UserVar *pVar)
 {
-# line 504 "../sncFGTRamping.stt"
-	sprintf(pVar->statusText, "Ramp Step Finished");
 # line 505 "../sncFGTRamping.stt"
-	seq_pvPut(ssId, 3/*statusText*/, 0);
+	sprintf(pVar->statusText, "Ramp Step Finished");
 # line 506 "../sncFGTRamping.stt"
-	pVar->endRamp = 1;
+	seq_pvPut(ssId, 3/*statusText*/, 0);
 # line 507 "../sncFGTRamping.stt"
+	pVar->endRamp = 1;
+# line 508 "../sncFGTRamping.stt"
 	for (pVar->i = 0; pVar->i < 8; pVar->i++)
 	{
-# line 508 "../sncFGTRamping.stt"
+# line 509 "../sncFGTRamping.stt"
 		if (pVar->channelEnabled[pVar->i] == 1 && pVar->tripStatus[pVar->i] != 4)
 		{
-# line 509 "../sncFGTRamping.stt"
+# line 510 "../sncFGTRamping.stt"
 			if (pVar->targetVoltage[pVar->i] != pVar->physicsVoltageSetting[pVar->i])
 			{
-# line 510 "../sncFGTRamping.stt"
+# line 511 "../sncFGTRamping.stt"
 				pVar->endRamp = 0;
 			}
 		}
@@ -1312,28 +1312,28 @@ static void I_ramp1_1_physics_ramping_step_finished(SS_ID ssId, struct UserVar *
 /* Delay function for state "physics_ramping_step_finished" in state set "ramp1" */
 static void D_ramp1_1_physics_ramping_step_finished(SS_ID ssId, struct UserVar *pVar)
 {
-# line 517 "../sncFGTRamping.stt"
+# line 518 "../sncFGTRamping.stt"
 	seq_delayInit(ssId, 0, (pVar->conditioningDelay[0]));
 }
 
 /* Event function for state "physics_ramping_step_finished" in state set "ramp1" */
 static seqBool E_ramp1_1_physics_ramping_step_finished(SS_ID ssId, struct UserVar *pVar, int *pTransNum, int *pNextState)
 {
-# line 515 "../sncFGTRamping.stt"
+# line 516 "../sncFGTRamping.stt"
 	if (pVar->endRamp == 1)
 	{
 		*pNextState = 15;
 		*pTransNum = 0;
 		return TRUE;
 	}
-# line 517 "../sncFGTRamping.stt"
+# line 518 "../sncFGTRamping.stt"
 	if (seq_delay(ssId, 0) && pVar->endRamp == 0)
 	{
 		*pNextState = 9;
 		*pTransNum = 1;
 		return TRUE;
 	}
-# line 519 "../sncFGTRamping.stt"
+# line 520 "../sncFGTRamping.stt"
 	if (pVar->control != 2 && pVar->control != 3 || pVar->real_power_state == 0)
 	{
 		*pNextState = 2;
@@ -1368,9 +1368,9 @@ static void A_ramp1_1_physics_ramping_step_finished(SS_ID ssId, struct UserVar *
 /* Entry function for state "off" in state set "ramp1" */
 static void I_ramp1_1_off(SS_ID ssId, struct UserVar *pVar)
 {
-# line 525 "../sncFGTRamping.stt"
-	sprintf(pVar->statusText, "OFF");
 # line 526 "../sncFGTRamping.stt"
+	sprintf(pVar->statusText, "OFF");
+# line 527 "../sncFGTRamping.stt"
 	seq_pvPut(ssId, 3/*statusText*/, 0);
 }
 
@@ -1382,7 +1382,7 @@ static void D_ramp1_1_off(SS_ID ssId, struct UserVar *pVar)
 /* Event function for state "off" in state set "ramp1" */
 static seqBool E_ramp1_1_off(SS_ID ssId, struct UserVar *pVar, int *pTransNum, int *pNextState)
 {
-# line 529 "../sncFGTRamping.stt"
+# line 530 "../sncFGTRamping.stt"
 	if (pVar->control != 1)
 	{
 		*pNextState = 2;
@@ -1409,9 +1409,9 @@ static void A_ramp1_1_off(SS_ID ssId, struct UserVar *pVar, int transNum, int *p
 /* Entry function for state "standby" in state set "ramp1" */
 static void I_ramp1_1_standby(SS_ID ssId, struct UserVar *pVar)
 {
-# line 534 "../sncFGTRamping.stt"
-	sprintf(pVar->statusText, "STANDBY");
 # line 535 "../sncFGTRamping.stt"
+	sprintf(pVar->statusText, "STANDBY");
+# line 536 "../sncFGTRamping.stt"
 	seq_pvPut(ssId, 3/*statusText*/, 0);
 }
 
@@ -1423,7 +1423,7 @@ static void D_ramp1_1_standby(SS_ID ssId, struct UserVar *pVar)
 /* Event function for state "standby" in state set "ramp1" */
 static seqBool E_ramp1_1_standby(SS_ID ssId, struct UserVar *pVar, int *pTransNum, int *pNextState)
 {
-# line 538 "../sncFGTRamping.stt"
+# line 539 "../sncFGTRamping.stt"
 	if (pVar->control != 2 || pVar->real_power_state == 0)
 	{
 		*pNextState = 2;
@@ -1450,9 +1450,9 @@ static void A_ramp1_1_standby(SS_ID ssId, struct UserVar *pVar, int transNum, in
 /* Entry function for state "physics" in state set "ramp1" */
 static void I_ramp1_1_physics(SS_ID ssId, struct UserVar *pVar)
 {
-# line 543 "../sncFGTRamping.stt"
-	sprintf(pVar->statusText, "PHYSICS");
 # line 544 "../sncFGTRamping.stt"
+	sprintf(pVar->statusText, "PHYSICS");
+# line 545 "../sncFGTRamping.stt"
 	seq_pvPut(ssId, 3/*statusText*/, 0);
 }
 
@@ -1464,7 +1464,7 @@ static void D_ramp1_1_physics(SS_ID ssId, struct UserVar *pVar)
 /* Event function for state "physics" in state set "ramp1" */
 static seqBool E_ramp1_1_physics(SS_ID ssId, struct UserVar *pVar, int *pTransNum, int *pNextState)
 {
-# line 547 "../sncFGTRamping.stt"
+# line 548 "../sncFGTRamping.stt"
 	if (pVar->control != 3 || pVar->real_power_state == 0)
 	{
 		*pNextState = 2;
