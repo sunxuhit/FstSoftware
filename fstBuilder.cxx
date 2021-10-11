@@ -1393,7 +1393,7 @@ void fstBuilder::event(daqReader *rdr)
     int adc_max = maxAdc[geoIdx];
     int tb_max  = maxTimeBin[geoIdx];
 
-    // int apvId = (elecRdo-1)*ArmPerRdo*ApvPerArm + elecArm*ApvPerArm + elecApv;
+    // non-ZS data
     if( adc_max>hitCut*rms && rms > minRMSVal && rms < maxRMSVal ){
       if( !isNoisyApv[glbElecApvIdx] || (isNoisyApv[glbElecApvIdx] && adc_max>noiseChipCut*rms)){
 	if(counterGoodHitPerEvent[glbElecApvIdx]<=hitOccupancyCut){
