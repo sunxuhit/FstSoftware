@@ -1,0 +1,1019 @@
+
+file {
+	name="/home/sysuser/GUI/ist/mpod/FstPowerSupply.adl"
+	version=030102
+}
+display {
+	object {
+		x=835
+		y=115
+		width=1082
+		height=524
+	}
+	clr=14
+	bclr=16
+	cmap=""
+	gridSpacing=5
+	gridOn=0
+	snapToGrid=0
+}
+"color map" {
+	ncolors=65
+	colors {
+		ffffff,
+		ececec,
+		dadada,
+		c8c8c8,
+		bbbbbb,
+		aeaeae,
+		9e9e9e,
+		919191,
+		858585,
+		787878,
+		696969,
+		5a5a5a,
+		464646,
+		2d2d2d,
+		000000,
+		00d800,
+		1ebb00,
+		339900,
+		2d7f00,
+		216c00,
+		fd0000,
+		de1309,
+		be190b,
+		a01207,
+		820400,
+		5893ff,
+		597ee1,
+		4b6ec7,
+		3a5eab,
+		27548d,
+		fbf34a,
+		f9da3c,
+		eeb62b,
+		e19015,
+		cd6100,
+		ffb0ff,
+		d67fe2,
+		ae4ebc,
+		8b1a96,
+		610a75,
+		a4aaff,
+		8793e2,
+		6a73c1,
+		4d52a4,
+		343386,
+		c7bb6d,
+		b79d5c,
+		a47e3c,
+		7d5627,
+		58340f,
+		99ffff,
+		73dfff,
+		4ea5f9,
+		2a63e4,
+		0a00b8,
+		ebf1b5,
+		d4db9d,
+		bbc187,
+		a6a462,
+		8b8239,
+		73ff6b,
+		52da3b,
+		3cb420,
+		289315,
+		1a7309,
+	}
+}
+text {
+	object {
+		x=90
+		y=24
+		width=100
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Main Switch for Crate 1"
+}
+"text update" {
+	object {
+		x=55
+		y=43
+		width=180
+		height=24
+	}
+	monitor {
+		chan="fstmpod01:status"
+		clr=14
+		bclr=3
+	}
+	limits {
+	}
+}
+valuator {
+	object {
+		x=298
+		y=23
+		width=67
+		height=40
+	}
+	control {
+		chan="fstmpod01:pwr_setting"
+		clr=14
+		bclr=3
+	}
+	dPrecision=1.000000
+	limits {
+	}
+}
+oval {
+	object {
+		x=400
+		y=25
+		width=39
+		height=37
+	}
+	"basic attribute" {
+		clr=15
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="fstmpod01:pwr_reading"
+	}
+}
+oval {
+        object {
+                x=400
+                y=25
+                width=39
+                height=37
+        }
+        "basic attribute" {
+                clr=20
+        }
+        "dynamic attribute" {
+                vis="if zero"
+                chan="fstmpod01:pwr_reading"
+        }
+}
+"related display" {
+	object {
+		x=485
+		y=16
+		width=150
+		height=40
+	}
+	display[0] {
+		label="Supply Slot 0"
+		name="hv_status_overview.adl"
+		args="SYSTEM=fstmpod01,U=u"
+	}
+	clr=14
+	bclr=55
+	label="Status Overview c1"
+}
+"message button" {
+	object {
+		x=660
+		y=16
+		width=90
+		height=40
+	}
+	control {
+		chan="fstmpod01:ramp_control_switch"
+		clr=14
+		bclr=4
+	}
+	label="OFF"
+	press_msg="1"
+}
+rectangle {
+        object {
+		x=655
+		y=11
+		width=100
+		height=50
+        }
+        "basic attribute" {
+                clr=20
+        }
+        "dynamic attribute" {
+                vis="calc"
+                calc="A=1"
+                chan="fstmpod01:ramp_control_switch"
+        }
+}
+"message button" {
+	object {
+		x=775
+		y=16
+		width=90
+		height=40
+	}
+	control {
+		chan="fstmpod01:ramp_control_switch"
+		clr=14
+		bclr=4
+	}
+	label="Standby"
+	press_msg="2"
+}
+rectangle {
+        object {
+		x=770
+		y=11
+		width=100
+		height=50
+        }
+        "basic attribute" {
+                clr=15
+        }
+        "dynamic attribute" {
+                vis="calc"
+                calc="A=2"
+                chan="fstmpod01:ramp_control_switch"
+        }
+}
+"message button" {
+	object {
+		x=880
+		y=16
+		width=90
+		height=40
+	}
+	control {
+		chan="fstmpod01:ramp_control_switch"
+		clr=14
+		bclr=4
+	}
+	label="Physics"
+	press_msg="3"
+}
+rectangle {
+        object {
+		x=875
+		y=11
+		width=100
+		height=50
+        }
+        "basic attribute" {
+                clr=15
+        }
+        "dynamic attribute" {
+                vis="calc"
+                calc="A=3"
+                chan="fstmpod01:ramp_control_switch"
+        }
+}
+"related display" {
+	object {
+		x=55
+		y=77
+		width=100
+		height=50
+	}
+	display[0] {
+		label="Supply Slot 2"
+		name="MpodC.adl"
+		args="SYSTEM=fstmpod01"
+	}
+	clr=14
+	bclr=4
+	label="MpodC1"
+}
+"related display" {
+	object {
+		x=178
+		y=77
+		width=300
+		height=50
+	}
+	display[0] {
+		label="Supply Slot 1"
+		name="iseg_all.adl"
+		args="SYSTEM=fstmpod01,U1=u,U2=u10,U3=u20,L=c1"
+	}
+	clr=14
+	bclr=55
+	label="hv_Crate_1_Bias_0_1_2"
+}
+"related display" {
+	object {
+		x=517
+		y=77
+		width=150
+		height=50
+	}
+	display[0] {
+		label="Supply Slot 2"
+		name="iseg.adl"
+		args="SYSTEM=fstmpod01,U=u"
+	}
+	clr=14
+	bclr=55
+	label="Crate_1_bias_0"
+}
+"related display" {
+	object {
+		x=677
+		y=77
+		width=150
+		height=50
+	}
+	display[0] {
+		label="Supply Slot 2"
+		name="iseg.adl"
+		args="SYSTEM=fstmpod01,U=u10"
+	}
+	clr=14
+	bclr=55
+	label="Crate_1_bias_1"
+}
+"related display" {
+	object {
+		x=832
+		y=77
+		width=150
+		height=50
+	}
+	display[0] {
+		label="Supply Slot 2"
+		name="iseg.adl"
+		args="SYSTEM=fstmpod01,U=u20"
+	}
+	clr=14
+	bclr=55
+	label="Crate_1_bias_2"
+}
+"related display" {
+	object {
+		x=522
+		y=136
+		width=150
+		height=25
+	}
+	display[0] {
+		label="Supply Slot 0"
+		name="iseg_ramp_controls.adl"
+		args="SYSTEM=fstmpod01,U=u"
+	}
+	clr=14
+	bclr=55
+	label="Ramp Controls"
+}
+"related display" {
+	object {
+		x=677
+		y=136
+		width=150
+		height=25
+	}
+	display[0] {
+		label="Supply Slot 1"
+		name="iseg_ramp_controls.adl"
+		args="SYSTEM=fstmpod01,U=u10"
+	}
+	clr=14
+	bclr=55
+	label="Ramp Controls"
+}
+"related display" {
+	object {
+		x=832
+		y=136
+		width=150
+		height=25
+	}
+	display[0] {
+		label="Supply Slot 2"
+		name="iseg_ramp_controls.adl"
+		args="SYSTEM=fstmpod01,U=u20"
+	}
+	clr=14
+	bclr=55
+	label="Ramp Controls"
+}
+text {
+	object {
+		x=90
+		y=197
+		width=100
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Main Switch for Crate 2"
+}
+"text update" {
+	object {
+		x=59
+		y=216
+		width=180
+		height=24
+	}
+	monitor {
+		chan="fstmpod02:status"
+		clr=14
+		bclr=3
+	}
+	limits {
+	}
+}
+valuator {
+	object {
+		x=302
+		y=196
+		width=67
+		height=40
+	}
+	control {
+		chan="fstmpod02:pwr_setting"
+		clr=14
+		bclr=3
+	}
+	dPrecision=1.000000
+	limits {
+	}
+}
+oval {
+	object {
+		x=400
+		y=198
+		width=39
+		height=37
+	}
+	"basic attribute" {
+		clr=15
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="fstmpod02:pwr_reading"
+	}
+}
+oval {
+        object {
+                x=400
+                y=198
+                width=39
+                height=37
+        }
+        "basic attribute" {
+                clr=20
+        }
+        "dynamic attribute" {
+                vis="if zero"
+                chan="fstmpod02:pwr_reading"
+        }
+}
+"related display" {
+	object {
+		x=489
+		y=189
+		width=150
+		height=40
+	}
+	display[0] {
+		label="Supply Slot 0"
+		name="hv_status_overview.adl"
+		args="SYSTEM=fstmpod02,U=u"
+	}
+	clr=14
+	bclr=55
+	label="Status Overview c2"
+}
+"message button" {
+	object {
+		x=664
+		y=193
+		width=90
+		height=40
+	}
+	control {
+		chan="fstmpod02:ramp_control_switch"
+		clr=14
+		bclr=4
+	}
+	label="OFF"
+	press_msg="1"
+}
+rectangle {
+        object {
+		x=659
+		y=188
+		width=100
+		height=50
+        }
+        "basic attribute" {
+                clr=20
+        }
+        "dynamic attribute" {
+                vis="calc"
+                calc="A=1"
+                chan="fstmpod02:ramp_control_switch"
+        }
+}
+"message button" {
+	object {
+		x=779
+		y=193
+		width=90
+		height=40
+	}
+	control {
+		chan="fstmpod02:ramp_control_switch"
+		clr=14
+		bclr=4
+	}
+	label="Standby"
+	press_msg="2"
+}
+rectangle {
+        object {
+		x=774
+		y=188
+		width=100
+		height=50
+        }
+        "basic attribute" {
+                clr=15
+        }
+        "dynamic attribute" {
+                vis="calc"
+                calc="A=2"
+                chan="fstmpod02:ramp_control_switch"
+        }
+}
+"message button" {
+	object {
+		x=884
+		y=193
+		width=90
+		height=40
+	}
+	control {
+		chan="fstmpod02:ramp_control_switch"
+		clr=14
+		bclr=4
+	}
+	label="Physics"
+	press_msg="3"
+}
+rectangle {
+        object {
+		x=879
+		y=188
+		width=100
+		height=50
+        }
+        "basic attribute" {
+                clr=15
+        }
+        "dynamic attribute" {
+                vis="calc"
+                calc="A=3"
+                chan="fstmpod02:ramp_control_switch"
+        }
+}
+"related display" {
+	object {
+		x=55
+		y=250
+		width=100
+		height=50
+	}
+	display[0] {
+		label="Supply Slot 2"
+		name="MpodC.adl"
+		args="SYSTEM=fstmpod02"
+	}
+	clr=14
+	bclr=4
+	label="MpodC2"
+}
+"related display" {
+	object {
+		x=176
+		y=250
+		width=300
+		height=50
+	}
+	display[0] {
+		label="Supply Slot 2"
+		name="iseg_all.adl"
+		args="SYSTEM=fstmpod02,U1=u,U2=u10,U3=u20,L=c2"
+	}
+	clr=14
+	bclr=55
+	label="hv_Crate_2_Bias_0_1_2"
+}
+"related display" {
+	object {
+		x=522
+		y=250
+		width=150
+		height=50
+	}
+	display[0] {
+		label="Supply Slot 2"
+		name="iseg.adl"
+		args="SYSTEM=fstmpod02,U=u"
+	}
+	clr=14
+	bclr=55
+	label="Crate_2_bias_0"
+}
+"related display" {
+	object {
+		x=677
+		y=250
+		width=150
+		height=50
+	}
+	display[0] {
+		label="Supply Slot 2"
+		name="iseg.adl"
+		args="SYSTEM=fstmpod02,U=u10"
+	}
+	clr=14
+	bclr=55
+	label="Crate_2_bias_1"
+}
+"related display" {
+	object {
+		x=832
+		y=250
+		width=150
+		height=50
+	}
+	display[0] {
+		label="Supply Slot 2"
+		name="iseg.adl"
+		args="SYSTEM=fstmpod02,U=u20"
+	}
+	clr=14
+	bclr=55
+	label="Crate_2_bias_2"
+}
+"related display" {
+	object {
+		x=522
+		y=310
+		width=150
+		height=25
+	}
+	display[0] {
+		label="Supply Slot 0"
+		name="iseg_ramp_controls.adl"
+		args="SYSTEM=fstmpod02,U=u"
+	}
+	clr=14
+	bclr=55
+	label="Ramp Controls"
+}
+"related display" {
+	object {
+		x=677
+		y=310
+		width=150
+		height=25
+	}
+	display[0] {
+		label="Supply Slot 1"
+		name="iseg_ramp_controls.adl"
+		args="SYSTEM=fstmpod02,U=u10"
+	}
+	clr=14
+	bclr=55
+	label="Ramp Controls"
+}
+"related display" {
+	object {
+		x=832
+		y=310
+		width=150
+		height=25
+	}
+	display[0] {
+		label="Supply Slot 2"
+		name="iseg_ramp_controls.adl"
+		args="SYSTEM=fstmpod02,U=u20"
+	}
+	clr=14
+	bclr=55
+	label="Ramp Controls"
+}
+text {
+	object {
+		x=90
+		y=373
+		width=100
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Main Switch for crate 3"
+}
+"text update" {
+	object {
+		x=45
+		y=392
+		width=180
+		height=24
+	}
+	monitor {
+		chan="fstmpod03:status"
+		clr=14
+		bclr=3
+	}
+	limits {
+	}
+}
+valuator {
+	object {
+		x=288
+		y=372
+		width=67
+		height=40
+	}
+	control {
+		chan="fstmpod03:pwr_setting"
+		clr=14
+		bclr=3
+	}
+	dPrecision=1.000000
+	limits {
+	}
+}
+oval {
+	object {
+		x=400
+		y=374
+		width=39
+		height=37
+	}
+	"basic attribute" {
+		clr=15
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="fstmpod03:pwr_reading"
+	}
+}
+oval {
+        object {
+                x=400
+                y=374
+                width=39
+                height=37
+        }
+        "basic attribute" {
+                clr=20
+        }
+        "dynamic attribute" {
+                vis="if zero"
+                chan="fstmpod03:pwr_reading"
+        }
+}
+"related display" {
+	object {
+		x=475
+		y=365
+		width=150
+		height=40
+	}
+	display[0] {
+		label="Supply Slot 0"
+		name="hv_status_overview.adl"
+		args="SYSTEM=fstmpod03,U=u"
+	}
+	clr=14
+	bclr=55
+	label="Status Overview c3"
+}
+"message button" {
+	object {
+		x=650
+		y=369
+		width=90
+		height=40
+	}
+	control {
+		chan="fstmpod03:ramp_control_switch"
+		clr=14
+		bclr=4
+	}
+	label="OFF"
+	press_msg="1"
+}
+rectangle {
+        object {
+		x=645
+		y=364
+		width=100
+		height=50
+        }
+        "basic attribute" {
+                clr=20
+        }
+        "dynamic attribute" {
+                vis="calc"
+                calc="A=1"
+                chan="fstmpod03:ramp_control_switch"
+        }
+}
+"message button" {
+	object {
+		x=765
+		y=369
+		width=90
+		height=40
+	}
+	control {
+		chan="fstmpod03:ramp_control_switch"
+		clr=14
+		bclr=4
+	}
+	label="Standby"
+	press_msg="2"
+}
+rectangle {
+        object {
+		x=760
+		y=364
+		width=100
+		height=50
+        }
+        "basic attribute" {
+                clr=15
+        }
+        "dynamic attribute" {
+                vis="calc"
+                calc="A=2"
+                chan="fstmpod03:ramp_control_switch"
+        }
+}
+"message button" {
+	object {
+		x=870
+		y=370
+		width=90
+		height=40
+	}
+	control {
+		chan="fstmpod03:ramp_control_switch"
+		clr=14
+		bclr=4
+	}
+	label="Physics"
+	press_msg="3"
+}
+rectangle {
+        object {
+		x=865
+		y=365
+		width=100
+		height=50
+        }
+        "basic attribute" {
+                clr=15
+        }
+        "dynamic attribute" {
+                vis="calc"
+                calc="A=3"
+                chan="fstmpod03:ramp_control_switch"
+        }
+}
+"related display" {
+	object {
+		x=49
+		y=440
+		width=100
+		height=50
+	}
+	display[0] {
+		label="Supply Slot 2"
+		name="MpodC.adl"
+		args="SYSTEM=fstmpod03"
+	}
+	clr=14
+	bclr=4
+	label="MpodC3"
+}
+"related display" {
+	object {
+		x=169
+		y=439
+		width=300
+		height=50
+	}
+	display[0] {
+		label="Supply Slot 2"
+		name="iseg_all.adl"
+		args="SYSTEM=fstmpod03,U1=u,U2=u10,U3=u20,L=c3"
+	}
+	clr=14
+	bclr=55
+	label="hv_Crate_3_Bias_0_1_2"
+}
+"related display" {
+	object {
+		x=516
+		y=420
+		width=150
+		height=50
+	}
+	display[0] {
+		label="Supply Slot 2"
+		name="iseg.adl"
+		args="SYSTEM=fstmpod03,U=u"
+	}
+	clr=14
+	bclr=55
+	label="Crate_3_bias_0"
+}
+"related display" {
+	object {
+		x=671
+		y=420
+		width=150
+		height=50
+	}
+	display[0] {
+		label="Supply Slot 2"
+		name="iseg.adl"
+		args="SYSTEM=fstmpod03,U=u10"
+	}
+	clr=14
+	bclr=55
+	label="Crate_3_bias_1"
+}
+"related display" {
+	object {
+		x=826
+		y=420
+		width=150
+		height=50
+	}
+	display[0] {
+		label="Supply Slot 2"
+		name="iseg.adl"
+		args="SYSTEM=fstmpod03,U=u20"
+	}
+	clr=14
+	bclr=55
+	label="Crate_3_bias_2"
+}
+"related display" {
+	object {
+		x=516
+		y=480
+		width=150
+		height=25
+	}
+	display[0] {
+		label="Supply Slot 0"
+		name="iseg_ramp_controls.adl"
+		args="SYSTEM=fstmpod03,U=u"
+	}
+	clr=14
+	bclr=55
+	label="Ramp Controls"
+}
+"related display" {
+	object {
+		x=671
+		y=480
+		width=150
+		height=25
+	}
+	display[0] {
+		label="Supply Slot 1"
+		name="iseg_ramp_controls.adl"
+		args="SYSTEM=fstmpod03,U=u10"
+	}
+	clr=14
+	bclr=55
+	label="Ramp Controls"
+}
+"related display" {
+	object {
+		x=826
+		y=480
+		width=150
+		height=25
+	}
+	display[0] {
+		label="Supply Slot 2"
+		name="iseg_ramp_controls.adl"
+		args="SYSTEM=fstmpod03,U=u20"
+	}
+	clr=14
+	bclr=55
+	label="Ramp Controls"
+}

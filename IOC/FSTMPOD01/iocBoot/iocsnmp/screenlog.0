@@ -1,0 +1,251 @@
+#!../../bin/linux-x86_64/snmp
+## You may have to change snmp to something else
+## everywhere it appears in this file
+< envPaths
+epicsEnvSet("ARCH","linux-x86_64")
+epicsEnvSet("IOC","iocsnmp")
+epicsEnvSet("TOP","/home/sysuser/iocTop/FST/FSTMPOD01")
+epicsEnvSet("EPICS_BASE","/usr/local/epics/base-3.14.12.1GMT")
+epicsEnvSet("ASYN","/usr/local/epics/base-3.14.12.1GMT/../soft/synApps_5_7GMT-12.1/support/asyn-4-21")
+epicsEnvSet("SNCSEQ","/usr/local/epics/base-3.14.12.1GMT/../soft/synApps_5_7GMT-12.1/support/seq-2-1-13")
+## Register all support components
+cd /home/sysuser/iocTop/FST/FSTMPOD01/dbd
+dbLoadDatabase("snmp.dbd")
+dbLoadDatabase("modbus.dbd")
+#dbLoadDatabase("calcSupport.dbd")
+cd /home/sysuser/iocTop/FST/FSTMPOD01
+snmp_registerRecordDeviceDriver(pdbbase)
+modbus_registerRecordDeviceDriver(pdbbase)
+registryFunctionRefAdd: could not register asSubInit
+Warning -- iocshRegisterVariable redefining asCaDebug.
+Warning -- iocshRegisterVariable redefining dbRecordsOnceOnly.
+Warning -- iocshRegisterVariable redefining dbBptNotMonotonic.
+## Load record instances
+dbLoadRecords("db/crate.db","HOST=130.199.61.3,SYSTEM=fstmpod01")
+##dbLoadRecords("db/crate.db","HOST=130.199.61.19,SYSTEM=fstmpod01")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u",ID=0")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u",ID=1")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u",ID=2")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u",ID=3")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u",ID=4")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u",ID=5")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u",ID=6")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u",ID=7")
+dbLoadRecords("db/fst_alarms.db","SYSTEM=fstmpod01,SLOT="u"")
+#dbLoadRecords("db/all_fst_alarms.db","SYSTEM1=fstmpod01,SYSTEM2=fstmpod02,SYSTEM3=fstmpod03,SLOT="u"")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u10",ID=0")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u10",ID=1")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u10",ID=2")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u10",ID=3")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u10",ID=4")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u10",ID=5")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u10",ID=6")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u10",ID=7")
+dbLoadRecords("db/fst_alarms.db","SYSTEM=fstmpod01,SLOT="u10"")
+#dbLoadRecords("db/all_fst_alarms.db","SYSTEM1=fstmpod01,SYSTEM2=fstmpod02,SYSTEM3=fstmpod03,SLOT="u10"")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u20",ID=0")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u20",ID=1")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u20",ID=2")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u20",ID=3")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u20",ID=4")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u20",ID=5")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u20",ID=6")
+dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u20",ID=7")
+dbLoadRecords("db/fst_alarms.db","SYSTEM=fstmpod01,SLOT="u20"")
+#dbLoadRecords("db/all_fst_alarms.db","SYSTEM1=fstmpod01,SYSTEM2=fstmpod02,SYSTEM3=fstmpod03,SLOT="u20"")
+##dbLoadRecords("db/fgt_alarms.db","SYSTEM=fstmpod01")
+## Load Control Interface db for seq
+dbLoadRecords("db/fgt_controls.db","SYSTEM=fstmpod01")
+##dbLoadRecords("db/fee_enable.db","ID=0")
+##dbLoadRecords("db/fee_enable.db","ID=1")
+dbLoadRecords("db/fee_temp.db","ID=0_0")
+dbLoadRecords("db/fee_temp.db","ID=0_1")
+dbLoadRecords("db/fee_temp.db","ID=0_2")
+##dbLoadRecords("db/fee_temp.db","ID=0_3") ## not used in FST
+##dbLoadRecords("db/fee_temp.db","ID=0_4")
+##dbLoadRecords("db/fee_temp.db","ID=0_5")
+dbLoadRecords("db/fee_temp.db","ID=1_0")
+dbLoadRecords("db/fee_temp.db","ID=1_1")
+dbLoadRecords("db/fee_temp.db","ID=1_2")
+##dbLoadRecords("db/fee_temp.db","ID=1_3") ## not used in FST
+##dbLoadRecords("db/fee_temp.db","ID=1_4")
+##dbLoadRecords("db/fee_temp.db","ID=1_5")
+## Set this to see messages from mySub
+#var mySubDebug 1
+cd /home/sysuser/iocTop/FST/FSTMPOD01/iocBoot/iocsnmp
+iocInit()
+Starting iocInit
+############################################################################
+## EPICS R3.14.12.1 $Date: Tue 2011-04-26 15:36:19 -0500$
+## EPICS Base built Jan 20 2021
+############################################################################
+snmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aisnmpAiInit
+devSnmp_manager::createDevice: aidevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: aodevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longindevSnmp_manager::createDevice: longinsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutsnmpLoInit
+devSnmp_manager::createDevice: longoutdevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_mancas warning: Configured TCP port was unavailable.
+cas warning: Using dynamically assigned TCP port 34606,
+cas warning: but now two or more servers share the same UDP port.
+cas warning: Depending on your IP kernel this server may not be
+cas warning: reachable with UDP unicast (a host's IP in EPICS_CA_ADDR_LIST)
+iocRun: All initialization complete
+ager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringin#iocLogInit()
+epicsSnmpInit()
+## Load record instances
+seq sncFGTControl, "SYSTEM=fstmpod01,SLOT=u"
+Sequencer release 2.1.13, compiled Wed Jan 13 16:47:50 2021
+Spawning sequencer program "sncFGTControl", thread 0x14b55a0: "sncFGTControl"
+seq sncFGTRamping, "SYSTEM=fstmpod01,SLOT=u20,deviceName=u20"
+Sequencer release 2.1.13, compiled Wed Jan 13 16:47:50 2021
+Spawning sequencer program "sncFGTRamping", thread 0x151aec0: "sncFGTRamping"
+seq sncFGTRamping, "SYSTEM=fstmpod01,SLOT=u10,deviceName=u10"
+Sequencer release 2.1.13, compiled Wed Jan 13 16:47:50 2021
+sncFGTControl[0]: all channels connected & received 1st monitor
+sncFGTRamping[0]: all channels connected & received 1st monitor
+Spawning sequencer program "sncFGTRamping", thread 0x15807b0: "sncFGTRamping"
+seq sncFGTRamping, "SYSTEM=fstmpod01,SLOT=u,deviceName=u"
+Sequencer release 2.1.13, compiled Wed Jan 13 16:47:50 2021
+sncFGTRamping[1]: all channels connected & received 1st monitor
+Spawning sequencer program "sncFGTRamping", thread 0x15e5f20: "sncFGTRamping"
+dbpf("fstmpod01:hv_settings","/home/sysuser/iocTop/FST/HV/mpod01/def")
+DBR_STRING:          "/home/sysuser/iocTop/FST/HV/mpod01/def"         
+sncFGTRamping[2]: all channels connected & received 1st monitor
+epics> sncFGTControl: Startup delay over

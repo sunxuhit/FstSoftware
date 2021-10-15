@@ -1,0 +1,41 @@
+record(ao, "FGT_FEE_TEMPERATURE$(ID)00")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_TEMPERATURE$(ID)01")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_TEMPERATURE$(ID)02")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_TEMPERATURE$(ID)03")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_TEMPERATURE$(ID)10")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_TEMPERATURE$(ID)11")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_TEMPERATURE$(ID)12")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_TEMPERATURE$(ID)13")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+

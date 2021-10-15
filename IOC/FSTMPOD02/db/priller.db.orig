@@ -1,0 +1,5532 @@
+record(longout, "ISEGL2_1_GROUP_0")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::groupsSwitch.0 INTEGER: 100 i")
+ field(ADEL, "1")
+}
+
+record(longout, "ISEGL2_1_GROUP_1")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::groupsSwitch.1 INTEGER: 100 i")
+ field(ADEL, "1")
+}
+
+record(longout, "ISEGL2_1_GROUP_100")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::groupsSwitch.100 INTEGER: 100 i")
+ field(ADEL, "1")
+}
+
+record(longout, "ISEGL2_1_GROUP_1000")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::groupsSwitch.1000 INTEGER: 100 i")
+ field(ADEL, "1")
+}
+
+record(longout, "ISEGL2_1_GROUP_101")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::groupsSwitch.101 INTEGER: 100 i")
+ field(ADEL, "1")
+}
+
+record(longout, "ISEGL2_1_GROUP_200")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::groupsSwitch.200 INTEGER: 100 i")
+ field(ADEL, "1")
+}
+
+record(longout, "ISEGL2_1_GROUP_300")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::groupsSwitch.300 INTEGER: 100 i")
+ field(ADEL, "1")
+}
+
+record(longout, "ISEGL2_1_GROUP_400")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::groupsSwitch.400 INTEGER: 100 i")
+ field(ADEL, "1")
+}
+
+record(longout, "ISEGL2_1_GROUP_500")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::groupsSwitch.500 INTEGER: 100 i")
+ field(ADEL, "1")
+}
+
+record(longout, "ISEGL2_1_GROUP_600")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::groupsSwitch.600 INTEGER: 100 i")
+ field(ADEL, "1")
+}
+
+record(longout, "ISEGL2_1_GROUP_700")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::groupsSwitch.700 INTEGER: 100 i")
+ field(ADEL, "1")
+}
+
+record(longout, "ISEGL2_1_GROUP_800")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::groupsSwitch.800 INTEGER: 100 i")
+ field(ADEL, "1")
+}
+
+record(longin, "ISEGL2_1_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::sysMainSwitch.0 ( 100")
+ field(ADEL, "1")
+}
+
+record(ai, "L016MCP_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u16 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L016MCP_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u16 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L016MCP_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u16 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L016MCP_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u16 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L016MCP_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u16 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L016MCP_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u16 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L016PHOS_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u0 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L016PHOS_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u0 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L016PHOS_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u0 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L016PHOS_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u0 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L016PHOS_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u0 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L016PHOS_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u0 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L024TAH_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u504 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TAH_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u504 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L024TAH_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u504 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TAH_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u504 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L024TAH_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u504 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TAH_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u504 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L024TAV_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u500 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TAV_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u500 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L024TAV_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u500 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TAV_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u500 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L024TAV_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u500 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TAV_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u500 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L024TBHL_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u200 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TBHL_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u200 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L024TBHL_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u200 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TBHL_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u200 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L024TBHL_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u200 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TBHL_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u200 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L024TBHR_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u201 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TBHR_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u201 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L024TBHR_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u201 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TBHR_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u201 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L024TBHR_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u201 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TBHR_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u201 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L024TBVB_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u203 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TBVB_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u203 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L024TBVB_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u203 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TBVB_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u203 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L024TBVB_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u203 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TBVB_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u203 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L024TBVT_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u202 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TBVT_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u202 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L024TBVT_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u202 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TBVT_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u202 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L024TBVT_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u202 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TBVT_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u202 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L024TCH_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u505 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TCH_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u505 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L024TCH_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u505 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TCH_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u505 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L024TCH_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u505 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TCH_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u505 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L024TCV_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u501 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TCV_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u501 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L024TCV_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u501 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TCV_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u501 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L024TCV_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u501 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L024TCV_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u501 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L026DHL_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u102 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L026DHL_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u102 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L026DHL_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u102 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L026DHL_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u102 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L026DHL_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u102 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L026DHL_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u102 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L026DHR_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u103 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L026DHR_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u103 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L026DHR_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u103 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L026DHR_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u103 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L026DHR_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u103 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L026DHR_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u103 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L026DVB_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u105 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L026DVB_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u105 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L026DVB_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u105 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L026DVB_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u105 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L026DVB_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u105 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L026DVB_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u105 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L026DVT_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u104 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L026DVT_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u104 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L026DVT_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u104 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L026DVT_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u104 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L026DVT_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u104 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L026DVT_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u104 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L026MCP_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u17 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L026MCP_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u17 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L026MCP_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u17 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L026MCP_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u17 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L026MCP_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u17 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L026MCP_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u17 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L026PHOS_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u1 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L026PHOS_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u1 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L026PHOS_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u1 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L026PHOS_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u1 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L026PHOS_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u1 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L026PHOS_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u1 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L028DEL_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u300 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L028DEL_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u300 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L028DEL_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u300 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L028DEL_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u300 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L028DEL_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u300 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L028DEL_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u300 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L028DER_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u302 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L028DER_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u302 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L028DER_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u302 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L028DER_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u302 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L028DER_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u302 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L028DER_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u302 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L030QSH_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u18 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L030QSH_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u18 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L030QSH_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u18 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L030QSH_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u18 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L030QSH_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u18 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L030QSH_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u18 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L030QSVB_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u3 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L030QSVB_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u3 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L030QSVB_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u3 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L030QSVB_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u3 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L030QSVB_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u3 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L030QSVB_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u3 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L030QSVT_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u2 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L030QSVT_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u2 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L030QSVT_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u2 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(stringin, "L030QSVT_STATUS")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputStatus.u2 BITS: 100")
+}
+
+record(ao, "L030QSVT_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u2 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L030QSVT_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u2 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L030QSVT_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u2 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L032DEL_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u301 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L032DEL_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u301 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L032DEL_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u301 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L032DEL_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u301 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L032DEL_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u301 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L032DEL_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u301 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L032DER_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u303 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L032DER_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u303 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L032DER_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u303 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L032DER_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u303 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L032DER_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u303 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L032DER_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u303 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L034DHL_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u106 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L034DHL_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u106 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L034DHL_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u106 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L034DHL_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u106 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L034DHL_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u106 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L034DHL_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u106 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L034DHR_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u107 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L034DHR_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u107 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L034DHR_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u107 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L034DHR_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u107 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L034DHR_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u107 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L034DHR_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u107 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L034DVB_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u109 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L034DVB_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u109 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L034DVB_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u109 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L034DVB_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u109 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L034DVB_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u109 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L034DVB_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u109 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L034DVT_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u108 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L034DVT_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u108 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L034DVT_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u108 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L034DVT_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u108 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L034DVT_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u108 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L034DVT_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u108 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L034MCP_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u19 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L034MCP_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u19 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L034MCP_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u19 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L034MCP_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u19 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L034MCP_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u19 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L034MCP_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u19 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L034PHOS_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u4 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L034PHOS_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u4 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L034PHOS_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u4 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L034PHOS_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u4 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L034PHOS_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u4 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L034PHOS_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u4 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L035QAH_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u5 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L035QAH_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u5 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L035QAH_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u5 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L035QAH_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u5 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L035QAH_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u5 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L035QAH_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u5 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L035QAV_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u20 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L035QAV_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u20 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L035QAV_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u20 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L035QAV_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u20 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L035QAV_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u20 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L035QAV_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u20 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L035QBH_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u21 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L035QBH_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u21 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L035QBH_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u21 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L035QBH_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u21 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L035QBH_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u21 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L035QBH_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u21 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L035QBV_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u6 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L035QBV_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u6 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L035QBV_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u6 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L035QBV_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u6 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L035QBV_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u6 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L035QBV_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u6 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L042QAHL_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u22 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L042QAHL_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u22 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L042QAHL_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u22 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L042QAHL_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u22 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L042QAHL_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u22 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L042QAHL_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u22 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L042QAHR_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u23 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L042QAHR_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u23 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L042QAHR_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u23 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L042QAHR_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u23 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L042QAHR_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u23 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L042QAHR_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u23 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L042QAVB_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u8 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L042QAVB_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u8 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L042QAVB_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u8 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L042QAVB_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u8 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L042QAVB_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u8 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L042QAVB_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u8 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L042QAVT_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u7 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L042QAVT_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u7 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L042QAVT_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u7 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L042QAVT_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u7 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L042QAVT_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u7 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L042QAVT_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u7 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L042QBH_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u9 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L042QBH_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u9 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L042QBH_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u9 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L042QBH_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u9 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L042QBH_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u9 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L042QBH_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u9 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L042QBV_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u24 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L042QBV_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u24 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L042QBV_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u24 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L042QBV_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u24 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L042QBV_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u24 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L042QBV_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u24 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L044DHL_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u111 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L044DHL_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u111 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L044DHL_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u111 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L044DHL_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u111 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L044DHL_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u111 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L044DHL_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u111 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L044DHR_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u110 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L044DHR_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u110 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L044DHR_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u110 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L044DHR_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u110 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L044DHR_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u110 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L044DHR_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u110 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L044DVB_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u113 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L044DVB_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u113 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L044DVB_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u113 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L044DVB_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u113 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L044DVB_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u113 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L044DVB_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u113 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L044DVT_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u112 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L044DVT_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u112 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L044DVT_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u112 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L044DVT_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u112 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L044DVT_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u112 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L044DVT_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u112 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L044MCP_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u25 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L044MCP_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u25 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L044MCP_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u25 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L044MCP_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u25 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L044MCP_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u25 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L044MCP_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u25 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L044PHOS_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u10 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L044PHOS_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u10 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L044PHOS_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u10 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L044PHOS_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u10 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L044PHOS_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u10 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L044PHOS_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u10 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L045QAH_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u502 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L045QAH_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u502 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L045QAH_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u502 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L045QAH_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u502 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L045QAH_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u502 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L045QAH_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u502 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L045QAV_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u506 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L045QAV_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u506 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L045QAV_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u506 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L045QAV_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u506 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L045QAV_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u506 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L045QAV_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u506 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L045QBH_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u507 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L045QBH_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u507 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L045QBH_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u507 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L045QBH_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u507 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L045QBH_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u507 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L045QBH_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u507 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L045QBV_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u503 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L045QBV_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u503 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L045QBV_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u503 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L045QBV_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u503 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L045QBV_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u503 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L045QBV_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u503 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L048QAH_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u700 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L048QAH_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u700 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L048QAH_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u700 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L048QAH_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u700 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L048QAH_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u700 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L048QAH_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u700 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L048QAV_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u704 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L048QAV_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u704 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L048QAV_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u704 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L048QAV_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u704 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L048QAV_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u704 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L048QAV_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u704 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L048QBHL_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u705 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L048QBHL_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u705 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L048QBHL_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u705 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L048QBHL_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u705 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L048QBHL_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u705 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L048QBHL_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u705 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L048QBHR_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u701 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L048QBHR_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u701 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L048QBHR_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u701 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L048QBHR_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u701 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L048QBHR_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u701 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L048QBHR_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u701 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L048QBV_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u702 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L048QBV_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u702 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L048QBV_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u702 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L048QBV_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u702 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L048QBV_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u702 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L048QBV_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u702 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L053MCP_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u26 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L053MCP_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u26 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L053MCP_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u26 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L053MCP_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u26 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L053MCP_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u26 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L053MCP_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u26 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L053PHOS_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u11 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L053PHOS_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u11 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L053PHOS_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u11 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L053PHOS_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u11 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L053PHOS_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u11 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L053PHOS_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u11 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L054QAHL_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u703 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L054QAHL_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u703 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L054QAHL_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u703 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L054QAHL_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u703 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L054QAHL_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u703 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L054QAHL_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u703 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L054QAHR_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u706 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L054QAHR_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u706 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L054QAHR_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u706 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L054QAHR_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u706 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L054QAHR_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u706 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L054QAHR_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u706 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L054QAV_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u707 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L054QAV_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u707 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L054QAV_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u707 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L054QAV_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u707 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L054QAV_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u707 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L054QAV_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u707 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L054QBH_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u804 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L054QBH_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u804 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L054QBH_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u804 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L054QBH_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u804 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L054QBH_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u804 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L054QBH_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u804 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L054QBV_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u800 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L054QBV_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u800 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L054QBV_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u800 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L054QBV_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u800 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L054QBV_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u800 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L054QBV_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u800 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L057QAH_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u801 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L057QAH_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u801 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L057QAH_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u801 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L057QAH_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u801 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L057QAH_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u801 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L057QAH_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u801 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L057QAV_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u805 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L057QAV_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u805 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L057QAV_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u805 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L057QAV_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u805 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L057QAV_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u805 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L057QAV_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u805 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L057QBHL_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u806 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L057QBHL_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u806 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L057QBHL_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u806 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L057QBHL_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u806 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L057QBHL_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u806 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L057QBHL_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u806 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L057QBHR_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u807 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L057QBHR_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u807 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L057QBHR_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u807 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L057QBHR_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u807 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L057QBHR_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u807 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L057QBHR_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u807 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L057QBVB_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u803 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L057QBVB_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u803 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L057QBVB_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u803 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L057QBVB_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u803 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L057QBVB_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u803 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L057QBVB_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u803 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L057QBVT_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u802 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L057QBVT_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u802 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "L057QBVT_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u802 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "L057QBVT_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u802 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "L057QBVT_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u802 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "L057QBVT_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u802 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LA003DHL_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u100 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LA003DHL_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u100 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "LA003DHL_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u100 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "LA003DHL_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u100 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LA003DHL_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u100 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LA003DHL_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u100 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LA003DHR_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u101 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LA003DHR_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u101 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "LA003DHR_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u101 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "LA003DHR_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u101 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LA003DHR_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u101 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LA003DHR_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u101 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LA003DVB_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u115 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LA003DVB_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u115 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "LA003DVB_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u115 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "LA003DVB_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u115 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LA003DVB_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u115 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LA003DVB_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u115 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LA003DVT_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u114 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LA003DVT_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u114 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "LA003DVT_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u114 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "LA003DVT_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u114 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LA003DVT_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u114 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LA003DVT_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u114 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LA005DEL_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u401 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LA005DEL_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u401 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "LA005DEL_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u401 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "LA005DEL_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u401 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LA005DEL_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u401 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LA005DEL_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u401 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LA005DER_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u403 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LA005DER_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u403 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "LA005DER_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u403 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "LA005DER_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u403 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LA005DER_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u403 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LA005DER_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u403 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LB004TAHL_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u604 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TAHL_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u604 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "LB004TAHL_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u604 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TAHL_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u604 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LB004TAHL_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u604 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TAHL_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u604 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LB004TAHR_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u605 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TAHR_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u605 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "LB004TAHR_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u605 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TAHR_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u605 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LB004TAHR_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u605 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TAHR_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u605 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LB004TAVB_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u601 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TAVB_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u601 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "LB004TAVB_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u601 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TAVB_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u601 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LB004TAVB_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u601 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TAVB_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u601 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LB004TAVT_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u600 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TAVT_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u600 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "LB004TAVT_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u600 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TAVT_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u600 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LB004TAVT_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u600 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TAVT_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u600 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LB004TBH_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u400 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TBH_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u400 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "LB004TBH_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u400 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TBH_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u400 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LB004TBH_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u400 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TBH_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u400 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LB004TBV_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u402 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TBV_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u402 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "LB004TBV_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u402 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TBV_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u402 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LB004TBV_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u402 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TBV_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u402 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LB004TCHL_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u606 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TCHL_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u606 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "LB004TCHL_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u606 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TCHL_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u606 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LB004TCHL_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u606 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TCHL_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u606 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LB004TCHR_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u607 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TCHR_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u607 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "LB004TCHR_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u607 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TCHR_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u607 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LB004TCHR_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u607 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TCHR_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u607 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LB004TCVB_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u603 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TCVB_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u603 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "LB004TCVB_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u603 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TCVB_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u603 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LB004TCVB_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u603 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TCVB_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u603 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LB004TCVT_I_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u602 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TCVT_I_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u602 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(longout, "LB004TCVT_ON")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u602 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TCVT_VRISE")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u602 Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "LB004TCVT_V_RD")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u602 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "LB004TCVT_V_SET")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u602 Float: 100 F")
+ field(ADEL, "1")
+}

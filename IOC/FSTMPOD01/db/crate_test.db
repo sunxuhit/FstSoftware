@@ -1,0 +1,13 @@
+record(longout, "$(SYSTEM):group_0")                                                          
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(PINI, "YES")
+ field(OUT,  "@$(HOST) seCrET WIENER-CRATE-MIB::groupsSwitch.0 INTEGER: 100 i")
+ field(ADEL, "1")
+ field(VAL, "5")
+ field(DRVH, "5")
+ field(DRVL, "5")
+}

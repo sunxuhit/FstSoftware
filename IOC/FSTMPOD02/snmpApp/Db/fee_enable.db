@@ -1,0 +1,92 @@
+record(ao, "FGT_FEE_POWER_ENABLE$(ID)00")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_POWER_ENABLE$(ID)01")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_POWER_ENABLE$(ID)02")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_POWER_ENABLE$(ID)10")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_POWER_ENABLE$(ID)11")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_POWER_ENABLE$(ID)12")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_POWER_ENABLE$(ID)20")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_POWER_ENABLE$(ID)21")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_POWER_ENABLE$(ID)22")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_POWER_ENABLE$(ID)30")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_POWER_ENABLE$(ID)31")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_POWER_ENABLE$(ID)32")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_POWER_ENABLE$(ID)40")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_POWER_ENABLE$(ID)41")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_POWER_ENABLE$(ID)42")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_POWER_ENABLE$(ID)50")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_POWER_ENABLE$(ID)51")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "FGT_FEE_POWER_ENABLE$(ID)52")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+
+

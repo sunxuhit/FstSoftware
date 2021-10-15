@@ -1,0 +1,6 @@
+epicsEnvSet("ARCH","linux-x86_64")
+epicsEnvSet("IOC","iocsnmp")
+epicsEnvSet("TOP","/home/sysuser/iocTop/FST/FSTMPOD02")
+epicsEnvSet("EPICS_BASE","/usr/local/epics/base-3.14.12.1GMT")
+epicsEnvSet("ASYN","/usr/local/epics/base-3.14.12.1GMT/../soft/synApps_5_7GMT-12.1/support/asyn-4-21")
+epicsEnvSet("SNCSEQ","/usr/local/epics/base-3.14.12.1GMT/../soft/synApps_5_7GMT-12.1/support/seq-2-1-13")

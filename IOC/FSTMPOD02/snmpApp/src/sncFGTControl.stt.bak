@@ -1,0 +1,378 @@
+program sncFGTControl
+int v;
+int i;
+int j;
+int doneRampingToStandby;
+int endRamp;  /* 1 = ramping step done, 0 = continue ramping */
+int control;  /* 0 = uninitialiazed, 1 = OFF, 2 = STANDBY, 3 = PHYSICS */
+
+assign control to "{SYSTEM}:ramp_control_switch";
+monitor control;
+
+assign v to "{SYSTEM}:master_control_switch";
+monitor v;
+
+string hv_filename;
+assign hv_filename to "{SYSTEM}:hv_settings";
+monitor hv_filename;
+
+double targetVoltage[8];
+double physicsVoltageSetting[8];
+double standbyVoltageSetting[8];
+double physicsRampRate[8];
+double standbyRampRate[8];
+double conditioningDelay[8];
+double conditioningVoltageStep[8];
+double tripStatus[8];
+
+double voltageSetting[8];
+double voltageReading[8];
+double powerSwitch[8];      /* this value connected to the actual PV which signals the crate */
+double channelEnabled[8];   /* software value indicates that powerSwitch should be thrown when needed */
+double currentSetting[8];
+double rampRate[8];
+double autoResetDelay[8];
+double autoResetEnabled[8];
+double maxCycles[8];
+assign physicsVoltageSetting[0] to "{SYSTEM}:physics_voltage_{SLOT}0";
+assign physicsVoltageSetting[1] to "{SYSTEM}:physics_voltage_{SLOT}1";
+assign physicsVoltageSetting[2] to "{SYSTEM}:physics_voltage_{SLOT}2";
+assign physicsVoltageSetting[3] to "{SYSTEM}:physics_voltage_{SLOT}3";
+assign physicsVoltageSetting[4] to "{SYSTEM}:physics_voltage_{SLOT}4";
+assign physicsVoltageSetting[5] to "{SYSTEM}:physics_voltage_{SLOT}5";
+assign physicsVoltageSetting[6] to "{SYSTEM}:physics_voltage_{SLOT}6";
+assign physicsVoltageSetting[7] to "{SYSTEM}:physics_voltage_{SLOT}7";
+assign standbyVoltageSetting[0] to "{SYSTEM}:standby_voltage_{SLOT}0";
+assign standbyVoltageSetting[1] to "{SYSTEM}:standby_voltage_{SLOT}1";
+assign standbyVoltageSetting[2] to "{SYSTEM}:standby_voltage_{SLOT}2";
+assign standbyVoltageSetting[3] to "{SYSTEM}:standby_voltage_{SLOT}3";
+assign standbyVoltageSetting[4] to "{SYSTEM}:standby_voltage_{SLOT}4";
+assign standbyVoltageSetting[5] to "{SYSTEM}:standby_voltage_{SLOT}5";
+assign standbyVoltageSetting[6] to "{SYSTEM}:standby_voltage_{SLOT}6";
+assign standbyVoltageSetting[7] to "{SYSTEM}:standby_voltage_{SLOT}7";
+assign physicsRampRate[0] to "{SYSTEM}:physics_ramp_rate_{SLOT}0";
+assign physicsRampRate[1] to "{SYSTEM}:physics_ramp_rate_{SLOT}1";
+assign physicsRampRate[2] to "{SYSTEM}:physics_ramp_rate_{SLOT}2";
+assign physicsRampRate[3] to "{SYSTEM}:physics_ramp_rate_{SLOT}3";
+assign physicsRampRate[4] to "{SYSTEM}:physics_ramp_rate_{SLOT}4";
+assign physicsRampRate[5] to "{SYSTEM}:physics_ramp_rate_{SLOT}5";
+assign physicsRampRate[6] to "{SYSTEM}:physics_ramp_rate_{SLOT}6";
+assign physicsRampRate[7] to "{SYSTEM}:physics_ramp_rate_{SLOT}7";
+assign standbyRampRate[0] to "{SYSTEM}:standby_ramp_rate_{SLOT}0";
+assign standbyRampRate[1] to "{SYSTEM}:standby_ramp_rate_{SLOT}1";
+assign standbyRampRate[2] to "{SYSTEM}:standby_ramp_rate_{SLOT}2";
+assign standbyRampRate[3] to "{SYSTEM}:standby_ramp_rate_{SLOT}3";
+assign standbyRampRate[4] to "{SYSTEM}:standby_ramp_rate_{SLOT}4";
+assign standbyRampRate[5] to "{SYSTEM}:standby_ramp_rate_{SLOT}5";
+assign standbyRampRate[6] to "{SYSTEM}:standby_ramp_rate_{SLOT}6";
+assign standbyRampRate[7] to "{SYSTEM}:standby_ramp_rate_{SLOT}7";
+assign conditioningDelay[0] to "{SYSTEM}:conditioning_delay_{SLOT}0";
+assign conditioningDelay[1] to "{SYSTEM}:conditioning_delay_{SLOT}1";
+assign conditioningDelay[2] to "{SYSTEM}:conditioning_delay_{SLOT}2";
+assign conditioningDelay[3] to "{SYSTEM}:conditioning_delay_{SLOT}3";
+assign conditioningDelay[4] to "{SYSTEM}:conditioning_delay_{SLOT}4";
+assign conditioningDelay[5] to "{SYSTEM}:conditioning_delay_{SLOT}5";
+assign conditioningDelay[6] to "{SYSTEM}:conditioning_delay_{SLOT}6";
+assign conditioningDelay[7] to "{SYSTEM}:conditioning_delay_{SLOT}7";
+assign conditioningVoltageStep[0] to "{SYSTEM}:conditioning_voltage_step_{SLOT}0";
+assign conditioningVoltageStep[1] to "{SYSTEM}:conditioning_voltage_step_{SLOT}1";
+assign conditioningVoltageStep[2] to "{SYSTEM}:conditioning_voltage_step_{SLOT}2";
+assign conditioningVoltageStep[3] to "{SYSTEM}:conditioning_voltage_step_{SLOT}3";
+assign conditioningVoltageStep[4] to "{SYSTEM}:conditioning_voltage_step_{SLOT}4";
+assign conditioningVoltageStep[5] to "{SYSTEM}:conditioning_voltage_step_{SLOT}5";
+assign conditioningVoltageStep[6] to "{SYSTEM}:conditioning_voltage_step_{SLOT}6";
+assign conditioningVoltageStep[7] to "{SYSTEM}:conditioning_voltage_step_{SLOT}7";
+assign voltageSetting[0] to "{SYSTEM}:output_voltage_{SLOT}0";
+assign voltageSetting[1] to "{SYSTEM}:output_voltage_{SLOT}1";
+assign voltageSetting[2] to "{SYSTEM}:output_voltage_{SLOT}2";
+assign voltageSetting[3] to "{SYSTEM}:output_voltage_{SLOT}3";
+assign voltageSetting[4] to "{SYSTEM}:output_voltage_{SLOT}4";
+assign voltageSetting[5] to "{SYSTEM}:output_voltage_{SLOT}5";
+assign voltageSetting[6] to "{SYSTEM}:output_voltage_{SLOT}6";
+assign voltageSetting[7] to "{SYSTEM}:output_voltage_{SLOT}7";
+assign voltageReading[0] to "{SYSTEM}:output_sense_voltage_{SLOT}0";
+assign voltageReading[1] to "{SYSTEM}:output_sense_voltage_{SLOT}1";
+assign voltageReading[2] to "{SYSTEM}:output_sense_voltage_{SLOT}2";
+assign voltageReading[3] to "{SYSTEM}:output_sense_voltage_{SLOT}3";
+assign voltageReading[4] to "{SYSTEM}:output_sense_voltage_{SLOT}4";
+assign voltageReading[5] to "{SYSTEM}:output_sense_voltage_{SLOT}5";
+assign voltageReading[6] to "{SYSTEM}:output_sense_voltage_{SLOT}6";
+assign voltageReading[7] to "{SYSTEM}:output_sense_voltage_{SLOT}7";
+assign currentSetting[0] to "{SYSTEM}:output_current_{SLOT}0";
+assign currentSetting[1] to "{SYSTEM}:output_current_{SLOT}1";
+assign currentSetting[2] to "{SYSTEM}:output_current_{SLOT}2";
+assign currentSetting[3] to "{SYSTEM}:output_current_{SLOT}3";
+assign currentSetting[4] to "{SYSTEM}:output_current_{SLOT}4";
+assign currentSetting[5] to "{SYSTEM}:output_current_{SLOT}5";
+assign currentSetting[6] to "{SYSTEM}:output_current_{SLOT}6";
+assign currentSetting[7] to "{SYSTEM}:output_current_{SLOT}7";
+assign rampRate[0] to "{SYSTEM}:output_rise_rate_{SLOT}0";
+assign rampRate[1] to "{SYSTEM}:output_rise_rate_{SLOT}1";
+assign rampRate[2] to "{SYSTEM}:output_rise_rate_{SLOT}2";
+assign rampRate[3] to "{SYSTEM}:output_rise_rate_{SLOT}3";
+assign rampRate[4] to "{SYSTEM}:output_rise_rate_{SLOT}4";
+assign rampRate[5] to "{SYSTEM}:output_rise_rate_{SLOT}5";
+assign rampRate[6] to "{SYSTEM}:output_rise_rate_{SLOT}6";
+assign rampRate[7] to "{SYSTEM}:output_rise_rate_{SLOT}7";
+assign autoResetDelay[0] to "{SYSTEM}:{SLOT}0:ControlSQ.DLY4";
+assign autoResetDelay[1] to "{SYSTEM}:{SLOT}1:ControlSQ.DLY4";
+assign autoResetDelay[2] to "{SYSTEM}:{SLOT}2:ControlSQ.DLY4";
+assign autoResetDelay[3] to "{SYSTEM}:{SLOT}3:ControlSQ.DLY4";
+assign autoResetDelay[4] to "{SYSTEM}:{SLOT}4:ControlSQ.DLY4";
+assign autoResetDelay[5] to "{SYSTEM}:{SLOT}5:ControlSQ.DLY4";
+assign autoResetDelay[6] to "{SYSTEM}:{SLOT}6:ControlSQ.DLY4";
+assign autoResetDelay[7] to "{SYSTEM}:{SLOT}7:ControlSQ.DLY4";
+assign autoResetEnabled[0] to "{SYSTEM}:{SLOT}0:AutoResetEnable";
+assign autoResetEnabled[1] to "{SYSTEM}:{SLOT}1:AutoResetEnable";
+assign autoResetEnabled[2] to "{SYSTEM}:{SLOT}2:AutoResetEnable";
+assign autoResetEnabled[3] to "{SYSTEM}:{SLOT}3:AutoResetEnable";
+assign autoResetEnabled[4] to "{SYSTEM}:{SLOT}4:AutoResetEnable";
+assign autoResetEnabled[5] to "{SYSTEM}:{SLOT}5:AutoResetEnable";
+assign autoResetEnabled[6] to "{SYSTEM}:{SLOT}6:AutoResetEnable";
+assign autoResetEnabled[7] to "{SYSTEM}:{SLOT}7:AutoResetEnable";
+assign maxCycles[0] to "{SYSTEM}:{SLOT}0:maxCycles";
+assign maxCycles[1] to "{SYSTEM}:{SLOT}1:maxCycles";
+assign maxCycles[2] to "{SYSTEM}:{SLOT}2:maxCycles";
+assign maxCycles[3] to "{SYSTEM}:{SLOT}3:maxCycles";
+assign maxCycles[4] to "{SYSTEM}:{SLOT}4:maxCycles";
+assign maxCycles[5] to "{SYSTEM}:{SLOT}5:maxCycles";
+assign maxCycles[6] to "{SYSTEM}:{SLOT}6:maxCycles";
+assign maxCycles[7] to "{SYSTEM}:{SLOT}7:maxCycles";
+assign channelEnabled[0] to "{SYSTEM}:{SLOT}0:sw_enabled";
+assign channelEnabled[1] to "{SYSTEM}:{SLOT}1:sw_enabled";
+assign channelEnabled[2] to "{SYSTEM}:{SLOT}2:sw_enabled";
+assign channelEnabled[3] to "{SYSTEM}:{SLOT}3:sw_enabled";
+assign channelEnabled[4] to "{SYSTEM}:{SLOT}4:sw_enabled";
+assign channelEnabled[5] to "{SYSTEM}:{SLOT}5:sw_enabled";
+assign channelEnabled[6] to "{SYSTEM}:{SLOT}6:sw_enabled";
+assign channelEnabled[7] to "{SYSTEM}:{SLOT}7:sw_enabled";
+assign powerSwitch[0] to "{SYSTEM}:output_switch_{SLOT}0";
+assign powerSwitch[1] to "{SYSTEM}:output_switch_{SLOT}1";
+assign powerSwitch[2] to "{SYSTEM}:output_switch_{SLOT}2";
+assign powerSwitch[3] to "{SYSTEM}:output_switch_{SLOT}3";
+assign powerSwitch[4] to "{SYSTEM}:output_switch_{SLOT}4";
+assign powerSwitch[5] to "{SYSTEM}:output_switch_{SLOT}5";
+assign powerSwitch[6] to "{SYSTEM}:output_switch_{SLOT}6";
+assign powerSwitch[7] to "{SYSTEM}:output_switch_{SLOT}7";
+assign tripStatus[0] to "{SYSTEM}:trip_status_{SLOT}0";
+assign tripStatus[1] to "{SYSTEM}:trip_status_{SLOT}1";
+assign tripStatus[2] to "{SYSTEM}:trip_status_{SLOT}2";
+assign tripStatus[3] to "{SYSTEM}:trip_status_{SLOT}3";
+assign tripStatus[4] to "{SYSTEM}:trip_status_{SLOT}4";
+assign tripStatus[5] to "{SYSTEM}:trip_status_{SLOT}5";
+assign tripStatus[6] to "{SYSTEM}:trip_status_{SLOT}6";
+assign tripStatus[7] to "{SYSTEM}:trip_status_{SLOT}7";
+
+%{
+
+#include <stdio.h>
+#include <string.h>
+int channelref, board, chan;
+char boardname[3];
+char channelName[256];
+
+void writeFile(char *filename)
+{
+  char buff[1025];
+
+  FILE* fp;
+  int i, board, chan;
+
+  sprintf(buff,"%s.csv",filename);
+  //printf("%s\n",buff);
+  fp = fopen(buff, "w");
+  i = 0;
+
+  fprintf(fp, "{SYSTEM} HV Settings\n");
+  fprintf(fp, "Channel(ignored), standbyV, physicsV, current limit, standbyRamp, physicsRamp, delay(s), Vstep, maxCycles, resetDelay, autoResetEnabled (0=no), channelEnabled(0=no)\n");
+	
+  for(board = 0; board<1;board++) {
+    if (board == 0) {
+      boardname[0] = 0;
+    } else if (board == 1) {
+      strcpy(boardname,"10");
+    } else if (board == 2) {
+      strcpy(boardname,"20");
+    }
+
+    for (chan = 0; chan < 8; chan++) {
+      sprintf(channelName, "u%s%c", boardname, '0'+chan);
+      //printf("%s\n",channelName);
+      
+      fprintf(fp,"%s, %f, %f, %f, %f, %f, ", 
+              channelName, standbyVoltageSetting[i], physicsVoltageSetting[i], currentSetting[i], standbyRampRate[i], physicsRampRate[i]);
+      fprintf(fp,"%f, %f, %f, %f, %f, %f\n",
+              conditioningDelay[i], conditioningVoltageStep[i], maxCycles[i], autoResetDelay[i], autoResetEnabled[i], channelEnabled[i]);
+                                                                    /* setting value of channelEnabled from state of powerSwitch */
+      i++;
+    }
+  }
+	  
+  fclose(fp);
+}
+void readFile(char *filename)
+{
+  char buff[1025];
+  char *next;
+
+  FILE* fp;
+  int m, ii;
+
+  sprintf(buff,"%s.csv",filename);
+  //printf("%s\n",buff);
+  fp = fopen(buff, "r");
+  if (fp) {
+    m = 0;
+
+    for (ii = 0; ii < 2;ii++) {  fgets(buff,1024,fp); } /* skip 2 lines */
+	
+    while (NULL != fgets(buff,1024,fp) && m < 8) {
+            //printf("%s", buff);
+	    next = buff-1;
+	    strtod(next+1,&next);  /* skip 1 entry*/
+	    strtod(next+1,&next);  /* skip 1 entry*/
+	    standbyVoltageSetting[m]=strtod(next+1,&next);
+	    physicsVoltageSetting[m]=strtod(next+1,&next);
+	    currentSetting[m]=strtod(next+1,&next);
+	    standbyRampRate[m]=strtod(next+1,&next);
+	    physicsRampRate[m]=strtod(next+1,&next);
+	    conditioningDelay[m]=strtod(next+1,&next);
+	    conditioningVoltageStep[m]=strtod(next+1,&next);
+	    maxCycles[m]=strtod(next+1,&next);
+	    autoResetDelay[m]=strtod(next+1,&next);
+	    autoResetEnabled[m]=strtod(next+1,&next);
+      	    channelEnabled[m]=strtod(next+1,&next);
+            /*printf("%f %f %f %f %f %f %f \n", 
+                   voltageSetting[m], currentSetting[m], rampRate[m],
+                   maxCycles[m], autoResetDelay[m], autoResetEnabled[m], channelEnabled[m]); */
+  
+	    m++;
+	  }
+	    
+    fclose(fp);
+  }
+}
+}%
+
+
+ss ss1 {
+    state init {
+        entry {
+            v = 1 ;
+            pvPut(v);
+	    /* printf("sncFGTControl: initializing\n"); */
+        }
+	when (delay(5)) {
+	    printf("sncFGTControl: Startup delay over\n"); 
+            v=1;
+            pvPut(v);
+            for(board = 0; board<1;board++) {
+                if (board == 0) {
+                    boardname[0] = 0;
+                } else if (board == 1) {
+                    strcpy(boardname,"10");
+                } else if (board == 2) {
+                    strcpy(boardname,"20");
+                }
+ 
+                for (channelref = 0; channelref < 8; channelref++) {
+                   pvMonitor(voltageSetting[channelref]);
+                   pvMonitor(voltageReading[channelref]);
+                   pvMonitor(channelEnabled[channelref]); 
+                   pvMonitor(powerSwitch[channelref]); 
+                   pvMonitor(currentSetting[channelref]);
+                   pvMonitor(rampRate[channelref]);
+                   pvMonitor(autoResetDelay[channelref]);
+                   pvMonitor(autoResetEnabled[channelref]);
+                   pvMonitor(maxCycles[channelref]);
+                   pvMonitor(tripStatus[channelref]);
+                   pvMonitor(physicsVoltageSetting[channelref]);
+                   pvMonitor(standbyVoltageSetting[channelref]);
+                   pvMonitor(physicsRampRate[channelref]);
+                   pvMonitor(standbyRampRate[channelref]);
+                   pvMonitor(conditioningDelay[channelref]);
+                   pvMonitor(conditioningVoltageStep[channelref]);
+                }
+            }
+	} state pause_then_load
+    }
+    state pause_then_load {
+        when(delay(5)) {
+        } state loading_all
+    }
+    state waiting {
+        entry {
+	    /* printf("waiting\n"); */
+        }
+	when (v == 3) {
+		/* printf("load config from file\n"); */
+        } state loading_all
+	when (v == 4) {
+		/* printf("write config to file\n"); */
+        } state saving_all
+	when (v == 5) {
+		/* printf("power on enabled channels\n"); */
+        } state powering_all
+    }
+    state loading_all {
+        entry {
+            pvGet(hv_filename);
+            /*printf("filename: %s\n",hv_filename); */
+            readFile(hv_filename);
+            for(i=0; i<8; i++) {
+	      pvPut(voltageSetting[i],SYNC);
+	      pvPut(currentSetting[i],SYNC);
+	      pvPut(rampRate[i],SYNC);
+	      pvPut(maxCycles[i],SYNC);
+	      pvPut(autoResetDelay[i],SYNC);
+	      pvPut(autoResetEnabled[i],SYNC);
+	      pvPut(channelEnabled[i],SYNC);
+              pvPut(physicsVoltageSetting[i],SYNC);
+              pvPut(standbyVoltageSetting[i],SYNC);
+              pvPut(physicsRampRate[i],SYNC);
+              pvPut(standbyRampRate[i],SYNC);
+              pvPut(conditioningDelay[i],SYNC);
+              pvPut(conditioningVoltageStep[i],SYNC);
+              /*printf("After Put  %f %f %f %f %f %f %f \n", 
+                     voltageSetting[i], currentSetting[i], rampRate[i],
+                     maxCycles[i], autoResetDelay[i], autoResetEnabled[i], channelEnabled[i]); */
+            }
+        } 
+	when (delay(1)) {
+    	    v = 1;
+            pvPut(v,SYNC);
+	} state waiting
+        when (v==1) {
+        } state waiting
+    }
+    state saving_all {
+        entry {
+            /* printf("saving all values\n"); */
+            pvGet(hv_filename);
+            /* printf("filename: %s\n",hv_filename); */
+            writeFile(hv_filename);
+            v = 1;
+            pvPut(v);
+        } 
+        when (1) {
+        } state waiting
+    }
+    state powering_all {
+        entry {
+            for(i=0;i<8;i++) {
+              if(channelEnabled[i] == 1 && powerSwitch[i] == 0 && tripStatus[i] != 4) {
+                powerSwitch[i] = 1;
+                pvPut(powerSwitch[i]);
+               }
+            }
+            /* printf("powering on all channels\n"); */
+            v = 1;
+            pvPut(v);
+        } 
+        when (1) {
+        } state waiting
+    }
+
+}
+   
+

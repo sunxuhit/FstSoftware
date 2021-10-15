@@ -1,0 +1,578 @@
+
+file {
+	name="/home/fgttester/SANDBOX_GERRIT/display/iseg_master_monitor.adl"
+	version=030102
+}
+display {
+	object {
+		x=43
+		y=25
+		width=800
+		height=856
+	}
+	clr=14
+	bclr=4
+	cmap=""
+	gridSpacing=5
+	gridOn=0
+	snapToGrid=0
+}
+"color map" {
+	ncolors=65
+	colors {
+		ffffff,
+		ececec,
+		dadada,
+		c8c8c8,
+		bbbbbb,
+		aeaeae,
+		9e9e9e,
+		919191,
+		858585,
+		787878,
+		696969,
+		5a5a5a,
+		464646,
+		2d2d2d,
+		000000,
+		00d800,
+		1ebb00,
+		339900,
+		2d7f00,
+		216c00,
+		fd0000,
+		de1309,
+		be190b,
+		a01207,
+		820400,
+		5893ff,
+		597ee1,
+		4b6ec7,
+		3a5eab,
+		27548d,
+		fbf34a,
+		f9da3c,
+		eeb62b,
+		e19015,
+		cd6100,
+		ffb0ff,
+		d67fe2,
+		ae4ebc,
+		8b1a96,
+		610a75,
+		a4aaff,
+		8793e2,
+		6a73c1,
+		4d52a4,
+		343386,
+		c7bb6d,
+		b79d5c,
+		a47e3c,
+		7d5627,
+		58340f,
+		99ffff,
+		73dfff,
+		4ea5f9,
+		2a63e4,
+		0a00b8,
+		ebf1b5,
+		d4db9d,
+		bbc187,
+		a6a462,
+		8b8239,
+		73ff6b,
+		52da3b,
+		3cb420,
+		289315,
+		1a7309,
+	}
+}
+"strip chart" {
+	object {
+		x=10
+		y=208
+		width=650
+		height=202
+	}
+	plotcom {
+		title="Current"
+		xlabel="time (minutes)"
+		ylabel="current"
+		clr=14
+		bclr=4
+	}
+	period=10.000000
+	units="minute"
+	pen[0] {
+		chan="$(SYSTEM):measurement_current_$(U)0"
+		clr=20
+		limits {
+			hoprSrc="default"
+			hoprDefault=0.001
+		}
+	}
+	pen[1] {
+		chan="$(SYSTEM):measurement_current_$(U)1"
+		clr=54
+		limits {
+			hoprSrc="default"
+			hoprDefault=0.001
+		}
+	}
+	pen[2] {
+		chan="$(SYSTEM):measurement_current_$(U)2"
+		clr=64
+		limits {
+			hoprSrc="default"
+			hoprDefault=0.001
+		}
+	}
+	pen[3] {
+		chan="$(SYSTEM):measurement_current_$(U)3"
+		clr=30
+		limits {
+			hoprSrc="default"
+			hoprDefault=0.001
+		}
+	}
+}
+"strip chart" {
+	object {
+		x=10
+		y=10
+		width=650
+		height=202
+	}
+	plotcom {
+		title="Voltage"
+		xlabel="time (minutes)"
+		ylabel="voltage"
+		clr=14
+		bclr=4
+	}
+	period=10.000000
+	units="minute"
+	pen[0] {
+		chan="$(SYSTEM):output_sense_voltage_$(U)0"
+		clr=20
+		limits {
+			loprSrc="default"
+			hoprSrc="default"
+			hoprDefault=4000
+		}
+	}
+	pen[1] {
+		chan="$(SYSTEM):output_sense_voltage_$(U)1"
+		clr=54
+		limits {
+			loprSrc="default"
+			hoprSrc="default"
+			hoprDefault=4000
+		}
+	}
+	pen[2] {
+		chan="$(SYSTEM):output_sense_voltage_$(U)2"
+		clr=64
+		limits {
+			loprSrc="default"
+			hoprSrc="default"
+			hoprDefault=4000
+		}
+	}
+	pen[3] {
+		chan="$(SYSTEM):output_sense_voltage_$(U)3"
+		clr=30
+		limits {
+			loprSrc="default"
+			hoprSrc="default"
+			hoprDefault=4000
+		}
+	}
+}
+text {
+	object {
+		x=665
+		y=82
+		width=50
+		height=76
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="$(U)0-3"
+	align="horiz. centered"
+}
+composite {
+	object {
+		x=10
+		y=415
+		width=705
+		height=400
+	}
+	"composite name"=""
+	children {
+		"strip chart" {
+			object {
+				x=10
+				y=415
+				width=650
+				height=202
+			}
+			plotcom {
+				title="Voltage"
+				xlabel="time (minutes)"
+				ylabel="voltage"
+				clr=14
+				bclr=4
+			}
+			period=10.000000
+			units="minute"
+			pen[0] {
+				chan="$(SYSTEM):output_sense_voltage_$(U)4"
+				clr=20
+				limits {
+					loprSrc="default"
+					hoprSrc="default"
+					hoprDefault=4000
+				}
+			}
+			pen[1] {
+				chan="$(SYSTEM):output_sense_voltage_$(U)5"
+				clr=54
+				limits {
+					loprSrc="default"
+					hoprSrc="default"
+					hoprDefault=4000
+				}
+			}
+			pen[2] {
+				chan="$(SYSTEM):output_sense_voltage_$(U)6"
+				clr=64
+				limits {
+					loprSrc="default"
+					hoprSrc="default"
+					hoprDefault=4000
+				}
+			}
+			pen[3] {
+				chan="$(SYSTEM):output_sense_voltage_$(U)7"
+				clr=30
+				limits {
+					loprSrc="default"
+					hoprSrc="default"
+					hoprDefault=4000
+				}
+			}
+		}
+		"strip chart" {
+			object {
+				x=10
+				y=613
+				width=650
+				height=202
+			}
+			plotcom {
+				title="Current"
+				xlabel="time (minutes)"
+				ylabel="current"
+				clr=14
+				bclr=4
+			}
+			period=10.000000
+			units="minute"
+			pen[0] {
+				chan="$(SYSTEM):measurement_current_$(U)4"
+				clr=20
+				limits {
+					hoprSrc="default"
+					hoprDefault=0.001
+				}
+			}
+			pen[1] {
+				chan="$(SYSTEM):measurement_current_$(U)5"
+				clr=54
+				limits {
+					hoprSrc="default"
+					hoprDefault=0.001
+				}
+			}
+			pen[2] {
+				chan="$(SYSTEM):measurement_current_$(U)6"
+				clr=64
+				limits {
+					hoprSrc="default"
+					hoprDefault=0.001
+				}
+			}
+			pen[3] {
+				chan="$(SYSTEM):measurement_current_$(U)7"
+				clr=30
+				limits {
+					hoprSrc="default"
+					hoprDefault=0.001
+				}
+			}
+		}
+		text {
+			object {
+				x=665
+				y=487
+				width=50
+				height=76
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="$(U)4-7"
+			align="horiz. centered"
+		}
+	}
+}
+"text update" {
+	object {
+		x=669
+		y=103
+		width=81
+		height=19
+	}
+	monitor {
+		chan="$(SYSTEM):output_sense_voltage_$(U)0"
+		clr=20
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=669
+		y=258
+		width=81
+		height=19
+	}
+	monitor {
+		chan="$(SYSTEM):measurement_current_$(U)0"
+		clr=20
+		bclr=4
+	}
+	format="engr. notation"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=669
+		y=282
+		width=81
+		height=19
+	}
+	monitor {
+		chan="$(SYSTEM):measurement_current_$(U)1"
+		clr=54
+		bclr=4
+	}
+	format="engr. notation"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=669
+		y=127
+		width=81
+		height=19
+	}
+	monitor {
+		chan="$(SYSTEM):output_sense_voltage_$(U)1"
+		clr=54
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=669
+		y=151
+		width=81
+		height=19
+	}
+	monitor {
+		chan="$(SYSTEM):output_sense_voltage_$(U)2"
+		clr=64
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=669
+		y=306
+		width=81
+		height=19
+	}
+	monitor {
+		chan="$(SYSTEM):measurement_current_$(U)2"
+		clr=64
+		bclr=4
+	}
+	format="engr. notation"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=669
+		y=330
+		width=81
+		height=19
+	}
+	monitor {
+		chan="$(SYSTEM):measurement_current_$(U)3"
+		clr=30
+		bclr=4
+	}
+	format="engr. notation"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=669
+		y=175
+		width=81
+		height=19
+	}
+	monitor {
+		chan="$(SYSTEM):output_sense_voltage_$(U)3"
+		clr=30
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=669
+		y=507
+		width=81
+		height=19
+	}
+	monitor {
+		chan="$(SYSTEM):output_sense_voltage_$(U)4"
+		clr=20
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=669
+		y=668
+		width=81
+		height=19
+	}
+	monitor {
+		chan="$(SYSTEM):measurement_current_$(U)4"
+		clr=20
+		bclr=4
+	}
+	format="engr. notation"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=669
+		y=692
+		width=81
+		height=19
+	}
+	monitor {
+		chan="$(SYSTEM):measurement_current_$(U)5"
+		clr=54
+		bclr=4
+	}
+	format="engr. notation"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=669
+		y=531
+		width=81
+		height=19
+	}
+	monitor {
+		chan="$(SYSTEM):output_sense_voltage_$(U)5"
+		clr=54
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=669
+		y=555
+		width=81
+		height=19
+	}
+	monitor {
+		chan="$(SYSTEM):output_sense_voltage_$(U)6"
+		clr=64
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=669
+		y=716
+		width=81
+		height=19
+	}
+	monitor {
+		chan="$(SYSTEM):measurement_current_$(U)6"
+		clr=64
+		bclr=4
+	}
+	format="engr. notation"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=669
+		y=740
+		width=81
+		height=19
+	}
+	monitor {
+		chan="$(SYSTEM):measurement_current_$(U)7"
+		clr=30
+		bclr=4
+	}
+	format="engr. notation"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=669
+		y=579
+		width=81
+		height=19
+	}
+	monitor {
+		chan="$(SYSTEM):output_sense_voltage_$(U)7"
+		clr=30
+		bclr=4
+	}
+	limits {
+	}
+}

@@ -1,0 +1,10 @@
+      record(longin,"MEM:192.168.1.100:swap:Size_li")  {
+            field(DESC,"hrStorageSize")
+            field(SCAN,"10 second")
+            field(DTYP,"Snmp")
+            field(INP,"@192.168.1.100 public HOST-RESOURCES-MIB::hrStorageSize.3 INTEGER: 11")
+            field(EGU,"blocks")
+            field(ADEL,"1000")
+            field(MDEL,"1000")
+
+}

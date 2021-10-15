@@ -1,0 +1,22 @@
+record(longin, "$(SYSTEM):master_control_switch")
+{
+ field(DESC, "MasterControl Switch for FST")
+ field(SCAN, "Passive")
+ field(VAL, "0")
+}
+
+record(longin, "$(SYSTEM):ramp_control_switch")
+{
+ field(DESC, "Ramping Control Switch for FST")
+ field(SCAN, "Passive")
+ field(VAL, "0")
+}
+
+record(stringout, "$(SYSTEM):hv_settings")
+{
+ field(DESC, "filename for FST HV settings")
+ field(SCAN, "Passive")
+ field(VAL, "/home/sysuser/iocTop/FST/HV/mpod01/def")
+}
+
+

@@ -1,0 +1,276 @@
+record(longout, "GROUP_0")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::groupsSwitch.0 INTEGER: 100 i")
+ field(ADEL, "1")
+ field(LOPR, "0")
+ field(HIPR, "5")
+}
+
+
+record(longin, "GROUP_0_READING")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::groupsSwitch.0 ( 100 i )")
+ field(ADEL, "1")
+}
+
+
+
+record(longout, "GROUP_1000")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::groupsSwitch.1000 INTEGER: 100 i")
+ field(ADEL, "1")
+}
+
+record(longout, "GROUPS_INDEX")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::groupsIndex.0 INTEGER: 100 i")
+ field(ADEL, "1")
+}
+
+record(longin, "PWR_READING")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::sysMainSwitch.0 ( 100")
+ field(ADEL, "1")
+}
+
+record(longout, "PWR_SETTING")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::sysMainSwitch.0 ( 100 i")
+ field(ADEL, "1")
+}
+
+record(stringin, "STATUS")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "5 second")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::sysStatus.0 BITS: 100")
+}
+
+record(ai, "PS_Voltage0")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::psAuxiliaryMeasurementVoltage.u0 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "PS_Voltage1")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::psAuxiliaryMeasurementVoltage.u1 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "PS_Voltage2")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::psAuxiliaryMeasurementVoltage.u2 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "PS_Voltage3")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::psAuxiliaryMeasurementVoltage.u3 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "PS_Voltage4")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::psAuxiliaryMeasurementVoltage.u4 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "PS_Voltage5")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::psAuxiliaryMeasurementVoltage.u5 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "PS_Voltage6")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::psAuxiliaryMeasurementVoltage.u6 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "PS_Voltage7")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::psAuxiliaryMeasurementVoltage.u7 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "PS_Current0")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::psAuxiliaryMeasurementCurrent.u0 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "PS_Current1")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::psAuxiliaryMeasurementCurrent.u1 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "PS_Current2")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::psAuxiliaryMeasurementCurrent.u2 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "PS_Current3")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::psAuxiliaryMeasurementCurrent.u3 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "PS_Current4")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::psAuxiliaryMeasurementCurrent.u4 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "PS_Current5")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::psAuxiliaryMeasurementCurrent.u5 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "PS_Current6")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::psAuxiliaryMeasurementCurrent.u6 Float: 100")
+ field(ADEL, "1")
+}
+
+record(ai, "PS_Current7")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::psAuxiliaryMeasurementCurrent.u7 Float: 100")
+ field(ADEL, "1")
+}
+
+
+record(longin, "PS_FAN")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".2 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::fanNominalSpeed.0 INTEGER: 100")
+ field(ADEL, "1")
+}
+
+
+record(longout, "PS_FAN_Control")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::fanNominalSpeed.0 INTEGER: 100 i")
+ field(ADEL, "3200")
+ field(LOPR, "0")
+ field(HIPR, "6000")
+}
+
+
+

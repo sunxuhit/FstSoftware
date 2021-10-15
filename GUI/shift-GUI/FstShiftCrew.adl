@@ -1,0 +1,426 @@
+
+file {
+	name="/star/u/sysuser/users/xusun/FstSlowControl/scripts/FstShiftCrew.adl"
+	version=030107
+}
+display {
+	object {
+		x=468
+		y=344
+		width=450
+		height=450
+	}
+	clr=14
+	bclr=27
+	cmap=""
+	gridSpacing=5
+	gridOn=0
+	snapToGrid=0
+}
+"color map" {
+	ncolors=65
+	colors {
+		ffffff,
+		ececec,
+		dadada,
+		c8c8c8,
+		bbbbbb,
+		aeaeae,
+		9e9e9e,
+		919191,
+		858585,
+		787878,
+		696969,
+		5a5a5a,
+		464646,
+		2d2d2d,
+		000000,
+		00d800,
+		1ebb00,
+		339900,
+		2d7f00,
+		216c00,
+		fd0000,
+		de1309,
+		be190b,
+		a01207,
+		820400,
+		5893ff,
+		597ee1,
+		4b6ec7,
+		3a5eab,
+		27548d,
+		fbf34a,
+		f9da3c,
+		eeb62b,
+		e19015,
+		cd6100,
+		ffb0ff,
+		d67fe2,
+		ae4ebc,
+		8b1a96,
+		610a75,
+		a4aaff,
+		8793e2,
+		6a73c1,
+		4d52a4,
+		343386,
+		c7bb6d,
+		b79d5c,
+		a47e3c,
+		7d5627,
+		58340f,
+		99ffff,
+		73dfff,
+		4ea5f9,
+		2a63e4,
+		0a00b8,
+		ebf1b5,
+		d4db9d,
+		bbc187,
+		a6a462,
+		8b8239,
+		73ff6b,
+		52da3b,
+		3cb420,
+		289315,
+		1a7309,
+	}
+}
+text {
+	object {
+		x=29
+		y=14
+		width=436
+		height=60
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="FST CONTROL"
+}
+text {
+	object {
+		x=31
+		y=232
+		width=395
+		height=66
+	}
+	"basic attribute" {
+		clr=14
+	}
+}
+text {
+	object {
+		x=30
+		y=165
+		width=300
+		height=44
+	}
+	"basic attribute" {
+		clr=15
+	}
+	"dynamic attribute" {
+		vis="calc"
+		calc="A&&B"
+		chan="fstON_crate_voltage_status"
+		chanB="fst_crate_status_ON"
+	}
+	textix="FST IS READY"
+}
+text {
+	object {
+		x=30
+		y=165
+		width=180
+		height=44
+	}
+	"basic attribute" {
+		clr=20
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="fst_crate_status_ON"
+	}
+	textix="FST IS OFF"
+}
+rectangle {
+	object {
+		x=300
+		y=130
+		width=90
+		height=90
+	}
+	"basic attribute" {
+		clr=15
+	}
+	"dynamic attribute" {
+		vis="calc"
+		calc="(A&&B)||(!B&&!C)"
+		chan="fstON_crate_voltage_status"
+		chanB="fst_crate_status_ON"
+		chanC="fstOFF_crate_voltage_status"
+	}
+}
+text {
+	object {
+		x=726
+		y=157
+		width=36
+		height=37
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Crate1 Power is ON"
+}
+text {
+	object {
+		x=29
+		y=350
+		width=200
+		height=25
+	}
+	"basic attribute" {
+		clr=21
+	}
+	"dynamic attribute" {
+		vis="calc"
+		calc="!A&&B"
+		chan="fstON_crate_voltage_status"
+		chanB="fst_crate_status_ON"
+	}
+	textix="Failure Code 2"
+}
+"related display" {
+	object {
+		x=30
+		y=400
+		width=180
+		height=30
+	}
+	display[0] {
+		label="ShutDown"
+		name="FstShutDown.adl"
+	}
+	clr=14
+	bclr=56
+	label="ShutDown"
+}
+text {
+	object {
+		x=29
+		y=330
+		width=200
+		height=25
+	}
+	"basic attribute" {
+		clr=21
+	}
+	"dynamic attribute" {
+		vis="calc"
+		calc="!A&&B"
+		chan="fst_crate_status_ON"
+		chanB="fstOFF_crate_voltage_status"
+	}
+	textix="Failure Code 1"
+}
+text {
+	object {
+		x=29
+		y=370
+		width=400
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		calc="A"
+		chan="fst_crate_status_panic"
+	}
+	textix="Warning! bad shutdown"
+}
+"related display" {
+	object {
+		x=27
+		y=60
+		width=203
+		height=54
+	}
+	display[0] {
+		label="ON"
+		name="FstOn.adl"
+	}
+	clr=14
+	bclr=50
+	label="Turn-ON"
+}
+"related display" {
+	object {
+		x=30
+		y=220
+		width=203
+		height=54
+	}
+	display[0] {
+		label="OFF"
+		name="FstOff.adl"
+	}
+	clr=14
+	bclr=20
+	label="Turn-OFF"
+}
+text {
+	object {
+		x=280
+		y=100
+		width=70
+		height=25
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Status Flag"
+}
+rectangle {
+	object {
+		x=27
+		y=155
+		width=238
+		height=56
+	}
+	"basic attribute" {
+		clr=0
+		fill="outline"
+	}
+}
+image {
+	object {
+		x=310
+		y=140
+		width=72
+		height=67
+	}
+	type="gif"
+	"image name"="p.gif"
+	"dynamic attribute" {
+		vis="calc"
+		calc="(!A&&B)||(!B&&C)"
+		chan="fstON_crate_voltage_status"
+		chanB="fst_crate_status_ON"
+		chanC="fstOFF_crate_voltage_status"
+	}
+}
+image {
+	object {
+		x=300
+		y=15
+		width=98
+		height=63
+	}
+	type="gif"
+	"image name"="IST.gif"
+}
+image {
+	object {
+		x=210
+		y=330
+		width=30
+		height=30
+	}
+	type="gif"
+	"image name"="warning_spin.gif"
+	"dynamic attribute" {
+		vis="calc"
+		calc="!A&&B"
+		chan="fst_crate_status_ON"
+		chanB="fstOFF_crate_voltage_status"
+	}
+}
+image {
+	object {
+		x=210
+		y=350
+		width=30
+		height=30
+	}
+	type="gif"
+	"image name"="warning_spin.gif"
+	"dynamic attribute" {
+		vis="calc"
+		calc="!A&&B"
+		chan="fstON_crate_voltage_status"
+		chanB="fst_crate_status_ON"
+	}
+}
+text {
+	object {
+		x=30
+		y=165
+		width=300
+		height=44
+	}
+	"basic attribute" {
+		clr=15
+	}
+	"dynamic attribute" {
+		vis="calc"
+		calc="!A&&B"
+		chan="fstON_crate_voltage_status"
+		chanB="fst_crate_status_ON"
+	}
+	textix="FST IS ON"
+}
+text {
+	object {
+		x=28
+		y=122
+		width=117
+		height=25
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Operation Status"
+}
+image {
+	object {
+		x=300
+		y=261
+		width=140
+		height=90
+	}
+	type="gif"
+	"image name"="GIL.gif"
+	"dynamic attribute" {
+		vis="if zero"
+		calc="A"
+		chan="IST:Cool:Interlock:sum"
+	}
+}
+rectangle {
+	object {
+		x=25
+		y=281
+		width=240
+		height=110
+	}
+	"basic attribute" {
+		clr=0
+		fill="outline"
+	}
+}
+text {
+	object {
+		x=70
+		y=285
+		width=210
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Failure Codes"
+}

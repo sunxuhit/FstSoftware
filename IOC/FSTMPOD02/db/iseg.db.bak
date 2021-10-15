@@ -1,0 +1,108 @@
+record(longout, "FGT_OUTPUT_SWITCH_U$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputSwitch.u$(ID) ( 100 i")
+ field(ADEL, "1")
+}
+
+
+
+record(ai, "MEASUREMENT_CURRENT_U$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementCurrent.u$(ID) Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "OUTPUT_CURRENT_U$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputCurrent.u$(ID) Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ao, "OUTPUT_TRIPTIME_U$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "0")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputTripTimeMaxCurrent.u$(ID) INTEGER: 100 i")
+ field(ADEL, "1")
+}
+
+record(ao, "OUTPUT_RISE_RATE_U$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "0")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageRiseRate.u$(ID) Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ao, "OUTPUT_FALL_RATE_U$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "1")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltageFallRate.u$(ID) Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(ai, "OUTPUT_SENSE_VOLTAGE_U$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementSenseVoltage.u$(ID) Float: 100")
+ field(ADEL, "1")
+}
+
+record(ao, "FGT_OUTPUT_VOLTAGE_U$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "Passive")
+ field(PREC, "3")
+ field(EGU,  "")
+ field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::outputVoltage.u$(ID) Float: 100 F")
+ field(ADEL, "1")
+}
+
+record(stringin, "STATUS_BITS_U$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, ".5 second")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputStatus.u$(ID) BITS: 200")
+}
+
+record(longin, "TEMP_U$(ID)")
+{
+ field(DESC, "SNMP channel BBM-")
+ field(DTYP, "Snmp")
+ field(SCAN, "5 second")
+ field(EGU,  "")
+ field(INP,  "@$(HOST) guru WIENER-CRATE-MIB::outputMeasurementTemperature.u$(ID) INTEGER: 100 ")
+ field(ADEL, "1")
+}
+
+

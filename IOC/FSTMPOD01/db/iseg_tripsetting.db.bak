@@ -1,0 +1,17 @@
+record(calcout,"$(SYSTEM):u$(ID):checkTripSetup"){
+        field(CALC,"(A != 4224) ?1:0")
+        field(SCAN,"Passive")
+        field(INPA,"$(SYSTEM):output_supervision_behavior_u$(ID).VAL PP MS")
+        field(FLNK,"$(SYSTEM):u$(ID):fixTripSetup PP NMS")
+}
+
+record(seq,"$(SYSTEM):u$(ID):fixTripSetup") {
+        field(SELM,"Mask")
+        field(PREC,"3")
+        field(SELL,"$(SYSTEM):u$(ID):checkTripSetup.RVAL NPP NMS")
+        field(DLY1,"0")
+        field(DOL1,"4224")
+        field(LNK1,"$(SYSTEM):set_output_supervision_behavior_u$(ID) PP MS")
+}
+
+

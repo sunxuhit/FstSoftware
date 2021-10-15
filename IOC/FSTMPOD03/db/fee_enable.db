@@ -1,0 +1,91 @@
+record(ao, "fst_fee_power_enable_$(ID)_0_0")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "fst_fee_power_enable_$(ID)_0_1")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "fst_fee_power_enable_$(ID)_0_2")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "fst_fee_power_enable_$(ID)_1_0")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "fst_fee_power_enable_$(ID)_1_1")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "fst_fee_power_enable_$(ID)_1_2")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "fst_fee_power_enable_$(ID)_2_0")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "fst_fee_power_enable_$(ID)_2_1")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "fst_fee_power_enable_$(ID)_2_2")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "fst_fee_power_enable_$(ID)_3_0")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "fst_fee_power_enable_$(ID)_3_1")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "fst_fee_power_enable_$(ID)_3_2")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "fst_fee_power_enable_$(ID)_4_0")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "fst_fee_power_enable_$(ID)_4_1")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "fst_fee_power_enable_$(ID)_4_2")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "fst_fee_power_enable_$(ID)_5_0")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "fst_fee_power_enable_$(ID)_5_1")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+record(ao, "fst_fee_power_enable_$(ID)_5_2")
+{
+ field(DOL, "0.0")
+ field(PREC, "6")
+}
+

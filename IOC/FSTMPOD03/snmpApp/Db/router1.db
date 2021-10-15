@@ -1,0 +1,9 @@
+      record(longin,"NT:$(HOST):$(ID):InBcast_li")  {
+            field(DESC,"Port=$(ID) In-Bcast")
+            field(SCAN,"60 second")
+            field(DTYP,"Snmp")
+            field(INP,"@$(HOST) public IF-MIB::ifInBroadcastPkts.$(ID) Counter32: 11")
+            field(EGU,"Packets")
+            field(ADEL,"10")
+            field(MDEL,"10")
+      }

@@ -1,0 +1,37 @@
+In a terminal window:
+====IOC====
+******>>>>>> THE IOC NOW STARTS AUTOMATICALLY WHEN THE SYSTEM BOOTS  <<<<<<<<=========
+$ cd snmp/iocBoot/iocsnmp/
+$ ./startfgt
+
+This launches a screen process which runs the IOC console in the background.
+You can attach to that "screen" with the following command
+	screen -d -r ioc
+	Use the key sequence 'ctrl-a ctrl-d' to detach from the screen.
+
+====GUI====
+$ cd snmp
+$ source run_display
+
+At this point the display screen for the FGT slow controls should pop up.
+
+====ABOUT THE SCREENS====
+A few general status indicators are available from the main screen; system status, fan speed.  You can also turn the crate on and off using the control switch.
+
+Four buttons across the top of the display will launch additional control screens.
+
+The first screen is labled "MpodC"
+	Controls general settings for the crate and provides an interface to monitor the internal power supplies, fan, and temperatures.
+
+The remaining three screens are for the three HV boards.
+	U-EHS 8 060n, U10-EHS 8 060n, and U20-EHS 8 060n
+	Individual channels can be turned on and off with the switchs on the left-hand side.
+	Status is indicated with the "light" and the line of text.
+	Voltage and current settings are in editable text boxes.
+	Voltage and current readings appear below the editable text boxes.
+	A "ramp rate" is set for the entire borad in Volts per second.
+	A "Trip Delay" determines how long (in ms) a current can be above the trip threshold before the supply will shut it down.
+	A small button near the indicator light will allow you to clear any trip condition.  A channel cannot be powered back on before a trip condition is cleared.
+	The "Hardware Trip" section was necessary for a previous version of the firmware.  It should be removed and a proper setting should be made for this trip behavior.
+
+

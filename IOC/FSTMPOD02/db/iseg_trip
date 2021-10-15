@@ -1,0 +1,53 @@
+record(calcout,"$(SYSTEM):u$(ID):checkTripSetup"){
+        field(CALC,"(A != 4224) ?0xff:0")
+        field(SCAN,"Passive")
+        field(INPA,"$(SYSTEM):output_supervision_behavior_u$(ID).VAL PP MS")
+        field(OUT,"$(SYSTEM):u$(ID):fixTripSetup PP MS")
+}
+
+record(mbbo,"$(SYSTEM):u$(ID):tripCheckControl") {
+	field(DTYP,"Raw Soft Channel")
+        field(FLNK,"$(SYSTEM):u$(ID):fixTripSetup PP MS")
+	field(ZRVL,"0x0")
+	field(ONVL,"0xff")
+	field(VAL,"0")
+}
+
+record(seq,"$(SYSTEM):u$(ID):fixTripSetup") {
+        field(SELM,"Mask")
+        field(PREC,"3")
+        field(SELL,"$(SYSTEM):u$(ID):checkTripSetup.VAL NPP MS")
+        field(DLY1,"0")
+        field(DOL1,"0")
+        field(LNK1,"$(SYSTEM):tripCheckControl PP MS")
+        field(DLY2,"0")
+        field(DOL2,"5")
+        field(LNK2,"$(SYSTEM):group_0 PP MS")
+        field(DLY3,"0")
+        field(DOL3,"5")
+        field(LNK3,"$(SYSTEM):group_64 PP MS")
+        field(DLY4,"0")
+        field(DOL4,"4224")
+        field(LNK4,"$(SYSTEM):set_output_supervision_behavior_u$(ID) PP MS")
+}
+
+
+
+
+record(calcout,"$(SYSTEM):u$(ID):checkTripSetup"){
+        field(CALC,"(A != 4224) ?1:0")
+        field(SCAN,"Passive")
+        field(INPA,"$(SYSTEM):output_supervision_behavior_u$(ID).VAL PP MS")
+        field(FLNK,"$(SYSTEM):u$(ID):fixTripSetup PP NMS")
+}
+
+record(seq,"$(SYSTEM):u$(ID):fixTripSetup") {
+        field(SELM,"Mask")
+        field(PREC,"3")
+        field(SELL,"$(SYSTEM):u$(ID):checkTripSetup.RVAL NPP NMS")
+        field(DLY1,"0")
+        field(DOL1,"4224")
+        field(LNK1,"$(SYSTEM):set_output_supervision_behavior_u$(ID) PP MS")
+}
+
+
