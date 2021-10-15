@@ -1,0 +1,39 @@
+# a comment - this is ignored
+# ignore share lib
+lib/
+
+# ignore build
+build/
+
+# ignore *.swp and *.o
+src/*.swp
+
+# ignore tmp root file
+macros/*.root
+macros/*/*.root
+macros/*/figures/*.eps
+macros/*/figures/*.pdf
+macros/*/figures/*.png
+macros/*/figures/*/*.eps
+macros/*/figures/*/*.pdf
+macros/*/figures/*/*/*.pdf
+macros/*/figures/*/*/*.eps
+
+# ignore intput and output root file
+data/*/*.root
+data/*/*/*.root
+output/*.root
+output/*/*.root
+output/*/*/*.root
+output/*/*/*/*.root
+output/*/*/*/*.root.*
+output/*/*/*/*/*.root
+
+# ignore some of list
+list/FST/*.list
+list/FST/*/*.list
+list/FST/*/*/*.list
+list/FST/*/*/*/*.list
+list/IST/*.list
+list/IST/*/*.list
+list/IST/*/*/*.list
