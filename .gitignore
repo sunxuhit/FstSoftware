@@ -1,0 +1,40 @@
+# a comment - this is ignored
+# ignore logs in FstSlowControl/GUI/shift-GUI/logs
+FstSlowControl/GUI/shift-GUI/logs/*.log
+FstSlowControl/GUI/shift-GUI/mibs/*
+
+
+# FstTracking
+# ignore share lib
+FstTracking/lib/
+# ignore build
+FstTracking/build/
+# ignore *.swp and *.o
+FstTracking/src/*.swp
+# ignore tmp root file
+FstTracking/acros/*.root
+FstTracking/acros/*/*.root
+FstTracking/acros/*/figures/*.eps
+FstTracking/acros/*/figures/*.pdf
+FstTracking/acros/*/figures/*.png
+FstTracking/acros/*/figures/*/*.eps
+FstTracking/acros/*/figures/*/*.pdf
+FstTracking/acros/*/figures/*/*/*.pdf
+FstTracking/acros/*/figures/*/*/*.eps
+# ignore intput and output root file
+FstTracking/data/*/*.root
+FstTracking/data/*/*/*.root
+FstTracking/output/*.root
+FstTracking/output/*/*.root
+FstTracking/output/*/*/*.root
+FstTracking/output/*/*/*/*.root
+FstTracking/output/*/*/*/*.root.*
+FstTracking/output/*/*/*/*/*.root
+# ignore some of list
+FstTracking/list/FST/*.list
+FstTracking/list/FST/*/*.list
+FstTracking/list/FST/*/*/*.list
+FstTracking/list/FST/*/*/*/*.list
+FstTracking/list/IST/*.list
+FstTracking/list/IST/*/*.list
+FstTracking/list/IST/*/*/*.list

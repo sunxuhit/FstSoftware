@@ -1,4 +1,0 @@
-# a comment - this is ignored
-# ignore logs in GUI/shift-GUI/logs
-GUI/shift-GUI/logs/*.log
-GUI/shift-GUI/mibs/*
