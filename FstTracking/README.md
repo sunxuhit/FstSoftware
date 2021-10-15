@@ -97,5 +97,3 @@
 >  - change **hv** and **config** in `plotQA.sh` for different HV and configuration
 >  - all QA plots can be found in **figures/module\_hv\_config**
 >  - loopAll.sh to loop over all configurations
-
->>>>>>> FstTracking/master
