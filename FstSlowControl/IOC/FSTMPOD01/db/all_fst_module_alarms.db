@@ -28,12 +28,12 @@ record(calc, $(SYSTEM1):rbk_c_alm_module1){
 }
 
 record(calc, $(SYSTEM1):rbk_alm_module1){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM1):rbk_v_alm_module1")
   field(INPB, "$(SYSTEM1):rbk_c_alm_module1")
   field(INPC, "$(SYSTEM1):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -71,12 +71,12 @@ record(calc, $(SYSTEM1):rbk_c_alm_module2){
 }
 
 record(calc, $(SYSTEM1):rbk_alm_module2){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM1):rbk_v_alm_module2")
   field(INPB, "$(SYSTEM1):rbk_c_alm_module2")
   field(INPC, "$(SYSTEM1):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -114,12 +114,12 @@ record(calc, $(SYSTEM1):rbk_c_alm_module3){
 }
 
 record(calc, $(SYSTEM1):rbk_alm_module3){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM1):rbk_v_alm_module3")
   field(INPB, "$(SYSTEM1):rbk_c_alm_module3")
   field(INPC, "$(SYSTEM1):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -157,12 +157,12 @@ record(calc, $(SYSTEM1):rbk_c_alm_module4){
 }
 
 record(calc, $(SYSTEM1):rbk_alm_module4){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM1):rbk_v_alm_module4")
   field(INPB, "$(SYSTEM1):rbk_c_alm_module4")
   field(INPC, "$(SYSTEM1):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -200,12 +200,12 @@ record(calc, $(SYSTEM1):rbk_c_alm_module5){
 }
 
 record(calc, $(SYSTEM1):rbk_alm_module5){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM1):rbk_v_alm_module5")
   field(INPB, "$(SYSTEM1):rbk_c_alm_module5")
   field(INPC, "$(SYSTEM1):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -243,12 +243,12 @@ record(calc, $(SYSTEM1):rbk_c_alm_module6){
 }
 
 record(calc, $(SYSTEM1):rbk_alm_module6){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM1):rbk_v_alm_module6")
   field(INPB, "$(SYSTEM1):rbk_c_alm_module6")
   field(INPC, "$(SYSTEM1):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -267,7 +267,7 @@ record(calc, $(SYSTEM1):rdo1_status){
   field(INPF, "$(SYSTEM1):rbk_alm_module6")
   field(INPG, "$(SYSTEM1):pwr_reading")
   field(CALC, "G=1?A&&B&&C&&D&&E&&F:0")
-  field(FLNK, "fstON_crate_status")
+  field(FLNK, "$(SYSTEM1):rdo1_alarm")
 }
 
 record(calc, $(SYSTEM1):rdo1_alarm){
@@ -285,6 +285,7 @@ record(calc, $(SYSTEM1):rdo1_alarm){
   field(HIHI,"1")
   field(HSV,"MAJOR")
   field(HHSV,"MAJOR")
+  field(FLNK, "fstON_crate_status")
 }
 
 ################Disk1 Module7################
@@ -317,12 +318,12 @@ record(calc, $(SYSTEM1):rbk_c_alm_module7){
 }
 
 record(calc, $(SYSTEM1):rbk_alm_module7){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM1):rbk_v_alm_module7")
   field(INPB, "$(SYSTEM1):rbk_c_alm_module7")
   field(INPC, "$(SYSTEM1):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -360,12 +361,12 @@ record(calc, $(SYSTEM1):rbk_c_alm_module8){
 }
 
 record(calc, $(SYSTEM1):rbk_alm_module8){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM1):rbk_v_alm_module8")
   field(INPB, "$(SYSTEM1):rbk_c_alm_module8")
   field(INPC, "$(SYSTEM1):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -403,12 +404,12 @@ record(calc, $(SYSTEM1):rbk_c_alm_module9){
 }
 
 record(calc, $(SYSTEM1):rbk_alm_module9){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM1):rbk_v_alm_module9")
   field(INPB, "$(SYSTEM1):rbk_c_alm_module9")
   field(INPC, "$(SYSTEM1):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -446,12 +447,12 @@ record(calc, $(SYSTEM1):rbk_c_alm_module10){
 }
 
 record(calc, $(SYSTEM1):rbk_alm_module10){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM1):rbk_v_alm_module10")
   field(INPB, "$(SYSTEM1):rbk_c_alm_module10")
   field(INPC, "$(SYSTEM1):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -489,12 +490,12 @@ record(calc, $(SYSTEM1):rbk_c_alm_module11){
 }
 
 record(calc, $(SYSTEM1):rbk_alm_module11){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM1):rbk_v_alm_module11")
   field(INPB, "$(SYSTEM1):rbk_c_alm_module11")
   field(INPC, "$(SYSTEM1):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -532,12 +533,12 @@ record(calc, $(SYSTEM1):rbk_c_alm_module12){
 }
 
 record(calc, $(SYSTEM1):rbk_alm_module12){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM1):rbk_v_alm_module12")
   field(INPB, "$(SYSTEM1):rbk_c_alm_module12")
   field(INPC, "$(SYSTEM1):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -556,7 +557,7 @@ record(calc, $(SYSTEM1):rdo2_status){
   field(INPF, "$(SYSTEM1):rbk_alm_module12")
   field(INPG, "$(SYSTEM1):pwr_reading")
   field(CALC, "G=1?A&&B&&C&&D&&E&&F:0")
-  field(FLNK, "fstON_crate_status")
+  field(FLNK, "$(SYSTEM1):rdo2_alarm")
 }
 
 record(calc, $(SYSTEM1):rdo2_alarm){
@@ -574,6 +575,7 @@ record(calc, $(SYSTEM1):rdo2_alarm){
   field(HIHI,"1")
   field(HSV,"MAJOR")
   field(HHSV,"MAJOR")
+  field(FLNK, "fstON_crate_status")
 }
 
 #Below variable is added for debugging the ShiftGui Script.
@@ -611,12 +613,12 @@ record(calc, $(SYSTEM2):rbk_c_alm_module1){
 }
 
 record(calc, $(SYSTEM2):rbk_alm_module1){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM2):rbk_v_alm_module1")
   field(INPB, "$(SYSTEM2):rbk_c_alm_module1")
   field(INPC, "$(SYSTEM2):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -654,12 +656,12 @@ record(calc, $(SYSTEM2):rbk_c_alm_module2){
 }
 
 record(calc, $(SYSTEM2):rbk_alm_module2){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM2):rbk_v_alm_module2")
   field(INPB, "$(SYSTEM2):rbk_c_alm_module2")
   field(INPC, "$(SYSTEM2):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -697,12 +699,12 @@ record(calc, $(SYSTEM2):rbk_c_alm_module3){
 }
 
 record(calc, $(SYSTEM2):rbk_alm_module3){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM2):rbk_v_alm_module3")
   field(INPB, "$(SYSTEM2):rbk_c_alm_module3")
   field(INPC, "$(SYSTEM2):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -740,12 +742,12 @@ record(calc, $(SYSTEM2):rbk_c_alm_module4){
 }
 
 record(calc, $(SYSTEM2):rbk_alm_module4){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM2):rbk_v_alm_module4")
   field(INPB, "$(SYSTEM2):rbk_c_alm_module4")
   field(INPC, "$(SYSTEM2):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -783,12 +785,12 @@ record(calc, $(SYSTEM2):rbk_c_alm_module5){
 }
 
 record(calc, $(SYSTEM2):rbk_alm_module5){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM2):rbk_v_alm_module5")
   field(INPB, "$(SYSTEM2):rbk_c_alm_module5")
   field(INPC, "$(SYSTEM2):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -826,12 +828,12 @@ record(calc, $(SYSTEM2):rbk_c_alm_module6){
 }
 
 record(calc, $(SYSTEM2):rbk_alm_module6){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM2):rbk_v_alm_module6")
   field(INPB, "$(SYSTEM2):rbk_c_alm_module6")
   field(INPC, "$(SYSTEM2):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -850,7 +852,7 @@ record(calc, $(SYSTEM2):rdo3_status){
   field(INPF, "$(SYSTEM2):rbk_alm_module6")
   field(INPG, "$(SYSTEM2):pwr_reading")
   field(CALC, "G=1?A&&B&&C&&D&&E&&F:0")
-  field(FLNK, "fstON_crate_status")
+  field(FLNK, "$(SYSTEM2):rdo3_alarm")
 }
 
 record(calc, $(SYSTEM2):rdo3_alarm){
@@ -868,6 +870,7 @@ record(calc, $(SYSTEM2):rdo3_alarm){
   field(HIHI,"1")
   field(HSV,"MAJOR")
   field(HHSV,"MAJOR")
+  field(FLNK, "fstON_crate_status")
 }
 
 ################Disk2 Module7################
@@ -900,12 +903,12 @@ record(calc, $(SYSTEM2):rbk_c_alm_module7){
 }
 
 record(calc, $(SYSTEM2):rbk_alm_module7){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM2):rbk_v_alm_module7")
   field(INPB, "$(SYSTEM2):rbk_c_alm_module7")
   field(INPC, "$(SYSTEM2):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -943,12 +946,12 @@ record(calc, $(SYSTEM2):rbk_c_alm_module8){
 }
 
 record(calc, $(SYSTEM2):rbk_alm_module8){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM2):rbk_v_alm_module8")
   field(INPB, "$(SYSTEM2):rbk_c_alm_module8")
   field(INPC, "$(SYSTEM2):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -986,12 +989,12 @@ record(calc, $(SYSTEM2):rbk_c_alm_module9){
 }
 
 record(calc, $(SYSTEM2):rbk_alm_module9){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM2):rbk_v_alm_module9")
   field(INPB, "$(SYSTEM2):rbk_c_alm_module9")
   field(INPC, "$(SYSTEM2):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -1029,12 +1032,12 @@ record(calc, $(SYSTEM2):rbk_c_alm_module10){
 }
 
 record(calc, $(SYSTEM2):rbk_alm_module10){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM2):rbk_v_alm_module10")
   field(INPB, "$(SYSTEM2):rbk_c_alm_module10")
   field(INPC, "$(SYSTEM2):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -1072,12 +1075,12 @@ record(calc, $(SYSTEM2):rbk_c_alm_module11){
 }
 
 record(calc, $(SYSTEM2):rbk_alm_module11){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM2):rbk_v_alm_module11")
   field(INPB, "$(SYSTEM2):rbk_c_alm_module11")
   field(INPC, "$(SYSTEM2):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -1115,12 +1118,12 @@ record(calc, $(SYSTEM2):rbk_c_alm_module12){
 }
 
 record(calc, $(SYSTEM2):rbk_alm_module12){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM2):rbk_v_alm_module12")
   field(INPB, "$(SYSTEM2):rbk_c_alm_module12")
   field(INPC, "$(SYSTEM2):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -1139,7 +1142,7 @@ record(calc, $(SYSTEM2):rdo4_status){
   field(INPF, "$(SYSTEM2):rbk_alm_module12")
   field(INPG, "$(SYSTEM2):pwr_reading")
   field(CALC, "G=1?A&&B&&C&&D&&E&&F:0")
-  field(FLNK, "fstON_crate_status")
+  field(FLNK, "$(SYSTEM2):rdo4_alarm")
 }
 
 record(calc, $(SYSTEM2):rdo4_alarm){
@@ -1157,6 +1160,7 @@ record(calc, $(SYSTEM2):rdo4_alarm){
   field(HIHI,"1")
   field(HSV,"MAJOR")
   field(HHSV,"MAJOR")
+  field(FLNK, "fstON_crate_status")
 }
 
 #Below variable is added for debugging the ShiftGui Script.
@@ -1194,12 +1198,12 @@ record(calc, $(SYSTEM3):rbk_c_alm_module1){
 }
 
 record(calc, $(SYSTEM3):rbk_alm_module1){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM3):rbk_v_alm_module1")
   field(INPB, "$(SYSTEM3):rbk_c_alm_module1")
   field(INPC, "$(SYSTEM3):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -1237,12 +1241,12 @@ record(calc, $(SYSTEM3):rbk_c_alm_module2){
 }
 
 record(calc, $(SYSTEM3):rbk_alm_module2){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM3):rbk_v_alm_module2")
   field(INPB, "$(SYSTEM3):rbk_c_alm_module2")
   field(INPC, "$(SYSTEM3):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -1280,12 +1284,12 @@ record(calc, $(SYSTEM3):rbk_c_alm_module3){
 }
 
 record(calc, $(SYSTEM3):rbk_alm_module3){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM3):rbk_v_alm_module3")
   field(INPB, "$(SYSTEM3):rbk_c_alm_module3")
   field(INPC, "$(SYSTEM3):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -1323,12 +1327,12 @@ record(calc, $(SYSTEM3):rbk_c_alm_module4){
 }
 
 record(calc, $(SYSTEM3):rbk_alm_module4){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM3):rbk_v_alm_module4")
   field(INPB, "$(SYSTEM3):rbk_c_alm_module4")
   field(INPC, "$(SYSTEM3):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -1366,12 +1370,12 @@ record(calc, $(SYSTEM3):rbk_c_alm_module5){
 }
 
 record(calc, $(SYSTEM3):rbk_alm_module5){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM3):rbk_v_alm_module5")
   field(INPB, "$(SYSTEM3):rbk_c_alm_module5")
   field(INPC, "$(SYSTEM3):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -1409,12 +1413,12 @@ record(calc, $(SYSTEM3):rbk_c_alm_module6){
 }
 
 record(calc, $(SYSTEM3):rbk_alm_module6){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM3):rbk_v_alm_module6")
   field(INPB, "$(SYSTEM3):rbk_c_alm_module6")
   field(INPC, "$(SYSTEM3):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -1433,7 +1437,7 @@ record(calc, $(SYSTEM3):rdo5_status){
   field(INPF, "$(SYSTEM3):rbk_alm_module6")
   field(INPG, "$(SYSTEM3):pwr_reading")
   field(CALC, "G=1?A&&B&&C&&D&&E&&F:0")
-  field(FLNK, "fstON_crate_status")
+  field(FLNK, "$(SYSTEM3):rdo5_alarm")
 }
 
 record(calc, $(SYSTEM3):rdo5_alarm){
@@ -1451,6 +1455,7 @@ record(calc, $(SYSTEM3):rdo5_alarm){
   field(HIHI,"1")
   field(HSV,"MAJOR")
   field(HHSV,"MAJOR")
+  field(FLNK, "fstON_crate_status")
 }
 
 ################Disk3 Module7################
@@ -1483,12 +1488,12 @@ record(calc, $(SYSTEM3):rbk_c_alm_module7){
 }
 
 record(calc, $(SYSTEM3):rbk_alm_module7){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM3):rbk_v_alm_module7")
   field(INPB, "$(SYSTEM3):rbk_c_alm_module7")
   field(INPC, "$(SYSTEM3):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -1526,12 +1531,12 @@ record(calc, $(SYSTEM3):rbk_c_alm_module8){
 }
 
 record(calc, $(SYSTEM3):rbk_alm_module8){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM3):rbk_v_alm_module8")
   field(INPB, "$(SYSTEM3):rbk_c_alm_module8")
   field(INPC, "$(SYSTEM3):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -1569,12 +1574,12 @@ record(calc, $(SYSTEM3):rbk_c_alm_module9){
 }
 
 record(calc, $(SYSTEM3):rbk_alm_module9){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM3):rbk_v_alm_module9")
   field(INPB, "$(SYSTEM3):rbk_c_alm_module9")
   field(INPC, "$(SYSTEM3):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -1612,12 +1617,12 @@ record(calc, $(SYSTEM3):rbk_c_alm_module10){
 }
 
 record(calc, $(SYSTEM3):rbk_alm_module10){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM3):rbk_v_alm_module10")
   field(INPB, "$(SYSTEM3):rbk_c_alm_module10")
   field(INPC, "$(SYSTEM3):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -1655,12 +1660,12 @@ record(calc, $(SYSTEM3):rbk_c_alm_module11){
 }
 
 record(calc, $(SYSTEM3):rbk_alm_module11){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM3):rbk_v_alm_module11")
   field(INPB, "$(SYSTEM3):rbk_c_alm_module11")
   field(INPC, "$(SYSTEM3):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -1698,12 +1703,12 @@ record(calc, $(SYSTEM3):rbk_c_alm_module12){
 }
 
 record(calc, $(SYSTEM3):rbk_alm_module12){
+  field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
   field(INPA, "$(SYSTEM3):rbk_v_alm_module12")
   field(INPB, "$(SYSTEM3):rbk_c_alm_module12")
   field(INPC, "$(SYSTEM3):pwr_reading.VAL")
-  field(INPD, "0")
-  field(CALC, "C=1&A>D&B>D")
+  field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
@@ -1722,7 +1727,7 @@ record(calc, $(SYSTEM3):rdo6_status){
   field(INPF, "$(SYSTEM3):rbk_alm_module12")
   field(INPG, "$(SYSTEM3):pwr_reading")
   field(CALC, "G=1?A&&B&&C&&D&&E&&F:0")
-  field(FLNK, "fstON_crate_status")
+  field(FLNK, "$(SYSTEM3):rdo6_alarm")
 }
 
 record(calc, $(SYSTEM3):rdo6_alarm){
@@ -1740,6 +1745,7 @@ record(calc, $(SYSTEM3):rdo6_alarm){
   field(HIHI,"1")
   field(HSV,"MAJOR")
   field(HHSV,"MAJOR")
+  field(FLNK, "fstON_crate_status")
 }
 
 #Below variable is added for debugging the ShiftGui Script.
