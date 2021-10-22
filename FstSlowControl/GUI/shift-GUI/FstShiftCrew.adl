@@ -424,3 +424,18 @@ text {
 	}
 	textix="Failure Codes"
 }
+"related display" {
+	object {
+		x=250
+		y=400
+		width=180
+		height=30
+	}
+	display[0] {
+		label="Power Recycle"
+		name="FstPowerRecycle.adl"
+	}
+	clr=14
+	bclr=56
+	label="Power Recycle"
+}

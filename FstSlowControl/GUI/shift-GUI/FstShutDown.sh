@@ -3,8 +3,7 @@
 # Wiener Caret ON V.1.12
 
 ####### crate  settings
-# ip=130.199.60.175 # BNL Test Stand
-ip=130.199.61.4 # BNL Integration Test
+ip=130.199.61.19 # BNL clean room
 
 #path=/home/ptribedy/Downloads/net-snmp-5.8/share/snmp/mibs/ # BNL Test Stand
 path=/usr/share/snmp/mibs/ # Fst Integration Test
@@ -22,8 +21,8 @@ caput fst_crate_status_ON 0
     echo "------------------FST emergency shudown -------------  "
   
 caput fst_crate_status_ON 0
-# caput istmpod01:crate_status_panic 1
-caput fstmpod02:crate_status_panic 1
+caput istmpod01:crate_status_panic 1
+# caput fstmpod02:crate_status_panic 1
 # caput istmpod03:crate_status_panic 1
 caput fst_crate_status_panic 1
 caput fst_power_status_trans 0
