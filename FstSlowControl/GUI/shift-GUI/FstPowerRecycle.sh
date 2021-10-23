@@ -12,16 +12,20 @@ caput fst_crate_status_ON 0
 
 # Use PVs
 caput fstmpod01:ramp_control_switch 2
-# caput fstmpod02:ramp_control_switch 2
+caput fstmpod02:ramp_control_switch 2
+caput fstmpod03:ramp_control_switch 2
 sleep 40
 caput fstmpod01:ramp_control_switch 1
-# caput fstmpod02:ramp_control_switch 1
+caput fstmpod02:ramp_control_switch 1
+caput fstmpod03:ramp_control_switch 1
 sleep 10 
 caput fstmpod01:pwr_setting 0
-# caput fstmpod02:pwr_setting 0
+caput fstmpod02:pwr_setting 0
+caput fstmpod03:pwr_setting 0
 sleep 20
 caput fstmpod01:pwr_setting 1
-# caput fstmpod02:pwr_setting 1
+caput fstmpod02:pwr_setting 1
+caput fstmpod03:pwr_setting 1
 sleep 10
 
 echo "--------------------------------------------- "

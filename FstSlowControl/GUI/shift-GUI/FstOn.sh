@@ -12,15 +12,29 @@ caput fst_crate_status_ON 1
 
 # Use PVs
 caput fstmpod01:pwr_setting 1
+caput fstmpod02:pwr_setting 1
+caput fstmpod03:pwr_setting 1
 sleep 20
-caput fstmpod01:master_control_switch 3
-sleep 10 
 caput fstmpod01:ramp_control_switch 1
+caput fstmpod02:ramp_control_switch 1
+caput fstmpod03:ramp_control_switch 1
 sleep 10
 caput fstmpod01:ramp_control_switch 2
+caput fstmpod02:ramp_control_switch 2
+caput fstmpod03:ramp_control_switch 2
 sleep 10
+caput fstmpod01:master_control_switch 3
+caput fstmpod02:master_control_switch 3
+caput fstmpod03:master_control_switch 3
+sleep 5 
+caput fstmpod01:master_control_switch 6
+caput fstmpod02:master_control_switch 6
+caput fstmpod03:master_control_switch 6
+sleep 10 
 caput fstmpod01:ramp_control_switch 3
-sleep 40
+caput fstmpod02:ramp_control_switch 3
+caput fstmpod03:ramp_control_switch 3
+sleep 90
 
 echo "WARNING Please wait to stablize the HV outputs "
   COUNTER=0
@@ -38,11 +52,15 @@ echo "--------------------------------------------- "
 echo "--------------------------------------------- "
 
 
-caput istmpod01:crate_status_panic 0
-# caput fstmpod02:crate_status_panic 0
-# caput istmpod03:crate_status_panic 0
+caput fstmpod01:crate_status_panic 0
+caput fstmpod02:crate_status_panic 0
+caput fstmpod03:crate_status_panic 0
 caput fst_crate_status_panic 0
  
 sleep 5
 caput fst_power_status_trans 0
+caput fstmpod01:master_control_switch 3
+caput fstmpod02:master_control_switch 3
+caput fstmpod03:master_control_switch 3
+
 exit 0

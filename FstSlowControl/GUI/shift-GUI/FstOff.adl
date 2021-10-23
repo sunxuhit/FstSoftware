@@ -179,7 +179,7 @@ text {
 	"dynamic attribute" {
 		vis="calc"
 		calc="A&&B"
-		chan="fstON_crate_voltage_status"
+		chan="fstON_crate_status"
 		chanB="fst_crate_status_ON"
 	}
 	textix="FST IS READY"
@@ -197,9 +197,9 @@ rectangle {
 	"dynamic attribute" {
 		vis="calc"
 		calc="(A&&B)||(!B&&!C)"
-		chan="fstON_crate_voltage_status"
+		chan="fstON_crate_status"
 		chanB="fst_crate_status_ON"
-		chanC="fstOFF_crate_voltage_status"
+		chanC="fstOFF_crate_status"
 	}
 }
 image {
@@ -214,9 +214,9 @@ image {
 	"dynamic attribute" {
 		vis="calc"
 		calc="(!A&&B)||(!B&&C)"
-		chan="fstON_crate_voltage_status"
+		chan="fstON_crate_status"
 		chanB="fst_crate_status_ON"
-		chanC="fstOFF_crate_voltage_status"
+		chanC="fstOFF_crate_status"
 	}
 }
 text {
@@ -244,7 +244,7 @@ text {
 	"dynamic attribute" {
 		vis="calc"
 		calc="!A&&B"
-		chan="fstON_crate_voltage_status"
+		chan="fstON_crate_status"
 		chanB="fst_crate_status_ON"
 	}
 	textix="FST IS ON"
@@ -263,7 +263,7 @@ text {
 		vis="calc"
 		calc="!A&&B"
 		chan="fst_crate_status_ON"
-		chanB="fstOFF_crate_voltage_status"
+		chanB="fstOFF_crate_status"
 	}
 	textix="Failure Code 1"
 }
@@ -280,6 +280,6 @@ image {
 		vis="calc"
 		calc="!A&&B"
 		chan="fst_crate_status_ON"
-		chanB="fstOFF_crate_voltage_status"
+		chanB="fstOFF_crate_status"
 	}
 }
