@@ -34,7 +34,7 @@ sleep 10
 caput fstmpod01:ramp_control_switch 3
 caput fstmpod02:ramp_control_switch 3
 caput fstmpod03:ramp_control_switch 3
-sleep 90
+sleep 120
 
 echo "WARNING Please wait to stablize the HV outputs "
   COUNTER=0
