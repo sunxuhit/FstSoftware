@@ -86,20 +86,25 @@ int genPedestal()
   float totStdDev[6][3][24][128][9];
   float ranStdDev[6][3][24][128][9];
   float totRMS[6][3][24][128][9];
+  float cmnStdDev[6][3][24][4][9];
   for(int i_rdo = 0; i_rdo < 6; ++i_rdo)
   {
     for(int i_arm = 0; i_arm < 3; ++i_arm)
     {
       for(int i_apv = 0; i_apv < 24; ++i_apv)
       {
-	for(int i_ch = 0; i_ch < 128; ++i_ch)
+	for(int i_tb = 0; i_tb < 9; ++i_tb)
 	{
-	  for(int i_tb = 0; i_tb < 9; ++i_tb)
+	  for(int i_ch = 0; i_ch < 128; ++i_ch)
 	  {
 	    pedestal[i_rdo][i_arm][i_apv][i_ch][i_tb] = -1.0;
 	    totStdDev[i_rdo][i_arm][i_apv][i_ch][i_tb] = -1.0;
 	    ranStdDev[i_rdo][i_arm][i_apv][i_ch][i_tb] = -1.0;
 	    totRMS[i_rdo][i_arm][i_apv][i_ch][i_tb] = -1.0;
+	  }
+	  for(int i_group = 0; i_group < 4; ++i_group)
+	  {
+	    cmnStdDev[i_rdo][i_arm][i_apv][i_group][i_tb] = -1.0;
 	  }
 	}
       }
@@ -111,6 +116,10 @@ int genPedestal()
   int counters[6][3][24][128][9];
   float sumValues[6][3][24][128][9];
   float sumValuesSquared[6][3][24][128][9];
+  //  Calculate a rolling average and standard deviation for CMN
+  int counters_CMN[6][3][24][4][9];
+  float sumValues_CMN[6][3][24][4][9];
+  float sumValuesSquared_CMN[6][3][24][4][9];
 
   // numEvent = 10;
 
@@ -273,13 +282,19 @@ int genPedestal()
       {
 	for(int i_apv = 0; i_apv < 24; ++i_apv)
 	{
-	  for(int i_ch = 0; i_ch < 128; ++i_ch)
+	  for(int i_tb = 0; i_tb < 9; ++i_tb)
 	  {
-	    for(int i_tb = 0; i_tb < 9; ++i_tb)
+	    for(int i_ch = 0; i_ch < 128; ++i_ch)
 	    {
 	      counters[i_rdo][i_arm][i_apv][i_ch][i_tb] = 0;
 	      sumValues[i_rdo][i_arm][i_apv][i_ch][i_tb] = 0.0;
 	      sumValuesSquared[i_rdo][i_arm][i_apv][i_ch][i_tb] = 0.0;
+	    }
+	    for(int i_group = 0; i_group < 4; ++i_group)
+	    {
+	      counters_CMN[i_rdo][i_arm][i_apv][i_group][i_tb] = 0;
+	      sumValues_CMN[i_rdo][i_arm][i_apv][i_group][i_tb] = 0.0;
+	      sumValuesSquared_CMN[i_rdo][i_arm][i_apv][i_group][i_tb] = 0.0;
 	    }
 	  }
 	}
@@ -353,6 +368,7 @@ int genPedestal()
 	      for(int i_tb = 0; i_tb < 9; ++i_tb)
 	      {
 		int groupIdx = cmnGroup[i_apv][i_ch];
+		if(groupIdx < 0) continue;
 		if(couEvt[i_rdo][i_arm][i_apv][groupIdx][i_tb] > 0)
 		{
 		  cmnEvt[i_rdo][i_arm][i_apv][i_ch][i_tb] = sumEvt[i_rdo][i_arm][i_apv][groupIdx][i_tb]/couEvt[i_rdo][i_arm][i_apv][groupIdx][i_tb];
@@ -364,27 +380,40 @@ int genPedestal()
 	}
       }
 
-      // calculate differential noise
+      // calculate differential noise and cmn
       for(int i_rdo = 0; i_rdo < 6; ++i_rdo)
       {
 	for(int i_arm = 0; i_arm < 3; ++i_arm)
 	{
 	  for(int i_apv = 0; i_apv < 24; ++i_apv)
 	  {
-	    for(int i_ch = 0; i_ch < 128; ++i_ch)
+	    for(int i_tb = 0; i_tb < 9; ++i_tb)
 	    {
-	      for(int i_tb = 0; i_tb < 9; ++i_tb)
+	      for(int i_ch = 0; i_ch < 128; ++i_ch)
 	      {
 		int adcTemp   = adc[i_event][i_rdo][i_arm][i_apv][i_ch][i_tb];
 		float pedTemp = pedestal[i_rdo][i_arm][i_apv][i_ch][i_tb];
 		float devTemp = totStdDev[i_rdo][i_arm][i_apv][i_ch][i_tb];
 		float cmnTemp = cmnEvt[i_rdo][i_arm][i_apv][i_ch][i_tb];
 
+		// differential noise
 		if( (adcTemp < pedTemp+nPedsCut*devTemp) && ( adcTemp >= 0 && adcTemp < 4096) )
 		{ // exclude hits (adc < pedestal + 3*totStdDev)
 		  sumValues[i_rdo][i_arm][i_apv][i_ch][i_tb] += adcTemp-pedTemp-cmnTemp;
 		  sumValuesSquared[i_rdo][i_arm][i_apv][i_ch][i_tb] += (adcTemp-pedTemp-cmnTemp)*(adcTemp-pedTemp-cmnTemp);
 		  counters[i_rdo][i_arm][i_apv][i_ch][i_tb]++;
+		}
+	      }
+
+	      for(int i_group = 0; i_group < 4; ++i_group)
+	      {
+		// common mode noise
+		if(couEvt[i_rdo][i_arm][i_apv][i_group][i_tb] > 0) // eject bad channels
+		{
+		  float cmnTemp = sumEvt[i_rdo][i_arm][i_apv][i_group][i_tb]/couEvt[i_rdo][i_arm][i_apv][i_group][i_tb];
+		  sumValues_CMN[i_rdo][i_arm][i_apv][i_group][i_tb] += cmnTemp;
+		  sumValuesSquared_CMN[i_rdo][i_arm][i_apv][i_group][i_tb] += cmnTemp*cmnTemp;
+		  counters_CMN[i_rdo][i_arm][i_apv][i_group][i_tb]++;
 		}
 	      }
 	    }
@@ -399,9 +428,10 @@ int genPedestal()
       {
 	for(int i_apv = 0; i_apv < 24; ++i_apv)
 	{
-	  for(int i_ch = 0; i_ch < 128; ++i_ch)
+	  for(int i_tb = 0; i_tb < 9; ++i_tb)
 	  {
-	    for(int i_tb = 0; i_tb < 9; ++i_tb)
+	    // random noise
+	    for(int i_ch = 0; i_ch < 128; ++i_ch)
 	    {
 	      if(counters[i_rdo][i_arm][i_apv][i_ch][i_tb] > 0) // eject bad channels
 	      {
@@ -409,6 +439,16 @@ int genPedestal()
 		float sumSAdc = sumValuesSquared[i_rdo][i_arm][i_apv][i_ch][i_tb];
 		int coutAdc   = counters[i_rdo][i_arm][i_apv][i_ch][i_tb];
 		ranStdDev[i_rdo][i_arm][i_apv][i_ch][i_tb] = sqrt((sumSAdc-(float)coutAdc*meanAdc*meanAdc)/(float)(coutAdc-1)); // sample standard deviation
+	      }
+	      for(int i_group = 0; i_group < 4; ++i_group)
+	      {
+		if(counters_CMN[i_rdo][i_arm][i_apv][i_group][i_tb] > 0) // eject bad channels
+		{
+		  float meanCMN = sumValues_CMN[i_rdo][i_arm][i_apv][i_group][i_tb]/counters_CMN[i_rdo][i_arm][i_apv][i_group][i_tb];
+		  float sumSCMN = sumValuesSquared_CMN[i_rdo][i_arm][i_apv][i_group][i_tb];
+		  int coutCMN = counters_CMN[i_rdo][i_arm][i_apv][i_group][i_tb];
+		  cmnStdDev[i_rdo][i_arm][i_apv][i_group][i_tb] = sqrt((sumSCMN-(float)coutCMN*meanCMN*meanCMN)/(float)(coutCMN-1));
+		}
 	      }
 	    }
 	  }
@@ -422,7 +462,7 @@ int genPedestal()
   ofstream file_pedestal;
   file_pedestal.open(outputfile.c_str());
 
-  file_pedestal << "rdo    " << "arm    " << "apv    " << "channel    " << "tb    " << "pedestal    " << "totRMS   " << "ranRMS" << endl;
+  file_pedestal << "rdo    " << "arm    " << "apv    " << "channel    " << "tb    " << "pedestal    " << "totRMS   " << "ranRMS    " << "cmnRMS" << endl;
   for(int i_rdo = 0; i_rdo < 6; ++i_rdo)
   {
     for(int i_arm = 0; i_arm < 3; ++i_arm)
@@ -433,10 +473,9 @@ int genPedestal()
 	{
 	  for(int i_tb = 0; i_tb < 9; ++i_tb)
 	  {
-	    float pedestal[6][3][24][128][9];
-	    float totStdDev[6][3][24][128][9];
-	    float ranStdDev[6][3][24][128][9];
-	    file_pedestal << i_rdo+1 << "    " << i_arm << "    "  << i_apv << "    "  << i_ch << "    "  << i_tb << "    "  << pedestal[i_rdo][i_arm][i_apv][i_ch][i_tb] << "    "  << totStdDev[i_rdo][i_arm][i_apv][i_ch][i_tb] << "    "  << ranStdDev[i_rdo][i_arm][i_apv][i_ch][i_tb] << endl;
+	    int groupIdx = cmnGroup[i_apv][i_ch];
+	    if(groupIdx < 0) continue;
+	    file_pedestal << i_rdo+1 << "    " << i_arm << "    "  << i_apv << "    "  << i_ch << "    "  << i_tb << "    "  << pedestal[i_rdo][i_arm][i_apv][i_ch][i_tb] << "    "  << totStdDev[i_rdo][i_arm][i_apv][i_ch][i_tb] << "    "  << ranStdDev[i_rdo][i_arm][i_apv][i_ch][i_tb] << "    " << cmnStdDev[i_rdo][i_arm][i_apv][groupIdx][i_tb] << endl;
 	  }
 	}
       }
