@@ -3,6 +3,7 @@ program sncFGTRamping ("deviceName=(null)")
 
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 }%
 
@@ -444,7 +445,8 @@ ss ramp1 {
                 targetVoltage[i] = 0;  /* channel is disabled, set voltage to zero */
               }
               voltageSetting[i] = targetVoltage[i];
-              pvPut(voltageSetting[i]);
+	      %{ nanosleep((const struct timespec[]){{0, 100L}}, NULL); }% /* 100ns delay */
+              pvPut(voltageSetting[i],SYNC);
               if(channelEnabled[i] == 1 && tripStatus[i] != 4) {
                 if ( (physicsVoltageSetting[i] - targetVoltage[i]) <= conditioningVoltageStep[i]) {
                     rampRate[i] = physicsRampRate[1];

@@ -481,8 +481,7 @@ int genPedestal()
       }
     }
   }
-
-  file_cmnGroup.close();
+  file_pedestal.close();
 
   return 1;
 }
