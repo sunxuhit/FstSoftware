@@ -38,7 +38,8 @@ dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u20",ID=4")
 dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u20",ID=5")
 dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u20",ID=6")
 dbLoadRecords("db/iseg.db","HOST=130.199.61.3,SYSTEM=fstmpod01,SLOT="u20",ID=7")
-dbLoadRecords("db/all_fst_module_alarms.db","SYSTEM1=fstmpod01,SYSTEM2=fstmpod02,SYSTEM3=fstmpod03")
+##dbLoadRecords("db/all_fst_module_alarms.db","SYSTEM1=fstmpod01,SYSTEM2=fstmpod02,SYSTEM3=fstmpod03")
+dbLoadRecords("db/all_fst_module_alarms.db")
 
 ## Load Control Interface db for seq
 dbLoadRecords("db/fgt_controls.db","SYSTEM=fstmpod01")

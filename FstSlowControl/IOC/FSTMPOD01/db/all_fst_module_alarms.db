@@ -1,285 +1,285 @@
 ################Disk1 Module1################
-record(calc, $(SYSTEM1):rbk_v_alm_module1){
+record(calc, fstmpod01:rbk_v_alm_module1){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):output_sense_voltage_u0.VAL PP MS")
-  field(INPB, "$(SYSTEM1):output_sense_voltage_u1.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:output_sense_voltage_u0.VAL PP MS")
+  field(INPB, "fstmpod01:output_sense_voltage_u1.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module1")
+  field(FLNK, "fstmpod01:rbk_alm_module1")
 }
 
-record(calc, $(SYSTEM1):rbk_c_alm_module1){
+record(calc, fstmpod01:rbk_c_alm_module1){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):measurement_current_u0.VAL PP MS")
-  field(INPB, "$(SYSTEM1):measurement_current_u1.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:measurement_current_u0.VAL PP MS")
+  field(INPB, "fstmpod01:measurement_current_u1.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000007")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module1")
+  field(FLNK, "fstmpod01:rbk_alm_module1")
 }
 
-record(calc, $(SYSTEM1):rbk_alm_module1){
+record(calc, fstmpod01:rbk_alm_module1){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):rbk_v_alm_module1")
-  field(INPB, "$(SYSTEM1):rbk_c_alm_module1")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL")
+  field(INPA, "fstmpod01:rbk_v_alm_module1")
+  field(INPB, "fstmpod01:rbk_c_alm_module1")
+  field(INPC, "fstmpod01:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM1):rdo1_status")
+  field(FLNK, "fstmpod01:rdo1_status")
 }
 
 ################Disk1 Module2################
-record(calc, $(SYSTEM1):rbk_v_alm_module2){
+record(calc, fstmpod01:rbk_v_alm_module2){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):output_sense_voltage_u2.VAL PP MS")
-  field(INPB, "$(SYSTEM1):output_sense_voltage_u3.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:output_sense_voltage_u2.VAL PP MS")
+  field(INPB, "fstmpod01:output_sense_voltage_u3.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module2")
+  field(FLNK, "fstmpod01:rbk_alm_module2")
 }
 
-record(calc, $(SYSTEM1):rbk_c_alm_module2){
+record(calc, fstmpod01:rbk_c_alm_module2){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):measurement_current_u2.VAL PP MS")
-  field(INPB, "$(SYSTEM1):measurement_current_u3.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:measurement_current_u2.VAL PP MS")
+  field(INPB, "fstmpod01:measurement_current_u3.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module2")
+  field(FLNK, "fstmpod01:rbk_alm_module2")
 }
 
-record(calc, $(SYSTEM1):rbk_alm_module2){
+record(calc, fstmpod01:rbk_alm_module2){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):rbk_v_alm_module2")
-  field(INPB, "$(SYSTEM1):rbk_c_alm_module2")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL")
+  field(INPA, "fstmpod01:rbk_v_alm_module2")
+  field(INPB, "fstmpod01:rbk_c_alm_module2")
+  field(INPC, "fstmpod01:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM1):rdo1_status")
+  field(FLNK, "fstmpod01:rdo1_status")
 }
 
 ################Disk1 Module3################
-record(calc, $(SYSTEM1):rbk_v_alm_module3){
+record(calc, fstmpod01:rbk_v_alm_module3){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):output_sense_voltage_u4.VAL PP MS")
-  field(INPB, "$(SYSTEM1):output_sense_voltage_u5.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:output_sense_voltage_u4.VAL PP MS")
+  field(INPB, "fstmpod01:output_sense_voltage_u5.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module3")
+  field(FLNK, "fstmpod01:rbk_alm_module3")
 }
 
-record(calc, $(SYSTEM1):rbk_c_alm_module3){
+record(calc, fstmpod01:rbk_c_alm_module3){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):measurement_current_u4.VAL PP MS")
-  field(INPB, "$(SYSTEM1):measurement_current_u5.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:measurement_current_u4.VAL PP MS")
+  field(INPB, "fstmpod01:measurement_current_u5.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000005")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module3")
+  field(FLNK, "fstmpod01:rbk_alm_module3")
 }
 
-record(calc, $(SYSTEM1):rbk_alm_module3){
+record(calc, fstmpod01:rbk_alm_module3){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):rbk_v_alm_module3")
-  field(INPB, "$(SYSTEM1):rbk_c_alm_module3")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL")
+  field(INPA, "fstmpod01:rbk_v_alm_module3")
+  field(INPB, "fstmpod01:rbk_c_alm_module3")
+  field(INPC, "fstmpod01:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM1):rdo1_status")
+  field(FLNK, "fstmpod01:rdo1_status")
 }
 
 ################Disk1 Module4################
-record(calc, $(SYSTEM1):rbk_v_alm_module4){
+record(calc, fstmpod01:rbk_v_alm_module4){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):output_sense_voltage_u6.VAL PP MS")
-  field(INPB, "$(SYSTEM1):output_sense_voltage_u7.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:output_sense_voltage_u6.VAL PP MS")
+  field(INPB, "fstmpod01:output_sense_voltage_u7.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module4")
+  field(FLNK, "fstmpod01:rbk_alm_module4")
 }
 
-record(calc, $(SYSTEM1):rbk_c_alm_module4){
+record(calc, fstmpod01:rbk_c_alm_module4){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):measurement_current_u6.VAL PP MS")
-  field(INPB, "$(SYSTEM1):measurement_current_u7.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:measurement_current_u6.VAL PP MS")
+  field(INPB, "fstmpod01:measurement_current_u7.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000004")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module4")
+  field(FLNK, "fstmpod01:rbk_alm_module4")
 }
 
-record(calc, $(SYSTEM1):rbk_alm_module4){
+record(calc, fstmpod01:rbk_alm_module4){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):rbk_v_alm_module4")
-  field(INPB, "$(SYSTEM1):rbk_c_alm_module4")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL")
+  field(INPA, "fstmpod01:rbk_v_alm_module4")
+  field(INPB, "fstmpod01:rbk_c_alm_module4")
+  field(INPC, "fstmpod01:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM1):rdo1_status")
+  field(FLNK, "fstmpod01:rdo1_status")
 }
 
 ################Disk1 Module5################
-record(calc, $(SYSTEM1):rbk_v_alm_module5){
+record(calc, fstmpod01:rbk_v_alm_module5){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):output_sense_voltage_u100.VAL PP MS")
-  field(INPB, "$(SYSTEM1):output_sense_voltage_u101.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:output_sense_voltage_u100.VAL PP MS")
+  field(INPB, "fstmpod01:output_sense_voltage_u101.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module5")
+  field(FLNK, "fstmpod01:rbk_alm_module5")
 }
 
-record(calc, $(SYSTEM1):rbk_c_alm_module5){
+record(calc, fstmpod01:rbk_c_alm_module5){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):measurement_current_u100.VAL PP MS")
-  field(INPB, "$(SYSTEM1):measurement_current_u101.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:measurement_current_u100.VAL PP MS")
+  field(INPB, "fstmpod01:measurement_current_u101.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module5")
+  field(FLNK, "fstmpod01:rbk_alm_module5")
 }
 
-record(calc, $(SYSTEM1):rbk_alm_module5){
+record(calc, fstmpod01:rbk_alm_module5){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):rbk_v_alm_module5")
-  field(INPB, "$(SYSTEM1):rbk_c_alm_module5")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL")
+  field(INPA, "fstmpod01:rbk_v_alm_module5")
+  field(INPB, "fstmpod01:rbk_c_alm_module5")
+  field(INPC, "fstmpod01:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM1):rdo1_status")
+  field(FLNK, "fstmpod01:rdo1_status")
 }
 
 ################Disk1 Module6################
-record(calc, $(SYSTEM1):rbk_v_alm_module6){
+record(calc, fstmpod01:rbk_v_alm_module6){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):output_sense_voltage_u102.VAL PP MS")
-  field(INPB, "$(SYSTEM1):output_sense_voltage_u103.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:output_sense_voltage_u102.VAL PP MS")
+  field(INPB, "fstmpod01:output_sense_voltage_u103.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "69")
   field(INPE, "71")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module6")
+  field(FLNK, "fstmpod01:rbk_alm_module6")
 }
 
-record(calc, $(SYSTEM1):rbk_c_alm_module6){
+record(calc, fstmpod01:rbk_c_alm_module6){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):measurement_current_u102.VAL PP MS")
-  field(INPB, "$(SYSTEM1):measurement_current_u103.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:measurement_current_u102.VAL PP MS")
+  field(INPB, "fstmpod01:measurement_current_u103.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module6")
+  field(FLNK, "fstmpod01:rbk_alm_module6")
 }
 
-record(calc, $(SYSTEM1):rbk_alm_module6){
+record(calc, fstmpod01:rbk_alm_module6){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):rbk_v_alm_module6")
-  field(INPB, "$(SYSTEM1):rbk_c_alm_module6")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL")
+  field(INPA, "fstmpod01:rbk_v_alm_module6")
+  field(INPB, "fstmpod01:rbk_c_alm_module6")
+  field(INPC, "fstmpod01:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM1):rdo1_status")
+  field(FLNK, "fstmpod01:rdo1_status")
 }
 
 ################RDO1################
-record(calc, $(SYSTEM1):rdo1_status){
+record(calc, fstmpod01:rdo1_status){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):rbk_alm_module1")
-  field(INPB, "$(SYSTEM1):rbk_alm_module2")
-  field(INPC, "$(SYSTEM1):rbk_alm_module3")
-  field(INPD, "$(SYSTEM1):rbk_alm_module4")
-  field(INPE, "$(SYSTEM1):rbk_alm_module5")
-  field(INPF, "$(SYSTEM1):rbk_alm_module6")
-  field(INPG, "$(SYSTEM1):pwr_reading")
+  field(INPA, "fstmpod01:rbk_alm_module1")
+  field(INPB, "fstmpod01:rbk_alm_module2")
+  field(INPC, "fstmpod01:rbk_alm_module3")
+  field(INPD, "fstmpod01:rbk_alm_module4")
+  field(INPE, "fstmpod01:rbk_alm_module5")
+  field(INPF, "fstmpod01:rbk_alm_module6")
+  field(INPG, "fstmpod01:pwr_reading")
   field(CALC, "G=1?A&&B&&C&&D&&E&&F:0")
-  field(FLNK, "$(SYSTEM1):rdo1_alarm")
+  field(FLNK, "fstmpod01:rdo1_alarm")
 }
 
-record(calc, $(SYSTEM1):rdo1_alarm){
+record(calc, fstmpod01:rdo1_alarm){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):rbk_alm_module1")
-  field(INPB, "$(SYSTEM1):rbk_alm_module2")
-  field(INPC, "$(SYSTEM1):rbk_alm_module3")
-  field(INPD, "$(SYSTEM1):rbk_alm_module4")
-  field(INPE, "$(SYSTEM1):rbk_alm_module5")
-  field(INPF, "$(SYSTEM1):rbk_alm_module6")
-  field(INPG, "$(SYSTEM1):pwr_reading")
+  field(INPA, "fstmpod01:rbk_alm_module1")
+  field(INPB, "fstmpod01:rbk_alm_module2")
+  field(INPC, "fstmpod01:rbk_alm_module3")
+  field(INPD, "fstmpod01:rbk_alm_module4")
+  field(INPE, "fstmpod01:rbk_alm_module5")
+  field(INPF, "fstmpod01:rbk_alm_module6")
+  field(INPG, "fstmpod01:pwr_reading")
   field(CALC, "G=1?!(A&&B&&C&&D&&E&&F):0")
   field(HIGH,"1")
   field(HIHI,"1")
@@ -289,287 +289,287 @@ record(calc, $(SYSTEM1):rdo1_alarm){
 }
 
 ################Disk1 Module7################
-record(calc, $(SYSTEM1):rbk_v_alm_module7){
+record(calc, fstmpod01:rbk_v_alm_module7){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):output_sense_voltage_u104.VAL PP MS")
-  field(INPB, "$(SYSTEM1):output_sense_voltage_u105.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:output_sense_voltage_u104.VAL PP MS")
+  field(INPB, "fstmpod01:output_sense_voltage_u105.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module7")
+  field(FLNK, "fstmpod01:rbk_alm_module7")
 }
 
-record(calc, $(SYSTEM1):rbk_c_alm_module7){
+record(calc, fstmpod01:rbk_c_alm_module7){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):measurement_current_u104.VAL PP MS")
-  field(INPB, "$(SYSTEM1):measurement_current_u105.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:measurement_current_u104.VAL PP MS")
+  field(INPB, "fstmpod01:measurement_current_u105.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module7")
+  field(FLNK, "fstmpod01:rbk_alm_module7")
 }
 
-record(calc, $(SYSTEM1):rbk_alm_module7){
+record(calc, fstmpod01:rbk_alm_module7){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):rbk_v_alm_module7")
-  field(INPB, "$(SYSTEM1):rbk_c_alm_module7")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL")
+  field(INPA, "fstmpod01:rbk_v_alm_module7")
+  field(INPB, "fstmpod01:rbk_c_alm_module7")
+  field(INPC, "fstmpod01:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM1):rdo2_status")
+  field(FLNK, "fstmpod01:rdo2_status")
 }
 
 ################Disk1 Module8################
-record(calc, $(SYSTEM1):rbk_v_alm_module8){
+record(calc, fstmpod01:rbk_v_alm_module8){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):output_sense_voltage_u106.VAL PP MS")
-  field(INPB, "$(SYSTEM1):output_sense_voltage_u107.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:output_sense_voltage_u106.VAL PP MS")
+  field(INPB, "fstmpod01:output_sense_voltage_u107.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module8")
+  field(FLNK, "fstmpod01:rbk_alm_module8")
 }
 
-record(calc, $(SYSTEM1):rbk_c_alm_module8){
+record(calc, fstmpod01:rbk_c_alm_module8){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):measurement_current_u106.VAL PP MS")
-  field(INPB, "$(SYSTEM1):measurement_current_u107.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:measurement_current_u106.VAL PP MS")
+  field(INPB, "fstmpod01:measurement_current_u107.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module8")
+  field(FLNK, "fstmpod01:rbk_alm_module8")
 }
 
-record(calc, $(SYSTEM1):rbk_alm_module8){
+record(calc, fstmpod01:rbk_alm_module8){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):rbk_v_alm_module8")
-  field(INPB, "$(SYSTEM1):rbk_c_alm_module8")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL")
+  field(INPA, "fstmpod01:rbk_v_alm_module8")
+  field(INPB, "fstmpod01:rbk_c_alm_module8")
+  field(INPC, "fstmpod01:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM1):rdo2_status")
+  field(FLNK, "fstmpod01:rdo2_status")
 }
 
 ################Disk1 Module9################
-record(calc, $(SYSTEM1):rbk_v_alm_module9){
+record(calc, fstmpod01:rbk_v_alm_module9){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):output_sense_voltage_u200.VAL PP MS")
-  field(INPB, "$(SYSTEM1):output_sense_voltage_u201.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:output_sense_voltage_u200.VAL PP MS")
+  field(INPB, "fstmpod01:output_sense_voltage_u201.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module9")
+  field(FLNK, "fstmpod01:rbk_alm_module9")
 }
 
-record(calc, $(SYSTEM1):rbk_c_alm_module9){
+record(calc, fstmpod01:rbk_c_alm_module9){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):measurement_current_u200.VAL PP MS")
-  field(INPB, "$(SYSTEM1):measurement_current_u201.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:measurement_current_u200.VAL PP MS")
+  field(INPB, "fstmpod01:measurement_current_u201.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module9")
+  field(FLNK, "fstmpod01:rbk_alm_module9")
 }
 
-record(calc, $(SYSTEM1):rbk_alm_module9){
+record(calc, fstmpod01:rbk_alm_module9){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):rbk_v_alm_module9")
-  field(INPB, "$(SYSTEM1):rbk_c_alm_module9")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL")
+  field(INPA, "fstmpod01:rbk_v_alm_module9")
+  field(INPB, "fstmpod01:rbk_c_alm_module9")
+  field(INPC, "fstmpod01:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM1):rdo2_status")
+  field(FLNK, "fstmpod01:rdo2_status")
 }
 
 ################Disk1 Module10################
-record(calc, $(SYSTEM1):rbk_v_alm_module10){
+record(calc, fstmpod01:rbk_v_alm_module10){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):output_sense_voltage_u202.VAL PP MS")
-  field(INPB, "$(SYSTEM1):output_sense_voltage_u203.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:output_sense_voltage_u202.VAL PP MS")
+  field(INPB, "fstmpod01:output_sense_voltage_u203.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module10")
+  field(FLNK, "fstmpod01:rbk_alm_module10")
 }
 
-record(calc, $(SYSTEM1):rbk_c_alm_module10){
+record(calc, fstmpod01:rbk_c_alm_module10){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):measurement_current_u202.VAL PP MS")
-  field(INPB, "$(SYSTEM1):measurement_current_u203.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:measurement_current_u202.VAL PP MS")
+  field(INPB, "fstmpod01:measurement_current_u203.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module10")
+  field(FLNK, "fstmpod01:rbk_alm_module10")
 }
 
-record(calc, $(SYSTEM1):rbk_alm_module10){
+record(calc, fstmpod01:rbk_alm_module10){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):rbk_v_alm_module10")
-  field(INPB, "$(SYSTEM1):rbk_c_alm_module10")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL")
+  field(INPA, "fstmpod01:rbk_v_alm_module10")
+  field(INPB, "fstmpod01:rbk_c_alm_module10")
+  field(INPC, "fstmpod01:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM1):rdo2_status")
+  field(FLNK, "fstmpod01:rdo2_status")
 }
 
 ################Disk1 Module11################
-record(calc, $(SYSTEM1):rbk_v_alm_module11){
+record(calc, fstmpod01:rbk_v_alm_module11){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):output_sense_voltage_u204.VAL PP MS")
-  field(INPB, "$(SYSTEM1):output_sense_voltage_u205.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:output_sense_voltage_u204.VAL PP MS")
+  field(INPB, "fstmpod01:output_sense_voltage_u205.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module11")
+  field(FLNK, "fstmpod01:rbk_alm_module11")
 }
 
-record(calc, $(SYSTEM1):rbk_c_alm_module11){
+record(calc, fstmpod01:rbk_c_alm_module11){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):measurement_current_u204.VAL PP MS")
-  field(INPB, "$(SYSTEM1):measurement_current_u205.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:measurement_current_u204.VAL PP MS")
+  field(INPB, "fstmpod01:measurement_current_u205.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module11")
+  field(FLNK, "fstmpod01:rbk_alm_module11")
 }
 
-record(calc, $(SYSTEM1):rbk_alm_module11){
+record(calc, fstmpod01:rbk_alm_module11){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):rbk_v_alm_module11")
-  field(INPB, "$(SYSTEM1):rbk_c_alm_module11")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL")
+  field(INPA, "fstmpod01:rbk_v_alm_module11")
+  field(INPB, "fstmpod01:rbk_c_alm_module11")
+  field(INPC, "fstmpod01:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM1):rdo2_status")
+  field(FLNK, "fstmpod01:rdo2_status")
 }
 
 ################Disk1 Module12################
-record(calc, $(SYSTEM1):rbk_v_alm_module12){
+record(calc, fstmpod01:rbk_v_alm_module12){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):output_sense_voltage_u206.VAL PP MS")
-  field(INPB, "$(SYSTEM1):output_sense_voltage_u207.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:output_sense_voltage_u206.VAL PP MS")
+  field(INPB, "fstmpod01:output_sense_voltage_u207.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module12")
+  field(FLNK, "fstmpod01:rbk_alm_module12")
 }
 
-record(calc, $(SYSTEM1):rbk_c_alm_module12){
+record(calc, fstmpod01:rbk_c_alm_module12){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):measurement_current_u206.VAL PP MS")
-  field(INPB, "$(SYSTEM1):measurement_current_u207.VAL PP MS")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod01:measurement_current_u206.VAL PP MS")
+  field(INPB, "fstmpod01:measurement_current_u207.VAL PP MS")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM1):rbk_alm_module12")
+  field(FLNK, "fstmpod01:rbk_alm_module12")
 }
 
-record(calc, $(SYSTEM1):rbk_alm_module12){
+record(calc, fstmpod01:rbk_alm_module12){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):rbk_v_alm_module12")
-  field(INPB, "$(SYSTEM1):rbk_c_alm_module12")
-  field(INPC, "$(SYSTEM1):pwr_reading.VAL")
+  field(INPA, "fstmpod01:rbk_v_alm_module12")
+  field(INPB, "fstmpod01:rbk_c_alm_module12")
+  field(INPC, "fstmpod01:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM1):rdo2_status")
+  field(FLNK, "fstmpod01:rdo2_status")
 }
 
 ################RDO2################
-record(calc, $(SYSTEM1):rdo2_status){
+record(calc, fstmpod01:rdo2_status){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):rbk_alm_module7")
-  field(INPB, "$(SYSTEM1):rbk_alm_module8")
-  field(INPC, "$(SYSTEM1):rbk_alm_module9")
-  field(INPD, "$(SYSTEM1):rbk_alm_module10")
-  field(INPE, "$(SYSTEM1):rbk_alm_module11")
-  field(INPF, "$(SYSTEM1):rbk_alm_module12")
-  field(INPG, "$(SYSTEM1):pwr_reading")
+  field(INPA, "fstmpod01:rbk_alm_module7")
+  field(INPB, "fstmpod01:rbk_alm_module8")
+  field(INPC, "fstmpod01:rbk_alm_module9")
+  field(INPD, "fstmpod01:rbk_alm_module10")
+  field(INPE, "fstmpod01:rbk_alm_module11")
+  field(INPF, "fstmpod01:rbk_alm_module12")
+  field(INPG, "fstmpod01:pwr_reading")
   field(CALC, "G=1?A&&B&&C&&D&&E&&F:0")
-  field(FLNK, "$(SYSTEM1):rdo2_alarm")
+  field(FLNK, "fstmpod01:rdo2_alarm")
 }
 
-record(calc, $(SYSTEM1):rdo2_alarm){
+record(calc, fstmpod01:rdo2_alarm){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM1):rbk_alm_module7")
-  field(INPB, "$(SYSTEM1):rbk_alm_module8")
-  field(INPC, "$(SYSTEM1):rbk_alm_module9")
-  field(INPD, "$(SYSTEM1):rbk_alm_module10")
-  field(INPE, "$(SYSTEM1):rbk_alm_module11")
-  field(INPF, "$(SYSTEM1):rbk_alm_module12")
-  field(INPG, "$(SYSTEM1):pwr_reading")
+  field(INPA, "fstmpod01:rbk_alm_module7")
+  field(INPB, "fstmpod01:rbk_alm_module8")
+  field(INPC, "fstmpod01:rbk_alm_module9")
+  field(INPD, "fstmpod01:rbk_alm_module10")
+  field(INPE, "fstmpod01:rbk_alm_module11")
+  field(INPF, "fstmpod01:rbk_alm_module12")
+  field(INPG, "fstmpod01:pwr_reading")
   field(CALC, "G=1?!(A&&B&&C&&D&&E&&F):0")
   field(HIGH,"1")
   field(HIHI,"1")
@@ -579,292 +579,292 @@ record(calc, $(SYSTEM1):rdo2_alarm){
 }
 
 #Below variable is added for debugging the ShiftGui Script.
-record(calc, $(SYSTEM1):crate_status_panic){
+record(calc, fstmpod01:crate_status_panic){
   field(DESC, "Script status")
 }
 
 ################Disk2 Module1################
-record(calc, $(SYSTEM2):rbk_v_alm_module1){
+record(calc, fstmpod02:rbk_v_alm_module1){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):output_sense_voltage_u0.VAL PP MS")
-  field(INPB, "$(SYSTEM2):output_sense_voltage_u1.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:output_sense_voltage_u0.VAL PP MS")
+  field(INPB, "fstmpod02:output_sense_voltage_u1.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module1")
+  field(FLNK, "fstmpod02:rbk_alm_module1")
 }
 
-record(calc, $(SYSTEM2):rbk_c_alm_module1){
+record(calc, fstmpod02:rbk_c_alm_module1){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):measurement_current_u0.VAL PP MS")
-  field(INPB, "$(SYSTEM2):measurement_current_u1.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:measurement_current_u0.VAL PP MS")
+  field(INPB, "fstmpod02:measurement_current_u1.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module1")
+  field(FLNK, "fstmpod02:rbk_alm_module1")
 }
 
-record(calc, $(SYSTEM2):rbk_alm_module1){
+record(calc, fstmpod02:rbk_alm_module1){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):rbk_v_alm_module1")
-  field(INPB, "$(SYSTEM2):rbk_c_alm_module1")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL")
+  field(INPA, "fstmpod02:rbk_v_alm_module1")
+  field(INPB, "fstmpod02:rbk_c_alm_module1")
+  field(INPC, "fstmpod02:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM2):rdo3_status")
+  field(FLNK, "fstmpod02:rdo3_status")
 }
 
 ################Disk2 Module2################
-record(calc, $(SYSTEM2):rbk_v_alm_module2){
+record(calc, fstmpod02:rbk_v_alm_module2){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):output_sense_voltage_u2.VAL PP MS")
-  field(INPB, "$(SYSTEM2):output_sense_voltage_u3.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:output_sense_voltage_u2.VAL PP MS")
+  field(INPB, "fstmpod02:output_sense_voltage_u3.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module2")
+  field(FLNK, "fstmpod02:rbk_alm_module2")
 }
 
-record(calc, $(SYSTEM2):rbk_c_alm_module2){
+record(calc, fstmpod02:rbk_c_alm_module2){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):measurement_current_u2.VAL PP MS")
-  field(INPB, "$(SYSTEM2):measurement_current_u3.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:measurement_current_u2.VAL PP MS")
+  field(INPB, "fstmpod02:measurement_current_u3.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module2")
+  field(FLNK, "fstmpod02:rbk_alm_module2")
 }
 
-record(calc, $(SYSTEM2):rbk_alm_module2){
+record(calc, fstmpod02:rbk_alm_module2){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):rbk_v_alm_module2")
-  field(INPB, "$(SYSTEM2):rbk_c_alm_module2")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL")
+  field(INPA, "fstmpod02:rbk_v_alm_module2")
+  field(INPB, "fstmpod02:rbk_c_alm_module2")
+  field(INPC, "fstmpod02:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM2):rdo3_status")
+  field(FLNK, "fstmpod02:rdo3_status")
 }
 
 ################Disk2 Module3################
-record(calc, $(SYSTEM2):rbk_v_alm_module3){
+record(calc, fstmpod02:rbk_v_alm_module3){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):output_sense_voltage_u4.VAL PP MS")
-  field(INPB, "$(SYSTEM2):output_sense_voltage_u5.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:output_sense_voltage_u4.VAL PP MS")
+  field(INPB, "fstmpod02:output_sense_voltage_u5.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module3")
+  field(FLNK, "fstmpod02:rbk_alm_module3")
 }
 
-record(calc, $(SYSTEM2):rbk_c_alm_module3){
+record(calc, fstmpod02:rbk_c_alm_module3){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):measurement_current_u4.VAL PP MS")
-  field(INPB, "$(SYSTEM2):measurement_current_u5.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:measurement_current_u4.VAL PP MS")
+  field(INPB, "fstmpod02:measurement_current_u5.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module3")
+  field(FLNK, "fstmpod02:rbk_alm_module3")
 }
 
-record(calc, $(SYSTEM2):rbk_alm_module3){
+record(calc, fstmpod02:rbk_alm_module3){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):rbk_v_alm_module3")
-  field(INPB, "$(SYSTEM2):rbk_c_alm_module3")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL")
+  field(INPA, "fstmpod02:rbk_v_alm_module3")
+  field(INPB, "fstmpod02:rbk_c_alm_module3")
+  field(INPC, "fstmpod02:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM2):rdo3_status")
+  field(FLNK, "fstmpod02:rdo3_status")
 }
 
 ################Disk2 Module4################
-record(calc, $(SYSTEM2):rbk_v_alm_module4){
+record(calc, fstmpod02:rbk_v_alm_module4){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):output_sense_voltage_u6.VAL PP MS")
-  field(INPB, "$(SYSTEM2):output_sense_voltage_u7.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:output_sense_voltage_u6.VAL PP MS")
+  field(INPB, "fstmpod02:output_sense_voltage_u7.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module4")
+  field(FLNK, "fstmpod02:rbk_alm_module4")
 }
 
-record(calc, $(SYSTEM2):rbk_c_alm_module4){
+record(calc, fstmpod02:rbk_c_alm_module4){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):measurement_current_u6.VAL PP MS")
-  field(INPB, "$(SYSTEM2):measurement_current_u7.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:measurement_current_u6.VAL PP MS")
+  field(INPB, "fstmpod02:measurement_current_u7.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module4")
+  field(FLNK, "fstmpod02:rbk_alm_module4")
 }
 
-record(calc, $(SYSTEM2):rbk_alm_module4){
+record(calc, fstmpod02:rbk_alm_module4){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):rbk_v_alm_module4")
-  field(INPB, "$(SYSTEM2):rbk_c_alm_module4")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL")
+  field(INPA, "fstmpod02:rbk_v_alm_module4")
+  field(INPB, "fstmpod02:rbk_c_alm_module4")
+  field(INPC, "fstmpod02:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM2):rdo3_status")
+  field(FLNK, "fstmpod02:rdo3_status")
 }
 
 ################Disk2 Module5################
-record(calc, $(SYSTEM2):rbk_v_alm_module5){
+record(calc, fstmpod02:rbk_v_alm_module5){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):output_sense_voltage_u100.VAL PP MS")
-  field(INPB, "$(SYSTEM2):output_sense_voltage_u101.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:output_sense_voltage_u100.VAL PP MS")
+  field(INPB, "fstmpod02:output_sense_voltage_u101.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module5")
+  field(FLNK, "fstmpod02:rbk_alm_module5")
 }
 
-record(calc, $(SYSTEM2):rbk_c_alm_module5){
+record(calc, fstmpod02:rbk_c_alm_module5){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):measurement_current_u100.VAL PP MS")
-  field(INPB, "$(SYSTEM2):measurement_current_u101.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:measurement_current_u100.VAL PP MS")
+  field(INPB, "fstmpod02:measurement_current_u101.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module5")
+  field(FLNK, "fstmpod02:rbk_alm_module5")
 }
 
-record(calc, $(SYSTEM2):rbk_alm_module5){
+record(calc, fstmpod02:rbk_alm_module5){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):rbk_v_alm_module5")
-  field(INPB, "$(SYSTEM2):rbk_c_alm_module5")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL")
+  field(INPA, "fstmpod02:rbk_v_alm_module5")
+  field(INPB, "fstmpod02:rbk_c_alm_module5")
+  field(INPC, "fstmpod02:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM2):rdo3_status")
+  field(FLNK, "fstmpod02:rdo3_status")
 }
 
 ################Disk2 Module6################
-record(calc, $(SYSTEM2):rbk_v_alm_module6){
+record(calc, fstmpod02:rbk_v_alm_module6){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):output_sense_voltage_u102.VAL PP MS")
-  field(INPB, "$(SYSTEM2):output_sense_voltage_u103.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:output_sense_voltage_u102.VAL PP MS")
+  field(INPB, "fstmpod02:output_sense_voltage_u103.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module6")
+  field(FLNK, "fstmpod02:rbk_alm_module6")
 }
 
-record(calc, $(SYSTEM2):rbk_c_alm_module6){
+record(calc, fstmpod02:rbk_c_alm_module6){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):measurement_current_u102.VAL PP MS")
-  field(INPB, "$(SYSTEM2):measurement_current_u103.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:measurement_current_u102.VAL PP MS")
+  field(INPB, "fstmpod02:measurement_current_u103.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module6")
+  field(FLNK, "fstmpod02:rbk_alm_module6")
 }
 
-record(calc, $(SYSTEM2):rbk_alm_module6){
+record(calc, fstmpod02:rbk_alm_module6){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):rbk_v_alm_module6")
-  field(INPB, "$(SYSTEM2):rbk_c_alm_module6")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL")
+  field(INPA, "fstmpod02:rbk_v_alm_module6")
+  field(INPB, "fstmpod02:rbk_c_alm_module6")
+  field(INPC, "fstmpod02:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM2):rdo3_status")
+  field(FLNK, "fstmpod02:rdo3_status")
 }
 
 ################RDO3################
-record(calc, $(SYSTEM2):rdo3_status){
+record(calc, fstmpod02:rdo3_status){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):rbk_alm_module1")
-  field(INPB, "$(SYSTEM2):rbk_alm_module2")
-  field(INPC, "$(SYSTEM2):rbk_alm_module3")
-  field(INPD, "$(SYSTEM2):rbk_alm_module4")
-  field(INPE, "$(SYSTEM2):rbk_alm_module5")
-  field(INPF, "$(SYSTEM2):rbk_alm_module6")
-  field(INPG, "$(SYSTEM2):pwr_reading")
+  field(INPA, "fstmpod02:rbk_alm_module1")
+  field(INPB, "fstmpod02:rbk_alm_module2")
+  field(INPC, "fstmpod02:rbk_alm_module3")
+  field(INPD, "fstmpod02:rbk_alm_module4")
+  field(INPE, "fstmpod02:rbk_alm_module5")
+  field(INPF, "fstmpod02:rbk_alm_module6")
+  field(INPG, "fstmpod02:pwr_reading")
   field(CALC, "G=1?A&&B&&C&&D&&E&&F:0")
-  field(FLNK, "$(SYSTEM2):rdo3_alarm")
+  field(FLNK, "fstmpod02:rdo3_alarm")
 }
 
-record(calc, $(SYSTEM2):rdo3_alarm){
+record(calc, fstmpod02:rdo3_alarm){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):rbk_alm_module1")
-  field(INPB, "$(SYSTEM2):rbk_alm_module2")
-  field(INPC, "$(SYSTEM2):rbk_alm_module3")
-  field(INPD, "$(SYSTEM2):rbk_alm_module4")
-  field(INPE, "$(SYSTEM2):rbk_alm_module5")
-  field(INPF, "$(SYSTEM2):rbk_alm_module6")
-  field(INPG, "$(SYSTEM2):pwr_reading")
+  field(INPA, "fstmpod02:rbk_alm_module1")
+  field(INPB, "fstmpod02:rbk_alm_module2")
+  field(INPC, "fstmpod02:rbk_alm_module3")
+  field(INPD, "fstmpod02:rbk_alm_module4")
+  field(INPE, "fstmpod02:rbk_alm_module5")
+  field(INPF, "fstmpod02:rbk_alm_module6")
+  field(INPG, "fstmpod02:pwr_reading")
   field(CALC, "G=1?!(A&&B&&C&&D&&E&&F):0")
   field(HIGH,"1")
   field(HIHI,"1")
@@ -874,287 +874,287 @@ record(calc, $(SYSTEM2):rdo3_alarm){
 }
 
 ################Disk2 Module7################
-record(calc, $(SYSTEM2):rbk_v_alm_module7){
+record(calc, fstmpod02:rbk_v_alm_module7){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):output_sense_voltage_u104.VAL PP MS")
-  field(INPB, "$(SYSTEM2):output_sense_voltage_u105.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:output_sense_voltage_u104.VAL PP MS")
+  field(INPB, "fstmpod02:output_sense_voltage_u105.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module7")
+  field(FLNK, "fstmpod02:rbk_alm_module7")
 }
 
-record(calc, $(SYSTEM2):rbk_c_alm_module7){
+record(calc, fstmpod02:rbk_c_alm_module7){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):measurement_current_u104.VAL PP MS")
-  field(INPB, "$(SYSTEM2):measurement_current_u105.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:measurement_current_u104.VAL PP MS")
+  field(INPB, "fstmpod02:measurement_current_u105.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module7")
+  field(FLNK, "fstmpod02:rbk_alm_module7")
 }
 
-record(calc, $(SYSTEM2):rbk_alm_module7){
+record(calc, fstmpod02:rbk_alm_module7){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):rbk_v_alm_module7")
-  field(INPB, "$(SYSTEM2):rbk_c_alm_module7")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL")
+  field(INPA, "fstmpod02:rbk_v_alm_module7")
+  field(INPB, "fstmpod02:rbk_c_alm_module7")
+  field(INPC, "fstmpod02:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM2):rdo4_status")
+  field(FLNK, "fstmpod02:rdo4_status")
 }
 
 ################Disk2 Module8################
-record(calc, $(SYSTEM2):rbk_v_alm_module8){
+record(calc, fstmpod02:rbk_v_alm_module8){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):output_sense_voltage_u106.VAL PP MS")
-  field(INPB, "$(SYSTEM2):output_sense_voltage_u107.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:output_sense_voltage_u106.VAL PP MS")
+  field(INPB, "fstmpod02:output_sense_voltage_u107.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module8")
+  field(FLNK, "fstmpod02:rbk_alm_module8")
 }
 
-record(calc, $(SYSTEM2):rbk_c_alm_module8){
+record(calc, fstmpod02:rbk_c_alm_module8){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):measurement_current_u106.VAL PP MS")
-  field(INPB, "$(SYSTEM2):measurement_current_u107.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:measurement_current_u106.VAL PP MS")
+  field(INPB, "fstmpod02:measurement_current_u107.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module8")
+  field(FLNK, "fstmpod02:rbk_alm_module8")
 }
 
-record(calc, $(SYSTEM2):rbk_alm_module8){
+record(calc, fstmpod02:rbk_alm_module8){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):rbk_v_alm_module8")
-  field(INPB, "$(SYSTEM2):rbk_c_alm_module8")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL")
+  field(INPA, "fstmpod02:rbk_v_alm_module8")
+  field(INPB, "fstmpod02:rbk_c_alm_module8")
+  field(INPC, "fstmpod02:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM2):rdo4_status")
+  field(FLNK, "fstmpod02:rdo4_status")
 }
 
 ################Disk2 Module9################
-record(calc, $(SYSTEM2):rbk_v_alm_module9){
+record(calc, fstmpod02:rbk_v_alm_module9){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):output_sense_voltage_u200.VAL PP MS")
-  field(INPB, "$(SYSTEM2):output_sense_voltage_u201.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:output_sense_voltage_u200.VAL PP MS")
+  field(INPB, "fstmpod02:output_sense_voltage_u201.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module9")
+  field(FLNK, "fstmpod02:rbk_alm_module9")
 }
 
-record(calc, $(SYSTEM2):rbk_c_alm_module9){
+record(calc, fstmpod02:rbk_c_alm_module9){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):measurement_current_u200.VAL PP MS")
-  field(INPB, "$(SYSTEM2):measurement_current_u201.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:measurement_current_u200.VAL PP MS")
+  field(INPB, "fstmpod02:measurement_current_u201.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module9")
+  field(FLNK, "fstmpod02:rbk_alm_module9")
 }
 
-record(calc, $(SYSTEM2):rbk_alm_module9){
+record(calc, fstmpod02:rbk_alm_module9){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):rbk_v_alm_module9")
-  field(INPB, "$(SYSTEM2):rbk_c_alm_module9")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL")
+  field(INPA, "fstmpod02:rbk_v_alm_module9")
+  field(INPB, "fstmpod02:rbk_c_alm_module9")
+  field(INPC, "fstmpod02:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM2):rdo4_status")
+  field(FLNK, "fstmpod02:rdo4_status")
 }
 
 ################Disk2 Module10################
-record(calc, $(SYSTEM2):rbk_v_alm_module10){
+record(calc, fstmpod02:rbk_v_alm_module10){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):output_sense_voltage_u202.VAL PP MS")
-  field(INPB, "$(SYSTEM2):output_sense_voltage_u203.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:output_sense_voltage_u202.VAL PP MS")
+  field(INPB, "fstmpod02:output_sense_voltage_u203.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module10")
+  field(FLNK, "fstmpod02:rbk_alm_module10")
 }
 
-record(calc, $(SYSTEM2):rbk_c_alm_module10){
+record(calc, fstmpod02:rbk_c_alm_module10){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):measurement_current_u202.VAL PP MS")
-  field(INPB, "$(SYSTEM2):measurement_current_u203.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:measurement_current_u202.VAL PP MS")
+  field(INPB, "fstmpod02:measurement_current_u203.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module10")
+  field(FLNK, "fstmpod02:rbk_alm_module10")
 }
 
-record(calc, $(SYSTEM2):rbk_alm_module10){
+record(calc, fstmpod02:rbk_alm_module10){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):rbk_v_alm_module10")
-  field(INPB, "$(SYSTEM2):rbk_c_alm_module10")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL")
+  field(INPA, "fstmpod02:rbk_v_alm_module10")
+  field(INPB, "fstmpod02:rbk_c_alm_module10")
+  field(INPC, "fstmpod02:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM2):rdo4_status")
+  field(FLNK, "fstmpod02:rdo4_status")
 }
 
 ################Disk2 Module11################
-record(calc, $(SYSTEM2):rbk_v_alm_module11){
+record(calc, fstmpod02:rbk_v_alm_module11){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):output_sense_voltage_u204.VAL PP MS")
-  field(INPB, "$(SYSTEM2):output_sense_voltage_u205.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:output_sense_voltage_u204.VAL PP MS")
+  field(INPB, "fstmpod02:output_sense_voltage_u205.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module11")
+  field(FLNK, "fstmpod02:rbk_alm_module11")
 }
 
-record(calc, $(SYSTEM2):rbk_c_alm_module11){
+record(calc, fstmpod02:rbk_c_alm_module11){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):measurement_current_u204.VAL PP MS")
-  field(INPB, "$(SYSTEM2):measurement_current_u205.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:measurement_current_u204.VAL PP MS")
+  field(INPB, "fstmpod02:measurement_current_u205.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module11")
+  field(FLNK, "fstmpod02:rbk_alm_module11")
 }
 
-record(calc, $(SYSTEM2):rbk_alm_module11){
+record(calc, fstmpod02:rbk_alm_module11){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):rbk_v_alm_module11")
-  field(INPB, "$(SYSTEM2):rbk_c_alm_module11")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL")
+  field(INPA, "fstmpod02:rbk_v_alm_module11")
+  field(INPB, "fstmpod02:rbk_c_alm_module11")
+  field(INPC, "fstmpod02:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM2):rdo4_status")
+  field(FLNK, "fstmpod02:rdo4_status")
 }
 
 ################Disk2 Module12################
-record(calc, $(SYSTEM2):rbk_v_alm_module12){
+record(calc, fstmpod02:rbk_v_alm_module12){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):output_sense_voltage_u206.VAL PP MS")
-  field(INPB, "$(SYSTEM2):output_sense_voltage_u207.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:output_sense_voltage_u206.VAL PP MS")
+  field(INPB, "fstmpod02:output_sense_voltage_u207.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module12")
+  field(FLNK, "fstmpod02:rbk_alm_module12")
 }
 
-record(calc, $(SYSTEM2):rbk_c_alm_module12){
+record(calc, fstmpod02:rbk_c_alm_module12){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):measurement_current_u206.VAL PP MS")
-  field(INPB, "$(SYSTEM2):measurement_current_u207.VAL PP MS")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod02:measurement_current_u206.VAL PP MS")
+  field(INPB, "fstmpod02:measurement_current_u207.VAL PP MS")
+  field(INPC, "fstmpod02:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000004")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM2):rbk_alm_module12")
+  field(FLNK, "fstmpod02:rbk_alm_module12")
 }
 
-record(calc, $(SYSTEM2):rbk_alm_module12){
+record(calc, fstmpod02:rbk_alm_module12){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):rbk_v_alm_module12")
-  field(INPB, "$(SYSTEM2):rbk_c_alm_module12")
-  field(INPC, "$(SYSTEM2):pwr_reading.VAL")
+  field(INPA, "fstmpod02:rbk_v_alm_module12")
+  field(INPB, "fstmpod02:rbk_c_alm_module12")
+  field(INPC, "fstmpod02:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM2):rdo4_status")
+  field(FLNK, "fstmpod02:rdo4_status")
 }
 
 ################RDO4################
-record(calc, $(SYSTEM2):rdo4_status){
+record(calc, fstmpod02:rdo4_status){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):rbk_alm_module7")
-  field(INPB, "$(SYSTEM2):rbk_alm_module8")
-  field(INPC, "$(SYSTEM2):rbk_alm_module9")
-  field(INPD, "$(SYSTEM2):rbk_alm_module10")
-  field(INPE, "$(SYSTEM2):rbk_alm_module11")
-  field(INPF, "$(SYSTEM2):rbk_alm_module12")
-  field(INPG, "$(SYSTEM2):pwr_reading")
+  field(INPA, "fstmpod02:rbk_alm_module7")
+  field(INPB, "fstmpod02:rbk_alm_module8")
+  field(INPC, "fstmpod02:rbk_alm_module9")
+  field(INPD, "fstmpod02:rbk_alm_module10")
+  field(INPE, "fstmpod02:rbk_alm_module11")
+  field(INPF, "fstmpod02:rbk_alm_module12")
+  field(INPG, "fstmpod02:pwr_reading")
   field(CALC, "G=1?A&&B&&C&&D&&E&&F:0")
-  field(FLNK, "$(SYSTEM2):rdo4_alarm")
+  field(FLNK, "fstmpod02:rdo4_alarm")
 }
 
-record(calc, $(SYSTEM2):rdo4_alarm){
+record(calc, fstmpod02:rdo4_alarm){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM2):rbk_alm_module7")
-  field(INPB, "$(SYSTEM2):rbk_alm_module8")
-  field(INPC, "$(SYSTEM2):rbk_alm_module9")
-  field(INPD, "$(SYSTEM2):rbk_alm_module10")
-  field(INPE, "$(SYSTEM2):rbk_alm_module11")
-  field(INPF, "$(SYSTEM2):rbk_alm_module12")
-  field(INPG, "$(SYSTEM2):pwr_reading")
+  field(INPA, "fstmpod02:rbk_alm_module7")
+  field(INPB, "fstmpod02:rbk_alm_module8")
+  field(INPC, "fstmpod02:rbk_alm_module9")
+  field(INPD, "fstmpod02:rbk_alm_module10")
+  field(INPE, "fstmpod02:rbk_alm_module11")
+  field(INPF, "fstmpod02:rbk_alm_module12")
+  field(INPG, "fstmpod02:pwr_reading")
   field(CALC, "G=1?!(A&&B&&C&&D&&E&&F):0")
   field(HIGH,"1")
   field(HIHI,"1")
@@ -1164,292 +1164,292 @@ record(calc, $(SYSTEM2):rdo4_alarm){
 }
 
 #Below variable is added for debugging the ShiftGui Script.
-record(calc, $(SYSTEM2):crate_status_panic){
+record(calc, fstmpod02:crate_status_panic){
   field(DESC, "Script status")
 }
 
 ################Disk3 Module1################
-record(calc, $(SYSTEM3):rbk_v_alm_module1){
+record(calc, fstmpod03:rbk_v_alm_module1){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):output_sense_voltage_u0.VAL PP MS")
-  field(INPB, "$(SYSTEM3):output_sense_voltage_u1.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:output_sense_voltage_u0.VAL PP MS")
+  field(INPB, "fstmpod03:output_sense_voltage_u1.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module1")
+  field(FLNK, "fstmpod03:rbk_alm_module1")
 }
 
-record(calc, $(SYSTEM3):rbk_c_alm_module1){
+record(calc, fstmpod03:rbk_c_alm_module1){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):measurement_current_u0.VAL PP MS")
-  field(INPB, "$(SYSTEM3):measurement_current_u1.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:measurement_current_u0.VAL PP MS")
+  field(INPB, "fstmpod03:measurement_current_u1.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
-  field(CALC, "C=1&A>D&A<E&B>F&B<G")
+  field(CALC, "C=1&&A>D&&A<E&&B>F&&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module1")
+  field(FLNK, "fstmpod03:rbk_alm_module1")
 }
 
-record(calc, $(SYSTEM3):rbk_alm_module1){
+record(calc, fstmpod03:rbk_alm_module1){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):rbk_v_alm_module1")
-  field(INPB, "$(SYSTEM3):rbk_c_alm_module1")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL")
+  field(INPA, "fstmpod03:rbk_v_alm_module1")
+  field(INPB, "fstmpod03:rbk_c_alm_module1")
+  field(INPC, "fstmpod03:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM3):rdo5_status")
+  field(FLNK, "fstmpod03:rdo5_status")
 }
 
 ################Disk3 Module2################
-record(calc, $(SYSTEM3):rbk_v_alm_module2){
+record(calc, fstmpod03:rbk_v_alm_module2){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):output_sense_voltage_u2.VAL PP MS")
-  field(INPB, "$(SYSTEM3):output_sense_voltage_u3.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:output_sense_voltage_u2.VAL PP MS")
+  field(INPB, "fstmpod03:output_sense_voltage_u3.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
-  field(INPF, "39")
-  field(INPG, "41")
+  field(INPF, "34")
+  field(INPG, "36")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module2")
+  field(FLNK, "fstmpod03:rbk_alm_module2")
 }
 
-record(calc, $(SYSTEM3):rbk_c_alm_module2){
+record(calc, fstmpod03:rbk_c_alm_module2){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):measurement_current_u2.VAL PP MS")
-  field(INPB, "$(SYSTEM3):measurement_current_u3.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:measurement_current_u2.VAL PP MS")
+  field(INPB, "fstmpod03:measurement_current_u3.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
-  field(INPG, "0.000004")
+  field(INPG, "0.000005")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module2")
+  field(FLNK, "fstmpod03:rbk_alm_module2")
 }
 
-record(calc, $(SYSTEM3):rbk_alm_module2){
+record(calc, fstmpod03:rbk_alm_module2){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):rbk_v_alm_module2")
-  field(INPB, "$(SYSTEM3):rbk_c_alm_module2")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL")
+  field(INPA, "fstmpod03:rbk_v_alm_module2")
+  field(INPB, "fstmpod03:rbk_c_alm_module2")
+  field(INPC, "fstmpod03:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM3):rdo5_status")
+  field(FLNK, "fstmpod03:rdo5_status")
 }
 
 ################Disk3 Module3################
-record(calc, $(SYSTEM3):rbk_v_alm_module3){
+record(calc, fstmpod03:rbk_v_alm_module3){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):output_sense_voltage_u4.VAL PP MS")
-  field(INPB, "$(SYSTEM3):output_sense_voltage_u5.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:output_sense_voltage_u4.VAL PP MS")
+  field(INPB, "fstmpod03:output_sense_voltage_u5.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module3")
+  field(FLNK, "fstmpod03:rbk_alm_module3")
 }
 
-record(calc, $(SYSTEM3):rbk_c_alm_module3){
+record(calc, fstmpod03:rbk_c_alm_module3){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):measurement_current_u4.VAL PP MS")
-  field(INPB, "$(SYSTEM3):measurement_current_u5.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:measurement_current_u4.VAL PP MS")
+  field(INPB, "fstmpod03:measurement_current_u5.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module3")
+  field(FLNK, "fstmpod03:rbk_alm_module3")
 }
 
-record(calc, $(SYSTEM3):rbk_alm_module3){
+record(calc, fstmpod03:rbk_alm_module3){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):rbk_v_alm_module3")
-  field(INPB, "$(SYSTEM3):rbk_c_alm_module3")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL")
+  field(INPA, "fstmpod03:rbk_v_alm_module3")
+  field(INPB, "fstmpod03:rbk_c_alm_module3")
+  field(INPC, "fstmpod03:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM3):rdo5_status")
+  field(FLNK, "fstmpod03:rdo5_status")
 }
 
 ################Disk3 Module4################
-record(calc, $(SYSTEM3):rbk_v_alm_module4){
+record(calc, fstmpod03:rbk_v_alm_module4){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):output_sense_voltage_u6.VAL PP MS")
-  field(INPB, "$(SYSTEM3):output_sense_voltage_u7.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:output_sense_voltage_u6.VAL PP MS")
+  field(INPB, "fstmpod03:output_sense_voltage_u7.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module4")
+  field(FLNK, "fstmpod03:rbk_alm_module4")
 }
 
-record(calc, $(SYSTEM3):rbk_c_alm_module4){
+record(calc, fstmpod03:rbk_c_alm_module4){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):measurement_current_u6.VAL PP MS")
-  field(INPB, "$(SYSTEM3):measurement_current_u7.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:measurement_current_u6.VAL PP MS")
+  field(INPB, "fstmpod03:measurement_current_u7.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module4")
+  field(FLNK, "fstmpod03:rbk_alm_module4")
 }
 
-record(calc, $(SYSTEM3):rbk_alm_module4){
+record(calc, fstmpod03:rbk_alm_module4){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):rbk_v_alm_module4")
-  field(INPB, "$(SYSTEM3):rbk_c_alm_module4")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL")
+  field(INPA, "fstmpod03:rbk_v_alm_module4")
+  field(INPB, "fstmpod03:rbk_c_alm_module4")
+  field(INPC, "fstmpod03:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM3):rdo5_status")
+  field(FLNK, "fstmpod03:rdo5_status")
 }
 
 ################Disk3 Module5################
-record(calc, $(SYSTEM3):rbk_v_alm_module5){
+record(calc, fstmpod03:rbk_v_alm_module5){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):output_sense_voltage_u100.VAL PP MS")
-  field(INPB, "$(SYSTEM3):output_sense_voltage_u101.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:output_sense_voltage_u100.VAL PP MS")
+  field(INPB, "fstmpod03:output_sense_voltage_u101.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module5")
+  field(FLNK, "fstmpod03:rbk_alm_module5")
 }
 
-record(calc, $(SYSTEM3):rbk_c_alm_module5){
+record(calc, fstmpod03:rbk_c_alm_module5){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):measurement_current_u100.VAL PP MS")
-  field(INPB, "$(SYSTEM3):measurement_current_u101.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:measurement_current_u100.VAL PP MS")
+  field(INPB, "fstmpod03:measurement_current_u101.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module5")
+  field(FLNK, "fstmpod03:rbk_alm_module5")
 }
 
-record(calc, $(SYSTEM3):rbk_alm_module5){
+record(calc, fstmpod03:rbk_alm_module5){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):rbk_v_alm_module5")
-  field(INPB, "$(SYSTEM3):rbk_c_alm_module5")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL")
+  field(INPA, "fstmpod03:rbk_v_alm_module5")
+  field(INPB, "fstmpod03:rbk_c_alm_module5")
+  field(INPC, "fstmpod03:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM3):rdo5_status")
+  field(FLNK, "fstmpod03:rdo5_status")
 }
 
 ################Disk3 Module6################
-record(calc, $(SYSTEM3):rbk_v_alm_module6){
+record(calc, fstmpod03:rbk_v_alm_module6){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):output_sense_voltage_u102.VAL PP MS")
-  field(INPB, "$(SYSTEM3):output_sense_voltage_u103.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:output_sense_voltage_u102.VAL PP MS")
+  field(INPB, "fstmpod03:output_sense_voltage_u103.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module6")
+  field(FLNK, "fstmpod03:rbk_alm_module6")
 }
 
-record(calc, $(SYSTEM3):rbk_c_alm_module6){
+record(calc, fstmpod03:rbk_c_alm_module6){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):measurement_current_u102.VAL PP MS")
-  field(INPB, "$(SYSTEM3):measurement_current_u103.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:measurement_current_u102.VAL PP MS")
+  field(INPB, "fstmpod03:measurement_current_u103.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module6")
+  field(FLNK, "fstmpod03:rbk_alm_module6")
 }
 
-record(calc, $(SYSTEM3):rbk_alm_module6){
+record(calc, fstmpod03:rbk_alm_module6){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):rbk_v_alm_module6")
-  field(INPB, "$(SYSTEM3):rbk_c_alm_module6")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL")
+  field(INPA, "fstmpod03:rbk_v_alm_module6")
+  field(INPB, "fstmpod03:rbk_c_alm_module6")
+  field(INPC, "fstmpod03:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM3):rdo5_status")
+  field(FLNK, "fstmpod03:rdo5_status")
 }
 
 ################RDO5################
-record(calc, $(SYSTEM3):rdo5_status){
+record(calc, fstmpod03:rdo5_status){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):rbk_alm_module1")
-  field(INPB, "$(SYSTEM3):rbk_alm_module2")
-  field(INPC, "$(SYSTEM3):rbk_alm_module3")
-  field(INPD, "$(SYSTEM3):rbk_alm_module4")
-  field(INPE, "$(SYSTEM3):rbk_alm_module5")
-  field(INPF, "$(SYSTEM3):rbk_alm_module6")
-  field(INPG, "$(SYSTEM3):pwr_reading")
+  field(INPA, "fstmpod03:rbk_alm_module1")
+  field(INPB, "fstmpod03:rbk_alm_module2")
+  field(INPC, "fstmpod03:rbk_alm_module3")
+  field(INPD, "fstmpod03:rbk_alm_module4")
+  field(INPE, "fstmpod03:rbk_alm_module5")
+  field(INPF, "fstmpod03:rbk_alm_module6")
+  field(INPG, "fstmpod03:pwr_reading")
   field(CALC, "G=1?A&&B&&C&&D&&E&&F:0")
-  field(FLNK, "$(SYSTEM3):rdo5_alarm")
+  field(FLNK, "fstmpod03:rdo5_alarm")
 }
 
-record(calc, $(SYSTEM3):rdo5_alarm){
+record(calc, fstmpod03:rdo5_alarm){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):rbk_alm_module1")
-  field(INPB, "$(SYSTEM3):rbk_alm_module2")
-  field(INPC, "$(SYSTEM3):rbk_alm_module3")
-  field(INPD, "$(SYSTEM3):rbk_alm_module4")
-  field(INPE, "$(SYSTEM3):rbk_alm_module5")
-  field(INPF, "$(SYSTEM3):rbk_alm_module6")
-  field(INPG, "$(SYSTEM3):pwr_reading")
+  field(INPA, "fstmpod03:rbk_alm_module1")
+  field(INPB, "fstmpod03:rbk_alm_module2")
+  field(INPC, "fstmpod03:rbk_alm_module3")
+  field(INPD, "fstmpod03:rbk_alm_module4")
+  field(INPE, "fstmpod03:rbk_alm_module5")
+  field(INPF, "fstmpod03:rbk_alm_module6")
+  field(INPG, "fstmpod03:pwr_reading")
   field(CALC, "G=1?!(A&&B&&C&&D&&E&&F):0")
   field(HIGH,"1")
   field(HIHI,"1")
@@ -1459,287 +1459,287 @@ record(calc, $(SYSTEM3):rdo5_alarm){
 }
 
 ################Disk3 Module7################
-record(calc, $(SYSTEM3):rbk_v_alm_module7){
+record(calc, fstmpod03:rbk_v_alm_module7){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):output_sense_voltage_u104.VAL PP MS")
-  field(INPB, "$(SYSTEM3):output_sense_voltage_u105.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:output_sense_voltage_u104.VAL PP MS")
+  field(INPB, "fstmpod03:output_sense_voltage_u105.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module7")
+  field(FLNK, "fstmpod03:rbk_alm_module7")
 }
 
-record(calc, $(SYSTEM3):rbk_c_alm_module7){
+record(calc, fstmpod03:rbk_c_alm_module7){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):measurement_current_u104.VAL PP MS")
-  field(INPB, "$(SYSTEM3):measurement_current_u105.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:measurement_current_u104.VAL PP MS")
+  field(INPB, "fstmpod03:measurement_current_u105.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module7")
+  field(FLNK, "fstmpod03:rbk_alm_module7")
 }
 
-record(calc, $(SYSTEM3):rbk_alm_module7){
+record(calc, fstmpod03:rbk_alm_module7){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):rbk_v_alm_module7")
-  field(INPB, "$(SYSTEM3):rbk_c_alm_module7")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL")
+  field(INPA, "fstmpod03:rbk_v_alm_module7")
+  field(INPB, "fstmpod03:rbk_c_alm_module7")
+  field(INPC, "fstmpod03:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM3):rdo6_status")
+  field(FLNK, "fstmpod03:rdo6_status")
 }
 
 ################Disk3 Module8################
-record(calc, $(SYSTEM3):rbk_v_alm_module8){
+record(calc, fstmpod03:rbk_v_alm_module8){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):output_sense_voltage_u106.VAL PP MS")
-  field(INPB, "$(SYSTEM3):output_sense_voltage_u107.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:output_sense_voltage_u106.VAL PP MS")
+  field(INPB, "fstmpod03:output_sense_voltage_u107.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module8")
+  field(FLNK, "fstmpod03:rbk_alm_module8")
 }
 
-record(calc, $(SYSTEM3):rbk_c_alm_module8){
+record(calc, fstmpod03:rbk_c_alm_module8){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):measurement_current_u106.VAL PP MS")
-  field(INPB, "$(SYSTEM3):measurement_current_u107.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:measurement_current_u106.VAL PP MS")
+  field(INPB, "fstmpod03:measurement_current_u107.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module8")
+  field(FLNK, "fstmpod03:rbk_alm_module8")
 }
 
-record(calc, $(SYSTEM3):rbk_alm_module8){
+record(calc, fstmpod03:rbk_alm_module8){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):rbk_v_alm_module8")
-  field(INPB, "$(SYSTEM3):rbk_c_alm_module8")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL")
+  field(INPA, "fstmpod03:rbk_v_alm_module8")
+  field(INPB, "fstmpod03:rbk_c_alm_module8")
+  field(INPC, "fstmpod03:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM3):rdo6_status")
+  field(FLNK, "fstmpod03:rdo6_status")
 }
 
 ################Disk3 Module9################
-record(calc, $(SYSTEM3):rbk_v_alm_module9){
+record(calc, fstmpod03:rbk_v_alm_module9){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):output_sense_voltage_u200.VAL PP MS")
-  field(INPB, "$(SYSTEM3):output_sense_voltage_u201.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:output_sense_voltage_u200.VAL PP MS")
+  field(INPB, "fstmpod03:output_sense_voltage_u201.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module9")
+  field(FLNK, "fstmpod03:rbk_alm_module9")
 }
 
-record(calc, $(SYSTEM3):rbk_c_alm_module9){
+record(calc, fstmpod03:rbk_c_alm_module9){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):measurement_current_u200.VAL PP MS")
-  field(INPB, "$(SYSTEM3):measurement_current_u201.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:measurement_current_u200.VAL PP MS")
+  field(INPB, "fstmpod03:measurement_current_u201.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module9")
+  field(FLNK, "fstmpod03:rbk_alm_module9")
 }
 
-record(calc, $(SYSTEM3):rbk_alm_module9){
+record(calc, fstmpod03:rbk_alm_module9){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):rbk_v_alm_module9")
-  field(INPB, "$(SYSTEM3):rbk_c_alm_module9")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL")
+  field(INPA, "fstmpod03:rbk_v_alm_module9")
+  field(INPB, "fstmpod03:rbk_c_alm_module9")
+  field(INPC, "fstmpod03:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM3):rdo6_status")
+  field(FLNK, "fstmpod03:rdo6_status")
 }
 
 ################Disk3 Module10################
-record(calc, $(SYSTEM3):rbk_v_alm_module10){
+record(calc, fstmpod03:rbk_v_alm_module10){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):output_sense_voltage_u202.VAL PP MS")
-  field(INPB, "$(SYSTEM3):output_sense_voltage_u203.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:output_sense_voltage_u202.VAL PP MS")
+  field(INPB, "fstmpod03:output_sense_voltage_u203.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module10")
+  field(FLNK, "fstmpod03:rbk_alm_module10")
 }
 
-record(calc, $(SYSTEM3):rbk_c_alm_module10){
+record(calc, fstmpod03:rbk_c_alm_module10){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):measurement_current_u202.VAL PP MS")
-  field(INPB, "$(SYSTEM3):measurement_current_u203.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:measurement_current_u202.VAL PP MS")
+  field(INPB, "fstmpod03:measurement_current_u203.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000004")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module10")
+  field(FLNK, "fstmpod03:rbk_alm_module10")
 }
 
-record(calc, $(SYSTEM3):rbk_alm_module10){
+record(calc, fstmpod03:rbk_alm_module10){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):rbk_v_alm_module10")
-  field(INPB, "$(SYSTEM3):rbk_c_alm_module10")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL")
+  field(INPA, "fstmpod03:rbk_v_alm_module10")
+  field(INPB, "fstmpod03:rbk_c_alm_module10")
+  field(INPC, "fstmpod03:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM3):rdo6_status")
+  field(FLNK, "fstmpod03:rdo6_status")
 }
 
 ################Disk3 Module11################
-record(calc, $(SYSTEM3):rbk_v_alm_module11){
+record(calc, fstmpod03:rbk_v_alm_module11){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):output_sense_voltage_u204.VAL PP MS")
-  field(INPB, "$(SYSTEM3):output_sense_voltage_u205.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:output_sense_voltage_u204.VAL PP MS")
+  field(INPB, "fstmpod03:output_sense_voltage_u205.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module11")
+  field(FLNK, "fstmpod03:rbk_alm_module11")
 }
 
-record(calc, $(SYSTEM3):rbk_c_alm_module11){
+record(calc, fstmpod03:rbk_c_alm_module11){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):measurement_current_u204.VAL PP MS")
-  field(INPB, "$(SYSTEM3):measurement_current_u205.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:measurement_current_u204.VAL PP MS")
+  field(INPB, "fstmpod03:measurement_current_u205.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module11")
+  field(FLNK, "fstmpod03:rbk_alm_module11")
 }
 
-record(calc, $(SYSTEM3):rbk_alm_module11){
+record(calc, fstmpod03:rbk_alm_module11){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):rbk_v_alm_module11")
-  field(INPB, "$(SYSTEM3):rbk_c_alm_module11")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL")
+  field(INPA, "fstmpod03:rbk_v_alm_module11")
+  field(INPB, "fstmpod03:rbk_c_alm_module11")
+  field(INPC, "fstmpod03:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM3):rdo6_status")
+  field(FLNK, "fstmpod03:rdo6_status")
 }
 
 ################Disk3 Module12################
-record(calc, $(SYSTEM3):rbk_v_alm_module12){
+record(calc, fstmpod03:rbk_v_alm_module12){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):output_sense_voltage_u206.VAL PP MS")
-  field(INPB, "$(SYSTEM3):output_sense_voltage_u207.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:output_sense_voltage_u206.VAL PP MS")
+  field(INPB, "fstmpod03:output_sense_voltage_u207.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "139")
   field(INPE, "141")
   field(INPF, "159")
   field(INPG, "161")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "4")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module12")
+  field(FLNK, "fstmpod03:rbk_alm_module12")
 }
 
-record(calc, $(SYSTEM3):rbk_c_alm_module12){
+record(calc, fstmpod03:rbk_c_alm_module12){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):measurement_current_u206.VAL PP MS")
-  field(INPB, "$(SYSTEM3):measurement_current_u207.VAL PP MS")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL PP MS")
+  field(INPA, "fstmpod03:measurement_current_u206.VAL PP MS")
+  field(INPB, "fstmpod03:measurement_current_u207.VAL PP MS")
+  field(INPC, "fstmpod03:pwr_reading.VAL PP MS")
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
   field(INPG, "0.000003")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
-  field(FLNK, "$(SYSTEM3):rbk_alm_module12")
+  field(FLNK, "fstmpod03:rbk_alm_module12")
 }
 
-record(calc, $(SYSTEM3):rbk_alm_module12){
+record(calc, fstmpod03:rbk_alm_module12){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):rbk_v_alm_module12")
-  field(INPB, "$(SYSTEM3):rbk_c_alm_module12")
-  field(INPC, "$(SYSTEM3):pwr_reading.VAL")
+  field(INPA, "fstmpod03:rbk_v_alm_module12")
+  field(INPB, "fstmpod03:rbk_c_alm_module12")
+  field(INPC, "fstmpod03:pwr_reading.VAL")
   field(CALC, "C=1&A>0&B>0")
   field(LOW,"0")
   field(LOLO,"0")
   field(LSV,"MAJOR")
   field(LLSV,"MAJOR")
-  field(FLNK, "$(SYSTEM3):rdo6_status")
+  field(FLNK, "fstmpod03:rdo6_status")
 }
 
 ################RDO6################
-record(calc, $(SYSTEM3):rdo6_status){
+record(calc, fstmpod03:rdo6_status){
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):rbk_alm_module7")
-  field(INPB, "$(SYSTEM3):rbk_alm_module8")
-  field(INPC, "$(SYSTEM3):rbk_alm_module9")
-  field(INPD, "$(SYSTEM3):rbk_alm_module10")
-  field(INPE, "$(SYSTEM3):rbk_alm_module11")
-  field(INPF, "$(SYSTEM3):rbk_alm_module12")
-  field(INPG, "$(SYSTEM3):pwr_reading")
+  field(INPA, "fstmpod03:rbk_alm_module7")
+  field(INPB, "fstmpod03:rbk_alm_module8")
+  field(INPC, "fstmpod03:rbk_alm_module9")
+  field(INPD, "fstmpod03:rbk_alm_module10")
+  field(INPE, "fstmpod03:rbk_alm_module11")
+  field(INPF, "fstmpod03:rbk_alm_module12")
+  field(INPG, "fstmpod03:pwr_reading")
   field(CALC, "G=1?A&&B&&C&&D&&E&&F:0")
-  field(FLNK, "$(SYSTEM3):rdo6_alarm")
+  field(FLNK, "fstmpod03:rdo6_alarm")
 }
 
-record(calc, $(SYSTEM3):rdo6_alarm){
+record(calc, fstmpod03:rdo6_alarm){
   field(DESC, "Alarm handler alarm")
   field(SCAN, ".5 second")
-  field(INPA, "$(SYSTEM3):rbk_alm_module7")
-  field(INPB, "$(SYSTEM3):rbk_alm_module8")
-  field(INPC, "$(SYSTEM3):rbk_alm_module9")
-  field(INPD, "$(SYSTEM3):rbk_alm_module10")
-  field(INPE, "$(SYSTEM3):rbk_alm_module11")
-  field(INPF, "$(SYSTEM3):rbk_alm_module12")
-  field(INPG, "$(SYSTEM3):pwr_reading")
+  field(INPA, "fstmpod03:rbk_alm_module7")
+  field(INPB, "fstmpod03:rbk_alm_module8")
+  field(INPC, "fstmpod03:rbk_alm_module9")
+  field(INPD, "fstmpod03:rbk_alm_module10")
+  field(INPE, "fstmpod03:rbk_alm_module11")
+  field(INPF, "fstmpod03:rbk_alm_module12")
+  field(INPG, "fstmpod03:pwr_reading")
   field(CALC, "G=1?!(A&&B&&C&&D&&E&&F):0")
   field(HIGH,"1")
   field(HIHI,"1")
@@ -1749,7 +1749,7 @@ record(calc, $(SYSTEM3):rdo6_alarm){
 }
 
 #Below variable is added for debugging the ShiftGui Script.
-record(calc, $(SYSTEM3):crate_status_panic){
+record(calc, fstmpod03:crate_status_panic){
   field(DESC, "Script status")
 }
 
@@ -1771,12 +1771,12 @@ record(calc, fst_power_status_trans){
 
 record(calc, fstON_crate_status){
  field(SCAN, "1 second")
- field(INPA, "$(SYSTEM1):rdo1_status")
- field(INPB, "$(SYSTEM1):rdo2_status")
- field(INPC, "$(SYSTEM2):rdo3_status")
- field(INPD, "$(SYSTEM2):rdo4_status")
- field(INPE, "$(SYSTEM3):rdo5_status")
- field(INPF, "$(SYSTEM3):rdo6_status")
+ field(INPA, "fstmpod01:rdo1_status")
+ field(INPB, "fstmpod01:rdo2_status")
+ field(INPC, "fstmpod02:rdo3_status")
+ field(INPD, "fstmpod02:rdo4_status")
+ field(INPE, "fstmpod03:rdo5_status")
+ field(INPF, "fstmpod03:rdo6_status")
  field(INPG, "1")
  field(CALC, "G=1?A&&B&&C&&D&&E&&F:0")
  field(FLNK, "fst_general_alarm_onStatus")
@@ -1784,18 +1784,18 @@ record(calc, fstON_crate_status){
 
 record(calc, fstOFF_crate_status){
  field(SCAN, "1 second")
- field(INPA, "$(SYSTEM1):pwr_reading")
- field(INPB, "$(SYSTEM2):pwr_reading")
- field(INPC, "$(SYSTEM3):pwr_reading")
+ field(INPA, "fstmpod01:pwr_reading")
+ field(INPB, "fstmpod02:pwr_reading")
+ field(INPC, "fstmpod03:pwr_reading")
  field(CALC, "(A||B||C)=1?1:0")
  field(FLNK, "fst_general_alarm_offStatus")
 }
 
 record(calc, fst_crate_status_panic){
  field(SCAN, "1 second")
- field(INPA, "$(SYSTEM1):crate_status_panic")
- field(INPB, "$(SYSTEM2):crate_status_panic")
- field(INPC, "$(SYSTEM3):crate_status_panic")
+ field(INPA, "fstmpod01:crate_status_panic")
+ field(INPB, "fstmpod02:crate_status_panic")
+ field(INPC, "fstmpod03:crate_status_panic")
  field(CALC, "(A&&B&&C)=1?1:0")
 }
 
