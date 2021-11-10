@@ -38,3 +38,6 @@ FstTracking/list/FST/*/*/*/*.list
 FstTracking/list/IST/*.list
 FstTracking/list/IST/*/*.list
 FstTracking/list/IST/*/*/*.list
+
+# FstOnlineZS
+FstOnlineZS/figures/*.pdf
