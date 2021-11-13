@@ -820,8 +820,8 @@ void fstBuilder::startrun(daqReader *rdr)
   //load external pedstal/RMS value for all channels
   FILE *file;
   char paraDir[256];
-  sprintf(paraDir, "%s/fst_s1_pedestals.txt", clientdatadir);
-  // sprintf(paraDir, "/star/data01/pwg/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/daqtest/fst_s1_pedestals.txt");
+  // sprintf(paraDir, "%s/fst_s1_pedestals.txt", clientdatadir);
+  sprintf(paraDir, "/star/data01/pwg/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/daqtest/fst_s1_pedestals.txt");
 
   file = fopen(paraDir, "r");
   if (file==0) {
@@ -1396,8 +1396,8 @@ void fstBuilder::event(daqReader *rdr)
       }
       else {
 	numVals[glbGeomChanId]++;
-	runningAvg[glbGeomChanId] = fstPedestal[glbElecChanId];
-	oldStdDevs[glbGeomChanId] = fstRmsNoise[glbElecChanId];
+	runningAvg[glbGeomChanId]  = fstPedestal[glbElecChanId];
+	oldStdDevs[glbGeomChanId]  = fstRmsNoise[glbElecChanId];
       }
       //channel status decision
       Bool_t isBad = false;
@@ -1638,7 +1638,7 @@ void fstBuilder::fillSumHistos()
   int numBadAll =0;
   sumHistogramsFilled++;
 
-  for ( int geoIdx=1; geoIdx<=totCh; geoIdx++ ) {
+  for ( int geoIdx=0; geoIdx<totCh; geoIdx++ ) {
     int diskIdx       = geoIdx/ChPerDisk + 1;                                   // 1-3
     int glbElecChanId = fstElecMapping[geoIdx];                                 // 0-36863
     int rdoIdx        = glbElecChanId/ChPerRdo + 1;                             // 1-6
