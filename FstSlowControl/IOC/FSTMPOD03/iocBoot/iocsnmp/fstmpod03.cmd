@@ -50,15 +50,10 @@ dbLoadRecords("db/fee_enable.db","ID=5")
 dbLoadRecords("db/fee_temp.db","ID=4_0")
 dbLoadRecords("db/fee_temp.db","ID=4_1")
 dbLoadRecords("db/fee_temp.db","ID=4_2")
-dbLoadRecords("db/fee_temp.db","ID=4_3")
-dbLoadRecords("db/fee_temp.db","ID=4_4")
-dbLoadRecords("db/fee_temp.db","ID=4_5")
 dbLoadRecords("db/fee_temp.db","ID=5_0")
 dbLoadRecords("db/fee_temp.db","ID=5_1")
 dbLoadRecords("db/fee_temp.db","ID=5_2")
-dbLoadRecords("db/fee_temp.db","ID=5_3")
-dbLoadRecords("db/fee_temp.db","ID=5_4")
-dbLoadRecords("db/fee_temp.db","ID=5_5")
+dbLoadRecords("db/fst_feeTemp_alarms.db")
 
 ## Set this to see messages from mySub
 #var mySubDebug 1

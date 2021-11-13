@@ -49,15 +49,10 @@ dbLoadRecords("db/fgt_controls.db","SYSTEM=fstmpod01")
 dbLoadRecords("db/fee_temp.db","ID=0_0")
 dbLoadRecords("db/fee_temp.db","ID=0_1")
 dbLoadRecords("db/fee_temp.db","ID=0_2")
-##dbLoadRecords("db/fee_temp.db","ID=0_3") ## not used in FST
-##dbLoadRecords("db/fee_temp.db","ID=0_4")
-##dbLoadRecords("db/fee_temp.db","ID=0_5")
 dbLoadRecords("db/fee_temp.db","ID=1_0")
 dbLoadRecords("db/fee_temp.db","ID=1_1")
 dbLoadRecords("db/fee_temp.db","ID=1_2")
-##dbLoadRecords("db/fee_temp.db","ID=1_3") ## not used in FST
-##dbLoadRecords("db/fee_temp.db","ID=1_4")
-##dbLoadRecords("db/fee_temp.db","ID=1_5")
+dbLoadRecords("db/fst_feeTemp_alarms.db")
 
 ## Set this to see messages from mySub
 #var mySubDebug 1

@@ -1,0 +1,468 @@
+################Disk1 Module1################
+record(calc, fstmpod01:temp_alm_module1_low){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_0_0_0_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_0_0_0_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_0_0_0_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_0_0_0_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "29")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module1")
+}
+
+record(calc, fstmpod01:temp_alm_module1_high){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_0_0_0_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_0_0_0_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_0_0_0_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_0_0_0_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "32")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module1")
+}
+
+record(calc, fstmpod01:temp_alm_module1){
+  field(DESC, "Alarm handler alarm")
+  field(SCAN, ".5 second")
+  field(INPA, "fstmpod01:temp_alm_module1_low")
+  field(INPB, "fstmpod01:temp_alm_module1_high")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
+  field(CALC, "C=1?(A+B):0")
+  field(HIGH,"1")
+  field(HIHI,"2")
+  field(HSV,"MINOR")
+  field(HHSV,"MAJOR")
+}
+################Disk1 Module2################
+record(calc, fstmpod01:temp_alm_module2_low){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_0_0_1_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_0_0_1_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_0_0_1_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_0_0_1_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "29")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module2")
+}
+
+record(calc, fstmpod01:temp_alm_module2_high){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_0_0_1_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_0_0_1_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_0_0_1_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_0_0_1_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "32")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module2")
+}
+
+record(calc, fstmpod01:temp_alm_module2){
+  field(DESC, "Alarm handler alarm")
+  field(SCAN, ".5 second")
+  field(INPA, "fstmpod01:temp_alm_module2_low")
+  field(INPB, "fstmpod01:temp_alm_module2_high")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
+  field(CALC, "C=1?(A+B):0")
+  field(HIGH,"1")
+  field(HIHI,"2")
+  field(HSV,"MINOR")
+  field(HHSV,"MAJOR")
+}
+################Disk1 Module3################
+record(calc, fstmpod01:temp_alm_module3_low){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_0_1_0_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_0_1_0_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_0_1_0_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_0_1_0_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "29")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module3")
+}
+
+record(calc, fstmpod01:temp_alm_module3_high){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_0_1_0_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_0_1_0_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_0_1_0_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_0_1_0_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "32")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module3")
+}
+
+record(calc, fstmpod01:temp_alm_module3){
+  field(DESC, "Alarm handler alarm")
+  field(SCAN, ".5 second")
+  field(INPA, "fstmpod01:temp_alm_module3_low")
+  field(INPB, "fstmpod01:temp_alm_module3_high")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
+  field(CALC, "C=1?(A+B):0")
+  field(HIGH,"1")
+  field(HIHI,"2")
+  field(HSV,"MINOR")
+  field(HHSV,"MAJOR")
+}
+################Disk1 Module4################
+record(calc, fstmpod01:temp_alm_module4_low){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_0_1_1_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_0_1_1_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_0_1_1_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_0_1_1_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "29")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module4")
+}
+
+record(calc, fstmpod01:temp_alm_module4_high){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_0_1_1_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_0_1_1_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_0_1_1_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_0_1_1_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "32")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module4")
+}
+
+record(calc, fstmpod01:temp_alm_module4){
+  field(DESC, "Alarm handler alarm")
+  field(SCAN, ".5 second")
+  field(INPA, "fstmpod01:temp_alm_module4_low")
+  field(INPB, "fstmpod01:temp_alm_module4_high")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
+  field(CALC, "C=1?(A+B):0")
+  field(HIGH,"1")
+  field(HIHI,"2")
+  field(HSV,"MINOR")
+  field(HHSV,"MAJOR")
+}
+################Disk1 Module5################
+record(calc, fstmpod01:temp_alm_module5_low){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_0_2_0_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_0_2_0_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_0_2_0_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_0_2_0_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "29")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module5")
+}
+
+record(calc, fstmpod01:temp_alm_module5_high){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_0_2_0_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_0_2_0_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_0_2_0_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_0_2_0_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "32")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module5")
+}
+
+record(calc, fstmpod01:temp_alm_module5){
+  field(DESC, "Alarm handler alarm")
+  field(SCAN, ".5 second")
+  field(INPA, "fstmpod01:temp_alm_module5_low")
+  field(INPB, "fstmpod01:temp_alm_module5_high")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
+  field(CALC, "C=1?(A+B):0")
+  field(HIGH,"1")
+  field(HIHI,"2")
+  field(HSV,"MINOR")
+  field(HHSV,"MAJOR")
+}
+################Disk1 Module6################
+record(calc, fstmpod01:temp_alm_module6_low){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_0_2_1_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_0_2_1_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_0_2_1_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_0_2_1_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "29")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module6")
+}
+
+record(calc, fstmpod01:temp_alm_module6_high){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_0_2_1_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_0_2_1_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_0_2_1_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_0_2_1_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "32")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module6")
+}
+
+record(calc, fstmpod01:temp_alm_module6){
+  field(DESC, "Alarm handler alarm")
+  field(SCAN, ".5 second")
+  field(INPA, "fstmpod01:temp_alm_module6_low")
+  field(INPB, "fstmpod01:temp_alm_module6_high")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
+  field(CALC, "C=1?(A+B):0")
+  field(HIGH,"1")
+  field(HIHI,"2")
+  field(HSV,"MINOR")
+  field(HHSV,"MAJOR")
+}
+################Disk1 Module7################
+record(calc, fstmpod01:temp_alm_module7_low){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_1_0_0_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_1_0_0_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_1_0_0_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_1_0_0_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "29")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module7")
+}
+
+record(calc, fstmpod01:temp_alm_module7_high){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_1_0_0_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_1_0_0_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_1_0_0_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_1_0_0_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "32")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module7")
+}
+
+record(calc, fstmpod01:temp_alm_module7){
+  field(DESC, "Alarm handler alarm")
+  field(SCAN, ".5 second")
+  field(INPA, "fstmpod01:temp_alm_module7_low")
+  field(INPB, "fstmpod01:temp_alm_module7_high")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
+  field(CALC, "C=1?(A+B):0")
+  field(HIGH,"1")
+  field(HIHI,"2")
+  field(HSV,"MINOR")
+  field(HHSV,"MAJOR")
+}
+################Disk1 Module8################
+record(calc, fstmpod01:temp_alm_module8_low){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_1_0_1_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_1_0_1_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_1_0_1_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_1_0_1_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "29")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module8")
+}
+
+record(calc, fstmpod01:temp_alm_module8_high){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_1_0_1_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_1_0_1_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_1_0_1_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_1_0_1_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "32")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module8")
+}
+
+record(calc, fstmpod01:temp_alm_module8){
+  field(DESC, "Alarm handler alarm")
+  field(SCAN, ".5 second")
+  field(INPA, "fstmpod01:temp_alm_module8_low")
+  field(INPB, "fstmpod01:temp_alm_module8_high")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
+  field(CALC, "C=1?(A+B):0")
+  field(HIGH,"1")
+  field(HIHI,"2")
+  field(HSV,"MINOR")
+  field(HHSV,"MAJOR")
+}
+################Disk1 Module9################
+record(calc, fstmpod01:temp_alm_module9_low){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_1_1_0_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_1_1_0_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_1_1_0_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_1_1_0_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "29")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module9")
+}
+
+record(calc, fstmpod01:temp_alm_module9_high){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_1_1_0_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_1_1_0_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_1_1_0_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_1_1_0_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "32")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module9")
+}
+
+record(calc, fstmpod01:temp_alm_module9){
+  field(DESC, "Alarm handler alarm")
+  field(SCAN, ".5 second")
+  field(INPA, "fstmpod01:temp_alm_module9_low")
+  field(INPB, "fstmpod01:temp_alm_module9_high")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
+  field(CALC, "C=1?(A+B):0")
+  field(HIGH,"1")
+  field(HIHI,"2")
+  field(HSV,"MINOR")
+  field(HHSV,"MAJOR")
+}
+################Disk1 Module10################
+record(calc, fstmpod01:temp_alm_module10_low){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_1_1_1_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_1_1_1_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_1_1_1_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_1_1_1_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "29")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module10")
+}
+
+record(calc, fstmpod01:temp_alm_module10_high){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_1_1_1_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_1_1_1_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_1_1_1_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_1_1_1_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "32")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module10")
+}
+
+record(calc, fstmpod01:temp_alm_module10){
+  field(DESC, "Alarm handler alarm")
+  field(SCAN, ".5 second")
+  field(INPA, "fstmpod01:temp_alm_module10_low")
+  field(INPB, "fstmpod01:temp_alm_module10_high")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
+  field(CALC, "C=1?(A+B):0")
+  field(HIGH,"1")
+  field(HIHI,"2")
+  field(HSV,"MINOR")
+  field(HHSV,"MAJOR")
+}
+################Disk1 Module11################
+record(calc, fstmpod01:temp_alm_module11_low){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_1_2_0_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_1_2_0_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_1_2_0_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_1_2_0_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "29")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module11")
+}
+
+record(calc, fstmpod01:temp_alm_module11_high){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_1_2_0_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_1_2_0_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_1_2_0_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_1_2_0_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "32")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module11")
+}
+
+record(calc, fstmpod01:temp_alm_module11){
+  field(DESC, "Alarm handler alarm")
+  field(SCAN, ".5 second")
+  field(INPA, "fstmpod01:temp_alm_module11_low")
+  field(INPB, "fstmpod01:temp_alm_module11_high")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
+  field(CALC, "C=1?(A+B):0")
+  field(HIGH,"1")
+  field(HIHI,"2")
+  field(HSV,"MINOR")
+  field(HHSV,"MAJOR")
+}
+################Disk1 Module12################
+record(calc, fstmpod01:temp_alm_module12_low){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_1_2_1_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_1_2_1_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_1_2_1_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_1_2_1_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "29")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module12")
+}
+
+record(calc, fstmpod01:temp_alm_module12_high){
+  field(SCAN, ".5 second")
+  field(INPA, "fst_fee_temperature_1_2_1_0.VAL PP MS")
+  field(INPB, "fst_fee_temperature_1_2_1_1.VAL PP MS")
+  field(INPC, "fst_fee_temperature_1_2_1_2.VAL PP MS")
+  field(INPD, "fst_fee_temperature_1_2_1_3.VAL PP MS")
+  field(INPE, "fstmpod01:pwr_reading.VAL PP MS")
+  field(INPF, "32")
+  field(CALC, "E=1?(A>F||B>F||C>F||D>F):0")
+  field(PREC, "4")
+  field(FLNK, "fstmpod01:temp_alm_module12")
+}
+
+record(calc, fstmpod01:temp_alm_module12){
+  field(DESC, "Alarm handler alarm")
+  field(SCAN, ".5 second")
+  field(INPA, "fstmpod01:temp_alm_module12_low")
+  field(INPB, "fstmpod01:temp_alm_module12_high")
+  field(INPC, "fstmpod01:pwr_reading.VAL PP MS")
+  field(CALC, "C=1?(A+B):0")
+  field(HIGH,"1")
+  field(HIHI,"2")
+  field(HSV,"MINOR")
+  field(HHSV,"MAJOR")
+}

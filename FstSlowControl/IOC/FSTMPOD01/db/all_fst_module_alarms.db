@@ -21,7 +21,7 @@ record(calc, fstmpod01:rbk_c_alm_module1){
   field(INPD, "-0.000001")
   field(INPE, "0.000003")
   field(INPF, "-0.000001")
-  field(INPG, "0.000007")
+  field(INPG, "0.000010")
   field(CALC, "C=1&A>D&A<E&B>F&B<G")
   field(PREC, "6")
   field(FLNK, "fstmpod01:rbk_alm_module1")

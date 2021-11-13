@@ -1,5 +1,6 @@
 #!/bin/sh
 Turnondelay=10
+Rampdelay=120
 Logfilename=`date +%Y.%m.%d-%H.%M.%S`
 caput fst_power_status_trans 1
 sleep 1
@@ -34,7 +35,17 @@ sleep 10
 caput fstmpod01:ramp_control_switch 3
 caput fstmpod02:ramp_control_switch 3
 caput fstmpod03:ramp_control_switch 3
-sleep 120
+# sleep 100
+echo "Start Ramping to PHYSICS HV..."
+  COUNTER=0
+  COUNTER1=$Rampdelay
+  while [ $COUNTER -lt $Rampdelay ]; do
+  echo "Wait $COUNTER1 seconds....."
+  sleep 5
+  let COUNTER=COUNTER+5
+  let COUNTER1=Rampdelay-COUNTER
+  done
+echo "--------------------------------------------- "
 
 echo "WARNING Please wait to stablize the HV outputs "
   COUNTER=0
