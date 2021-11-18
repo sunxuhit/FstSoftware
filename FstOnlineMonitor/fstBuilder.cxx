@@ -34,12 +34,15 @@ const float fstBuilder::minMipSigma_ZS    = 80;
 const float fstBuilder::minMipSigma_nonZS = 60;
 const float fstBuilder::maxMipSigma       = 200;
 const float fstBuilder::maxTbFracOK       = 0.9;
-const float fstBuilder::landauFit_dn      = 400.0;
+// const float fstBuilder::landauFit_dn      = 400.0;
+const float fstBuilder::landauFit_dn      = 10.0;
 const float fstBuilder::landauFit_up      = 2000.0;
 const float fstBuilder::cmnCut            = 3.0;
-const float fstBuilder::hitCut            = 3.0;
+const float fstBuilder::hitCut            = 4.0;
+const float fstBuilder::zsCut             = 4.0;
 const float fstBuilder::noiseChipCut      = 10.0;
-const int   fstBuilder::hitOccupancyCut  = 25;
+const int   fstBuilder::hitOccupancyCut   = 100;
+const int   fstBuilder::defTb             = 1;
 
 // constant used for FST Geometry Hit Map
 // all values are defined by inner direction
@@ -108,15 +111,14 @@ void fstBuilder::initialize(int argc, char *argv[])
 
   for( int i=0; i<totCh; i++ ) 
   {
-    meanVals[i]        = 0;
     aVals[i]           = 0;
     numVals[i]         = 0;
     numOverOneSig[i]   = 0;
     oldStdDevs[i]      = 0;
+    ranStdDevs[i]      = 0;
     isChannelBad[i]    = false;
     runningAvg[i]      = 0;
     runningStdDevSq[i] = 0;
-    fstRanNoise[i]      = 0;
   }
   for ( int i=0; i<totCh; i++ )
   {
@@ -481,7 +483,7 @@ void fstBuilder::initialize(int argc, char *argv[])
 
     sprintf(buffer,"HitMapOfFSTDisk%d_ZS", iDisk+1);
     sprintf(buffer2,"FST - Hit map (ZS) for Disk%d", iDisk+1);
-    hSumContents.hHitMap_ZS[iDisk] = new TH2S(buffer, buffer2, PhiSegPerMod*ModPerDisk, -0.5, PhiSegPerMod*ModPerDisk, RstripPerMod-0.5, -0.5, RstripPerMod-0.5);//1536*8 bins
+    hSumContents.hHitMap_ZS[iDisk] = new TH2S(buffer, buffer2, PhiSegPerMod*ModPerDisk, -0.5, PhiSegPerMod*ModPerDisk, RstripPerMod, -0.5, RstripPerMod-0.5);//1536*8 bins
     hSumContents.hHitMap_ZS[iDisk]->GetXaxis()->SetNdivisions(-ModPerDisk, false);
     hSumContents.hHitMap_ZS[iDisk]->GetYaxis()->SetNdivisions(-RstripPerMod, false);
     hSumContents.hHitMap_ZS[iDisk]->SetStats(false);
@@ -806,12 +808,12 @@ void fstBuilder::startrun(daqReader *rdr)
 
   for ( int i=0; i<totCh; i++ ) 
   {
-    meanVals[i]        = 0;
     aVals[i]           = 0;
     //      rmsVals[i] = 0;
     numVals[i]         = 0;
     numOverOneSig[i]   = 0;
     oldStdDevs[i]      = 0;
+    ranStdDevs[i]      = 0;
     isChannelBad[i]    = false;
     runningAvg[i]      = 0;
     runningStdDevSq[i] = 0;
@@ -820,8 +822,8 @@ void fstBuilder::startrun(daqReader *rdr)
   //load external pedstal/RMS value for all channels
   FILE *file;
   char paraDir[256];
-  sprintf(paraDir, "%s/fst_s1_pedestals.txt", clientdatadir);
-  // sprintf(paraDir, "/star/data01/pwg/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/daqtest/fst_s1_pedestals.txt");
+  // sprintf(paraDir, "%s/fst/fst_s1_pedestals.txt", clientdatadir);
+  sprintf(paraDir, "/star/data01/pwg/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/daqtest/fst_s1_pedestals.txt");
 
   file = fopen(paraDir, "r");
   if (file==0) {
@@ -850,7 +852,7 @@ void fstBuilder::startrun(daqReader *rdr)
 	int ret = sscanf(buff,"%d %d %d %d %d %f %f %f",&rdoIdxTemp,&armIdxTemp,&apvIdxTemp,&chanIdxTemp,&tbIdxTemp,&pp,&rr,&nn);
 	if(ret!=8) continue;
 
-	if(tbIdxTemp==2) { //only take time bin 2 as sample
+	if(tbIdxTemp==defTb) { //only take the default time bin as sample
 	  int portIdxTemp        = apvIdxTemp/ApvRoPerPort; // 0: 0-7 | 1: 12-19
 	  int refApvIdxTemp      = apvIdxTemp - portIdxTemp*ApvNumOffset + portIdxTemp*ApvPerPort; // 0-15
 	  int glbElecChanIdxTemp = (rdoIdxTemp-1)*ChPerRdo + armIdxTemp*ChPerArm + refApvIdxTemp*ChPerApv + chanIdxTemp; // 0-36863
@@ -882,7 +884,7 @@ void fstBuilder::startrun(daqReader *rdr)
       int ret = sscanf(buff,"%d %d %d %d %d %f %f %f",&rdoIdxTemp,&armIdxTemp,&apvIdxTemp,&chanIdxTemp,&tbIdxTemp,&pp,&rr,&nn);
       if(ret!=8) continue;
 
-      if(tbIdxTemp==2) { //only take time bin 2 as sample
+      if(tbIdxTemp==defTb) { //only take the default time bin as sample
 	int portIdxTemp        = apvIdxTemp/ApvRoPerPort; // 0: 0-7 | 1: 12-19
 	int refApvIdxTemp      = apvIdxTemp - portIdxTemp*ApvNumOffset + portIdxTemp*ApvPerPort; // 0-15
 	int glbElecChanIdxTemp = (rdoIdxTemp-1)*ChPerRdo + armIdxTemp*ChPerArm + refApvIdxTemp*ChPerApv + chanIdxTemp; // 0-36863
@@ -896,8 +898,8 @@ void fstBuilder::startrun(daqReader *rdr)
     fclose(file);
   }
 
-  sprintf(paraDir, "%s/fst_s2_pedestals.txt", clientdatadir);
-  // sprintf(paraDir, "/star/data01/pwg/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/daqtest/fst_s2_pedestals.txt");
+  // sprintf(paraDir, "%s/fst/fst_s2_pedestals.txt", clientdatadir);
+  sprintf(paraDir, "/star/data01/pwg/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/daqtest/fst_s2_pedestals.txt");
 
   FILE *file0;
 
@@ -928,7 +930,7 @@ void fstBuilder::startrun(daqReader *rdr)
 	int ret = sscanf(buff,"%d %d %d %d %d %f %f %f",&rdoIdxTemp,&armIdxTemp,&apvIdxTemp,&chanIdxTemp,&tbIdxTemp,&pp,&rr,&nn);
 	if(ret!=8) continue;
 
-	if(tbIdxTemp==2) { //only take time bin 2 as sample
+	if(tbIdxTemp==defTb) { //only take the defualt time bin as sample
 	  int portIdxTemp        = apvIdxTemp/ApvRoPerPort; // 0: 0-7 | 1: 12-19
 	  int refApvIdxTemp      = apvIdxTemp - portIdxTemp*ApvNumOffset + portIdxTemp*ApvPerPort; // 0-15
 	  int glbElecChanIdxTemp = (rdoIdxTemp-1)*ChPerRdo + armIdxTemp*ChPerArm + refApvIdxTemp*ChPerApv + chanIdxTemp; // 0-36863
@@ -960,7 +962,7 @@ void fstBuilder::startrun(daqReader *rdr)
       int ret = sscanf(buff,"%d %d %d %d %d %f %f %f",&rdoIdxTemp,&armIdxTemp,&apvIdxTemp,&chanIdxTemp,&tbIdxTemp,&pp,&rr,&nn);
       if(ret!=8) continue;
 
-      if(tbIdxTemp==2) { //only take time bin 2 as sample
+      if(tbIdxTemp==defTb) { //only take the defualt time bin as sample
 	int portIdxTemp        = apvIdxTemp/ApvRoPerPort; // 0: 0-7 | 1: 12-19
 	int refApvIdxTemp      = apvIdxTemp - portIdxTemp*ApvNumOffset + portIdxTemp*ApvPerPort; // 0-15
 	int glbElecChanIdxTemp = (rdoIdxTemp-1)*ChPerRdo + armIdxTemp*ChPerArm + refApvIdxTemp*ChPerApv + chanIdxTemp; // 0-36863
@@ -1251,6 +1253,7 @@ void fstBuilder::event(daqReader *rdr)
   // check if we have to look for the zs data
   size_t evtSize = 0;
   daq_dta *ddZS = rdr->det("fst")->get("zs");
+
   while( ddZS && ddZS->iterate() ) {
     fgt_adc_t *f_zs = (fgt_adc_t *) ddZS->Void ;
     evtSize += ddZS->ncontent * sizeof(fgt_adc_t);
@@ -1284,13 +1287,15 @@ void fstBuilder::event(daqReader *rdr)
       int glbGeomChanId_zs    = fstGeomMapping[glbElecChanId_zs]; // 0-36863
       if ( isChannelBad[glbGeomChanId_zs] )     continue;
 
+      int flag = f_zs[i].flags;
+
       //max ADC and its time bin index decision
       if ( f_zs[i].adc > maxAdc_zs[glbGeomChanId_zs] ) {
 	maxAdc_zs[glbGeomChanId_zs]     = f_zs[i].adc;
 	maxTimeBin_zs[glbGeomChanId_zs] = f_zs[i].tb;
       }
-      // if ( f_zs[i].adc > hitCut * ranStdDevs[glbGeomChanId_zs]) {
-      if ( f_zs[i].adc > hitCut * fstRanNoise[glbElecChanId_zs]) {
+      if ( flag < 8) { // select seed hits & recovery hits
+      // if ( flag == 7) { // select seed hits only
 	cou_zs[f_zs[i].ch]++;
       }
     }//end current APV loop
@@ -1392,17 +1397,19 @@ void fstBuilder::event(daqReader *rdr)
 	runningAvg[glbGeomChanId]      += (f[i].adc-runningAvg[glbGeomChanId]) / numVals[glbGeomChanId];
 	runningStdDevSq[glbGeomChanId] += ((float)numVals[glbGeomChanId]-1)/(numVals[glbGeomChanId]) * (f[i].adc-runningAvg[glbGeomChanId]) * (f[i].adc-runningAvg[glbGeomChanId]);
 	oldStdDevs[glbGeomChanId]       = sqrt(runningStdDevSq[glbGeomChanId] / numVals[glbGeomChanId]);
-	fstRanNoise[glbElecChanId]      = fstRmsNoise[glbElecChanId];
+	ranStdDevs[glbGeomChanId]       = oldStdDevs[glbGeomChanId];
       }
       else {
 	numVals[glbGeomChanId]++;
-	runningAvg[glbGeomChanId] = fstPedestal[glbElecChanId];
-	oldStdDevs[glbGeomChanId] = fstRmsNoise[glbElecChanId];
+	runningAvg[glbGeomChanId]  = fstPedestal[glbElecChanId];
+	oldStdDevs[glbGeomChanId]  = fstRmsNoise[glbElecChanId];
+	ranStdDevs[glbGeomChanId]  = fstRanNoise[glbElecChanId];
       }
       //channel status decision
       Bool_t isBad = false;
       if ( runningAvg[glbGeomChanId] < minPedVal || runningAvg[glbGeomChanId] > maxPedVal ) isBad = true;
       if ( oldStdDevs[glbGeomChanId] < minRMSVal || oldStdDevs[glbGeomChanId] > maxRMSVal ) isBad = true;
+      if ( ranStdDevs[glbGeomChanId] < minRanVal || ranStdDevs[glbGeomChanId] > maxRanVal ) isBad = true;
       if(isBad) continue;
 
       //fill pedestal-subtracted ADC vs time bin index
@@ -1422,7 +1429,7 @@ void fstBuilder::event(daqReader *rdr)
       }
 
       //counts for dynamical common mode noise calculation
-      if ( f[i].tb==(numTb-1) ) {       //only take last time bin
+      if ( f[i].tb==defTb ) {       //only take the default time bin
 	//exclude signal-related channels for common mode noise calculation
 	if ( oldStdDevs[glbGeomChanId]>0 && abs(maxAdc[glbGeomChanId] < cmnCut*oldStdDevs[glbGeomChanId]) ) {
 	  int rIdx = lclRstripIdx < 4 ? lclRstripIdx:lclRstripIdx-4;
@@ -1505,7 +1512,7 @@ void fstBuilder::event(daqReader *rdr)
 
     //float pedestal   = runningAvg[geoIdx-1];
     float rms   = oldStdDevs[geoIdx];
-    float ran   = fstRanNoise[glbElecChanId];
+    float ran   = ranStdDevs[geoIdx];
     int adc_max = maxAdc[geoIdx];
     int tb_max  = maxTimeBin[geoIdx];
 
@@ -1554,7 +1561,7 @@ void fstBuilder::event(daqReader *rdr)
     }
 
     //ZS data
-    if( maxAdc_zs[geoIdx] > hitCut*ran && ran > minRMSVal && ran < maxRMSVal ) {//roughly cut
+    if( maxAdc_zs[geoIdx] > zsCut*ran && ran > minRanVal && ran < maxRanVal) {//roughly cut
       if( !isNoisyApv[glbElecApvIdx] || (isNoisyApv[glbElecApvIdx] && maxAdc_zs[geoIdx] > noiseChipCut*ran)){
 	if(counterGoodHitPerEvent_zs[glbElecApvIdx]<=hitOccupancyCut){
 	  hMipContents.mipArray[glbSecIdx+totSec]->Fill(short(maxAdc_zs[geoIdx]+0.5));
@@ -1608,8 +1615,22 @@ void fstBuilder::event(daqReader *rdr)
   }
 
   //getting MPV value and CM noise every 50 evts for each section
-  //if(!(evtCt%100)) 
-  //	cout << "Analyzing event: " << evtCt << endl;
+  //Updating CMN every 1000 events
+  if( !(evtCt%1000))
+  {
+    cout << "Updating CMN!" << endl;
+    for(int i_disk = 0; i_disk < 3; ++i_disk)
+    {
+	hSumContents.hCommonModeNoise[i_disk]->Reset();
+    }
+    for( int k=0; k<totAPV; k++ ) {
+      int diskIdx = k/ApvPerDisk + 1; // 1-3
+      for(int iRstrip = 0; iRstrip < 4; ++iRstrip)
+      {
+	hSumContents.hCommonModeNoise[diskIdx-1]->Fill(4*(k-(diskIdx-1)*ApvPerDisk)+iRstrip, short(hCmnTemp.hCmnPerChip[k][iRstrip]->GetRMS()+0.5));
+      }
+    }
+  }
 
   // Reset rolling histos if necessary..
   int tm = time(NULL);
@@ -1631,6 +1652,12 @@ void fstBuilder::fillSumHistos()
   hEventSumContents.hMeanRMS->Reset();  // sigma
   hEventSumContents.hMeanRan->Reset();  // sigma
   hEventSumContents.hSumBad->Reset();   // #goodapv
+  for(int iDisk = 0; iDisk < 3; ++iDisk)
+  {
+    hSumContents.hSumSig[iDisk]->Reset();
+    hSumContents.hSumRan[iDisk]->Reset();
+    hSumContents.hSumPed[iDisk]->Reset();
+  }
 
   int numGood[totAPV];
   for(int i=0; i<totAPV; i++)  numGood[i] = 0;
@@ -1649,7 +1676,7 @@ void fstBuilder::fillSumHistos()
 
     float pedestal = runningAvg[geoIdx];
     float rmsPed   = oldStdDevs[geoIdx];
-    float ranPed   = fstRanNoise[glbElecChanId];
+    float ranPed   = ranStdDevs[geoIdx];
     bool  isBad    = false;
 
     if ( rmsPed > 0 ) {
@@ -1689,6 +1716,10 @@ void fstBuilder::fillSumHistos()
 void fstBuilder::stoprun(daqReader *rdr) 
 {
   //common mode noise
+  for(int i_disk = 0; i_disk < 3; ++i_disk)
+  {
+    hSumContents.hCommonModeNoise[i_disk]->Reset();
+  }
   for( int k=0; k<totAPV; k++ ) {
     int diskIdx = k/ApvPerDisk + 1; // 1-3
     for(int iRstrip = 0; iRstrip < 4; ++iRstrip)
@@ -1745,8 +1776,7 @@ void fstBuilder::stoprun(daqReader *rdr)
       entriesTB_123 = hMaxTimeBinContents.maxTimeBinArray[j]->Integral(2, numTb-1);
       entriesTB_all = hMaxTimeBinContents.maxTimeBinArray[j]->Integral(1, numTb);
       fraction = entriesTB_123/entriesTB_all;
-      if(j==6) fraction = 1.0;
-      if(j<36 && fraction<maxTbFracOK) {
+      if(fraction<maxTbFracOK) {
 	//LOG(U_FST,"maxTimeBinFraction::section RDO%d_ARM%d_GROUP%d with fraction %f!", rdoIdx, armIdx, portIdx, fraction);
 	errLocation_maxTimeBinFraction[errCt_maxTimeBinFraction] = rdoIdx*100 + armIdx*10 + portIdx;
 	errValue_maxTimeBinFraction[errCt_maxTimeBinFraction] = fraction;
@@ -1757,17 +1787,13 @@ void fstBuilder::stoprun(daqReader *rdr)
 
     float lowerRange=landauFit_dn, upperRange=landauFit_up, mpvMIP_nonZS=0., sigmaMIP_nonZS=0., mpvMIP_ZS=0., sigmaMIP_ZS=0.;
     if(hMipContents.mipArray[j]->GetEntries()>0) {
-      if(j%3==1)
-	hMipContents.mipArray[j]->Fit("landau","QR","",lowerRange-50, upperRange);
-      else
-	hMipContents.mipArray[j]->Fit("landau","QR","",lowerRange, upperRange);
+      hMipContents.mipArray[j]->Fit("landau","QR","",lowerRange, upperRange);
       TF1* fit_nonZS = hMipContents.mipArray[j]->GetFunction("landau");
       if(fit_nonZS) {
 	mpvMIP_nonZS    = fit_nonZS->GetParameter("MPV");
 	sigmaMIP_nonZS  = fit_nonZS->GetParameter("Sigma");
 
 	if(mpvMIP_nonZS<minMipMpv_nonZS || mpvMIP_nonZS>maxMipMpv || sigmaMIP_nonZS<minMipSigma_nonZS || sigmaMIP_nonZS>maxMipSigma) {
-	  //LOG(U_FST,"MIP_nonZS::section RDO%d_ARM%d_GROUP%d with MIP mpv %f, sigma %f!", rdoIdx, armIdx, portIdx, mpvMIP_nonZS, sigmaMIP_nonZS);
 	  errLocation_mipNonZS[errCt_mipNonZS] = rdoIdx*100 + armIdx*10 + portIdx;
 	  errValue_mipNonZS[errCt_mipNonZS] = mpvMIP_nonZS;
 	  errValue_sigmaNonZS[errCt_mipNonZS] = sigmaMIP_nonZS;
@@ -1778,26 +1804,18 @@ void fstBuilder::stoprun(daqReader *rdr)
 	LOG(WARN, "Bad Fit due to non-enough data (non-ZS) for RDO%d_ARM%d_GROUP%d", rdoIdx, armIdx, portIdx);
       }
     }
-    // if(j==6) {
-    //   mpvMIP_nonZS = 550.;
-    //   sigmaMIP_nonZS = 140.;
-    // }
     hEventSumContents.hMipMPVvsSection->SetBinContent(j+1, short(mpvMIP_nonZS+0.5));
     hEventSumContents.hMipSIGMAvsSection->SetBinContent(j+1, short(sigmaMIP_nonZS+0.5));
 
 
     if(hMipContents.mipArray[j+72]->GetEntries()>0) {
-      if((j+72)%3==1)
-	hMipContents.mipArray[j+72]->Fit("landau","QR","",lowerRange-50, upperRange);
-      else
-	hMipContents.mipArray[j+72]->Fit("landau","QR","",lowerRange, upperRange);
+      hMipContents.mipArray[j+72]->Fit("landau","QR","",lowerRange, upperRange);
       TF1* fit_ZS = hMipContents.mipArray[j+72]->GetFunction("landau");
       if(fit_ZS) {
 	mpvMIP_ZS      = fit_ZS->GetParameter("MPV");
 	sigmaMIP_ZS    = fit_ZS->GetParameter("Sigma");
 
 	if(mpvMIP_ZS<minMipMpv_ZS || mpvMIP_ZS>maxMipMpv || sigmaMIP_ZS<minMipSigma_ZS || sigmaMIP_ZS>maxMipSigma)  {
-	  //LOG(U_FST,"MIP_ZS::section RDO%d_ARM%d_GROUP%d with MIP mpv %f, sigma %f!", rdoIdx, armIdx, portIdx, mpvMIP_ZS, sigmaMIP_ZS);
 	  errLocation_mipZS[errCt_mipZS] = rdoIdx*100 + armIdx*10 + portIdx;
 	  errValue_mipZS[errCt_mipZS] = mpvMIP_ZS;
 	  errValue_sigmaZS[errCt_mipZS] = sigmaMIP_ZS;
@@ -1808,18 +1826,14 @@ void fstBuilder::stoprun(daqReader *rdr)
 	LOG(WARN, "Bad Fit due to non-enough data (ZS) for RDO%d_ARM%d_GROUP%d", rdoIdx, armIdx, portIdx);
       }
     }
-    // if(j==6) {
-    //   mpvMIP_ZS = 550.;
-    //   sigmaMIP_ZS = 140.;
-    // }
     hEventSumContents.hMipMPVvsSection_ZS->SetBinContent(j+1, short(mpvMIP_ZS+0.5));
     hEventSumContents.hMipSIGMAvsSection_ZS->SetBinContent(j+1, short(sigmaMIP_ZS+0.5));
   }
 
-  hEventSumContents.hMipMPVvsSection->GetYaxis()->SetRangeUser(300, 800);
-  hEventSumContents.hMipSIGMAvsSection->GetYaxis()->SetRangeUser(40, 200);
-  hEventSumContents.hMipMPVvsSection_ZS->GetYaxis()->SetRangeUser(300, 800);
-  hEventSumContents.hMipSIGMAvsSection_ZS->GetYaxis()->SetRangeUser(40, 200);
+  hEventSumContents.hMipMPVvsSection->GetYaxis()->SetRangeUser(0, 800);
+  hEventSumContents.hMipSIGMAvsSection->GetYaxis()->SetRangeUser(0, 200);
+  hEventSumContents.hMipMPVvsSection_ZS->GetYaxis()->SetRangeUser(0, 800);
+  hEventSumContents.hMipSIGMAvsSection_ZS->GetYaxis()->SetRangeUser(0, 200);
 
   TString buffer_Err = "";
   if(errCt_visibleAPVperSection>0) {
@@ -1863,7 +1877,7 @@ void fstBuilder::stoprun(daqReader *rdr)
     runningAvg[i]      = 0;
     runningStdDevSq[i] = 0;
     oldStdDevs[i]      = 0;
-    meanVals[i]        = 0;
+    ranStdDevs[i]      = 0;
     aVals[i]           = 0;
     //rmsVals[i]         = 0;
     isChannelBad[i]    =false;

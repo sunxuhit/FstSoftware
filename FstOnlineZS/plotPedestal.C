@@ -9,7 +9,7 @@
 
 using namespace std;
 
-void plotPedestal(string runId = "22316091")
+void plotPedestal(string runId = "22319088")
 {
   // read in ADC info for all events
   float pedestals[6][3][24][128][9];

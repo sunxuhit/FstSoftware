@@ -95,6 +95,8 @@ class fstBuilder : public JevpBuilder {
   static const int maxPedVal    = 3000;  // to be decided
   static const int minRMSVal    = 10;    // to be decided
   static const int maxRMSVal    = 60;    // to be decided
+  static const int minRanVal    = 8;    // to be decided
+  static const int maxRanVal    = 60;    // to be decided
   //alarm threshold
   static const float minMipMpv_ZS;
   static const float minMipMpv_nonZS;
@@ -109,8 +111,10 @@ class fstBuilder : public JevpBuilder {
   //cut setting
   static const float cmnCut;
   static const float hitCut;
+  static const float zsCut;
   static const float noiseChipCut;
   static const int   hitOccupancyCut;
+  static const int   defTb;
 
   // constant used for FST Geometry Hit Map
   // all values are defined by inner direction
@@ -635,7 +639,7 @@ class fstBuilder : public JevpBuilder {
   float runningStdDevSq[totCh];
 
   float oldStdDevs[totCh];
-  float meanVals[totCh];
+  float ranStdDevs[totCh];
 
   float cmNoise[totAPV][4]; // each APV has 4 groups of CMN
   bool isChannelBad[totCh];
