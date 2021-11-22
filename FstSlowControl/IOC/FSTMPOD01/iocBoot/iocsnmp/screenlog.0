@@ -211,7 +211,7 @@ devSnmp_manager::createDevice: longoutsnmpLoInit
 devSnmp_manager::createDevice: longoutsnmpLoInit
 devSnmp_manager::createDevice: longoutsnmpLoInit
 devSnmp_manager::createDevice: longoutdevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_mancas warning: Configured TCP port was unavailable.
-cas warning: Using dynamically assigned TCP port 37049,
+cas warning: Using dynamically assigned TCP port 37782,
 cas warning: but now two or more servers share the same UDP port.
 cas warning: Depending on your IP kernel this server may not be
 cas warning: reachable with UDP unicast (a host's IP in EPICS_CA_ADDR_LIST)
@@ -221,21 +221,21 @@ epicsSnmpInit()
 ## Load record instances
 seq sncFGTControl, "SYSTEM=fstmpod01,SLOT=u"
 Sequencer release 2.1.13, compiled Wed Jan 13 16:47:50 2021
-Spawning sequencer program "sncFGTControl", thread 0x1a2c4e0: "sncFGTControl"
+Spawning sequencer program "sncFGTControl", thread 0x1870240: "sncFGTControl"
 seq sncFGTRamping, "SYSTEM=fstmpod01,SLOT=u20,deviceName=u20"
 Sequencer release 2.1.13, compiled Wed Jan 13 16:47:50 2021
-Spawning sequencer program "sncFGTRamping", thread 0x1a91df0: "sncFGTRamping"
+Spawning sequencer program "sncFGTRamping", thread 0x18d5b50: "sncFGTRamping"
 seq sncFGTRamping, "SYSTEM=fstmpod01,SLOT=u10,deviceName=u10"
 Sequencer release 2.1.13, compiled Wed Jan 13 16:47:50 2021
 sncFGTControl[0]: all channels connected & received 1st monitor
-Spawning sequencer program "sncFGTRamping", thread 0x1af76e0: "sncFGTRamping"
+sncFGTRamping[0]: all channels connected & received 1st monitor
+Spawning sequencer program "sncFGTRamping", thread 0x193b440: "sncFGTRamping"
 seq sncFGTRamping, "SYSTEM=fstmpod01,SLOT=u,deviceName=u"
 Sequencer release 2.1.13, compiled Wed Jan 13 16:47:50 2021
-Spawning sequencer program "sncFGTRamping", thread 0x1b5ce50: "sncFGTRamping"
+sncFGTRamping[1]: all channels connected & received 1st monitor
+Spawning sequencer program "sncFGTRamping", thread 0x19a0bb0: "sncFGTRamping"
 dbpf("fstmpod01:hv_settings","/home/sysuser/iocTop/FST/HV/mpod01/def")
 DBR_STRING:          "/home/sysuser/iocTop/FST/HV/mpod01/def"         
-sncFGTRamping[0]: all channels connected & received 1st monitor
-sncFGTRamping[1]: all channels connected & received 1st monitor
 sncFGTRamping[2]: all channels connected & received 1st monitor
 epics> sncFGTControl: Startup delay over
-DB CA Link Exception: "Virtual circuit disconnect", context "softioc4.starp.bnl.gov:43624"
+DB CA Link Exception: "Virtual circuit disconnect", context "softioc4.starp.bnl.gov:41765"

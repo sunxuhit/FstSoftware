@@ -38,11 +38,11 @@ const float fstBuilder::maxTbFracOK       = 0.9;
 const float fstBuilder::landauFit_dn      = 10.0;
 const float fstBuilder::landauFit_up      = 2000.0;
 const float fstBuilder::cmnCut            = 3.0;
-const float fstBuilder::hitCut            = 4.0;
-const float fstBuilder::zsCut             = 4.0;
+const float fstBuilder::hitCut            = 6.0;
+const float fstBuilder::zsCut             = 6.0;
 const float fstBuilder::noiseChipCut      = 10.0;
 const int   fstBuilder::hitOccupancyCut   = 100;
-const int   fstBuilder::defTb             = 1;
+const int   fstBuilder::defTb             = 0;
 
 // constant used for FST Geometry Hit Map
 // all values are defined by inner direction
@@ -55,7 +55,7 @@ const float fstBuilder::rStart[RstripPerMod] = {50.00, 78.75, 107.50, 136.25, 16
 const float fstBuilder::rStop[RstripPerMod]  = {78.75, 107.5, 136.25, 165.00, 193.75, 222.50, 251.25, 280.00}; // in mm
 const float fstBuilder::rDelta               = 28.75; // in mm
 
-fstBuilder::fstBuilder(JevpServer *parent):JevpBuilder(parent),evtCt(0) 
+fstBuilder::fstBuilder(JevpServer *parent):JevpBuilder(parent),evtCt(1),evtCt_nonZS(1)
 {
   plotsetname = (char *)"fst";
   // start with histograms undefined...
@@ -119,6 +119,9 @@ void fstBuilder::initialize(int argc, char *argv[])
     isChannelBad[i]    = false;
     runningAvg[i]      = 0;
     runningStdDevSq[i] = 0;
+    sumAdc[i]          = 0;
+    sum2Adc[i]         = 0;
+    couAdc[i]          = 0;
   }
   for ( int i=0; i<totCh; i++ )
   {
@@ -285,6 +288,7 @@ void fstBuilder::initialize(int argc, char *argv[])
     sprintf( buffer2,"FST - ADC vs Timebin (non-ZS), Disk%d Module%d: RDO%d_ARM%d_PORT%d_SEC%d", diskIdx, moduleIdx, rdoIdx, armIdx, portIdx, secIdx);
 
     hTbVsAdcContents.tbVsAdcArray[index] = new TH2S(buffer, buffer2, numTimeBin, 0, numTimeBin, 100, ADCMin, ADCMax); //9*50 bins
+    // hTbVsAdcContents.tbVsAdcArray[index] = new TH2S(buffer, buffer2, numTimeBin, 0, numTimeBin, 500, -4100, ADCMax); //9*50 bins
     hTbVsAdcContents.tbVsAdcArray[index]->GetXaxis()->SetTitle("Time Bin Index");
     hTbVsAdcContents.tbVsAdcArray[index]->GetYaxis()->SetTitle("Pedestal-subtracted ADC value");
     hTbVsAdcContents.tbVsAdcArray[index]->GetXaxis()->SetNdivisions(numTimeBin,false);
@@ -559,17 +563,46 @@ void fstBuilder::initialize(int argc, char *argv[])
     hSumContents.hSumRan[iDisk]->GetXaxis()->SetTitle("Channel Geometry ID");
     hSumContents.hSumRan[iDisk]->GetYaxis()->SetTitle("Random RMS [ADC counts]");
 
-    for(int index=0; index<ModPerDisk; index++ )
+    sprintf(buffer,"CmnRmsPerAPVDisk%d", iDisk+1);
+    sprintf(buffer2,"FST - Common Mode RMS vs APV for Disk%d", iDisk+1);
+    hSumContents.hSumCmn[iDisk] = new TH2S(buffer, buffer2, ApvPerDisk*4, 0, ApvPerDisk*4, nBins*2, CmnMin, CmnMax); //96*100 bins
+    hSumContents.hSumCmn[iDisk]->GetXaxis()->SetNdivisions(-ModPerDisk,false);
+    hSumContents.hSumCmn[iDisk]->SetStats(false);
+    hSumContents.hSumCmn[iDisk]->GetXaxis()->SetTitle("APV Geometry ID");
+    hSumContents.hSumCmn[iDisk]->GetXaxis()->SetLabelSize(0.03);
+    hSumContents.hSumCmn[iDisk]->GetYaxis()->SetTitle("Common Mode Noise [ADC counts]");
+    hSumContents.hSumCmn[iDisk]->GetYaxis()->SetLabelSize(0.03);
+
+    for(int iModule=0; iModule<ModPerDisk; iModule++ )
     {
       char label[100];
-      sprintf(label, "M%d", index+1);
-      hSumContents.hSumPed[iDisk]->GetXaxis()->SetBinLabel(index*ApvPerMod+ApvPerMod/2, label);  
-      hSumContents.hSumSig[iDisk]->GetXaxis()->SetBinLabel(index*ApvPerMod+ApvPerMod/2, label);
-      hSumContents.hSumRan[iDisk]->GetXaxis()->SetBinLabel(index*ApvPerMod+ApvPerMod/2, label);
+      sprintf(label, "M%d", iModule+1);
+      hSumContents.hSumPed[iDisk]->GetXaxis()->SetBinLabel(iModule*ApvPerMod+ApvPerMod/2, label);  
+      hSumContents.hSumSig[iDisk]->GetXaxis()->SetBinLabel(iModule*ApvPerMod+ApvPerMod/2, label);
+      hSumContents.hSumRan[iDisk]->GetXaxis()->SetBinLabel(iModule*ApvPerMod+ApvPerMod/2, label);
+      hSumContents.hSumCmn[iDisk]->GetXaxis()->SetBinLabel(iModule*ApvPerMod*4+ApvPerMod*2, label);
     }
 
+    sprintf(buffer,"SignalPerChannelDisk%d", iDisk+1);
+    sprintf(buffer2,"FST - Signal (non-ZS) vs Channel for Disk%d", iDisk+1);
+    hSumContents.hSignal[iDisk] = new TH2S(buffer, buffer2, ApvPerDisk, 0, ChPerDisk, nBins*2, -100, 1500); //96*100 bins
+    hSumContents.hSignal[iDisk]->GetXaxis()->SetNdivisions(-ModPerDisk,false);
+    hSumContents.hSignal[iDisk]->SetStats(false);
+    hSumContents.hSignal[iDisk]->GetXaxis()->SetTitle("Channel Geometry ID");
+    hSumContents.hSignal[iDisk]->GetYaxis()->SetTitle("ADC - Pedestal [ADC counts]");
+    hSumContents.hSignal[iDisk]->GetYaxis()->SetTitleOffset(1.1);
+
+    sprintf(buffer,"RandomNoisePerChannelDisk%d", iDisk+1);
+    sprintf(buffer2,"FST - Random Noise (non-ZS) vs Channel for Disk%d", iDisk+1);
+    hSumContents.hRanNoise[iDisk] = new TH2S(buffer, buffer2, ApvPerDisk, 0, ChPerDisk, nBins*2, SigMin, SigMax); //96*100 bins
+    hSumContents.hRanNoise[iDisk]->GetXaxis()->SetNdivisions(-ModPerDisk,false);
+    hSumContents.hRanNoise[iDisk]->SetStats(false);
+    hSumContents.hRanNoise[iDisk]->GetXaxis()->SetTitle("Channel Geometry ID");
+    hSumContents.hRanNoise[iDisk]->GetYaxis()->SetTitle("ADC - Pedestal [ADC counts]");
+    hSumContents.hRanNoise[iDisk]->GetYaxis()->SetTitleOffset(1.1);
+
     sprintf(buffer,"CommonModeNoisePerAPVDisk%d", iDisk+1);
-    sprintf(buffer2,"FST - Common Mode Noise vs APV for Disk%d", iDisk+1);
+    sprintf(buffer2,"FST - Common Mode Noise (non-ZS) vs APV for Disk%d", iDisk+1);
     hSumContents.hCommonModeNoise[iDisk] = new TH2S(buffer, buffer2, ApvPerDisk*4, 0, ApvPerDisk*4, nBins*2, CmnMin, CmnMax);//384*100 bins
     hSumContents.hCommonModeNoise[iDisk]->GetXaxis()->SetNdivisions(-ModPerDisk, false);
     hSumContents.hCommonModeNoise[iDisk]->SetStats(false);
@@ -580,8 +613,11 @@ void fstBuilder::initialize(int argc, char *argv[])
     //label setting
     for(int iModule=0; iModule<ModPerDisk; iModule++) 
     {
-      sprintf( buffer, "M%d", 1+iModule );
-      hSumContents.hCommonModeNoise[iDisk]->GetXaxis()->SetBinLabel(iModule*ApvPerMod*4+ApvPerMod*2,buffer);
+      char label[100];
+      sprintf( label, "M%d", 1+iModule );
+      hSumContents.hSignal[iDisk]->GetXaxis()->SetBinLabel(iModule*ApvPerMod+ApvPerMod/2, label);  
+      hSumContents.hRanNoise[iDisk]->GetXaxis()->SetBinLabel(iModule*ApvPerMod+ApvPerMod/2, label);
+      hSumContents.hCommonModeNoise[iDisk]->GetXaxis()->SetBinLabel(iModule*ApvPerMod*4+ApvPerMod*2, label);
     }
   }
 
@@ -730,11 +766,20 @@ void fstBuilder::initialize(int argc, char *argv[])
   plots[nPlots+30] = new JevpPlot(hSumContents.hSumRan[0]);
   plots[nPlots+31] = new JevpPlot(hSumContents.hSumRan[1]);
   plots[nPlots+32] = new JevpPlot(hSumContents.hSumRan[2]);
-  plots[nPlots+33] = new JevpPlot(hSumContents.hCommonModeNoise[0]);
-  plots[nPlots+34] = new JevpPlot(hSumContents.hCommonModeNoise[1]);
-  plots[nPlots+35] = new JevpPlot(hSumContents.hCommonModeNoise[2]);
+  plots[nPlots+33] = new JevpPlot(hSumContents.hSumCmn[0]);
+  plots[nPlots+34] = new JevpPlot(hSumContents.hSumCmn[1]);
+  plots[nPlots+35] = new JevpPlot(hSumContents.hSumCmn[2]);
+  plots[nPlots+36] = new JevpPlot(hSumContents.hSignal[0]);
+  plots[nPlots+37] = new JevpPlot(hSumContents.hSignal[1]);
+  plots[nPlots+38] = new JevpPlot(hSumContents.hSignal[2]);
+  plots[nPlots+39] = new JevpPlot(hSumContents.hRanNoise[0]);
+  plots[nPlots+40] = new JevpPlot(hSumContents.hRanNoise[1]);
+  plots[nPlots+41] = new JevpPlot(hSumContents.hRanNoise[2]);
+  plots[nPlots+42] = new JevpPlot(hSumContents.hCommonModeNoise[0]);
+  plots[nPlots+43] = new JevpPlot(hSumContents.hCommonModeNoise[1]);
+  plots[nPlots+44] = new JevpPlot(hSumContents.hCommonModeNoise[2]);
 
-  for(int iPlots = nPlots; iPlots < nPlots+36; ++iPlots)
+  for(int iPlots = nPlots; iPlots < nPlots+45; ++iPlots)
   {
     LOG(DBG, "Adding plot %d",iPlots);
     addPlot(plots[iPlots]);
@@ -817,6 +862,9 @@ void fstBuilder::startrun(daqReader *rdr)
     isChannelBad[i]    = false;
     runningAvg[i]      = 0;
     runningStdDevSq[i] = 0;
+    sumAdc[i]          = 0;
+    sum2Adc[i]         = 0;
+    couAdc[i]          = 0;
   }
 
   //load external pedstal/RMS value for all channels
@@ -852,14 +900,14 @@ void fstBuilder::startrun(daqReader *rdr)
 	int ret = sscanf(buff,"%d %d %d %d %d %f %f %f",&rdoIdxTemp,&armIdxTemp,&apvIdxTemp,&chanIdxTemp,&tbIdxTemp,&pp,&rr,&nn);
 	if(ret!=8) continue;
 
-	if(tbIdxTemp==defTb) { //only take the default time bin as sample
+	// if(tbIdxTemp==defTb) { //only take the default time bin as sample
 	  int portIdxTemp        = apvIdxTemp/ApvRoPerPort; // 0: 0-7 | 1: 12-19
 	  int refApvIdxTemp      = apvIdxTemp - portIdxTemp*ApvNumOffset + portIdxTemp*ApvPerPort; // 0-15
 	  int glbElecChanIdxTemp = (rdoIdxTemp-1)*ChPerRdo + armIdxTemp*ChPerArm + refApvIdxTemp*ChPerApv + chanIdxTemp; // 0-36863
-	  fstPedestal[glbElecChanIdxTemp] = pp; // pedestal
-	  fstRmsNoise[glbElecChanIdxTemp] = rr; // total noise
-	  fstRanNoise[glbElecChanIdxTemp] = nn; // random noise
-	}
+	  fstPedestal[tbIdxTemp][glbElecChanIdxTemp] = pp; // pedestal
+	  fstRmsNoise[tbIdxTemp][glbElecChanIdxTemp] = rr; // total noise
+	  fstRanNoise[tbIdxTemp][glbElecChanIdxTemp] = nn; // random noise
+	// }
       }
       tableFound = true;
       fclose(file);
@@ -884,15 +932,14 @@ void fstBuilder::startrun(daqReader *rdr)
       int ret = sscanf(buff,"%d %d %d %d %d %f %f %f",&rdoIdxTemp,&armIdxTemp,&apvIdxTemp,&chanIdxTemp,&tbIdxTemp,&pp,&rr,&nn);
       if(ret!=8) continue;
 
-      if(tbIdxTemp==defTb) { //only take the default time bin as sample
+      // if(tbIdxTemp==defTb) { //only take the default time bin as sample
 	int portIdxTemp        = apvIdxTemp/ApvRoPerPort; // 0: 0-7 | 1: 12-19
 	int refApvIdxTemp      = apvIdxTemp - portIdxTemp*ApvNumOffset + portIdxTemp*ApvPerPort; // 0-15
 	int glbElecChanIdxTemp = (rdoIdxTemp-1)*ChPerRdo + armIdxTemp*ChPerArm + refApvIdxTemp*ChPerApv + chanIdxTemp; // 0-36863
-	fstPedestal[glbElecChanIdxTemp] = pp; // pedestal
-	fstRmsNoise[glbElecChanIdxTemp] = rr; // total noise
-	fstRanNoise[glbElecChanIdxTemp] = nn; // random noise
-	// cout << "glbElecChanIdxTemp = " << glbElecChanIdxTemp << ", rdoIdxTemp = " << rdoIdxTemp << ", armIdxTemp = " << armIdxTemp << ", apvIdxTemp = " << apvIdxTemp << "chanIdxTemp = " << chanIdxTemp << ", nn = " << nn << endl;
-      }
+	fstPedestal[tbIdxTemp][glbElecChanIdxTemp] = pp; // pedestal
+	fstRmsNoise[tbIdxTemp][glbElecChanIdxTemp] = rr; // total noise
+	fstRanNoise[tbIdxTemp][glbElecChanIdxTemp] = nn; // random noise
+      // }
     }
     tableFound = true;
     fclose(file);
@@ -930,14 +977,14 @@ void fstBuilder::startrun(daqReader *rdr)
 	int ret = sscanf(buff,"%d %d %d %d %d %f %f %f",&rdoIdxTemp,&armIdxTemp,&apvIdxTemp,&chanIdxTemp,&tbIdxTemp,&pp,&rr,&nn);
 	if(ret!=8) continue;
 
-	if(tbIdxTemp==defTb) { //only take the defualt time bin as sample
+	// if(tbIdxTemp==defTb) { //only take the defualt time bin as sample
 	  int portIdxTemp        = apvIdxTemp/ApvRoPerPort; // 0: 0-7 | 1: 12-19
 	  int refApvIdxTemp      = apvIdxTemp - portIdxTemp*ApvNumOffset + portIdxTemp*ApvPerPort; // 0-15
 	  int glbElecChanIdxTemp = (rdoIdxTemp-1)*ChPerRdo + armIdxTemp*ChPerArm + refApvIdxTemp*ChPerApv + chanIdxTemp; // 0-36863
-	  fstPedestal[glbElecChanIdxTemp] = pp; // pedestal
-	  fstRmsNoise[glbElecChanIdxTemp] = rr; // total noise
-	  fstRanNoise[glbElecChanIdxTemp] = nn; // random noise
-	}
+	  fstPedestal[tbIdxTemp][glbElecChanIdxTemp] = pp; // pedestal
+	  fstRmsNoise[tbIdxTemp][glbElecChanIdxTemp] = rr; // total noise
+	  fstRanNoise[tbIdxTemp][glbElecChanIdxTemp] = nn; // random noise
+	// }
       }
       tableFound = true;
       fclose(file0);
@@ -962,15 +1009,14 @@ void fstBuilder::startrun(daqReader *rdr)
       int ret = sscanf(buff,"%d %d %d %d %d %f %f %f",&rdoIdxTemp,&armIdxTemp,&apvIdxTemp,&chanIdxTemp,&tbIdxTemp,&pp,&rr,&nn);
       if(ret!=8) continue;
 
-      if(tbIdxTemp==defTb) { //only take the defualt time bin as sample
+      // if(tbIdxTemp==defTb) { //only take the defualt time bin as sample
 	int portIdxTemp        = apvIdxTemp/ApvRoPerPort; // 0: 0-7 | 1: 12-19
 	int refApvIdxTemp      = apvIdxTemp - portIdxTemp*ApvNumOffset + portIdxTemp*ApvPerPort; // 0-15
 	int glbElecChanIdxTemp = (rdoIdxTemp-1)*ChPerRdo + armIdxTemp*ChPerArm + refApvIdxTemp*ChPerApv + chanIdxTemp; // 0-36863
-	fstPedestal[glbElecChanIdxTemp] = pp; // pedestal
-	fstRmsNoise[glbElecChanIdxTemp] = rr; // total noise
-	fstRanNoise[glbElecChanIdxTemp] = nn; // random noise
-	// cout << "glbElecChanIdxTemp = " << glbElecChanIdxTemp << ", rdoIdxTemp = " << rdoIdxTemp << ", armIdxTemp = " << armIdxTemp << ", apvIdxTemp = " << apvIdxTemp << "chanIdxTemp = " << "pp = " << pp << ", rr = " << rr << ", nn = " << nn << endl;
-      }
+	fstPedestal[tbIdxTemp][glbElecChanIdxTemp] = pp; // pedestal
+	fstRmsNoise[tbIdxTemp][glbElecChanIdxTemp] = rr; // total noise
+	fstRanNoise[tbIdxTemp][glbElecChanIdxTemp] = nn; // random noise
+      // }
     }
     tableFound = true;
     fclose(file0);
@@ -1294,8 +1340,8 @@ void fstBuilder::event(daqReader *rdr)
 	maxAdc_zs[glbGeomChanId_zs]     = f_zs[i].adc;
 	maxTimeBin_zs[glbGeomChanId_zs] = f_zs[i].tb;
       }
-      if ( flag < 8) { // select seed hits & recovery hits
-      // if ( flag == 7) { // select seed hits only
+      // if ( flag < 8) { // select seed hits & recovery hits
+      if ( flag == 1 || flag == 3 || flag == 5 || flag == 7) { // select seed hits only
 	cou_zs[f_zs[i].ch]++;
       }
     }//end current APV loop
@@ -1370,7 +1416,6 @@ void fstBuilder::event(daqReader *rdr)
 	}
       }
 
-      // Int_t channelId = (dd->rdo-1)*ArmPerRdo*ApvPerArm*ChPerApv + dd->sec*ApvPerArm*ChPerApv + dd->pad*ChPerApv + f[i].ch;
       int glbElecChanId = (rdoIdx-1)*ChPerRdo + armIdx*ChPerArm + refApvIdx*ChPerApv + f[i].ch; // 0-36863
       int refElecChanId = glbElecChanId - (rdoIdx-1)*ChPerRdo - armIdx*ChPerArm;                // 0-2047
       int lclElecChanId = refElecChanId - portIdx*ChPerMod;                                     // 0-1023
@@ -1387,8 +1432,8 @@ void fstBuilder::event(daqReader *rdr)
 
       if ( isChannelBad[glbGeomChanId] ) continue;  //
 
-      //fill ADC value vs lclElecChanId per module
-      hAdcContents.adcArray[glbModuleIdx-1]->Fill(lclElecChanId, f[i].adc);
+      //fill ADC value vs lclElecChanId per module for defTb
+      if(f[i].tb == defTb) hAdcContents.adcArray[glbModuleIdx-1]->Fill(lclElecChanId, f[i].adc);
 
       //calculate mean pedestal and RMS
       if(!tableFound) {
@@ -1401,9 +1446,9 @@ void fstBuilder::event(daqReader *rdr)
       }
       else {
 	numVals[glbGeomChanId]++;
-	runningAvg[glbGeomChanId]  = fstPedestal[glbElecChanId];
-	oldStdDevs[glbGeomChanId]  = fstRmsNoise[glbElecChanId];
-	ranStdDevs[glbGeomChanId]  = fstRanNoise[glbElecChanId];
+	runningAvg[glbGeomChanId]  = fstPedestal[defTb][glbElecChanId];
+	oldStdDevs[glbGeomChanId]  = fstRmsNoise[defTb][glbElecChanId];
+	ranStdDevs[glbGeomChanId]  = fstRanNoise[defTb][glbElecChanId];
       }
       //channel status decision
       Bool_t isBad = false;
@@ -1420,7 +1465,7 @@ void fstBuilder::event(daqReader *rdr)
 	numOverOneSig[glbGeomChanId]++; 
 
       //max ADC and its time bin index decision
-      if ( (f[i].adc - runningAvg[glbGeomChanId] )> maxAdc[glbGeomChanId] ) {
+      if ( (f[i].adc - runningAvg[glbGeomChanId]) > maxAdc[glbGeomChanId] ) {
 	maxAdc[glbGeomChanId]     = f[i].adc - runningAvg[glbGeomChanId];
 	maxTimeBin[glbGeomChanId] = f[i].tb;
       }
@@ -1431,10 +1476,89 @@ void fstBuilder::event(daqReader *rdr)
       //counts for dynamical common mode noise calculation
       if ( f[i].tb==defTb ) {       //only take the default time bin
 	//exclude signal-related channels for common mode noise calculation
-	if ( oldStdDevs[glbGeomChanId]>0 && abs(maxAdc[glbGeomChanId] < cmnCut*oldStdDevs[glbGeomChanId]) ) {
+	if ( oldStdDevs[glbGeomChanId]>0 && abs(f[i].adc < runningAvg[glbGeomChanId] + cmnCut*oldStdDevs[glbGeomChanId]) ) {
 	  int rIdx = lclRstripIdx < 4 ? lclRstripIdx:lclRstripIdx-4;
-	  sumAdcPerEvent[glbElecApvIdx][rIdx] += (maxAdc[glbGeomChanId]+runningAvg[glbGeomChanId]);
-	  counterAdcPerEvent[glbElecApvIdx][rIdx]++;
+	  sumAdcPerEvent[currentAPV][rIdx] += (f[i].adc-runningAvg[glbGeomChanId]);
+	  counterAdcPerEvent[currentAPV][rIdx]++;
+	}
+      }
+    } //end current APV chip loops
+
+    //calculate dynamical common mode noise for current event
+    for(int iRstrip = 0; iRstrip < 4; ++iRstrip)
+    {
+      if ( counterAdcPerEvent[currentAPV][iRstrip] > 0 && currentAPV > -1) 
+      {
+	// cout << "counterAdcPerEvent = " << counterAdcPerEvent[currentAPV][iRstrip] << endl;
+	cmNoise[currentAPV][iRstrip] = sumAdcPerEvent[currentAPV][iRstrip] / counterAdcPerEvent[currentAPV][iRstrip];
+	hCmnTemp.hCmnPerChip[currentAPV][iRstrip]->Fill(short(cmNoise[currentAPV][iRstrip]+0.5));
+      }
+    }
+
+    // loop for random noise calculation
+    for ( u_int i=0; i<dd->ncontent; i++ ) { //loop current APV chip
+      //non-ZS data
+      if ( f[i].ch  < 0 || f[i].ch  > 127 )       continue;      //valid Channel numbering: 0, 1, ..., 127 
+      if ( f[i].tb  < 0 || f[i].tb  > numTb )     continue;      //valid Time bin numbering: 0, 1, ..., numTb-1 (default 9 time bins, or 4, 5)
+      if ( f[i].adc < 0 || f[i].adc > 4095 )      continue;      //valid ADC counts from 0 to 4095
+
+      int glbElecChanId = (rdoIdx-1)*ChPerRdo + armIdx*ChPerArm + refApvIdx*ChPerApv + f[i].ch; // 0-36863
+      int refElecChanId = glbElecChanId - (rdoIdx-1)*ChPerRdo - armIdx*ChPerArm;                // 0-2047
+      int lclElecChanId = refElecChanId - portIdx*ChPerMod;                                     // 0-1023
+      int sigElecChanId = lclElecChanId%ChPerApv;                                               // 0-127
+      if(glbElecChanId < 0 || glbElecChanId >= totCh) continue;
+
+      int glbGeomChanId = fstGeomMapping[glbElecChanId];                                  // 0-36863
+      int diskIdx       = glbGeomChanId/ChPerDisk + 1;                                    // 1-3
+      int moduleIdx     = (glbGeomChanId-(diskIdx-1)*ChPerDisk)/ChPerMod + 1;             // 1-12
+      int lclGeomChanId = glbGeomChanId - (diskIdx-1)*ChPerDisk - (moduleIdx-1)*ChPerMod; // 0-1023
+      int lclRstripIdx  = lclGeomChanId/PhiSegPerMod;                                     // 0-7
+      int lclPhiSegIdx  = lclGeomChanId%PhiSegPerMod;                                     // 0-127
+      currentAPV        = glbElecApvIdx;
+
+      if ( isChannelBad[glbGeomChanId] ) continue;  //
+
+      //channel status decision
+      Bool_t isBad = false;
+      if ( runningAvg[glbGeomChanId] < minPedVal || runningAvg[glbGeomChanId] > maxPedVal ) isBad = true;
+      if ( oldStdDevs[glbGeomChanId] < minRMSVal || oldStdDevs[glbGeomChanId] > maxRMSVal ) isBad = true;
+      if ( ranStdDevs[glbGeomChanId] < minRanVal || ranStdDevs[glbGeomChanId] > maxRanVal ) isBad = true;
+      if(isBad) continue;
+
+      int rIdx = lclRstripIdx < 4 ? lclRstripIdx:lclRstripIdx-4;
+      float tempCMN = cmNoise[currentAPV][rIdx];
+      int tempTb = f[i].tb;
+
+      /*
+      //fill pedestal-subtracted ADC vs time bin index
+      hTbVsAdcContents.tbVsAdcArray[glbSecIdx]->Fill(f[i].tb, f[i].adc - (int)(runningAvg[glbGeomChanId]+0.5));
+
+      //count channel whose pedestal subtracted ADC yield one RMS
+      if ( (f[i].adc-runningAvg[glbGeomChanId])>oldStdDevs[glbGeomChanId] && oldStdDevs[glbGeomChanId]>0 ) 
+	numOverOneSig[glbGeomChanId]++; 
+
+      //max ADC and its time bin index decision
+      // if ( (f[i].adc - runningAvg[glbGeomChanId] - tempCMN) > maxAdc[glbGeomChanId] ) {
+      if ( (f[i].adc - fstPedestal[tempTb][glbElecChanId] - tempCMN) > maxAdc[glbGeomChanId] ) {
+	maxAdc[glbGeomChanId]     = f[i].adc - fstPedestal[tempTb][glbGeomChanId] - tempCMN;
+	maxTimeBin[glbGeomChanId] = f[i].tb;
+      }
+      if ( (f[i].adc - fstPedestal[tempTb][glbElecChanId] - tempCMN) >  hitCut * fstRanNoise[tempTb][glbElecChanId] ){
+	cou[f[i].ch]++;
+      }
+      */
+
+      //counts for random noise calculation
+      if ( f[i].tb==defTb ) {       //only take the default time bin
+	//exclude signal-related channels for random noise calculation
+	if ( oldStdDevs[glbGeomChanId]>0 && abs(f[i].adc < runningAvg[glbGeomChanId] + cmnCut*oldStdDevs[glbGeomChanId]) ) {
+	  if ( counterAdcPerEvent[currentAPV][rIdx] > 0 && currentAPV > -1) 
+	  {
+
+	    sumAdc[glbGeomChanId] += f[i].adc - runningAvg[glbGeomChanId] - tempCMN;
+	    sum2Adc[glbGeomChanId] += (f[i].adc - runningAvg[glbGeomChanId] - tempCMN)*(f[i].adc - runningAvg[glbGeomChanId] - tempCMN);
+	    couAdc[glbGeomChanId]++;
+	  }
 	}
       }
     } //end current APV chip loops
@@ -1448,15 +1572,6 @@ void fstBuilder::event(daqReader *rdr)
 	maxTimeBin[glbGeomChanId] = -1;
       }else{
 	counterGoodHitPerEvent[glbElecApvIdx]++;
-      }
-    }
-
-    //calculate dynamical common mode noise for current event
-    if ( counterAdcPerEvent[currentAPV] > 0 && currentAPV > -1) {
-      for(int iRstrip = 0; iRstrip < 4; ++iRstrip)
-      {
-	cmNoise[currentAPV][iRstrip] = sumAdcPerEvent[currentAPV][iRstrip] / counterAdcPerEvent[currentAPV][iRstrip];
-	hCmnTemp.hCmnPerChip[currentAPV][iRstrip]->Fill(short(cmNoise[currentAPV][iRstrip]+0.5));
       }
     }
   }//end all RDO, ARM, APV chips loops
@@ -1483,6 +1598,8 @@ void fstBuilder::event(daqReader *rdr)
 
     //do for zs and non-zs data and fill with num kB
     hEventSumContents.hEventSize->Fill(short(evtSize/1024));
+    evtCt_nonZS++;
+    // cout << "evtCt_nonZS = " << evtCt_nonZS << ", evtCt = " << evtCt << endl;
   }
 
   //counting analyzed event number
@@ -1524,6 +1641,7 @@ void fstBuilder::event(daqReader *rdr)
 	  hSumContents.hHitMapVsAPV[diskIdx-1]->Fill(moduleIdx, lclApvIdx);
 	  hMipContents.mipArray[glbSecIdx]->Fill(short(adc_max+0.5));
 	  if(tb_max>=0) hEventSumContents.hMaxTimeBin->Fill(tb_max);
+	  hSumContents.hSignal[diskIdx-1]->Fill(geoIdx-(diskIdx-1)*ChPerDisk, short(adc_max+0.5));
 	}
 	//keep monitoring hot chips
 	hHitMapContents.hitMapArray[glbModuleIdx-1]->Fill(lclPhiSegIdx, lclRstripIdx);
@@ -1615,14 +1733,15 @@ void fstBuilder::event(daqReader *rdr)
   }
 
   //getting MPV value and CM noise every 50 evts for each section
-  //Updating CMN every 1000 events
-  if( !(evtCt%1000))
+  //Updating CMN every 1000 non-ZS events
+  if( !(evtCt_nonZS%500))
   {
-    cout << "Updating CMN!" << endl;
-    for(int i_disk = 0; i_disk < 3; ++i_disk)
-    {
-	hSumContents.hCommonModeNoise[i_disk]->Reset();
-    }
+    // cout << "evtCt_nonZS = " << evtCt_nonZS << endl;
+    // cout << "Updating CMN!" << endl;
+    // for(int i_disk = 0; i_disk < 3; ++i_disk)
+    // {
+    //   hSumContents.hCommonModeNoise[i_disk]->Reset();
+    // }
     for( int k=0; k<totAPV; k++ ) {
       int diskIdx = k/ApvPerDisk + 1; // 1-3
       for(int iRstrip = 0; iRstrip < 4; ++iRstrip)
@@ -1630,6 +1749,30 @@ void fstBuilder::event(daqReader *rdr)
 	hSumContents.hCommonModeNoise[diskIdx-1]->Fill(4*(k-(diskIdx-1)*ApvPerDisk)+iRstrip, short(hCmnTemp.hCmnPerChip[k][iRstrip]->GetRMS()+0.5));
       }
     }
+    for( int k=0; k<totAPV; k++ ) { // clear common mode noise
+      for(int iRstrip = 0; iRstrip < 4; ++iRstrip)
+      {
+	hCmnTemp.hCmnPerChip[k][iRstrip]->Reset();
+      }
+    }
+    // fill random noise every 5000 events
+    for ( int geoIdx=0; geoIdx<totCh; geoIdx++ ) {
+      if(couAdc[geoIdx] > 0)
+      {
+	int diskIdx    = geoIdx/ChPerDisk + 1;                                   // 1-3
+	int moduleIdx  = (geoIdx-(diskIdx-1)*ChPerDisk)/ChPerMod + 1;            // 1-12
+	float meanAdc = sumAdc[geoIdx]/couAdc[geoIdx];
+	float ranNoise = sqrt((sum2Adc[geoIdx]-(float)couAdc[geoIdx]*meanAdc*meanAdc)/(float)(couAdc[geoIdx]));
+	if(ranNoise > 0) hSumContents.hRanNoise[diskIdx-1]->Fill(geoIdx-(diskIdx-1)*ChPerDisk, short(ranNoise+0.5));
+      }
+    }
+    for ( int geoIdx=0; geoIdx<totCh; geoIdx++ ) { // clear random noise
+      sumAdc[geoIdx]  = 0;
+      sum2Adc[geoIdx] = 0;
+      couAdc[geoIdx]  = 0;
+    }
+    cout << "evtCt_nonZS = " << evtCt_nonZS << ", evtCt = " << evtCt << endl;
+    evtCt_nonZS++;
   }
 
   // Reset rolling histos if necessary..
@@ -1716,6 +1859,7 @@ void fstBuilder::fillSumHistos()
 void fstBuilder::stoprun(daqReader *rdr) 
 {
   //common mode noise
+  /*
   for(int i_disk = 0; i_disk < 3; ++i_disk)
   {
     hSumContents.hCommonModeNoise[i_disk]->Reset();
@@ -1727,6 +1871,7 @@ void fstBuilder::stoprun(daqReader *rdr)
       hSumContents.hCommonModeNoise[diskIdx-1]->Fill(4*(k-(diskIdx-1)*ApvPerDisk)+iRstrip, short(hCmnTemp.hCmnPerChip[k][iRstrip]->GetRMS()+0.5));
     }
   }
+  */
 
   int errCt_visibleAPVperSection = 0, errCt_maxTimeBinFraction = 0, errCt_mipNonZS = 0, errCt_mipZS = 0;
   int errLocation_visibleAPVperSection[totSec], errLocation_maxTimeBinFraction[totSec], errLocation_mipNonZS[totSec], errLocation_mipZS[totSec]; 

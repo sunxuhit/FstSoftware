@@ -212,7 +212,7 @@ devSnmp_manager::createDevice: longoutsnmpLoInit
 devSnmp_manager::createDevice: longoutsnmpLoInit
 devSnmp_manager::createDevice: longoutsnmpLoInit
 devSnmp_manager::createDevice: longoutdevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_manager::createDevice: stringindevSnmp_mancas warning: Configured TCP port was unavailable.
-cas warning: Using dynamically assigned TCP port 43832,
+cas warning: Using dynamically assigned TCP port 42451,
 cas warning: but now two or more servers share the same UDP port.
 cas warning: Depending on your IP kernel this server may not be
 cas warning: reachable with UDP unicast (a host's IP in EPICS_CA_ADDR_LIST)
@@ -222,19 +222,19 @@ epicsSnmpInit()
 ## Load record instances
 seq sncFGTControl, "SYSTEM=fstmpod03,SLOT=u"
 Sequencer release 2.1.13, compiled Wed Jan 13 16:47:50 2021
-Spawning sequencer program "sncFGTControl", thread 0x24701b0: "sncFGTControl"
+Spawning sequencer program "sncFGTControl", thread 0x13de400: "sncFGTControl"
 seq sncFGTRamping, "SYSTEM=fstmpod03,SLOT=u20,deviceName=u20"
 Sequencer release 2.1.13, compiled Wed Jan 13 16:47:50 2021
-Spawning sequencer program "sncFGTRamping", thread 0x24d5ac0: "sncFGTRamping"
+Spawning sequencer program "sncFGTRamping", thread 0x1443cf0: "sncFGTRamping"
 seq sncFGTRamping, "SYSTEM=fstmpod03,SLOT=u10,deviceName=u10"
 Sequencer release 2.1.13, compiled Wed Jan 13 16:47:50 2021
-sncFGTRamping[0]: all channels connected & received 1st monitor
 sncFGTControl[0]: all channels connected & received 1st monitor
-Spawning sequencer program "sncFGTRamping", thread 0x253b3b0: "sncFGTRamping"
+sncFGTRamping[0]: all channels connected & received 1st monitor
+Spawning sequencer program "sncFGTRamping", thread 0x14a95e0: "sncFGTRamping"
 seq sncFGTRamping, "SYSTEM=fstmpod03,SLOT=u,deviceName=u"
 Sequencer release 2.1.13, compiled Wed Jan 13 16:47:50 2021
 sncFGTRamping[1]: all channels connected & received 1st monitor
-Spawning sequencer program "sncFGTRamping", thread 0x25a0b20: "sncFGTRamping"
+Spawning sequencer program "sncFGTRamping", thread 0x150ed50: "sncFGTRamping"
 dbpf("fstmpod03:hv_settings","/home/sysuser/iocTop/FST/HV/mpod03/def")
 DBR_STRING:          "/home/sysuser/iocTop/FST/HV/mpod03/def"         
 sncFGTRamping[2]: all channels connected & received 1st monitor

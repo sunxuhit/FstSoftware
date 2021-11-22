@@ -40,6 +40,7 @@ class fstBuilder : public JevpBuilder {
   TH1D* projX;
   TRandom tRnd;
   int evtCt;
+  int evtCt_nonZS;
   int t_2min;
   int t_10min;
   int t_120min;
@@ -132,9 +133,9 @@ class fstBuilder : public JevpBuilder {
   int fstElecMapping[totCh]; //FST channel mapping (geometry ID & electronics ID transform)
   //FST pedestal/rms
   bool  tableFound;
-  float fstPedestal[totCh];
-  float fstRmsNoise[totCh];
-  float fstRanNoise[totCh];
+  float fstPedestal[numTimeBin][totCh];
+  float fstRmsNoise[numTimeBin][totCh];
+  float fstRanNoise[numTimeBin][totCh];
 
   //*** Histogram Declarations...
   union {
@@ -602,10 +603,13 @@ class fstBuilder : public JevpBuilder {
       TH2* hPolyHitMap_ZS[totDisk];      //hit density for each disk (phi val vs. r val -- 128*12 vs. 8)
       TH2* hHitMapVsAPV_ZS[totDisk];     //hit map on APV for each disk (APV geometry ID vs. module geometry ID)
       TH2* hMultVsModule[totDisk];       //total number of hits per event vs. module for each disk
-      TH2* hSumPed[totDisk];  	         //pedestal per channel for each disk (ADC vs. channel index)
-      TH2* hSumSig[totDisk];	         //pedestal RMS per channel for each disk (RMS vs. channel index)
-      TH2* hSumRan[totDisk];	         //random RMS per channel for each disk (RMS vs. channel index)
-      TH2* hCommonModeNoise[totDisk];    //common mode noise per chip for each disk (CM noise vs.chip index)
+      TH2* hSumPed[totDisk];  	         //pedestal from pedestal run (ADC vs. channel index)
+      TH2* hSumSig[totDisk];	         //pedestal RMS from pedestal run (totRMS vs. channel index)
+      TH2* hSumRan[totDisk];	         //random RMS from pedestal run (ranRMS vs. channel index)
+      TH2* hSumCmn[totDisk];	         //cmn RMS from pedestal run (cmnRMS vs. channel index)
+      TH2* hSignal[totDisk];             //signal (non-ZS) updates every event (adc-pedestal vs.chip index)
+      TH2* hRanNoise[totDisk];           //random noise (non-ZS) updates every 5k events (random noise vs.chip index)
+      TH2* hCommonModeNoise[totDisk];    //common mode noise (non-ZS) updates every 5k events (CM noise vs.chip index)
     };
   } hSumContents;
   //*** End Histogram Declarations...
@@ -637,6 +641,9 @@ class fstBuilder : public JevpBuilder {
   char  maxTimeBin_zs[totCh];
   float runningAvg[totCh];
   float runningStdDevSq[totCh];
+  float sumAdc[totCh];
+  float sum2Adc[totCh];
+  int   couAdc[totCh];
 
   float oldStdDevs[totCh];
   float ranStdDevs[totCh];
