@@ -41,6 +41,7 @@ class fstBuilder : public JevpBuilder {
   TRandom tRnd;
   int evtCt;
   int evtCt_nonZS;
+  int evtCt_ZS;
   int t_2min;
   int t_10min;
   int t_120min;
@@ -359,6 +360,8 @@ class fstBuilder : public JevpBuilder {
       TH1* hMipSIGMAvsSection; //FST Sigma of MIP per section (non-ZS) => per module?
       TH1* hMipSIGMAvsSection_ZS; //FST Sigma of MIP per section (ZS) => per module?
       TH1* hMaxTBfractionVsSection_ZS; //max time bin fraction in 1,2,3 over all time bins vs section ID
+      TH1* hMaxAdc; //max ADC
+      TH1* hMaxAdc_ZS; //max ADC (ZS)
     };
   } hEventSumContents;
   
@@ -593,16 +596,6 @@ class fstBuilder : public JevpBuilder {
   union {
     TH2 *sumArray[];
     struct{
-      TH2* hVisibleApv[totDisk];         //visible APVs per modules per event for each disk
-      TH2* hHitMap[totDisk];             //hit density for each disk (phi bin vs. r bin -- 128*12 vs. 8)
-      TH2* hDummyPolyHitMap[totDisk];    //hit density for each disk (phi val vs. r val -- 128*12 vs. 8)
-      TH2* hPolyHitMap[totDisk];         //hit density for each disk (phi val vs. r val -- 128*12 vs. 8)
-      TH2* hHitMapVsAPV[totDisk];        //hit map on APV for each disk (APV geometry ID vs. module geometry ID)
-      TH2* hHitMap_ZS[totDisk];          //hit density for each disk (phi vs. r -- 128*12 vs. 8)
-      TH2* hDummyPolyHitMap_ZS[totDisk]; //hit density for each disk (phi val vs. r val -- 128*12 vs. 8)
-      TH2* hPolyHitMap_ZS[totDisk];      //hit density for each disk (phi val vs. r val -- 128*12 vs. 8)
-      TH2* hHitMapVsAPV_ZS[totDisk];     //hit map on APV for each disk (APV geometry ID vs. module geometry ID)
-      TH2* hMultVsModule[totDisk];       //total number of hits per event vs. module for each disk
       TH2* hSumPed[totDisk];  	         //pedestal from pedestal run (ADC vs. channel index)
       TH2* hSumSig[totDisk];	         //pedestal RMS from pedestal run (totRMS vs. channel index)
       TH2* hSumRan[totDisk];	         //random RMS from pedestal run (ranRMS vs. channel index)
@@ -610,6 +603,18 @@ class fstBuilder : public JevpBuilder {
       TH2* hSignal[totDisk];             //signal (non-ZS) updates every event (adc-pedestal vs.chip index)
       TH2* hRanNoise[totDisk];           //random noise (non-ZS) updates every 5k events (random noise vs.chip index)
       TH2* hCommonModeNoise[totDisk];    //common mode noise (non-ZS) updates every 5k events (CM noise vs.chip index)
+      TH2* hVisibleApv[totDisk];         //visible APVs per modules per event for each disk
+      TH2* hHitMap[totDisk];             //hit density for each disk (phi bin vs. r bin -- 128*12 vs. 8)
+      TH2* hDummyPolyHitMap[totDisk];    //hit density for each disk (phi val vs. r val -- 128*12 vs. 8)
+      TH2* hPolyHitMap[totDisk];         //hit density for each disk (phi val vs. r val -- 128*12 vs. 8)
+      TH2* hHitMapVsAPV[totDisk];        //hit map on APV for each disk (APV geometry ID vs. module geometry ID)
+      TH2* hMultVsModule[totDisk];       //total number of hits (non-ZS) per event vs. module for each disk
+      TH2* hSignal_zs[totDisk];          //signal (ZS) updates every ZS event (adc-pedestal-CMN vs.chip index)
+      TH2* hHitMap_ZS[totDisk];          //hit density for each disk (phi vs. r -- 128*12 vs. 8)
+      TH2* hDummyPolyHitMap_ZS[totDisk]; //hit density for each disk (phi val vs. r val -- 128*12 vs. 8)
+      TH2* hPolyHitMap_ZS[totDisk];      //hit density for each disk (phi val vs. r val -- 128*12 vs. 8)
+      TH2* hHitMapVsAPV_ZS[totDisk];     //hit map on APV for each disk (APV geometry ID vs. module geometry ID)
+      TH2* hMultVsModule_zs[totDisk];    //total number of hits (ZS) per event vs. module for each disk
     };
   } hSumContents;
   //*** End Histogram Declarations...
