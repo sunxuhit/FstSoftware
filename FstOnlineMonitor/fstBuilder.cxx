@@ -918,8 +918,8 @@ void fstBuilder::startrun(daqReader *rdr)
   //load external pedstal/RMS value for all channels
   FILE *file;
   char paraDir[256];
-  // sprintf(paraDir, "%s/fst/fst_s1_pedestals.txt", clientdatadir);
-  sprintf(paraDir, "/star/data01/pwg/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/daqtest/fst_s1_pedestals.txt");
+  sprintf(paraDir, "%s/fst/fst_s1_pedestals.txt", clientdatadir);
+  // sprintf(paraDir, "/star/data01/pwg/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/daqtest/fst_s1_pedestals.txt");
 
   file = fopen(paraDir, "r");
   if (file==0) {
@@ -993,8 +993,8 @@ void fstBuilder::startrun(daqReader *rdr)
     fclose(file);
   }
 
-  // sprintf(paraDir, "%s/fst/fst_s2_pedestals.txt", clientdatadir);
-  sprintf(paraDir, "/star/data01/pwg/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/daqtest/fst_s2_pedestals.txt");
+  sprintf(paraDir, "%s/fst/fst_s2_pedestals.txt", clientdatadir);
+  // sprintf(paraDir, "/star/data01/pwg/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/daqtest/fst_s2_pedestals.txt");
 
   FILE *file0;
 
