@@ -136,6 +136,10 @@ Int_t StFstQAMaker::Init()
     hitMapOfAPV->GetXaxis()->SetTitle("APV geometry ID");
     hitMapOfAPV->GetYaxis()->SetTitle("Wedge ID");
 
+    hitGlobalXY = new TH2F("hitGlobalXY", "Global X vs. Global Y", 140, -35, 35, 140, -35, 35);
+    hitGlobalXY->GetXaxis()->SetTitle("Global X [cm]");
+    hitGlobalXY->GetYaxis()->SetTitle("Global Y [cm]");
+
     hitGlobalPhiZ = new TH2F("hitGlobalPhiZ", "Global #phi vs. Global r", 100, -3.14159, 3.14159, 230, 5, 28);
     hitGlobalPhiZ->GetXaxis()->SetTitle("Global #phi [rad.]");
     hitGlobalPhiZ->GetYaxis()->SetTitle("Global r [cm]");
