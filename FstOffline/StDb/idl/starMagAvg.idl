@@ -1,0 +1,18 @@
+/*    starMagAvg.idl
+*
+*  Table: starMagAvg
+*
+*       description: average Main STAR magnet current over run
+*/ 
+
+
+struct starMagAvg { 
+
+  unsigned long  runNumber;   /*   run number  */
+  unsigned long  startRunTime;/*   unix time of entry  */
+  unsigned long  endRunTime;  /*   unix time of entry  */
+  unsigned long  noEntries;   /*   no. entries used for averging */
+  double         current;     /*   averaged magnet current (- means B polarity)  */
+  double         rms;         /*   its rms */
+
+ };  

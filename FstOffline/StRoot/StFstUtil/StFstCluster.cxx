@@ -24,8 +24,8 @@ StFstCluster::StFstCluster(int key, int disk, int wedge, int sensor, int apv,
    mSensorId(sensor),
    mApv(apv),
    mClusteringType(clusteringType),
-   mMaxTimeBin(3), mNRawHits(1), mNRawHitsRPhi(1),
-   mNRawHitsZ(1), mRawHitVec()
+   mMaxTimeBin(3), mNRawHits(1), mNRawHitsR(1),
+   mNRawHitsPhi(1), mRawHitVec()
 {
 }
 
@@ -49,8 +49,8 @@ float            StFstCluster::getTotChargeErr() const  	{    return mTotChargeE
 unsigned char    StFstCluster::getMaxTimeBin() const    	{    return mMaxTimeBin;    };
 unsigned char    StFstCluster::getClusteringType() const 	{    return mClusteringType;};
 unsigned char    StFstCluster::getNRawHits() const      	{    return mNRawHits;      };
-unsigned char    StFstCluster::getNRawHitsRPhi() const  	{    return mNRawHitsRPhi;  };
-unsigned char    StFstCluster::getNRawHitsZ() const     	{    return mNRawHitsZ;     };
+unsigned char    StFstCluster::getNRawHitsR() const      	{    return mNRawHitsR;  };
+unsigned char    StFstCluster::getNRawHitsPhi() const     	{    return mNRawHitsPhi;     };
 unsigned short   StFstCluster::getIdTruth() const       	{    return mIdTruth;       };
 
 //modifiers
@@ -109,14 +109,14 @@ void StFstCluster::setNRawHits(int nRawHits)
    mNRawHits = nRawHits;
 };
 
-void StFstCluster::setNRawHitsRPhi(int nRawHitsRPhi)
+void StFstCluster::setNRawHitsR(int nRawHitsR)
 {
-   mNRawHitsRPhi = nRawHitsRPhi;
+   mNRawHitsR = nRawHitsR;
 };
 
-void StFstCluster::setNRawHitsZ(int nRawHitsZ)
+void StFstCluster::setNRawHitsPhi(int nRawHitsPhi)
 {
-   mNRawHitsZ = nRawHitsZ;
+   mNRawHitsPhi = nRawHitsPhi;
 };
 
 void StFstCluster::setIdTruth(unsigned short idTruth)
@@ -131,8 +131,8 @@ void StFstCluster::Print(Option_t *opt) const
              << " meanPhiStrip=" << getMeanPhiStrip() << " meanRStrip= " << getMeanRStrip()
              << " at disk=" << (short) getDisk() << " wedge=" << (short) getWedge() << " sensor=" << (short) getSensor()
              << " clusterSize=" << (short) getNRawHits()
-             << " clusterSize(Z)=" << (short) getNRawHitsZ()
-             << " clusterSize(R-Phi)=" << (short) getNRawHitsRPhi() << endm;
+             << " clusterSizeR=" << (short) getNRawHitsR()
+             << " clusterSizePhi=" << (short) getNRawHitsPhi() << endm;
 }
 
 

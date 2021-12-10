@@ -65,8 +65,8 @@ StFstQAMaker::StFstQAMaker( const char* name ) :
    numOfRawHits_SensorId = NULL;
    numOfHits_SensorId = NULL;
    clusterSize_SensorId = NULL;
-   clusterSizeZ_SensorId = NULL;
-   clusterSizeRPhi_SensorId = NULL;
+   clusterSizeR_SensorId = NULL;
+   clusterSizePhi_SensorId = NULL;
 }
 
 // initialize
@@ -78,7 +78,7 @@ Int_t StFstQAMaker::Init()
     fstRawHitTree->Branch("rawHits", &fstRawHit, "channelId/I:geoId:wedge:sensor:phistrip:rstrip:maxTimeBin:rdo:arm:apv:channel:idTruth:EventId:charge[9]/F:chargeErr[9]/F");
 
     fstHitTree = new TTree("fstHits", "fstHits_QA");
-    fstHitTree->Branch("hits", &fstHit, "hitId/I:wedge:sensor:apv:idTruth:EventId:maxTimeBin:clusteringType:nRawHits:nRawHitsZ:nRawHitsRPhi:meanPhiStrip:meanRStrip:localR:localPhi:localZ:x:y:z:charge:chargeErr");
+    fstHitTree->Branch("hits", &fstHit, "hitId/I:wedge/I:sensor/I:apv/I:idTruth/I:EventId/I:maxTimeBin/I:clusteringType/I:nRawHits/I:nRawHitsR/I:nRawHitsPhi/I:meanPhiStrip/F:meanRStrip/F:localR/F:localPhi/F:localZ/F:x/F:y/F:z/F:charge/F:chargeErr/F");
 
     numOfRawHits_SensorId = new TH2S("numOfRawHits_SensorId", "The number of RawHits vs. sensor ID", 108, 1, 109, 128, 0, 128);
     numOfRawHits_SensorId->GetXaxis()->SetTitle("Sensor ID");
@@ -120,13 +120,13 @@ Int_t StFstQAMaker::Init()
     clusterSize_SensorId->GetXaxis()->SetTitle("Sensor ID");
     clusterSize_SensorId->GetYaxis()->SetTitle("Cluster Size of Hits");
 
-    clusterSizeZ_SensorId = new TH2S("clusterSizeZ_SensorId", "Cluster size in Z of hits vs. sensor ID", 108, 1, 109, 20, 0, 20);
-    clusterSizeZ_SensorId->GetXaxis()->SetTitle("Sensor ID");
-    clusterSizeZ_SensorId->GetYaxis()->SetTitle("Cluster Size in Z of Hits");
+    clusterSizeR_SensorId = new TH2S("clusterSizeR_SensorId", "Cluster size in R of hits vs. sensor ID", 108, 1, 109, 20, 0, 20);
+    clusterSizeR_SensorId->GetXaxis()->SetTitle("Sensor ID");
+    clusterSizeR_SensorId->GetYaxis()->SetTitle("Cluster Size in R of Hits");
 
-    clusterSizeRPhi_SensorId = new TH2S("clusterSizeRPhi_SensorId", "Cluster size in r-#phi of hits vs. sensor ID", 108, 1, 109, 20, 0, 20);
-    clusterSizeRPhi_SensorId->GetXaxis()->SetTitle("Sensor ID");
-    clusterSizeRPhi_SensorId->GetYaxis()->SetTitle("Cluster Size in r-#phi of hits");
+    clusterSizePhi_SensorId = new TH2S("clusterSizePhi_SensorId", "Cluster size in #phi of hits vs. sensor ID", 108, 1, 109, 20, 0, 20);
+    clusterSizePhi_SensorId->GetXaxis()->SetTitle("Sensor ID");
+    clusterSizePhi_SensorId->GetYaxis()->SetTitle("Cluster Size in #phi of hits");
 
     hitMapOfFST = new TH2S("hitMapOfFST", "FST hit map in r-phi", 7, 1, 8, 128, 1, 129);
     hitMapOfFST->GetXaxis()->SetTitle("RStrip");
@@ -210,7 +210,7 @@ Int_t StFstQAMaker::Make(){
 	fstRawHit.charge[iTB] = 0.;
 	fstRawHit.chargeErr[iTB] = 0.;
    }
-   fstHit.hitId = fstHit.wedge = fstHit.sensor = fstHit.apv = fstHit.idTruth = fstHit.EventId = fstHit.maxTimeBin = fstHit.clusteringType = fstHit.nRawHits = fstHit.nRawHitsZ = fstHit.nRawHitsRPhi = fstHit.meanPhiStrip = fstHit.meanRStrip = fstHit.localZ = -1;
+   fstHit.hitId = fstHit.wedge = fstHit.sensor = fstHit.apv = fstHit.idTruth = fstHit.EventId = fstHit.maxTimeBin = fstHit.clusteringType = fstHit.nRawHits = fstHit.nRawHitsR = fstHit.nRawHitsPhi = fstHit.meanPhiStrip = fstHit.meanRStrip = fstHit.localZ = -1;
    fstHit.x = fstHit.y = fstHit.z = fstHit.charge = fstHit.chargeErr = 0.; 
 
    //loop
@@ -245,8 +245,8 @@ Int_t StFstQAMaker::Make(){
 			fstHit.maxTimeBin	= (int)hit->getMaxTimeBin();
 			fstHit.clusteringType	= (int)nClusteringType;
 			fstHit.nRawHits		= (int)hit->getNRawHits();
-			fstHit.nRawHitsZ	= (int)hit->getNRawHitsZ();
-			fstHit.nRawHitsRPhi	= (int)hit->getNRawHitsRPhi();
+			fstHit.nRawHitsR	= (int)hit->getNRawHitsR();
+			fstHit.nRawHitsPhi	= (int)hit->getNRawHitsPhi();
 			fstHit.idTruth		= (int)hit->idTruth();
 			fstHit.EventId		= (int)eventPtr->id();
 			fstHit.localR          	= (float)hit->localPosition(0);
@@ -259,7 +259,7 @@ Int_t StFstQAMaker::Make(){
 			fstHit.chargeErr	= (float)hit->getChargeErr();
 			fstHit.apv		= (int)hit->getApv();
 			fstHit.meanPhiStrip	= (float)hit->getMeanPhiStrip();
-			fstHit.meanRStrip		= (float)hit->getMeanRStrip();
+			fstHit.meanRStrip	= (float)hit->getMeanRStrip();
 
 			fstHitTree->Fill();
 
@@ -274,8 +274,8 @@ Int_t StFstQAMaker::Make(){
 			hitChargeErr_SensorId->Fill(sensorIdxTemp, (int)(hit->getChargeErr()+0.5));
 			maxTimeBin_SensorId->Fill(sensorIdxTemp, (int)hit->getMaxTimeBin());
 			clusterSize_SensorId->Fill(sensorIdxTemp, (int)hit->getNRawHits());
-			clusterSizeZ_SensorId->Fill(sensorIdxTemp, (int)hit->getNRawHitsZ());
-			clusterSizeRPhi_SensorId->Fill(sensorIdxTemp, (int)hit->getNRawHitsRPhi());
+			clusterSizeR_SensorId->Fill(sensorIdxTemp, (int)hit->getNRawHitsR());
+			clusterSizePhi_SensorId->Fill(sensorIdxTemp, (int)hit->getNRawHitsPhi());
 		 }//hit cut
               }//end loop over hits
 	      numOfHits_SensorId->Fill(sensorIdxTemp, sensorHitCollection->hits().size());
@@ -385,8 +385,8 @@ Int_t StFstQAMaker::Finish(){
     myRootFile->WriteTObject(rawHitMaxTimeBin_APV);
     myRootFile->WriteTObject(maxTimeBin_SensorId);
     myRootFile->WriteTObject(clusterSize_SensorId);
-    myRootFile->WriteTObject(clusterSizeZ_SensorId);
-    myRootFile->WriteTObject(clusterSizeRPhi_SensorId);
+    myRootFile->WriteTObject(clusterSizeR_SensorId);
+    myRootFile->WriteTObject(clusterSizePhi_SensorId);
     myRootFile->WriteTObject(hitMapOfFST);
     myRootFile->WriteTObject(hitMapOfAPV);
     myRootFile->WriteTObject(hitGlobalXY);
