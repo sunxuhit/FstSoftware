@@ -165,7 +165,7 @@ Int_t StFstScanRadiusClusterAlgo::doClustering(const StFstCollection &fstCollect
 				newCluster->setMaxTimeBin(maxTb);
 				newCluster->setIdTruth(idTruth);
 
-				if(nToSeedhit>=0) {
+				if(nToSeedhit>0) {
 					clustersVec[sensorIdx][phiIdx].push_back(newCluster);
 					clusterLabel++;
 				}

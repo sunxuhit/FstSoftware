@@ -76,7 +76,8 @@
   while (!in.eof()){
     in >> channelId >> rdo >> arm >> apv >> chan >> timebin >> pedestalT >> rmsT;
     cout<<"	row.pedestal["<<channelId<<"]["<<timebin<<"]="<<pedestalT<<";"<<endl;
-    cout<<"	row.rmsNoise["<<channelId<<"]["<<timebin<<"]="<<100*(int)rmsT<<";"<<endl;
+    cout<<"	row.totNoise["<<channelId<<"]["<<timebin<<"]="<<100*(int)rmsT<<";"<<endl;
+    cout<<"	row.ranNoise["<<channelId<<"]["<<timebin<<"]="<<100*(int)rmsT<<";"<<endl; 
   }
   in.close();
   cout<<" tableSet->AddAt(&row, 0);"<<endl;

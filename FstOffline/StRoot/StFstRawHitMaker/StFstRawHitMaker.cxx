@@ -25,7 +25,8 @@ StFstRawHitMaker::StFstRawHitMaker( const char *name ): StRTSBaseMaker( "fst", n
 	mFstCollectionPtr(new StFstCollection()), mFstCollectionSimuPtr(nullptr),
 	mCmnVec(kFstNumApvs, std::vector<float>(kFstNumTimeBins, 0)),
 	mPedVec(kFstNumElecIds, std::vector<float>(kFstNumTimeBins, 0)),
-	mRmsVec(kFstNumElecIds, std::vector<float>(kFstNumTimeBins, 0)),
+	mTotRmsVec(kFstNumElecIds, std::vector<float>(kFstNumTimeBins, 0)),
+        mRanRmsVec(kFstNumElecIds, std::vector<float>(kFstNumTimeBins, 0)),
 	mGainVec(kFstNumElecIds, 0),
 	mMappingVec(kFstNumElecIds, 0),
 	mConfigVec(kFstNumApvs, 1),
@@ -119,10 +120,16 @@ Int_t StFstRawHitMaker::InitRun(Int_t runnumber)
 
 		for (int i = 0; i < kFstNumElecIds; i++) {
                      for ( int j = 0; j < kFstNumTimeBins; j++) {
-			LOG_DEBUG << Form(" Print entry %d-%d : RMS noise=%f ", i, j, (float)gPN[0].rmsNoise[i][j] / 100.) << endm;
-			mRmsVec[i][j] = (float)gPN[0].rmsNoise[i][j] / 100.;
+			LOG_DEBUG << Form(" Print entry %d-%d : RMS noise=%f ", i, j, (float)gPN[0].totNoise[i][j] / 100.) << endm;
+			mTotRmsVec[i][j] = (float)gPN[0].totNoise[i][j] / 100.;
                      }
 		}
+                for (int i = 0; i < kFstNumElecIds; i++) {
+                     for ( int j = 0; j < kFstNumTimeBins; j++) {
+                        LOG_DEBUG << Form(" Print entry %d-%d : RMS noise=%f ", i, j, (float)gPN[0].ranNoise[i][j] / 100.) << endm;
+                        mRanRmsVec[i][j] = (float)gPN[0].ranNoise[i][j] / 100.;
+                     }
+                }
 	}
 
 	// FST gain table
@@ -352,8 +359,8 @@ Int_t StFstRawHitMaker::Make()
 					signalCorrected[channel][timebin]    = signalUnCorrected[channel][timebin] - mPedVec[elecId][timebin];
 
 					// exclude signal-related channels for common mode noise calculation
-					if ( (signalCorrected[channel][timebin] > (-mCmnCut)*mRmsVec[elecId][timebin]) &&
-							(signalCorrected[channel][timebin] <   mCmnCut *mRmsVec[elecId][timebin]) )
+					if ( (signalCorrected[channel][timebin] > (-mCmnCut)*mTotRmsVec[elecId][timebin]) &&
+							(signalCorrected[channel][timebin] <   mCmnCut *mTotRmsVec[elecId][timebin]) )
 					{
 						Int_t geoId = mMappingVec[elecId];
 						int rstrip = (geoId % (kFstNumInnerSensorsPerWedge * kFstNumStripsPerInnerSensor + kFstNumOuterSensorsPerWedge * kFstNumStripsPerOuterSensor))/kFstNumPhiSegPerWedge;
@@ -446,9 +453,9 @@ int StFstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, in
 			// raw hit decision: the method is according to Xu's studying
 			if ( (signalUnCorrected[iChan][iTB] > 0) &&
 					(signalUnCorrected[iChan][iTB] < kFstMaxAdc) &&
-					((signalCorrected[iChan][iTB]     > mMedHitCut * mRmsVec[elecId][iTB])||
-					(iTB >0 && (signalCorrected[iChan][iTB-1]     > mMinHitCut * mRmsVec[elecId][iTB]) &&
-					(signalCorrected[iChan][iTB]     > mMinHitCut * mRmsVec[elecId][iTB]))))
+					((signalCorrected[iChan][iTB]     > mMedHitCut * mRanRmsVec[elecId][iTB])||
+					(iTB >0 && (signalCorrected[iChan][iTB-1]     > mMinHitCut * mRanRmsVec[elecId][iTB]) &&
+					(signalCorrected[iChan][iTB]     > mMinHitCut * mRanRmsVec[elecId][iTB]))))
 			{
 				isPassRawHitCut[iChan] = kTRUE;
 				nChanPassedCut++;
@@ -499,9 +506,9 @@ int StFstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, in
 			}
 
 			//skip current channel marked as suspicious status
-			if (mRmsVec[elecId][mDefaultTimeBin] < mChanMinRmsNoiseLevel ||
-					mRmsVec[elecId][mDefaultTimeBin] > mChanMaxRmsNoiseLevel ||
-					mRmsVec[elecId][mDefaultTimeBin] > 99.0)
+			if (mRanRmsVec[elecId][mDefaultTimeBin] < mChanMinRmsNoiseLevel ||
+					mRanRmsVec[elecId][mDefaultTimeBin] > mChanMaxRmsNoiseLevel ||
+					mRanRmsVec[elecId][mDefaultTimeBin] > 99.0)
 			{
 				LOG_DEBUG << "Skip: Noisy/hot/dead channel electronics index: " << elecId << endm;
 				continue;
@@ -521,7 +528,7 @@ int StFstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, in
 				if (signalCorrected[iChan][iTBin] < 0)
 					signalCorrected[iChan][iTBin] = 0.1;
 
-				rawHitPtr->setChargeErr(mRmsVec[elecId][iTBin] * mGainVec[elecId], (unsigned char)iTBin);
+				rawHitPtr->setChargeErr(mRanRmsVec[elecId][iTBin] * mGainVec[elecId], (unsigned char)iTBin);
 
 				if (signalCorrected[iChan][iTBin] > tempMaxCharge) {
 					tempMaxCharge = signalCorrected[iChan][iTBin];
@@ -529,8 +536,8 @@ int StFstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, in
 				}
 
 				signalCorrected[iChan][iTBin] *= mGainVec[elecId];
-				if(iTBin >0 && (signalCorrected[iChan][iTBin-1]     > mMaxHitCut * mRmsVec[elecId][iTBin-1]) &&
-						(signalCorrected[iChan][iTBin]     > mMaxHitCut * mRmsVec[elecId][iTBin]))
+				if(iTBin >0 && (signalCorrected[iChan][iTBin-1]     > mMaxHitCut * mRanRmsVec[elecId][iTBin-1]) &&
+						(signalCorrected[iChan][iTBin]     > mMaxHitCut * mRanRmsVec[elecId][iTBin]))
 					seedhitflag = 1;
 			}
 

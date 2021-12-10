@@ -74,7 +74,8 @@ protected:
 
    std::vector< std::vector< float > > mCmnVec;   ///< APV chip geom. index, common mode (CM) noise
    std::vector< std::vector< float > > mPedVec;   ///< Channel elec. index, pedestal
-   std::vector< std::vector< float > > mRmsVec;   ///< Channel elec. index, RMS noise
+   std::vector< std::vector< float > > mTotRmsVec;   ///< Channel elec. index, Total RMS noise
+   std::vector< std::vector< float > > mRanRmsVec;   ///< Channel elec. index, Random RMS noise
    std::vector< float > mGainVec;  ///< Channel elec. index, gain
    std::vector< int > mMappingVec; ///< Channel elec. index to geometry ID mapping
    std::vector< unsigned char > mConfigVec; ///< APV chip configuration status indexed by geom. id

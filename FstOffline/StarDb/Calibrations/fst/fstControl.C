@@ -4,9 +4,9 @@ TDataSet *CreateTable() {
   fstControl_st row;
   St_fstControl *tableSet = new St_fstControl("fstControl",1);
   memset(&row,0,tableSet->GetRowSize());
-  row.kFstChanMaxRmsNoiseLevel    = 35.0;
-  row.kFstChanMinRmsNoiseLevel    = 12.0;
-  row.kFstApvMaxCmNoiseLevel      = 15.0;
+  row.kFstChanMaxRmsNoiseLevel    = 50.0;
+  row.kFstChanMinRmsNoiseLevel    = 5.0;
+  row.kFstApvMaxCmNoiseLevel      = 25.0;
   row.kFstPedCutDefault           = 3.0;
   row.kFstMinHitCutDefault        = 2.5;
   row.kFstMedHitCutDefault        = 3.5;
