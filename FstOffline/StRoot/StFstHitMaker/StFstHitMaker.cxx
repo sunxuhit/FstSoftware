@@ -100,7 +100,7 @@ Int_t StFstHitMaker::Make()
 			LOG_DEBUG << "Make() - Number of clusters found in wedge " << (int)(wedgeIdx + 1) << ": " << numClusters << endm;
 
 			unsigned short idTruth = 0;
-			unsigned char  nRawHits = -1, nRawHitsZ = -1, nRawHitsRPhi = -1;
+			unsigned char  nRawHits = -1, nRawHitsR = -1, nRawHitsPhi = -1;
 			unsigned char  disk = -1, wedge = -1, sensor = -1, apv = -1;
 			int  meanRStrip = -1, meanPhiStrip = -1;
                         float  charge = 0., chargeErr = 0.;
@@ -111,21 +111,21 @@ Int_t StFstHitMaker::Make()
 			for (std::vector< StFstCluster * >::iterator clusterIter = clusterCollectionPtr->getClusterVec().begin(); clusterIter != clusterCollectionPtr->getClusterVec().end(); ++clusterIter) {
 				idTruth         = (*clusterIter)->getIdTruth();
 				key             = (*clusterIter)->getKey();
-				disk          = (*clusterIter)->getDisk();
-				wedge          = (*clusterIter)->getWedge();
+				disk            = (*clusterIter)->getDisk();
+				wedge           = (*clusterIter)->getWedge();
 				sensor          = (*clusterIter)->getSensor();
 				apv             = (*clusterIter)->getApv();
-				meanRStrip         = (*clusterIter)->getMeanRStrip();
-				meanPhiStrip      = (*clusterIter)->getMeanPhiStrip();
+				meanRStrip      = (*clusterIter)->getMeanRStrip();
+				meanPhiStrip    = (*clusterIter)->getMeanPhiStrip();
 				maxTb           = (*clusterIter)->getMaxTimeBin();
 				charge          = (*clusterIter)->getTotCharge();
 				chargeErr       = (*clusterIter)->getTotChargeErr();
 				nRawHits        = (*clusterIter)->getNRawHits();
-				nRawHitsZ       = (*clusterIter)->getNRawHitsZ();
-				nRawHitsRPhi    = (*clusterIter)->getNRawHitsRPhi();
+				nRawHitsR       = (*clusterIter)->getNRawHitsR();
+				nRawHitsPhi     = (*clusterIter)->getNRawHitsPhi();
 				nClusteringType = (*clusterIter)->getClusteringType();
 
-				StFstHit *newHit = new StFstHit(disk, wedge, sensor, apv, charge, chargeErr, maxTb, meanRStrip, meanPhiStrip, nRawHits, nRawHitsZ, nRawHitsRPhi);
+				StFstHit *newHit = new StFstHit(disk, wedge, sensor, apv, charge, chargeErr, maxTb, meanRStrip, meanPhiStrip, nRawHits, nRawHitsR, nRawHitsPhi);
 				newHit->setId(key);
 				newHit->setIdTruth(idTruth);
 
@@ -175,7 +175,6 @@ Int_t StFstHitMaker::Make()
 
 		//set global position
 		StFstWedgeHitCollection *wedgeHitCollection = fstHitCollection->wedge(wedgeIdx);
-
 		for (int sensorIdx = 0; sensorIdx < kFstNumSensorsPerWedge; sensorIdx++) {
 			StFstSensorHitCollection *sensorHitCollection = wedgeHitCollection->sensor(sensorIdx);
 
@@ -187,9 +186,15 @@ Int_t StFstHitMaker::Make()
 				local[1] = newHit->localPosition(1);
 				local[2] = newHit->localPosition(2);
 
+                                //Ye: simple transformation. Need to revisit
 				int sensorId = 1000 + ((int)newHit->getWedge() - 1) * kFstNumSensorsPerWedge + (int)newHit->getSensor();
 				TGeoHMatrix *geoMSensorOnGlobal = (TGeoHMatrix *) mSensorTransforms->FindObject(Form("R%04i", sensorId));
 				geoMSensorOnGlobal->LocalToMaster(local, global);
+
+                                global[0] = local[0]*cos(local[1]);
+                                global[1] = local[0]*sin(local[1]);
+                                global[2] = local[2];
+
 				StThreeVectorF vecGlobal(global);
 				newHit->setPosition(vecGlobal); //set global position
 			}//end sensor hit collection

@@ -16,7 +16,7 @@ class StFstHitMaker : public StMaker
 {
 public:
 
-   StFstHitMaker( const char *name = "ist_hit" );
+   StFstHitMaker( const char *name = "fst_hit" );
    Int_t InitRun(Int_t runnumber);
    Int_t Make();
 

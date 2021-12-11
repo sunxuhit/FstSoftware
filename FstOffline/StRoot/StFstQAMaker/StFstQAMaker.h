@@ -54,7 +54,7 @@ protected:
   } fstRawHit;
   
   struct hitInfo {
-	int hitId, wedge, sensor, apv, idTruth, EventId, maxTimeBin, clusteringType, nRawHits, nRawHitsZ, nRawHitsRPhi;
+	int hitId, wedge, sensor, apv, idTruth, EventId, maxTimeBin, clusteringType, nRawHits, nRawHitsR, nRawHitsPhi;
 	float meanPhiStrip, meanRStrip, localR, localPhi, localZ, x, y, z, charge, chargeErr;
   } fstHit;
 
@@ -78,8 +78,8 @@ protected:
   TProfile* numOfRawHits_EventId[kFstNumSensors];
   //cluster size
   TH2S* clusterSize_SensorId;	    // hit cluster size
-  TH2S* clusterSizeZ_SensorId;	    // hit cluster size in Z direction
-  TH2S* clusterSizeRPhi_SensorId;   // hit cluster size in R-Phi direction
+  TH2S* clusterSizeR_SensorId;	    // hit cluster size in R direction
+  TH2S* clusterSizePhi_SensorId;    // hit cluster size in Phi direction
 
   Int_t  mEventCounter;             // Event countter
 
