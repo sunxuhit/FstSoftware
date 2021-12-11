@@ -38,12 +38,12 @@ const string StFstCalibrationMaker::sectionLabel[72]={  "1C","1B","1A","2C","2B"
 // constructor
 StFstCalibrationMaker::StFstCalibrationMaker( const char* name ) : StMaker( name ), mTimeBinMask(0xFF), mRunHist(true), mDoPedCut(true), evtIdx(0), mHasFinished(0), mFstDb(0) {
 	for(unsigned char iTb=0; iTb<kFstNumTimeBins; iTb++) {
-		hist_meanPed[iTb] = NULL;
-		hist_rmsPed[iTb]  = NULL;
-		hist_cmNoise[iTb] = NULL;
-		hist_sumPed[iTb] = NULL;
-		hist_sumRms[iTb] = NULL;
-		hist_sumCmn[iTb] = NULL;
+		hist_meanPed[iTb]     = NULL;
+		hist_rmsPed[iTb]      = NULL;
+		hist_cmNoise[iTb]     = NULL;
+		hist_sumPed[iTb]      = NULL;
+		hist_sumRms[iTb]      = NULL;
+		hist_sumCmn[iTb]      = NULL;
 		hist_adcSpectrum[iTb] = NULL;
 	}
 

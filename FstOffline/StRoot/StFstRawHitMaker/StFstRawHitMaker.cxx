@@ -79,20 +79,20 @@ Int_t StFstRawHitMaker::InitRun(Int_t runnumber)
 		ierr = kStErr;
 	}
 	else {
-		mMinHitCut  = fstControlTable[0].kFstMinHitCutDefault;
-		mMedHitCut  = fstControlTable[0].kFstMedHitCutDefault;
-		mMaxHitCut  = fstControlTable[0].kFstMaxHitCutDefault;
-		mCmnCut  = fstControlTable[0].kFstCMNCutDefault;
+		mMinHitCut            = fstControlTable[0].kFstMinHitCutDefault;
+		mMedHitCut            = fstControlTable[0].kFstMedHitCutDefault;
+		mMaxHitCut            = fstControlTable[0].kFstMaxHitCutDefault;
+		mCmnCut               = fstControlTable[0].kFstCMNCutDefault;
 		mChanMinRmsNoiseLevel = fstControlTable[0].kFstChanMinRmsNoiseLevel;
 		mChanMaxRmsNoiseLevel = fstControlTable[0].kFstChanMaxRmsNoiseLevel;
 		mApvMaxCmNoiseLevel   = fstControlTable[0].kFstApvMaxCmNoiseLevel;
-		mALLdata = fstControlTable[0].kFstAlldata;
-		mADCdata = fstControlTable[0].kFstADCdata;
-		mZSdata  = fstControlTable[0].kFstZSdata;
-		mDefaultTimeBin = fstControlTable[0].kFstDefaultTimeBin;
-		mCurrentTimeBinNum = fstControlTable[0].kFstCurrentTimeBinNum;
-		mMinNumOfRawHits = fstControlTable[0].kFstMinNumOfRawHits;
-		mMaxNumOfRawHits = fstControlTable[0].kFstMaxNumOfRawHits;
+		mALLdata              = fstControlTable[0].kFstAlldata;
+		mADCdata              = fstControlTable[0].kFstADCdata;
+		mZSdata               = fstControlTable[0].kFstZSdata;
+		mDefaultTimeBin       = fstControlTable[0].kFstDefaultTimeBin;
+		mCurrentTimeBinNum    = fstControlTable[0].kFstCurrentTimeBinNum;
+		mMinNumOfRawHits      = fstControlTable[0].kFstMinNumOfRawHits;
+		mMaxNumOfRawHits      = fstControlTable[0].kFstMaxNumOfRawHits;
 	}
 
 	// FST pedestal/rms table
@@ -273,7 +273,7 @@ Int_t StFstRawHitMaker::Make()
 		// electronics coordinate info.: RDO, ARM, APV
 		Int_t rdo = rts_tbl->Rdo();     // 1, 2, ..., 6
 		Int_t arm = rts_tbl->Sector();  // 0, 1, 2
-		Int_t apvro = rts_tbl->Pad();     // 0-7&12-19
+		Int_t apvro = rts_tbl->Pad();   // 0-7&12-19
 		Int_t apv = -1;
 		if(apvro>7) apv = apvro-4;
 		else apv = apvro;           //APV:0-15
@@ -343,7 +343,7 @@ Int_t StFstRawHitMaker::Make()
 				}
 
 				if ( dataFlag == mADCdata ) { // non-ZS data
-					signalCorrected[channel][timebin]    = signalUnCorrected[channel][timebin] - mPedVec[elecId];
+					signalCorrected[channel][timebin] = signalUnCorrected[channel][timebin] - mPedVec[elecId];
 
 					// exclude signal-related channels for common mode noise calculation
 					if ( (signalCorrected[channel][timebin] > (-mCmnCut)*mRmsVec[elecId]) &&
@@ -363,7 +363,7 @@ Int_t StFstRawHitMaker::Make()
 					LOG_DEBUG << " Corrected = " << signalCorrected[channel][timebin] << endm;
 				}
 				else {      // ZS data
-					signalCorrected[channel][timebin]    = signalUnCorrected[channel][timebin];
+					signalCorrected[channel][timebin] = signalUnCorrected[channel][timebin];
 				}
 			}
 		} // end current APV loops

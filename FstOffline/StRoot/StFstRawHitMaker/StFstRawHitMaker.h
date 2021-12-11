@@ -37,15 +37,15 @@ public:
    Int_t Make();
    void Clear( Option_t *opts = "" );
 
-   void setIsCalibrationMode( bool isCaliMode = false )   	{ mIsCaliMode = isCaliMode;}
-   void setMinHitCut(double minhitCut = 2.5)				{ mMinHitCut = minhitCut;        }
-   void setMedHitCut(double medhitCut = 3.5)				{ mMedHitCut = medhitCut;        }
-   void setMaxHitCut(double maxhitCut = 4.0)				{ mMaxHitCut = maxhitCut;        }
-   void setCmnCorrection( bool doCmnCorrection = true )	{ mDoCmnCorrection = doCmnCorrection; }
-   void setCmnCut(double cmnCut = 3.)				{ mCmnCut = cmnCut;        }
+   void setIsCalibrationMode( bool isCaliMode = false )  { mIsCaliMode = isCaliMode; }
+   void setMinHitCut(double minhitCut = 2.5)             { mMinHitCut = minhitCut; }
+   void setMedHitCut(double medhitCut = 3.5)             { mMedHitCut = medhitCut; }
+   void setMaxHitCut(double maxhitCut = 4.0)             { mMaxHitCut = maxhitCut; }
+   void setCmnCorrection( bool doCmnCorrection = true )	 { mDoCmnCorrection = doCmnCorrection; }
+   void setCmnCut(double cmnCut = 3.)                    { mCmnCut = cmnCut; }
    /// 0 - All data; 1 - non-ZS data; 2 - ZS data; 3 - ZS first data
-   void setDataType(int nDataType = 0)				{ mDataType = nDataType;   };
-   void setDoEmbedding(Bool_t doIt) 				{mDoEmbedding = doIt;}
+   void setDataType(int nDataType = 0)                   { mDataType = nDataType; };
+   void setDoEmbedding(Bool_t doIt)                      { mDoEmbedding = doIt; }
    UChar_t getDataType() {return mDataType;} // 0 - All data; 1 - non-ZS data; 2 - ZS data; 3 - ZS first data
 
    // Get CVS
@@ -68,7 +68,7 @@ protected:
    /// merged with simulated hits or entirely provided by StFstSlowSimMaker
    StFstCollection *mFstCollectionPtr;
 
-   /// Ponter to an FST hit container with simulated ADC values usually provided
+   /// Pointer to an FST hit container with simulated ADC values usually provided
    /// by StFstSlowSimMaker
    StFstCollection *mFstCollectionSimuPtr;
 
