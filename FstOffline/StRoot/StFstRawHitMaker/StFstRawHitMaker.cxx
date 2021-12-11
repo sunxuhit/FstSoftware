@@ -23,7 +23,7 @@ StFstRawHitMaker::StFstRawHitMaker( const char *name ): StRTSBaseMaker( "fst", n
 	mIsCaliMode(false), mDoEmbedding(false), mDoCmnCorrection(true),
 	mMinHitCut(2.5), mMedHitCut(3.5), mMaxHitCut(4.0),mCmnCut(3.),
 	mFstCollectionPtr(new StFstCollection()), mFstCollectionSimuPtr(nullptr),
-	mCmnVec(kFstNumApvs, std::vector<float>(kFstNumTimeBins, 0)),
+	mCmnVec(kFstNumApvs, std::vector<std::vector<float>>(kFstNumRStripsPerSensor, std::vector<float>(kFstNumTimeBins, 0))),
 	mPedVec(kFstNumElecIds, std::vector<float>(kFstNumTimeBins, 0)),
 	mTotRmsVec(kFstNumElecIds, std::vector<float>(kFstNumTimeBins, 0)),
         mRanRmsVec(kFstNumElecIds, std::vector<float>(kFstNumTimeBins, 0)),
@@ -105,9 +105,11 @@ Int_t StFstRawHitMaker::InitRun(Int_t runnumber)
 	}
 	else {
 		for (int i = 0; i < kFstNumApvs; i++) {
-                     for ( int j = 0; j < kFstNumTimeBins; j++) {
-			LOG_DEBUG << Form(" Print entry %d-%d : CM noise=%f ", i, j, (float)gPN[0].cmNoise[i][j] / 100.) << endm;
-			mCmnVec[i][j] = (float)gPN[0].cmNoise[i][j] / 100.0;
+                     for ( int j = 0; j < kFstNumRStripsPerSensor; j++) {
+                          for ( int k = 0; k < kFstNumTimeBins; k++) {
+   			       LOG_DEBUG << Form(" Print entry %d-%d-%d : CM noise=%f ", i, j, k, (float)gPN[0].cmNoise[i][j][k] / 100.) << endm;
+			       mCmnVec[i][j][k] = (float)gPN[0].cmNoise[i][j][k] / 100.0;
+                          }
                      }
 		}
 

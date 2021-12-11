@@ -68,7 +68,9 @@
   while (!in2.eof()){
     in2 >> chipId >> rdo >> arm >> apv >> timebin >> cmNoiseT;
     if(timebin==0) cout<<"//Chip"<<chipId<<endl;
-    cout<<"         row.cmNoise["<<chipId<<"]["<<timebin<<"]="<<100*(int)cmNoiseT<<";"<<endl;
+    for(int i=0;i<4;i++) {
+        cout<<"         row.cmNoise["<<chipId<<"]["<<i<<"]["<<timebin<<"]="<<100*(int)cmNoiseT<<";"<<endl;
+    }
   }
   in2.close();
 

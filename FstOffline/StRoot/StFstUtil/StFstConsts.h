@@ -10,17 +10,17 @@
 
 #include "StEvent/StEnumerations.h"
 #include "TMath.h"
-const int kFstNumWedges = 36;                ///< 36 FST wedge
-const int kFstNumSensorsPerWedge = 3;        ///< 3 sensor per one FST Wedge
-const int kFstNumInnerSensorsPerWedge = 1;   ///< 1 inner sensor per one FST Wedge
-const int kFstNumOuterSensorsPerWedge = 2;   ///< 2 outer sensor per one FST Wedge
-const int kFstNumSensors = 108;              ///< 3*36 sensors
-const int kFstNumStripsPerInnerSensor = 512; ///< 128*4 strips in each inner sensor
-const int kFstNumStripsPerOuterSensor = 256; ///< 64*4 strips in each outer sensor
-const int kFstNumWedgePerDisk = 12;          ///< 12 wedge per one FST Disk
-const int kFstNumPhiSegPerWedge = 128;       ///< phi segmentation in r-phi direction per each wedge
-const int kFstNumPhiSegPerSensor = 128;      ///< phi segmentation in r-phi direction per each sensor: 128 for sensor 1 | 64 for sensor 2 & 3
-const int kFstNumRStripsPerSensor = 4;       ///< 4 R-strips in r-phi direction per each sensor
+const int kFstNumWedges = 36;          ///< 36 FST wedge
+const int kFstNumSensorsPerWedge = 3;  ///< 3 sensor per one FST Wedge
+const int kFstNumInnerSensorsPerWedge = 1;  ///< 1 inner sensor per one FST Wedge
+const int kFstNumOuterSensorsPerWedge = 2;  ///< 2 outer sensor per one FST Wedge
+const int kFstNumSensors = 108;         ///< 3*36 sensors
+const int kFstNumStripsPerInnerSensor = 512;   ///< 128*4 strips in each inner sensor
+const int kFstNumStripsPerOuterSensor = 256;   ///< 64*4 strips in each outer sensor
+const int kFstNumWedgePerDisk = 12;   ///< 12 wedge per one FST Disk
+const int kFstNumPhiSegPerWedge = 128;    ///< phi segmentation in r-phi direction per each wedge
+const int kFstNumPhiSegPerSensor = 128; ///< phi segmentation in r-phi direction per each sensor: 128 for sensor 1 | 64 for sensor 2 & 3
+const int kFstNumRStripsPerSensor = 4; ///< 4 R-strips in r-phi direction per each sensor
 
 /*
  * Hard-coded constants
