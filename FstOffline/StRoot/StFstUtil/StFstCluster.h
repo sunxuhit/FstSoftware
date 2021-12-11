@@ -37,8 +37,8 @@ public:
    unsigned char        getMaxTimeBin()     	const;
    unsigned char        getClusteringType() 	const;
    unsigned char        getNRawHits()       	const;
-   unsigned char        getNRawHitsRPhi()   	const;
-   unsigned char        getNRawHitsZ()      	const;
+   unsigned char        getNRawHitsR()   	const;
+   unsigned char        getNRawHitsPhi()      	const;
    unsigned short       getIdTruth()        	const;
 
    void        setDisk(int disk);
@@ -52,8 +52,8 @@ public:
    void        setMaxTimeBin(int tb);
    void        setClusteringType(int clusteringType);
    void        setNRawHits(int nRawHits);
-   void        setNRawHitsRPhi(int nRawHitsRPhi);
-   void        setNRawHitsZ(int nRawHitsZ);
+   void        setNRawHitsR(int nRawHitsR);
+   void        setNRawHitsPhi(int nRawHitsPhi);
    void        setIdTruth(unsigned short idTruth);
 
    virtual void Print(Option_t *opt = "") const;
@@ -65,15 +65,15 @@ protected:
    Float_t     mTotCharge;              	///< Charge sum of the cluster
    Float_t     mTotChargeErr;           	///< rMS noise of the cluster
    UShort_t    mIdTruth;                        //!< For embedding, 0 as background
-   UChar_t     mDiskId;                       ///< Disk id the cluster belongs to
-   UChar_t     mWedgeId;                       ///< Wedge id the cluster belongs to
+   UChar_t     mDiskId;                         ///< Disk id the cluster belongs to
+   UChar_t     mWedgeId;                        ///< Wedge id the cluster belongs to
    UChar_t     mSensorId;                       ///< Sensor id the cluster belongs to
-   UChar_t     mApv;                       ///< Apv id the cluster belongs to
+   UChar_t     mApv;                            ///< Apv id the cluster belongs to
    UChar_t     mClusteringType;         	///< Clustering algorithm type
    UChar_t     mMaxTimeBin;             	///< Max ADC time bin index
    UChar_t     mNRawHits;               	///< Cluster size
-   UChar_t     mNRawHitsRPhi;           	///< Cluster size in r-phi direction
-   UChar_t     mNRawHitsZ;              	///< Cluster size in beam direction
+   UChar_t     mNRawHitsR;           	        ///< Cluster size in R direction
+   UChar_t     mNRawHitsPhi;             	///< Cluster size in Phi direction
    std::vector<StFstRawHit *> mRawHitVec;	///< Map container to save raw hits who contribute to the cluster
 
    ClassDef(StFstCluster, 1);
