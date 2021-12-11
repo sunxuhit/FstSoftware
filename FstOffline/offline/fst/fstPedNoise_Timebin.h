@@ -16,12 +16,12 @@
 #define FSTPEDNOISE_H
 #define FSTPEDNOISE_SPEC \
 "struct fstPedNoise { \
-	unsigned short cmNoise[288][9]; \
+	unsigned short cmNoise[288][4][9]; \
 	unsigned short pedestal[36864][9]; \
 	unsigned short rmsNoise[36864][9]; \
 };"
 typedef struct fstPedNoise_st {
-	unsigned short cmNoise[288][9]; /* 100 * cm noise in ADC counts per chip      */
+	unsigned short cmNoise[288][4][9]; /* 100 * cm noise in ADC counts per chip      */
 	unsigned short pedestal[36864][9]; /* pedestal in ADC counts per channel   */
 	unsigned short rmsNoise[36864][9]; /* 100 * rms noise in ADC counts per channel  */
 } FSTPEDNOISE_ST;

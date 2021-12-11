@@ -72,7 +72,7 @@ protected:
    /// by StFstSlowSimMaker
    StFstCollection *mFstCollectionSimuPtr;
 
-   std::vector< std::vector< float > > mCmnVec;   ///< APV chip geom. index, common mode (CM) noise
+   std::vector< std::vector< std::vector< float > > > mCmnVec;   ///< APV chip geom. index, common mode (CM) noise
    std::vector< std::vector< float > > mPedVec;   ///< Channel elec. index, pedestal
    std::vector< std::vector< float > > mTotRmsVec;   ///< Channel elec. index, Total RMS noise
    std::vector< std::vector< float > > mRanRmsVec;   ///< Channel elec. index, Random RMS noise
