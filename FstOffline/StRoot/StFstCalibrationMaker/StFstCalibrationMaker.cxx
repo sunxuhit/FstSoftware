@@ -60,7 +60,7 @@ StFstCalibrationMaker::StFstCalibrationMaker( const char* name ) : StMaker( name
   if(mRunHist) 
   {
     mHistPedVec.assign( kFstNumTimeBins*kFstNumElecIds, (TH1S*)0 );
-    mHistRanVec.assign( kFstNumTimeBins*kFstNumElecIds, (TH1S*)0 );
+    mHistRanVec.assign( kFstNumTimeBins*kFstNumElecIds, (TH1F*)0 );
   }
 
   mHistCmnVec.assign( kFstNumTimeBins*kFstNumApvs*kFstNumRStripsPerSensor, (TH1F*)0 );
@@ -127,12 +127,20 @@ Int_t StFstCalibrationMaker::Init()
     hist_cmNoise[iTB]->GetXaxis()->SetNdivisions(-72,false);//sections
     hist_cmNoise[iTB]->GetYaxis()->SetTitle("ADC count");
 
+    sprintf(buffer,"hist_ranNoise_TimeBin%d",iTB);
+    hist_ranNoise[iTB] = new TH1F(buffer, buffer, kFstNumElecIds, 0, kFstNumElecIds);
+    hist_ranNoise[iTB]->SetStats(false);
+    hist_ranNoise[iTB]->GetXaxis()->SetTitle("Channel Geometry Index");
+    hist_ranNoise[iTB]->GetXaxis()->SetNdivisions(-72,false);//sections
+    hist_ranNoise[iTB]->GetYaxis()->SetTitle("ADC count");
+
     for(int i=0; i<72; i++) {
       TString binBuffer = "";
       binBuffer = sectionLabel[i];
       hist_meanPed[iTB]->GetXaxis()->SetBinLabel(i*512+256, binBuffer);
       hist_rmsPed[iTB]->GetXaxis()->SetBinLabel(i*512+256, binBuffer);
       hist_cmNoise[iTB]->GetXaxis()->SetBinLabel(i*4+4, binBuffer);
+      hist_ranNoise[iTB]->GetXaxis()->SetBinLabel(i*512+256, binBuffer);
     }
 
     sprintf(buffer,"hist_sumPedestal_TimeBin%d",iTB);
@@ -152,6 +160,12 @@ Int_t StFstCalibrationMaker::Init()
     hist_sumCmn[iTB]->SetStats(kTRUE);
     hist_sumCmn[iTB]->GetXaxis()->SetTitle("CM Noise [ADC counts]");
     hist_sumCmn[iTB]->GetYaxis()->SetTitle("Counts");
+
+    sprintf(buffer,"hist_sumRanNoise_TimeBin%d",iTB);
+    hist_sumRan[iTB] = new TH1F(buffer, buffer, 128, 0, 256);
+    hist_sumRan[iTB]->SetStats(kTRUE);
+    hist_sumRan[iTB]->GetXaxis()->SetTitle("RAN Noise [ADC counts]");
+    hist_sumRan[iTB]->GetYaxis()->SetTitle("Counts");
 
     sprintf(buffer,"hist_adcSpectrum_TimeBin%d",iTB);
     hist_adcSpectrum[iTB] = new TH2S(buffer, buffer, kFstNumElecIds, 0, kFstNumElecIds, 512, 0, 4096);
@@ -385,12 +399,12 @@ Int_t StFstCalibrationMaker::Make()
 		mMathCouRanVec[code] ++;
 
 		if(mRunHist) {
-		  TH1S* histRan = mHistRanVec[ code ];
+		  TH1F* histRan = mHistRanVec[ code ];
 		  if( !histRan ){
 		    ss.str("");
 		    ss.clear();
 		    ss << "hist_RanNoise_Ch" << code / kFstNumTimeBins << "_TB" << code % kFstNumTimeBins;
-		    histPed = new TH1S( ss.str().data(), "", 1024, -kFstMaxAdc, kFstMaxAdc );
+		    histRan = new TH1F( ss.str().data(), "", 1024, -kFstMaxAdc, kFstMaxAdc );
 		    mHistRanVec[ code ] = histRan;
 		  }
 		  histRan->Fill( adc-mPedVec1stLoop[code]-cmNoisePerEvent[lclApvIdx][rstrip][t] );
@@ -446,7 +460,7 @@ Int_t StFstCalibrationMaker::Finish()
       double mathPedRan, mathRmsRan;
       if(mMathCouRanVec[i] < 1) {
 	mathPedRan = 0.;
-	mathRmsRan = 100.;
+	mathRmsRan = 10000.;
       }
       else {
 	mathPedRan = mMathPedRanVec[i]/mMathCouRanVec[i];
@@ -506,7 +520,7 @@ Int_t StFstCalibrationMaker::Finish()
       int elecIdx = 0;
 
       for( mHistRanVecIter = mHistRanVec.begin(); mHistRanVecIter != mHistRanVec.end(); ++mHistRanVecIter ){
-	TH1S *histRan = *mHistRanVecIter;
+	TH1F *histRan = *mHistRanVecIter;
 	elecIdx = std::distance( mHistRanVec.begin(), mHistRanVecIter );
 	short timebin = elecIdx % kFstNumTimeBins;
 	int chanIdx   = elecIdx / kFstNumTimeBins;
