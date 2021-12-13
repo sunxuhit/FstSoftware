@@ -358,7 +358,7 @@ Int_t StFstRawHitMaker::Make()
 				}
 
 				if ( dataFlag == mADCdata ) { // non-ZS data
-					signalCorrected[channel][timebin] = signalUnCorrected[channel][timebin] - mPedVec[elecId];
+					signalCorrected[channel][timebin] = signalUnCorrected[channel][timebin] - mPedVec[elecId][timebin];
 
 					// exclude signal-related channels for common mode noise calculation
 					if ( (signalCorrected[channel][timebin] > (-mCmnCut)*mTotRmsVec[elecId][timebin]) &&
@@ -431,7 +431,6 @@ int StFstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, in
 	std::vector<bool> isPassRawHitCut(kFstNumApvChannels, false);
 	Int_t nChanPassedCut = 0;
 
-
 	for (int iChan = 0; iChan < kFstNumApvChannels; iChan++)
 	{
 		Int_t elecId = apvElecId + iChan;
@@ -480,7 +479,7 @@ int StFstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, in
 		Int_t elecId = apvElecId + iChan;
 		Int_t geoId  = mMappingVec[elecId]; // channel geometry ID which is numbering from 0 to 36863
 		Int_t wedge = 1 + geoId / (kFstApvsPerWedge * kFstNumApvChannels); // wedge geometry ID: 1, 2, ..., 36
-		Int_t apvId  = 1 + geoId / kFstNumApvChannels; // APV geometry ID: 1, ..., 288 (numbering from wedge 1 to wedge 36)
+		Int_t apvId  = elecId / kFstNumApvChannels; // APV geometry ID: 0, ..., 287 (numbering from wedge 1 to wedge 36)
 
 		//store raw hits information
 		StFstRawHitCollection *rawHitCollectionPtr = mFstCollectionPtr->getRawHitCollection( wedge - 1 );
@@ -502,8 +501,8 @@ int StFstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, in
 		}
 		else { //physics mode: pedestal subtracted + dynamical common mode correction
 			//skip dead chips and bad mis-configured chips
-			if (mConfigVec[apvId - 1] < 1 || mConfigVec[apvId - 1] > 9) { //1-9 good status code
-				LOG_DEBUG << "Skip: Channel belongs to dead/bad/mis-configured APV chip geometry index: " << apvId << " on wedge " << wedge << endm;
+			if (mConfigVec[apvId] < 1 || mConfigVec[apvId] > 9) { //1-9 good status code
+				LOG_DEBUG << "Skip: Channel belongs to dead/bad/mis-configured APV chip electronic index: " << apvId << " on wedge " << wedge << endm;
 				continue;
 			}
 
