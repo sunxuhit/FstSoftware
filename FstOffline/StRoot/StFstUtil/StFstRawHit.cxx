@@ -51,13 +51,6 @@ unsigned char StFstRawHit::getWedge() const
    return 1 + mGeoId / (kFstNumInnerSensorsPerWedge * kFstNumStripsPerInnerSensor + kFstNumOuterSensorsPerWedge * kFstNumStripsPerOuterSensor);
 };
 
-unsigned char StFstRawHit::getSensor() const
-{
-   int strip = mGeoId % (kFstNumInnerSensorsPerWedge * kFstNumStripsPerInnerSensor + kFstNumOuterSensorsPerWedge * kFstNumStripsPerOuterSensor);
-   if(strip < kFstNumStripsPerInnerSensor) return strip/kFstNumStripsPerInnerSensor;
-   else return strip / kFstNumStripsPerOuterSensor - 1;
-};
-
 unsigned char StFstRawHit::getPhiStrip() const
 {
    int strip = mGeoId % (kFstNumInnerSensorsPerWedge * kFstNumStripsPerInnerSensor + kFstNumOuterSensorsPerWedge * kFstNumStripsPerOuterSensor);
@@ -83,6 +76,13 @@ unsigned char StFstRawHit::getArm() const
 unsigned char StFstRawHit::getApv() const
 {
    return ((mChannelId % (kFstNumArmsPerRdo * kFstNumChanPerArm)) % kFstNumChanPerArm) / kFstNumApvChannels;
+};
+
+unsigned char StFstRawHit::getSensor() const
+{
+   int strip = mChannelId % (kFstNumInnerSensorsPerWedge * kFstNumStripsPerInnerSensor + kFstNumOuterSensorsPerWedge * kFstNumStripsPerOuterSensor);
+   if(strip < kFstNumStripsPerInnerSensor) return strip/kFstNumStripsPerInnerSensor;
+   else return strip / kFstNumStripsPerOuterSensor - 1;
 };
 
 unsigned char StFstRawHit::getChannel() const

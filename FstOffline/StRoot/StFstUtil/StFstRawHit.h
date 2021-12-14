@@ -29,7 +29,6 @@ public:
    int               getSeedhitflag() const; //!< 0 or 1
    unsigned char     getDisk()       const; //!< 1-3
    unsigned char     getWedge()      const; //!< 1-36
-   unsigned char     getSensor()     const; //!< 0-2
    unsigned char     getPhiStrip()   const; //!< 0-127
    unsigned char     getRStrip()     const; //!< 0-7
    float             getCharge(int tb = 0)    const;
@@ -38,6 +37,7 @@ public:
    unsigned char     getRdo()        const; //!< 1-6
    unsigned char     getArm()        const; //!< 0-2
    unsigned char     getApv()        const; //!< 0-15
+   unsigned char     getSensor()     const; //!< 0-2
    unsigned char     getChannel()    const; //!< 0-127
    static unsigned char  getDefaultTimeBin();
    unsigned short    getIdTruth()    const; //!< for embedding, 0 as background

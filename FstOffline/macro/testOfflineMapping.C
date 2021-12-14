@@ -37,21 +37,46 @@ int testOfflineMapping()
   const int kFstNumWedsPerRdo      = 6;     // 6 wedegs per Rdo
   const int kFstNumWedsPerArm      = 2;     // 2 wedges per ARM
 
-  int wedgesId = -1;
+  // check diskId
+  int diskId = -1, wedgeId = -1, rStripId = -1;
   for(int geoId = 0; geoId < kFstNumElecIds; ++geoId)
   {
+    int disk = 1 + geoId / ((kFstNumInnerSensorsPerWedge * kFstNumStripsPerInnerSensor + kFstNumOuterSensorsPerWedge * kFstNumStripsPerOuterSensor) * kFstNumWedgePerDisk);;
     int wedge = 1 + geoId / (kFstNumInnerSensorsPerWedge * kFstNumStripsPerInnerSensor + kFstNumOuterSensorsPerWedge * kFstNumStripsPerOuterSensor);
-    if(wedgesId != wedge)
+
+    int strip = geoId % (kFstNumInnerSensorsPerWedge * kFstNumStripsPerInnerSensor + kFstNumOuterSensorsPerWedge * kFstNumStripsPerOuterSensor);
+
+   int rstrip = strip / kFstNumPhiSegPerWedge;
+
+    if(diskId != disk || wedgeId != wedge || rStripId != rstrip)
     {
-      wedgesId = wedge;
-      cout << "geoId = " << geoId << ", wedgesId = " << wedgesId << endl;
+      diskId = disk;
+      wedgeId = wedge;
+      rStripId = rstrip;
+      cout << "geoId = " << geoId << ", diskId = " << diskId << ", wedgeId = " << wedgeId << ", rStripId = " << rStripId << endl;
     }
   }
 
-  for(int geoId = 0; geoId < kFstNumElecIds; ++geoId)
+  int rdoId = -1, armId = -1, apvId = -1, sensorId = -1;
+  int sensor = -1;
+  for(int elecId = 0; elecId < kFstNumElecIds; ++elecId)
   {
-    int rstrip = (geoId % (kFstNumInnerSensorsPerWedge * kFstNumStripsPerInnerSensor + kFstNumOuterSensorsPerWedge * kFstNumStripsPerOuterSensor))/kFstNumPhiSegPerWedge;
-    cout << "geoId = " << geoId << ", rstrip = " << rstrip << endl;
+    int rdo = 1 + elecId / (kFstNumArmsPerRdo * kFstNumChanPerArm);
+    int arm = (elecId % (kFstNumArmsPerRdo * kFstNumChanPerArm)) / kFstNumChanPerArm;
+    int apv = ((elecId % (kFstNumArmsPerRdo * kFstNumChanPerArm)) % kFstNumChanPerArm) / kFstNumApvChannels;
+
+    int strip = elecId % (kFstNumInnerSensorsPerWedge * kFstNumStripsPerInnerSensor + kFstNumOuterSensorsPerWedge * kFstNumStripsPerOuterSensor);
+    if(strip < kFstNumStripsPerInnerSensor) sensor = strip/kFstNumStripsPerInnerSensor;
+     else sensor = strip / kFstNumStripsPerOuterSensor - 1;
+
+    if(rdoId != rdo || armId != arm || apvId != apv || sensorId != sensor)
+    {
+      rdoId = rdo;
+      armId = arm;
+      apvId = apv;
+      sensorId = sensor;
+      cout << "elecId = " << elecId << ", rdoId = " << rdoId << ", armId = " << armId << ", apvId = " << apvId << ", sensorId = " << sensorId << endl;
+    }
   }
 
   return 1;
