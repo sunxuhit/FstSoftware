@@ -28,7 +28,7 @@ class StFstScanRadiusClusterAlgo : public StFstIClusterAlgo
 protected:
    enum {kFstScanRadiusClusterAlgo = 2};
 
-   virtual Int_t doClustering(const StFstCollection &istCollection, StFstRawHitCollection &rawHits, StFstClusterCollection &clusters );
+   virtual Int_t doClustering(const StFstCollection &fstCollection, StFstRawHitCollection &rawHits, StFstClusterCollection &clusters );
 };
 
 #endif

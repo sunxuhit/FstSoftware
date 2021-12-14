@@ -35,23 +35,23 @@ StFstCluster::~StFstCluster()
 }
 
 //accessors
-vector<StFstRawHit *> &StFstCluster::getRawHitVec()     	{    return mRawHitVec;     };
-const vector<StFstRawHit *> &StFstCluster::getRawHitVec() const {    return mRawHitVec;     };
-int              StFstCluster::getKey() const           	{    return mKey;           };
-unsigned char    StFstCluster::getDisk() const        	{    return mDiskId;      };
-unsigned char    StFstCluster::getWedge() const        	{    return mWedgeId;      };
-unsigned char    StFstCluster::getSensor() const        	{    return mSensorId;      };
-unsigned char    StFstCluster::getApv() const        	{    return mApv;      };
-float            StFstCluster::getMeanRStrip() const       	{    return mMeanRStrip;       };
-float            StFstCluster::getMeanPhiStrip() const    	{    return mMeanPhiStrip;    };
-float            StFstCluster::getTotCharge() const     	{    return mTotCharge;     };
-float            StFstCluster::getTotChargeErr() const  	{    return mTotChargeErr;  };
-unsigned char    StFstCluster::getMaxTimeBin() const    	{    return mMaxTimeBin;    };
-unsigned char    StFstCluster::getClusteringType() const 	{    return mClusteringType;};
-unsigned char    StFstCluster::getNRawHits() const      	{    return mNRawHits;      };
-unsigned char    StFstCluster::getNRawHitsR() const      	{    return mNRawHitsR;  };
-unsigned char    StFstCluster::getNRawHitsPhi() const     	{    return mNRawHitsPhi;     };
-unsigned short   StFstCluster::getIdTruth() const       	{    return mIdTruth;       };
+vector<StFstRawHit *> &StFstCluster::getRawHitVec()     	{  return mRawHitVec;       };
+const vector<StFstRawHit *> &StFstCluster::getRawHitVec() const {  return mRawHitVec;       };
+int              StFstCluster::getKey() const                   {  return mKey;             };
+unsigned char    StFstCluster::getDisk() const                  {  return mDiskId;          };
+unsigned char    StFstCluster::getWedge() const        	        {  return mWedgeId;         };
+unsigned char    StFstCluster::getSensor() const        	{  return mSensorId;        };
+unsigned char    StFstCluster::getApv() const                   {  return mApv;             };
+float            StFstCluster::getMeanRStrip() const       	{  return mMeanRStrip;      };
+float            StFstCluster::getMeanPhiStrip() const    	{  return mMeanPhiStrip;    };
+float            StFstCluster::getTotCharge() const     	{  return mTotCharge;       };
+float            StFstCluster::getTotChargeErr() const  	{  return mTotChargeErr;    };
+unsigned char    StFstCluster::getMaxTimeBin() const    	{  return mMaxTimeBin;      };
+unsigned char    StFstCluster::getClusteringType() const 	{  return mClusteringType;  };
+unsigned char    StFstCluster::getNRawHits() const      	{  return mNRawHits;        };
+unsigned char    StFstCluster::getNRawHitsR() const      	{  return mNRawHitsR;       };
+unsigned char    StFstCluster::getNRawHitsPhi() const     	{  return mNRawHitsPhi;     };
+unsigned short   StFstCluster::getIdTruth() const       	{  return mIdTruth;         };
 
 //modifiers
 void StFstCluster::setDisk(int disk)

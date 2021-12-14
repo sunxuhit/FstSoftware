@@ -18,233 +18,216 @@
 
 Int_t StFstScanRadiusClusterAlgo::doClustering(const StFstCollection &fstCollection, StFstRawHitCollection &rawHitsOriginal, StFstClusterCollection &clusters )
 {
-	StFstCluster *newCluster = 0;
-	StFstRawHit *rawHitTemp = 0;
-	StFstRawHit *rawHitMaxAdcTemp = 0;
-	Int_t clusterType = kFstScanRadiusClusterAlgo;
-	Int_t maxTb = -1, usedTb = -1;
-	Int_t disk = 0, wedge = 0, sensor = -1, apv = -1;
-	Float_t meanRStrip = -1., maxRStrip = -1, meanPhiStrip = -1;
-	Float_t totCharge = 0., totChargeErr = 0.;
-	Int_t clusterSize = 0, clusterSizeR = 0, clusterSizePhi = 0;
-	unsigned short idTruth = 0;
+  StFstCluster *newCluster = 0;
+  StFstRawHit *rawHitTemp = 0;
+  StFstRawHit *rawHitMaxAdcTemp = 0;
+  Int_t clusterType = kFstScanRadiusClusterAlgo;
+  Int_t maxTb = -1, usedTb = -1;
+  Int_t disk = 0, wedge = 0, sensor = -1, apv = -1;
+  Float_t meanRStrip = -1., maxRStrip = -1, meanPhiStrip = -1;
+  Float_t totCharge = 0., totChargeErr = 0.;
+  Int_t clusterSize = 0, clusterSizeR = 0, clusterSizePhi = 0;
+  unsigned short idTruth = 0;
 
-	//get number of time bin used in this event
-	Int_t nTimeBins = fstCollection.getNumTimeBins();
+  //get number of time bin used in this event
+  Int_t nTimeBins = fstCollection.getNumTimeBins();
 
-	//sort raw hits in increasing order by geometry ID
-	rawHitsOriginal.sortByGeoId();
+  //sort raw hits in increasing order by geometry ID
+  rawHitsOriginal.sortByGeoId();
 
-	//copy raw hit collection to temporary vectors
-	std::vector<StFstRawHit *>  rawHitsVec[kFstNumSensorsPerWedge][kFstNumPhiSegPerSensor];
-	std::vector<StFstCluster *> clustersVec[kFstNumSensorsPerWedge][kFstNumPhiSegPerSensor];
-	std::vector<StFstRawHit *>  rawHitsToMerge;
+  //copy raw hit collection to temporary vectors
+  std::vector<StFstRawHit *>  rawHitsVec[kFstNumSensorsPerWedge][kFstNumPhiSegPerSensor];
+  std::vector<StFstCluster *> clustersVec[kFstNumSensorsPerWedge][kFstNumPhiSegPerSensor];
+  std::vector<StFstRawHit *>  rawHitsToMerge;
 
-	for (int sensorIdx = 0; sensorIdx < kFstNumSensorsPerWedge; sensorIdx++) {
-		for (int phiIdx = 0; phiIdx < kFstNumPhiSegPerSensor; phiIdx++) {
-			rawHitsVec[sensorIdx][phiIdx].reserve(kFstNumRStripsPerSensor);
-			clustersVec[sensorIdx][phiIdx].reserve(kFstNumRStripsPerSensor);
-		}
+  for (int sensorIdx = 0; sensorIdx < kFstNumSensorsPerWedge; sensorIdx++) {
+    for (int phiIdx = 0; phiIdx < kFstNumPhiSegPerSensor; phiIdx++) {
+      rawHitsVec[sensorIdx][phiIdx].reserve(kFstNumRStripsPerSensor);
+      clustersVec[sensorIdx][phiIdx].reserve(kFstNumRStripsPerSensor);
+    }
+  }
+
+  rawHitsToMerge.reserve(kFstNumRStripsPerSensor);
+
+  for (std::vector< StFstRawHit * >::iterator rawHitPtr = rawHitsOriginal.getRawHitVec().begin(); rawHitPtr != rawHitsOriginal.getRawHitVec().end(); ++rawHitPtr) {
+    int sensorIndex = (int)(*rawHitPtr)->getSensor();
+    int phiIndex = (int)(*rawHitPtr)->getPhiStrip();
+    rawHitsVec[sensorIndex][phiIndex].push_back( new StFstRawHit( *(*rawHitPtr)) );
+  }
+
+  //do clustering
+  int clusterLabel = 0;
+
+  for (int sensorIdx = 0; sensorIdx < kFstNumSensorsPerWedge; sensorIdx++)
+  {
+    //step 1: do clustering for each phi
+    for (int phiIdx = 0; phiIdx < kFstNumPhiSegPerSensor; phiIdx++)
+    {
+      while ( !rawHitsVec[sensorIdx][phiIdx].empty() )
+      {
+	rawHitTemp = rawHitsVec[sensorIdx][phiIdx].back();
+	rawHitsVec[sensorIdx][phiIdx].pop_back();
+	rawHitsToMerge.push_back(rawHitTemp);
+	//count number to merge
+	int nToMerge = 1;
+	//find all raw hits that are neighboring
+	std::vector<StFstRawHit *>::iterator rawHitsToMergePtr = rawHitsToMerge.begin();
+	rawHitMaxAdcTemp = *rawHitsToMergePtr;
+	// StFstRawHit *rawHitNext = 0;
+	// StFstRawHit *rawHitTempBack = 0;
+
+	// put all raw hits in one phi strip to rawHitsToMerge
+	while (rawHitsToMergePtr != rawHitsToMerge.end() && !rawHitsVec[sensorIdx][phiIdx].empty()) {
+	  rawHitTemp = rawHitsVec[sensorIdx][phiIdx].back();
+	  rawHitsVec[sensorIdx][phiIdx].pop_back();
+
+	  ++nToMerge;
+	  rawHitsToMerge.push_back(rawHitTemp);
+
+	  if ( rawHitTemp->getCharge(rawHitTemp->getMaxTimeBin()) > (*rawHitsToMergePtr)->getCharge((*rawHitsToMergePtr)->getMaxTimeBin()) )
+	    rawHitMaxAdcTemp = rawHitTemp;
+
+	  ++rawHitsToMergePtr;
 	}
 
-	rawHitsToMerge.reserve(kFstNumRStripsPerSensor);
+	//used time bin index (raw hits with maximum ADC holds the time-bin priority)
+	maxTb   = rawHitMaxAdcTemp->getMaxTimeBin();
+	idTruth = rawHitMaxAdcTemp->getIdTruth();
 
-	for (std::vector< StFstRawHit * >::iterator rawHitPtr = rawHitsOriginal.getRawHitVec().begin(); rawHitPtr != rawHitsOriginal.getRawHitVec().end(); ++rawHitPtr) {
-		int sensorIndex = (int)(*rawHitPtr)->getSensor();
-		int phiIndex = (int)(*rawHitPtr)->getPhiStrip();
-		rawHitsVec[sensorIndex][phiIndex].push_back( new StFstRawHit( *(*rawHitPtr)) );
+	if (maxTb < 0 || maxTb >= nTimeBins)         maxTb  = rawHitMaxAdcTemp->getDefaultTimeBin();
+
+	if (mTimeBin < nTimeBins)                    usedTb = mTimeBin;
+	else                                         usedTb = maxTb;
+
+	disk            = rawHitMaxAdcTemp->getDisk();
+	wedge      	= rawHitMaxAdcTemp->getWedge();
+	sensor      	= rawHitMaxAdcTemp->getSensor(); // = sensorIdx
+	apv      	= rawHitMaxAdcTemp->getApv();
+	meanPhiStrip    = (float)rawHitMaxAdcTemp->getPhiStrip(); // = phiIdx
+	clusterSize 	= nToMerge;
+	clusterSizeR 	= nToMerge;
+	clusterSizePhi 	= 1;
+
+	float tempCharge[nToMerge], tempChargeErr[nToMerge], tempRStrip[nToMerge];
+
+	for (int i = 0; i < nToMerge; i++) {
+	  tempCharge[i] = 0.; tempChargeErr[i] = 0.; tempRStrip[i] = 0.;
 	}
 
-	//do clustering
-	int clusterLabel = 0;
+	float tempSumCharge = 0, tempSumChargeErrSquare = 0.;
+	int mergeIdx = 0;
+	//count number to seed hit
+	int nToSeedhit = 0;
 
-	for (int sensorIdx = 0; sensorIdx < kFstNumSensorsPerWedge; sensorIdx++)
-	{
-		//step 1: do clustering for each phi
-		for (int phiIdx = 0; phiIdx < kFstNumPhiSegPerSensor; phiIdx++)
-		{
-			while ( !rawHitsVec[sensorIdx][phiIdx].empty() )
-			{
-				rawHitTemp 	     = rawHitsVec[sensorIdx][phiIdx].back();
-                                rawHitsVec[sensorIdx][phiIdx].pop_back();
-				rawHitsToMerge.push_back(rawHitTemp);
-				//count number to merge
-				int nToMerge = 1;
-				//find all raw hits that are neighboring
-				std::vector<StFstRawHit *>::iterator rawHitsToMergePtr = rawHitsToMerge.begin();
-				rawHitMaxAdcTemp = *rawHitsToMergePtr;
-                                StFstRawHit *rawHitNext = 0;
-                                StFstRawHit *rawHitTempBack = 0;
-
-				while (rawHitsToMergePtr != rawHitsToMerge.end() && !rawHitsVec[sensorIdx][phiIdx].empty()) {
-                                        rawHitTemp       = rawHitsVec[sensorIdx][phiIdx].back();
-                                        rawHitTempBack   = rawHitsVec[sensorIdx][phiIdx].back();
-
-                                        if ( (*rawHitsToMergePtr)->getRStrip() == rawHitTemp->getRStrip() + 1 ) {
-                                                rawHitsVec[sensorIdx][phiIdx].pop_back();
-
-                                                if (!rawHitsVec[sensorIdx][phiIdx].empty()) {
-                                                        rawHitNext = rawHitsVec[sensorIdx][phiIdx].back();
-
-                                                        if ( (rawHitTemp->getRStrip() == rawHitNext->getRStrip() + 1) &&
-                                                             (rawHitTemp->getCharge(rawHitTemp->getMaxTimeBin()) < (*rawHitsToMergePtr)->getCharge((*rawHitsToMergePtr)->getMaxTimeBin())) &&
-                                                             (rawHitTemp->getCharge(rawHitTemp->getMaxTimeBin()) < rawHitNext->getCharge(rawHitNext->getMaxTimeBin())) ) {
-                                                                float weightBack = rawHitNext->getCharge(rawHitNext->getMaxTimeBin()) / ((*rawHitsToMergePtr)->getCharge((*rawHitsToMergePtr)->getMaxTimeBin()) + rawHitNext->getCharge(rawHitNext->getMaxTimeBin()));
-                                                                for (int iTB = 0; iTB < nTimeBins; iTB++) {
-                                                                        rawHitTempBack->setCharge(weightBack * rawHitTemp->getCharge(iTB), iTB);
-                                                                        rawHitTemp->setCharge((1.0 - weightBack) * rawHitTemp->getCharge(iTB), iTB);
-                                                                }
-                                                                rawHitsVec[sensorIdx][phiIdx].push_back(rawHitTempBack);
-                                                        }
-                                                }
- 
-                                                ++nToMerge;
-                                                rawHitsToMerge.push_back(rawHitTemp);
-
-                                                if ( rawHitTemp->getCharge(rawHitTemp->getMaxTimeBin()) > (*rawHitsToMergePtr)->getCharge((*rawHitsToMergePtr)->getMaxTimeBin()) )
-                                                rawHitMaxAdcTemp = rawHitTemp;
-                                        }
-                                        ++rawHitsToMergePtr;
-				}
-
-				//used time bin index (raw hits with maximum ADC holds the time-bin priority)
-				maxTb       = rawHitMaxAdcTemp->getMaxTimeBin();
-				idTruth = rawHitMaxAdcTemp->getIdTruth();
-
-				if (maxTb < 0 || maxTb >= nTimeBins)         maxTb  = rawHitMaxAdcTemp->getDefaultTimeBin();
-
-				if (mTimeBin < nTimeBins)                    usedTb = mTimeBin;
-				else                                         usedTb = maxTb;
-
-                                disk            = rawHitMaxAdcTemp->getDisk();
-				wedge      	= rawHitMaxAdcTemp->getWedge();
-				sensor      	= rawHitMaxAdcTemp->getSensor(); // = sensorIdx
-				apv      	= rawHitMaxAdcTemp->getApv();
-				meanPhiStrip    = (float)rawHitMaxAdcTemp->getPhiStrip(); // = phiIdx
-				clusterSize 	= nToMerge;
-				clusterSizeR 	= nToMerge;
-				clusterSizePhi 	= 1;
-
-				float tempCharge[nToMerge], tempChargeErr[nToMerge], tempRStrip[nToMerge];
-
-				for (int i = 0; i < nToMerge; i++) {
-					tempCharge[i] = 0.; tempChargeErr[i] = 0.; tempRStrip[i] = 0.;
-				}
-
-				float tempSumCharge = 0, tempSumChargeErrSquare = 0.;
-				int mergeIdx = 0;
-				//count number to seed hit
-				int nToSeedhit = 0;
-
-				for (rawHitsToMergePtr = rawHitsToMerge.begin(); rawHitsToMergePtr != rawHitsToMerge.end() && mergeIdx < nToMerge; ++rawHitsToMergePtr, ++mergeIdx) {
-					tempCharge[mergeIdx]    = (*rawHitsToMergePtr)->getCharge(usedTb);
-					tempChargeErr[mergeIdx] = (*rawHitsToMergePtr)->getChargeErr(usedTb);
-					tempRStrip[mergeIdx]       = (float)(*rawHitsToMergePtr)->getRStrip();
-					tempSumCharge += (*rawHitsToMergePtr)->getCharge(usedTb);
-					if ( (*rawHitsToMergePtr)->getSeedhitflag() == 1 ) ++nToSeedhit;
-				}
-
-				meanRStrip = 0;
-				maxRStrip = 0;
-
-				for (int iRawHit = 0; iRawHit < nToMerge; iRawHit++)  {
-					if(tempRStrip[iRawHit]>maxRStrip)
-						maxRStrip = tempRStrip[iRawHit];
-					meanRStrip = maxRStrip;
-					//meanRStrip		+= tempRStrip[iRawHit] * tempCharge[iRawHit] / tempSumCharge;
-					tempSumChargeErrSquare	+= tempChargeErr[iRawHit] * tempChargeErr[iRawHit];
-				}
-
-				totCharge    = tempSumCharge;
-				totChargeErr = sqrt(tempSumChargeErrSquare / nToMerge);
-
-				newCluster = new StFstCluster((int)wedge * 10000 + clusterLabel, disk, wedge, sensor, apv, meanRStrip, meanPhiStrip, totCharge, totChargeErr, clusterType);
-				newCluster->setNRawHits(clusterSize);
-				newCluster->setNRawHitsR(clusterSizeR);
-				newCluster->setNRawHitsPhi(clusterSizePhi);
-				newCluster->setMaxTimeBin(maxTb);
-				newCluster->setIdTruth(idTruth);
-
-				if(nToSeedhit>0) {
-					clustersVec[sensorIdx][phiIdx].push_back(newCluster);
-					clusterLabel++;
-				}
-
-				rawHitsToMerge.clear();
-			}//end current phi raw hits loop
-		}//end current sensor raw hits loop
-
-		//step 2: do clustering for neighboring phistrips
-		std::vector<StFstCluster *>::iterator clusterIt1, clusterIt2;
-		for (int phiIdx1 = 0; phiIdx1 < kFstNumPhiSegPerSensor - 1; phiIdx1++) {
-			int phiIdx2 = phiIdx1 + 1;
-
-			if (clustersVec[sensorIdx][phiIdx1].size() > 0 && clustersVec[sensorIdx][phiIdx2].size() > 0) {
-				for (clusterIt1 = clustersVec[sensorIdx][phiIdx1].begin(); clusterIt1 != clustersVec[sensorIdx][phiIdx1].end() && !clustersVec[sensorIdx][phiIdx1].empty(); clusterIt1++) {
-					for (clusterIt2 = clustersVec[sensorIdx][phiIdx2].begin(); clusterIt2 != clustersVec[sensorIdx][phiIdx2].end() && !clustersVec[sensorIdx][phiIdx1].empty(); clusterIt2++) {
-						float rstripDfstance = (*clusterIt1)->getMeanRStrip() - (*clusterIt2)->getMeanRStrip();
-
-						if (TMath::Abs(rstripDfstance) < 3.5) { //here 3.5 means the dfstance between two clusters' weighted centers in r direction smaller than 0.5
-							maxTb = (*clusterIt1)->getMaxTimeBin();
-							idTruth = (*clusterIt1)->getIdTruth();
-							apv = (*clusterIt1)->getApv();
-							if((*clusterIt1)->getTotCharge() < (*clusterIt2)->getTotCharge()) {
-								maxTb = (*clusterIt2)->getMaxTimeBin();
-								idTruth = (*clusterIt2)->getIdTruth();
-								apv = (*clusterIt2)->getApv();
-							}
-
-							totCharge       = (*clusterIt1)->getTotCharge() + (*clusterIt2)->getTotCharge();
-							totChargeErr    = sqrt(((*clusterIt1)->getTotChargeErr() * (*clusterIt1)->getTotChargeErr() * (*clusterIt1)->getNRawHits() + (*clusterIt2)->getTotChargeErr() * (*clusterIt2)->getTotChargeErr() * (*clusterIt2)->getNRawHits()) / ((*clusterIt1)->getNRawHits() + (*clusterIt2)->getNRawHits()));
-							clusterSize     = (*clusterIt1)->getNRawHits() + (*clusterIt2)->getNRawHits();
-							clusterSizeR    = (*clusterIt1)->getNRawHitsR() + (*clusterIt2)->getNRawHitsR() - 1;
-							clusterSizePhi  = (*clusterIt1)->getNRawHitsPhi() + (*clusterIt2)->getNRawHitsPhi();
-							meanRStrip      = (*clusterIt1)->getMeanRStrip();
-							if ((*clusterIt2)->getMeanRStrip() > (*clusterIt1)->getMeanRStrip()) 
-								meanRStrip  = (*clusterIt2)->getMeanRStrip();
-							//meanRStrip         = (*clusterIt1)->getMeanRStrip() * (*clusterIt1)->getTotCharge() / totCharge + (*clusterIt2)->getMeanRStrip() * (*clusterIt2)->getTotCharge() / totCharge;
-							meanPhiStrip      = (*clusterIt1)->getMeanPhiStrip() * (*clusterIt1)->getTotCharge() / totCharge + (*clusterIt2)->getMeanPhiStrip() * (*clusterIt2)->getTotCharge() / totCharge;
-
-							(*clusterIt2)->setMeanRStrip(meanRStrip);
-							(*clusterIt2)->setMeanPhiStrip(meanPhiStrip);
-							(*clusterIt2)->setTotCharge(totCharge);
-							(*clusterIt2)->setTotChargeErr(totChargeErr);
-							(*clusterIt2)->setNRawHits(clusterSize);
-							(*clusterIt2)->setNRawHitsR(clusterSizeR);
-							(*clusterIt2)->setNRawHitsPhi(clusterSizePhi);
-							(*clusterIt2)->setIdTruth(idTruth);
-							(*clusterIt2)->setApv(apv);
-
-							int distance1 = std::distance(clustersVec[sensorIdx][phiIdx1].begin(), clusterIt1);
-							clustersVec[sensorIdx][phiIdx1].erase(clusterIt1);
-
-							if (distance1 == 0)
-								clusterIt1 = clustersVec[sensorIdx][phiIdx1].begin();
-							else
-								--clusterIt1;
-						}//end merge
-					}//end clusters vector 2 loop
-				}//end clusters vector 1 loop
-			}//end phi cluster number cut
-		}//end current sensor cluster loop
-	}//end all sensor clustering loop
-
-	//fill output container
-	std::vector<StFstCluster *>::iterator clusterIt;
-
-	for (int sensorIdx = 0; sensorIdx < kFstNumSensorsPerWedge; sensorIdx++) {
-		for (int phiIdx = 0; phiIdx < kFstNumPhiSegPerSensor; phiIdx++) {
-			if (clustersVec[sensorIdx][phiIdx].size() <= 0) continue;
-
-			for (clusterIt = clustersVec[sensorIdx][phiIdx].begin(); clusterIt != clustersVec[sensorIdx][phiIdx].end(); ++clusterIt)
-				clusters.getClusterVec().push_back(*clusterIt);
-
-			rawHitsVec[sensorIdx][phiIdx].clear();
-			clustersVec[sensorIdx][phiIdx].clear();
-		}
+	for (rawHitsToMergePtr = rawHitsToMerge.begin(); rawHitsToMergePtr != rawHitsToMerge.end() && mergeIdx < nToMerge; ++rawHitsToMergePtr, ++mergeIdx) {
+	  tempCharge[mergeIdx]    = (*rawHitsToMergePtr)->getCharge(usedTb);
+	  tempChargeErr[mergeIdx] = (*rawHitsToMergePtr)->getChargeErr(usedTb);
+	  tempRStrip[mergeIdx]    = (float)(*rawHitsToMergePtr)->getRStrip();
+	  tempSumCharge += (*rawHitsToMergePtr)->getCharge(usedTb);
+	  if ( (*rawHitsToMergePtr)->getSeedhitflag() == 1 ) ++nToSeedhit;
 	}
 
-	return kStOk;
+	meanRStrip = 0;
+	maxRStrip = 0;
+
+	for (int iRawHit = 0; iRawHit < nToMerge; iRawHit++)  {
+	  if(tempRStrip[iRawHit]>maxRStrip)
+	    maxRStrip = tempRStrip[iRawHit];
+	  meanRStrip = maxRStrip;
+	  //meanRStrip += tempRStrip[iRawHit] * tempCharge[iRawHit] / tempSumCharge;
+	  tempSumChargeErrSquare += tempChargeErr[iRawHit] * tempChargeErr[iRawHit];
+	}
+
+	totCharge    = tempSumCharge;
+	totChargeErr = sqrt(tempSumChargeErrSquare / nToMerge);
+
+	newCluster = new StFstCluster((int)wedge * 10000 + clusterLabel, disk, wedge, sensor, apv, meanRStrip, meanPhiStrip, totCharge, totChargeErr, clusterType);
+	newCluster->setNRawHits(clusterSize);
+	newCluster->setNRawHitsR(clusterSizeR);
+	newCluster->setNRawHitsPhi(clusterSizePhi);
+	newCluster->setMaxTimeBin(maxTb);
+	newCluster->setIdTruth(idTruth);
+
+	if(nToSeedhit>0) {
+	  clustersVec[sensorIdx][phiIdx].push_back(newCluster);
+	  clusterLabel++;
+	}
+
+	rawHitsToMerge.clear();
+      }//end current phi raw hits loop
+    }//end current sensor raw hits loop
+
+    //step 2: do clustering for neighboring phistrips
+    std::vector<StFstCluster *>::iterator clusterIt1, clusterIt2;
+    for (int phiIdx1 = 0; phiIdx1 < kFstNumPhiSegPerSensor - 1; phiIdx1++) {
+      int phiIdx2 = phiIdx1 + 1;
+
+      if (clustersVec[sensorIdx][phiIdx1].size() > 0 && clustersVec[sensorIdx][phiIdx2].size() > 0) {
+	for (clusterIt1 = clustersVec[sensorIdx][phiIdx1].begin(); clusterIt1 != clustersVec[sensorIdx][phiIdx1].end() && !clustersVec[sensorIdx][phiIdx1].empty(); clusterIt1++) {
+	  for (clusterIt2 = clustersVec[sensorIdx][phiIdx2].begin(); clusterIt2 != clustersVec[sensorIdx][phiIdx2].end() && !clustersVec[sensorIdx][phiIdx1].empty(); clusterIt2++) {
+	    float rstripDfstance = (*clusterIt1)->getMeanRStrip() - (*clusterIt2)->getMeanRStrip();
+
+	    if (TMath::Abs(rstripDfstance) < 3.5) { //here 3.5 means the dfstance between two clusters' weighted centers in r direction smaller than 0.5
+	      maxTb   = (*clusterIt1)->getMaxTimeBin();
+	      idTruth = (*clusterIt1)->getIdTruth();
+	      apv     = (*clusterIt1)->getApv();
+	      if((*clusterIt1)->getTotCharge() < (*clusterIt2)->getTotCharge()) {
+		maxTb   = (*clusterIt2)->getMaxTimeBin();
+		idTruth = (*clusterIt2)->getIdTruth();
+		apv     = (*clusterIt2)->getApv();
+	      }
+
+	      totCharge      = (*clusterIt1)->getTotCharge() + (*clusterIt2)->getTotCharge();
+	      totChargeErr   = sqrt(((*clusterIt1)->getTotChargeErr() * (*clusterIt1)->getTotChargeErr() * (*clusterIt1)->getNRawHits() + (*clusterIt2)->getTotChargeErr() * (*clusterIt2)->getTotChargeErr() * (*clusterIt2)->getNRawHits()) / ((*clusterIt1)->getNRawHits() + (*clusterIt2)->getNRawHits()));
+	      clusterSize    = (*clusterIt1)->getNRawHits() + (*clusterIt2)->getNRawHits();
+	      clusterSizeR   = (*clusterIt1)->getNRawHitsR() + (*clusterIt2)->getNRawHitsR() - 1;
+	      clusterSizePhi = (*clusterIt1)->getNRawHitsPhi() + (*clusterIt2)->getNRawHitsPhi();
+	      meanRStrip     = (*clusterIt1)->getMeanRStrip();
+	      if ((*clusterIt2)->getMeanRStrip() > (*clusterIt1)->getMeanRStrip()) 
+		meanRStrip  = (*clusterIt2)->getMeanRStrip();
+	      //meanRStrip         = (*clusterIt1)->getMeanRStrip() * (*clusterIt1)->getTotCharge() / totCharge + (*clusterIt2)->getMeanRStrip() * (*clusterIt2)->getTotCharge() / totCharge;
+	      meanPhiStrip = (*clusterIt1)->getMeanPhiStrip() * (*clusterIt1)->getTotCharge() / totCharge + (*clusterIt2)->getMeanPhiStrip() * (*clusterIt2)->getTotCharge() / totCharge;
+
+	      (*clusterIt2)->setMeanRStrip(meanRStrip);
+	      (*clusterIt2)->setMeanPhiStrip(meanPhiStrip);
+	      (*clusterIt2)->setTotCharge(totCharge);
+	      (*clusterIt2)->setTotChargeErr(totChargeErr);
+	      (*clusterIt2)->setNRawHits(clusterSize);
+	      (*clusterIt2)->setNRawHitsR(clusterSizeR);
+	      (*clusterIt2)->setNRawHitsPhi(clusterSizePhi);
+	      (*clusterIt2)->setIdTruth(idTruth);
+	      (*clusterIt2)->setApv(apv);
+
+	      int distance1 = std::distance(clustersVec[sensorIdx][phiIdx1].begin(), clusterIt1);
+	      clustersVec[sensorIdx][phiIdx1].erase(clusterIt1);
+
+	      if (distance1 == 0)
+		clusterIt1 = clustersVec[sensorIdx][phiIdx1].begin();
+	      else
+		--clusterIt1;
+	    }//end merge
+	  }//end clusters vector 2 loop
+	}//end clusters vector 1 loop
+      }//end phi cluster number cut
+    }//end current sensor cluster loop
+  }//end all sensor clustering loop
+
+  //fill output container
+  std::vector<StFstCluster *>::iterator clusterIt;
+
+  for (int sensorIdx = 0; sensorIdx < kFstNumSensorsPerWedge; sensorIdx++) {
+    for (int phiIdx = 0; phiIdx < kFstNumPhiSegPerSensor; phiIdx++) {
+      if (clustersVec[sensorIdx][phiIdx].size() <= 0) continue;
+
+      for (clusterIt = clustersVec[sensorIdx][phiIdx].begin(); clusterIt != clustersVec[sensorIdx][phiIdx].end(); ++clusterIt)
+	clusters.getClusterVec().push_back(*clusterIt);
+
+      rawHitsVec[sensorIdx][phiIdx].clear();
+      clustersVec[sensorIdx][phiIdx].clear();
+    }
+  }
+
+  return kStOk;
 }
 
 
