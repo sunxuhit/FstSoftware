@@ -8,5 +8,5 @@
 
 struct fstChipConfig {
     //long run;             
-    octet s[288];   /* 1 good status */
+    long s[288];   /* 1 good status */
 };
