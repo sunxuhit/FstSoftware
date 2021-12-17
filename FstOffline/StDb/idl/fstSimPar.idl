@@ -7,7 +7,7 @@
 */ 
 
 struct fstSimPar {
-  octet mode;      /* effMode: 0-ideal; 1 (default) -momentum depenent; 2 nomimal */
+  long mode;      /* effMode: 0-ideal; 1 (default) -momentum depenent; 2 nomimal */
   float pCut;         /* momentum cut for momentum depenent efficiency */
   float effFst;       /* FST efficiency */
 };

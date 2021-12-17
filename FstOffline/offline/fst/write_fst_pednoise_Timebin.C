@@ -36,9 +36,9 @@
     exit(0);
   }
 
-  Int_t rdo, arm, apv, chan;
+  Int_t rdo, arm, apv, rId, chan;
 
-  Float_t pedestalT, rmsT, gainT;
+  Float_t pedestalT, totrmsT, ranrmsT, gainT;
   Int_t channelId, timebin;
 
   Float_t cmNoiseT;
@@ -66,20 +66,18 @@
 
   Int_t counter = 0;
   while (!in2.eof()){
-    in2 >> chipId >> rdo >> arm >> apv >> timebin >> cmNoiseT;
-    if(timebin==0) cout<<"//Chip"<<chipId<<endl;
-    for(int i=0;i<4;i++) {
-        cout<<"         row.cmNoise["<<chipId<<"]["<<i<<"]["<<timebin<<"]="<<100*(int)cmNoiseT<<";"<<endl;
-    }
+    in2 >> chipId >> rdo >> arm >> apv >> rId >> timebin >> cmNoiseT;
+    if(timebin==0) cout<<"//Chip"<<chipId<<" rId"<<rId<<endl;
+    cout<<"         row.cmNoise["<<(chipId*4+rId)*9+timebin<<"]="<<100*(int)cmNoiseT<<";"<<endl;
   }
   in2.close();
 
   counter = 0;
   while (!in.eof()){
-    in >> channelId >> rdo >> arm >> apv >> chan >> timebin >> pedestalT >> rmsT;
-    cout<<"	row.pedestal["<<channelId<<"]["<<timebin<<"]="<<pedestalT<<";"<<endl;
-    cout<<"	row.totNoise["<<channelId<<"]["<<timebin<<"]="<<100*(int)rmsT<<";"<<endl;
-    cout<<"	row.ranNoise["<<channelId<<"]["<<timebin<<"]="<<100*(int)rmsT<<";"<<endl; 
+    in >> channelId >> rdo >> arm >> apv >> chan >> timebin >> pedestalT >> totrmsT >> ranrmsT;
+    cout<<"	row.pedestal["<<channelId*9+timebin<<"]="<<(int)pedestalT<<";"<<endl;
+    cout<<"	row.totNoise["<<channelId*9+timebin<<"]="<<100*(int)totrmsT<<";"<<endl;
+    cout<<"	row.ranNoise["<<channelId*9+timebin<<"]="<<100*(int)ranrmsT<<";"<<endl; 
   }
   in.close();
   cout<<" tableSet->AddAt(&row, 0);"<<endl;

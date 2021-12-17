@@ -60,8 +60,8 @@ protected:
    Bool_t mDoCmnCorrection;
    //control paramters
    double mMinHitCut, mMedHitCut, mMaxHitCut, mCmnCut, mChanMinRmsNoiseLevel, mChanMaxRmsNoiseLevel, mApvMaxCmNoiseLevel;
-   UChar_t mALLdata, mADCdata, mZSdata, mDefaultTimeBin, mCurrentTimeBinNum;
-   UShort_t mMinNumOfRawHits, mMaxNumOfRawHits;
+   Int_t mALLdata, mADCdata, mZSdata, mDefaultTimeBin, mCurrentTimeBinNum;
+   Int_t mMinNumOfRawHits, mMaxNumOfRawHits;
 
    /// Main output container with either corrected or uncorrected ADC values per
    /// channel. Usually the values come from real data DAQ records but can be
@@ -78,7 +78,7 @@ protected:
    std::vector< std::vector< float > > mRanRmsVec;   ///< Channel elec. index, Random RMS noise
    std::vector< float > mGainVec;  ///< Channel elec. index, gain
    std::vector< int > mMappingVec; ///< Channel elec. index to geometry ID mapping
-   std::vector< unsigned char > mConfigVec; ///< APV chip configuration status indexed by geom. id
+   std::vector< int > mConfigVec; ///< APV chip configuration status indexed by geom. id
 
 private:
 
