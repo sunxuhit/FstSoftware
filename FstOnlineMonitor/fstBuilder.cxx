@@ -1787,7 +1787,7 @@ void fstBuilder::event(daqReader *rdr)
 
   //getting MPV value and CM noise every 50 evts for each section
   //Updating CMN every 1000 non-ZS events
-  if( !(evtCt_nonZS%100) && dd )
+  if( !(evtCt_nonZS%200) && dd )
   {
     // cout << "evtCt_nonZS = " << evtCt_nonZS << endl;
     // cout << "Updating CMN!" << endl;
