@@ -41,8 +41,8 @@ const int kFstNumWedsPerRdo      = 6;     // 6 wedegs per Rdo
 const int kFstNumWedsPerArm      = 2;     // 2 wedges per ARM
 
 //FST strip dimenssion
-const float kFstSensorActiveSizeR         = 5;  //cm, smallest radius of FST sensor active area in R direction
-const float kFstStripPitchR               = 2.875;   	// cm, FST strip pitch in r direction is (28-16.5)/4. or (16.5-5)/4.
+const float kFstSensorActiveSizeR         = 5;      //cm, smallest radius of FST sensor active area in R direction
+const float kFstStripPitchR               = 2.875;  // cm, FST strip pitch in r direction is (28-16.5)/4. or (16.5-5)/4.
 const float kFstStripPitchPhi             = TMath::Pi()*30.0/180.0/kFstNumPhiSegPerSensor;  //rad, FST strip pitch in phi direction
 const float kFstStripGapPhi               = TMath::Pi()*1.0/180.0; //rad, 1 degree gap between 2 outer sensor of FST
 const int zFilp[kFstNumDisk]              = {1,-1,1};

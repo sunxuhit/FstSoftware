@@ -46,19 +46,23 @@
 StFstQAMaker::StFstQAMaker( const char* name ) :
    StMaker(name), mEventCounter(0) {
    for(int iSensor=0; iSensor<kFstNumSensors; iSensor++) {
-	rawHitMap[iSensor] = NULL;
-	hitMap[iSensor] = NULL;
+	rawHitMap[iSensor]            = NULL;
+	hitMap[iSensor]               = NULL;
 	numOfRawHits_EventId[iSensor] = NULL;
    }
+
+   for(int iDisk = 0; iDisk < kFstNumDisk; iDisk++) {
+     hitMapOfFST[iDisk]   = NULL;
+     hitMapOfAPV[iDisk]   = NULL;
+     hitGlobalXY[iDisk]   = NULL;
+     hitGlobalRPhi[iDisk] = NULL;
+   }
+
    for(unsigned char iTimeBin=0; iTimeBin<kFstNumTimeBins; iTimeBin++)
     	rawHitCharge_TimeBin[iTimeBin] = NULL;
 
-   rawHitMaxTimeBin_APV    = NULL;
-   hitMapOfFST             = NULL;
-   hitMapOfAPV             = NULL;
-   hitGlobalXY             = NULL;
-   hitGlobalPhiZ           = NULL;
    rawHitChargeErr         = NULL;
+   rawHitMaxTimeBin_APV    = NULL;
    hitCharge_SensorId      = NULL;
    hitChargeErr_SensorId   = NULL;
    maxTimeBin_SensorId     = NULL;
@@ -128,21 +132,35 @@ Int_t StFstQAMaker::Init()
     clusterSizePhi_SensorId->GetXaxis()->SetTitle("Sensor ID");
     clusterSizePhi_SensorId->GetYaxis()->SetTitle("Cluster Size in #phi of hits");
 
-    hitMapOfFST = new TH2S("hitMapOfFST", "FST hit map in r-phi", 8, 0, 8, 128, 0, 128);
-    hitMapOfFST->GetXaxis()->SetTitle("RStrip");
-    hitMapOfFST->GetYaxis()->SetTitle("PhiStrip");
+    for(int iDisk = 0; iDisk < kFstNumDisk; ++iDisk)
+    {
+      TString HistName;
+      TString HistTitle;
 
-    hitMapOfAPV = new TH2S("hitMapOfAPV", "FST hit map in APV geometry Id vs. wedge", 8, 0, 8, 36, 1, 37);
-    hitMapOfAPV->GetXaxis()->SetTitle("APV geometry ID");
-    hitMapOfAPV->GetYaxis()->SetTitle("Wedge ID");
+      HistName = Form("hitMapOfFST_Disk%d",iDisk);
+      HistTitle = Form("FST hit map in r-phi for Disk%d",iDisk);
+      hitMapOfFST[iDisk] = new TH2S(HistName.Data(), HistTitle.Data(), kFstNumPhiSegPerWedge*kFstNumWedgePerDisk, 0, kFstNumPhiSegPerWedge*kFstNumWedgePerDisk, kFstNumRStripsPerWedge, 0, kFstNumRStripsPerWedge);
+      hitMapOfFST[iDisk]->GetXaxis()->SetTitle("PhiStrip");
+      hitMapOfFST[iDisk]->GetYaxis()->SetTitle("RStrip");
 
-    hitGlobalXY = new TH2F("hitGlobalXY", "Global X vs. Global Y", 140, -35, 35, 140, -35, 35);
-    hitGlobalXY->GetXaxis()->SetTitle("Global X [cm]");
-    hitGlobalXY->GetYaxis()->SetTitle("Global Y [cm]");
+      HistName = Form("hitMapOfAPV_Disk%d",iDisk);
+      HistTitle = Form("FST hit map in APV geometry Id vs. wedge for Disk%d",iDisk);
+      hitMapOfAPV[iDisk] = new TH2S(HistName.Data(), HistTitle.Data(), kFstNumWedgePerDisk, 1, kFstNumWedgePerDisk+1, kFstApvsPerWedge, 0, kFstApvsPerWedge);
+      hitMapOfAPV[iDisk]->GetXaxis()->SetTitle("Wedge ID");
+      hitMapOfAPV[iDisk]->GetYaxis()->SetTitle("APV geometry ID");
 
-    hitGlobalPhiZ = new TH2F("hitGlobalPhiZ", "Global #phi vs. Global r", 100, -3.14159, 3.14159, 230, 5, 28);
-    hitGlobalPhiZ->GetXaxis()->SetTitle("Global #phi [rad.]");
-    hitGlobalPhiZ->GetYaxis()->SetTitle("Global r [cm]");
+      HistName = Form("hitGlobalXY_Disk%d",iDisk);
+      HistTitle = Form("Global X vs. Global Y for Disk%d",iDisk);
+      hitGlobalXY[iDisk] = new TH2F(HistName.Data(), HistTitle.Data(), 140, -35, 35, 140, -35, 35);
+      hitGlobalXY[iDisk]->GetXaxis()->SetTitle("Global X [cm]");
+      hitGlobalXY[iDisk]->GetYaxis()->SetTitle("Global Y [cm]");
+
+      HistName = Form("hitGlobalRPhi_Disk%d",iDisk);
+      HistTitle = Form("Global #phi vs. Global r for Disk%d",iDisk);
+      hitGlobalRPhi[iDisk] = new TH2F(HistName.Data(), HistTitle.Data(), kFstNumPhiSegPerWedge*kFstNumWedgePerDisk/8, 0, TMath::TwoPi(), kFstNumRStripsPerWedge, 5, 28);
+      hitGlobalRPhi[iDisk]->GetXaxis()->SetTitle("Global #phi [rad.]");
+      hitGlobalRPhi[iDisk]->GetYaxis()->SetTitle("Global r [cm]");
+    }
 
     char histtitle[128];
     for(int iWedge=0; iWedge<kFstNumWedges; iWedge++) {
@@ -233,7 +251,6 @@ Int_t StFstQAMaker::Make(){
 	    unsigned char nClusteringType = fstHitCollection->getClusteringType();
 	    for(int sensorIdx=0; sensorIdx<kFstNumSensorsPerWedge; sensorIdx++)	{
 	       StFstSensorHitCollection* sensorHitCollection = wedgeHitCollection->sensor(sensorIdx);
-	       int sensorIdxTemp = 0;
                for(int idx=0; idx<(int)sensorHitCollection->hits().size(); idx++ ){
 		  StFstHit* hit = sensorHitCollection->hits()[idx];
 		  if(hit)	{
@@ -263,12 +280,17 @@ Int_t StFstQAMaker::Make(){
 
 			fstHitTree->Fill();
 
-			sensorIdxTemp = ((int)hit->getWedge()-1)*kFstNumSensorsPerWedge + (int)hit->getSensor(); // 0-107
-			hitMap[sensorIdxTemp]->Fill((int)(hit->getMeanPhiStrip()-0.5)+1, (int)(hit->getMeanRStrip()-0.5)+1);
-			hitMapOfFST->Fill(((int)hit->getWedge()-1)*kFstNumRStripsPerWedge+(int)(hit->getMeanRStrip()-0.5)+1, (int)hit->getSensor()*kFstNumPhiSegPerWedge+(int)(hit->getMeanPhiStrip()-0.5)+1);
-			hitMapOfAPV->Fill(((int)hit->getSensor())*kFstApvsPerWedge/kFstNumSensorsPerWedge + (int)hit->getApv(), (int)hit->getWedge());
-			hitGlobalXY->Fill((float)P.x(), (float)P.y());
-			hitGlobalPhiZ->Fill((float)P.phi(), (float)P.z());
+			int diskIdxTemp = ((int)hit->getWedge()-1)/kFstNumWedgePerDisk + 1; // 1-3
+			int sensorIdxTemp = ((int)hit->getWedge()-1)*kFstNumSensorsPerWedge + (int)hit->getSensor(); // 0-107
+			int wedgeIdxTemp = (int)hit->getWedge() - diskIdxTemp*kFstNumWedgePerDisk; // 1-12
+			int phiIdxTemp = sensorIdxTemp*kFstNumPhiSegPerWedge+(int)(hit->getMeanPhiStrip()+0.5);
+			int rIdxTemp = (int)(hit->getMeanRStrip()+0.5);
+
+			hitMap[sensorIdxTemp]->Fill((int)(hit->getMeanPhiStrip()+0.5), (int)(hit->getMeanRStrip()+0.5));
+			hitMapOfFST[diskIdxTemp]->Fill(phiIdxTemp, rIdxTemp);
+			hitMapOfAPV[diskIdxTemp]->Fill(wedgeIdxTemp, (int)hit->getApv()+(wedgeIdxTemp%2-1)*kFstApvsPerWedge);
+			hitGlobalXY[diskIdxTemp]->Fill((float)P.x(), (float)P.y());
+			hitGlobalRPhi[diskIdxTemp]->Fill((float)P.phi(), (float)P.z());
 
 			hitCharge_SensorId->Fill(sensorIdxTemp, (int)hit->charge());
 			hitChargeErr_SensorId->Fill(sensorIdxTemp, (int)(hit->getChargeErr()+0.5));
@@ -387,16 +409,19 @@ Int_t StFstQAMaker::Finish(){
     myRootFile->WriteTObject(clusterSize_SensorId);
     myRootFile->WriteTObject(clusterSizeR_SensorId);
     myRootFile->WriteTObject(clusterSizePhi_SensorId);
-    myRootFile->WriteTObject(hitMapOfFST);
-    myRootFile->WriteTObject(hitMapOfAPV);
-    myRootFile->WriteTObject(hitGlobalXY);
-    myRootFile->WriteTObject(hitGlobalPhiZ);
     for(int iWedge=0; iWedge<kFstNumWedges; iWedge++) {
         for(int iSensor=0; iSensor<kFstNumSensorsPerWedge; iSensor++) {
     	    myRootFile->WriteTObject(rawHitMap[iWedge*3+iSensor]);
             myRootFile->WriteTObject(hitMap[iWedge*3+iSensor]);
 	    myRootFile->WriteTObject(numOfRawHits_EventId[iWedge*3+iSensor]);
    	}
+    }
+    for(int iDisk = 0; iDisk < kFstNumDisk; iDisk++)
+    {
+      myRootFile->WriteTObject(hitMapOfFST[iDisk]);
+      myRootFile->WriteTObject(hitMapOfAPV[iDisk]);
+      myRootFile->WriteTObject(hitGlobalXY[iDisk]);
+      myRootFile->WriteTObject(hitGlobalRPhi[iDisk]);
     }
 
     myRootFile->Close();

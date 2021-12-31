@@ -253,7 +253,6 @@ Int_t StFstRawHitMaker::Make()
 				for (int arm = 0; arm < kFstNumArmsPerRdo; arm++) { //3 arms per arc
 					if (meta->arc[r].arm[arm].present == 0) continue ;
 
-					// for (int apv = 0; apv < kFstNumApvsPerArm; apv++) { //16 apvs per arm
 					for (int apv = 0; apv < 24; apv++) { //16 apvs per arm
 						if (meta->arc[r].arm[arm].apv[apv].present == 0) continue ;
 
@@ -276,6 +275,8 @@ Int_t StFstRawHitMaker::Make()
 		std::array< std::array<double, kFstNumTimeBins>, kFstNumApvChannels > signalUnCorrected{};
 		// Signal w/ pedestal subtracted
 		std::array< std::array<double, kFstNumTimeBins>, kFstNumApvChannels > signalCorrected{};
+		// seed hit flag: non-zs: 0 from data & set to -1 | zs: 7 for seed hit
+		std::array< std::array<int, kFstNumTimeBins>, kFstNumApvChannels > seedFlag{};
 		// id of mc track
 		std::array<int, kFstNumApvChannels> idTruth{};
 
@@ -311,9 +312,10 @@ Int_t StFstRawHitMaker::Make()
 		for (StRtsTable::iterator it = rts_tbl->begin(); it != rts_tbl->end(); it++) {
 			// channel info.
 			fgt_adc_t *f = (fgt_adc_t *)*it;
-			Int_t channel   = f->ch;  //channel index  0, 1, ..., 127
-			Int_t adc       = f->adc; //adc
-			Short_t timebin = f->tb;  //time bin
+			Int_t channel   = f->ch;    //channel index  0, 1, ..., 127
+			Int_t adc       = f->adc;   //adc
+			Short_t timebin = f->tb;    //time bin
+			Int_t sFlag     = f->flags; // seed hit flag
 			LOG_DEBUG << "channel: " << channel << "   adc: " << adc << "  time bin: " << timebin << endm;
 
 			flag = 0;
@@ -328,6 +330,7 @@ Int_t StFstRawHitMaker::Make()
 			}
 
 			signalUnCorrected[channel][timebin] = adc;
+			seedFlag[channel][timebin] = sFlag;
 			if(adc>0) nRawAdcFromData++;
 
 			if ( !mIsCaliMode )        {
@@ -359,6 +362,7 @@ Int_t StFstRawHitMaker::Make()
 
 				if ( dataFlag == mADCdata ) { // non-ZS data
 					signalCorrected[channel][timebin] = signalUnCorrected[channel][timebin] - mPedVec[elecId][timebin];
+					seedFlag[channel][timebin] = -1; // set seed hit flags to -1 for non-zs data
 
 					// exclude signal-related channels for common mode noise calculation
 					if ( (signalCorrected[channel][timebin] > (-mCmnCut)*mTotRmsVec[elecId][timebin]) &&
@@ -383,7 +387,7 @@ Int_t StFstRawHitMaker::Make()
 			}
 		} // end current APV loops
 
-		nIdTruth_Fst += FillRawHitCollectionFromAPVData(dataFlag, ntimebin, counterAdcPerRgroupPerEvent, sumAdcPerRgroupPerEvent, apvElecId, signalUnCorrected, signalCorrected, idTruth);
+		nIdTruth_Fst += FillRawHitCollectionFromAPVData(dataFlag, ntimebin, counterAdcPerRgroupPerEvent, sumAdcPerRgroupPerEvent, apvElecId, signalUnCorrected, signalCorrected, seedFlag, idTruth);
 
 	}//end while
 	LOG_INFO << " Total number of FST Raw Hits - Step I = " << mFstCollectionPtr->getNumRawHits() << " w/ idTruth = " << nIdTruth_Fst << endm;
@@ -407,6 +411,7 @@ int StFstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, in
 		int counterAdcPerRgroupPerEvent[][kFstNumTimeBins], double sumAdcPerRgroupPerEvent[][kFstNumTimeBins], int apvElecId,
 		std::array< std::array<double, kFstNumTimeBins>, kFstNumApvChannels > &signalUnCorrected,
 		std::array< std::array<double, kFstNumTimeBins>, kFstNumApvChannels > &signalCorrected,
+		std::array< std::array<double, kFstNumTimeBins>, kFstNumApvChannels > &seedFlag,
 		std::array<int, kFstNumApvChannels> &idTruth)
 {
 	int nIdTruth = 0;
@@ -433,36 +438,43 @@ int StFstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, in
 
 	for (int iChan = 0; iChan < kFstNumApvChannels; iChan++)
 	{
-		Int_t elecId = apvElecId + iChan;
-		Int_t geoId  = mMappingVec[elecId];
-		// Modify signalCorrected values in some ways
-		for (int iTBin = 0; iTBin < ntimebin; iTBin++)
-		{
-			if (!mIsCaliMode && mDoCmnCorrection && dataFlag == mADCdata ){
-				int rstrip = (geoId % (kFstNumInnerSensorsPerWedge * kFstNumStripsPerInnerSensor + kFstNumOuterSensorsPerWedge * kFstNumStripsPerOuterSensor))/kFstNumPhiSegPerWedge;
-				for (int rindex = 0; rindex < kFstNumRStripsPerWedge; rindex++){
-					if(rindex == rstrip){
-						signalCorrected[iChan][iTBin] -= commonModeNoise[rindex][iTBin];
-						break;
-					}
-				}
-			}
+	  Int_t elecId = apvElecId + iChan;
+	  Int_t geoId  = mMappingVec[elecId];
+	  // Modify signalCorrected values in some ways
+	  for (int iTBin = 0; iTBin < ntimebin; iTBin++)
+	  {
+	    if (!mIsCaliMode && mDoCmnCorrection && dataFlag == mADCdata ){
+	      int rstrip = (geoId % (kFstNumInnerSensorsPerWedge * kFstNumStripsPerInnerSensor + kFstNumOuterSensorsPerWedge * kFstNumStripsPerOuterSensor))/kFstNumPhiSegPerWedge;
+	      for (int rindex = 0; rindex < kFstNumRStripsPerWedge; rindex++){
+		if(rindex == rstrip){
+		  signalCorrected[iChan][iTBin] -= commonModeNoise[rindex][iTBin];
+		  break;
 		}
+	      }
+	    }
+	  }
 
-		for (int iTB = 0; iTB < ntimebin; iTB++)
-		{
-			// raw hit decision: the method is according to Xu's studying
-			if ( (signalUnCorrected[iChan][iTB] > 0) &&
-					(signalUnCorrected[iChan][iTB] < kFstMaxAdc) &&
-					((signalCorrected[iChan][iTB]     > mMedHitCut * mRanRmsVec[elecId][iTB])||
-					(iTB >0 && (signalCorrected[iChan][iTB-1]     > mMinHitCut * mRanRmsVec[elecId][iTB]) &&
-					(signalCorrected[iChan][iTB]     > mMinHitCut * mRanRmsVec[elecId][iTB]))))
-			{
-				isPassRawHitCut[iChan] = kTRUE;
-				nChanPassedCut++;
-				iTB = 999;
-			}
-		}
+	  for (int iTB = 0; iTB < ntimebin; iTB++)
+	  {
+	    // raw hit decision for non-zs
+	    if ( (dataFlag == mADCdata) && (signalUnCorrected[iChan][iTB] > 0) &&
+		(signalUnCorrected[iChan][iTB] < kFstMaxAdc) &&
+		((signalCorrected[iChan][iTB]     > mMedHitCut * mRanRmsVec[elecId][iTB])||
+		 (iTB >0 && (signalCorrected[iChan][iTB-1]     > mMinHitCut * mRanRmsVec[elecId][iTB]) &&
+		  (signalCorrected[iChan][iTB]     > mMinHitCut * mRanRmsVec[elecId][iTB]))))
+	    {
+	      isPassRawHitCut[iChan] = kTRUE;
+	      nChanPassedCut++;
+	      iTB = 999;
+	    }
+	    // zs data are all raw hits candidates
+	    if( (dataFlag == mZSdata) && (seedFlag[iChan][iTB] > 0) )
+	    {
+	      isPassRawHitCut[iChan] = kTRUE;
+	      nChanPassedCut++;
+	      iTB = 999;
+	    }
+	  }
 	}
 
 	// skip the chip filling if the signal-channel number too large (20% chip occupancy was set) to exclude hot chip
@@ -537,9 +549,25 @@ int StFstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, in
 				}
 
 				signalCorrected[iChan][iTBin] *= mGainVec[elecId];
-				if(iTBin >0 && (signalCorrected[iChan][iTBin-1]     > mMaxHitCut * mRanRmsVec[elecId][iTBin-1]) &&
-						(signalCorrected[iChan][iTBin]     > mMaxHitCut * mRanRmsVec[elecId][iTBin]))
-					seedhitflag = 1;
+				if( (iTBin >0) && 
+				    (signalCorrected[iChan][iTBin-1]     > mMaxHitCut * mRanRmsVec[elecId][iTBin-1]) &&
+				    (signalCorrected[iChan][iTBin]     > mMaxHitCut * mRanRmsVec[elecId][iTBin]))
+				{
+				  seedhitflag = 1;
+				  cout << "seedFlag = " << seedFlag[iChan][iTBin] << ", seedhitflag = " << seedhitflag << endl;
+				}
+				/*
+				if( (dataFlag == mADCdata) && (iTBin >0) && 
+				    (signalCorrected[iChan][iTBin-1]     > mMaxHitCut * mRanRmsVec[elecId][iTBin-1]) &&
+				    (signalCorrected[iChan][iTBin]     > mMaxHitCut * mRanRmsVec[elecId][iTBin]))
+				{
+				  seedhitflag = 1;
+				}
+				if( (dataFlag == mZSdata) && (seedFlag[iChan][iTBin] == 7) )
+				{
+				  seedhitflag = 1;
+				}
+				*/
 			}
 
 			rawHitPtr->setCharges(signalCorrected[iChan]);

@@ -59,12 +59,12 @@ protected:
   } fstHit;
 
   //position
-  TH2S* rawHitMap[kFstNumSensors]; // raw hit phistrip vs rstrip per sensor
-  TH2S* hitMap[kFstNumSensors];    // hit mean phistrip vs mean rstrip per sensor
-  TH2S* hitMapOfFST;		   // hit map of FST layer in r-phi vs. Z area
-  TH2S* hitMapOfAPV;		   // hit map in wedge vs. APV geometry Id
-  TH2F* hitGlobalXY;		   // hit global x vs y
-  TH2F* hitGlobalPhiZ;		   // hit global z
+  TH2S* rawHitMap[kFstNumSensors];  // raw hit phistrip vs. rstrip per sensor
+  TH2S* hitMap[kFstNumSensors];     // hit mean phistrip vs. mean rstrip per sensor
+  TH2S* hitMapOfFST[kFstNumDisk];   // hit map in r vs. phi per disk
+  TH2S* hitMapOfAPV[kFstNumDisk];   // hit map in APV geometry Id vs. module geometry Id per disk
+  TH2F* hitGlobalXY[kFstNumDisk];   // hit global x vs. y per disk
+  TH2F* hitGlobalRPhi[kFstNumDisk]; // hit global r vs. phi per disk
   //Charge
   TH2S* rawHitCharge_TimeBin[kFstNumTimeBins]; // Charge (ADC) vs channel ID over all time bins
   TH2S* rawHitChargeErr;           // RMS noise vs channel ID
