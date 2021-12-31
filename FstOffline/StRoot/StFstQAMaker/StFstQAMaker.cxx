@@ -138,26 +138,26 @@ Int_t StFstQAMaker::Init()
       TString HistTitle;
 
       HistName = Form("hitMapOfFST_Disk%d",iDisk);
-      HistTitle = Form("FST hit map in r-phi for Disk%d",iDisk);
+      HistTitle = Form("FST hit map in r-phi for Disk%d",iDisk+1);
       hitMapOfFST[iDisk] = new TH2S(HistName.Data(), HistTitle.Data(), kFstNumPhiSegPerWedge*kFstNumWedgePerDisk, 0, kFstNumPhiSegPerWedge*kFstNumWedgePerDisk, kFstNumRStripsPerWedge, 0, kFstNumRStripsPerWedge);
       hitMapOfFST[iDisk]->GetXaxis()->SetTitle("PhiStrip");
       hitMapOfFST[iDisk]->GetYaxis()->SetTitle("RStrip");
 
       HistName = Form("hitMapOfAPV_Disk%d",iDisk);
-      HistTitle = Form("FST hit map in APV geometry Id vs. wedge for Disk%d",iDisk);
+      HistTitle = Form("FST hit map in APV geometry Id vs. wedge for Disk%d",iDisk+1);
       hitMapOfAPV[iDisk] = new TH2S(HistName.Data(), HistTitle.Data(), kFstNumWedgePerDisk, 1, kFstNumWedgePerDisk+1, kFstApvsPerWedge, 0, kFstApvsPerWedge);
       hitMapOfAPV[iDisk]->GetXaxis()->SetTitle("Wedge ID");
       hitMapOfAPV[iDisk]->GetYaxis()->SetTitle("APV geometry ID");
 
       HistName = Form("hitGlobalXY_Disk%d",iDisk);
-      HistTitle = Form("Global X vs. Global Y for Disk%d",iDisk);
+      HistTitle = Form("Global X vs. Global Y for Disk%d",iDisk+1);
       hitGlobalXY[iDisk] = new TH2F(HistName.Data(), HistTitle.Data(), 140, -35, 35, 140, -35, 35);
       hitGlobalXY[iDisk]->GetXaxis()->SetTitle("Global X [cm]");
       hitGlobalXY[iDisk]->GetYaxis()->SetTitle("Global Y [cm]");
 
       HistName = Form("hitGlobalRPhi_Disk%d",iDisk);
-      HistTitle = Form("Global #phi vs. Global r for Disk%d",iDisk);
-      hitGlobalRPhi[iDisk] = new TH2F(HistName.Data(), HistTitle.Data(), kFstNumPhiSegPerWedge*kFstNumWedgePerDisk/8, 0, TMath::TwoPi(), kFstNumRStripsPerWedge, 5, 28);
+      HistTitle = Form("Global #phi vs. Global r for Disk%d",iDisk+1);
+      hitGlobalRPhi[iDisk] = new TH2F(HistName.Data(), HistTitle.Data(), kFstNumPhiSegPerWedge*kFstNumWedgePerDisk/8, -TMath::Pi(), TMath::Pi(), kFstNumRStripsPerWedge, 5, 28);
       hitGlobalRPhi[iDisk]->GetXaxis()->SetTitle("Global #phi [rad.]");
       hitGlobalRPhi[iDisk]->GetYaxis()->SetTitle("Global r [cm]");
     }
@@ -251,6 +251,7 @@ Int_t StFstQAMaker::Make(){
 	    unsigned char nClusteringType = fstHitCollection->getClusteringType();
 	    for(int sensorIdx=0; sensorIdx<kFstNumSensorsPerWedge; sensorIdx++)	{
 	       StFstSensorHitCollection* sensorHitCollection = wedgeHitCollection->sensor(sensorIdx);
+	       int sensorIdxTemp = 0;
                for(int idx=0; idx<(int)sensorHitCollection->hits().size(); idx++ ){
 		  StFstHit* hit = sensorHitCollection->hits()[idx];
 		  if(hit)	{
@@ -280,17 +281,17 @@ Int_t StFstQAMaker::Make(){
 
 			fstHitTree->Fill();
 
+			sensorIdxTemp = ((int)hit->getWedge()-1)*kFstNumSensorsPerWedge + (int)hit->getSensor(); // 0-107
 			int diskIdxTemp = ((int)hit->getWedge()-1)/kFstNumWedgePerDisk + 1; // 1-3
-			int sensorIdxTemp = ((int)hit->getWedge()-1)*kFstNumSensorsPerWedge + (int)hit->getSensor(); // 0-107
-			int wedgeIdxTemp = (int)hit->getWedge() - diskIdxTemp*kFstNumWedgePerDisk; // 1-12
-			int phiIdxTemp = sensorIdxTemp*kFstNumPhiSegPerWedge+(int)(hit->getMeanPhiStrip()+0.5);
+			int wedgeIdxTemp = (int)hit->getWedge() - (diskIdxTemp-1)*kFstNumWedgePerDisk; // 1-12
+			int phiIdxTemp = (wedgeIdxTemp-1)*kFstNumPhiSegPerWedge+(int)(hit->getMeanPhiStrip()+0.5);
 			int rIdxTemp = (int)(hit->getMeanRStrip()+0.5);
 
 			hitMap[sensorIdxTemp]->Fill((int)(hit->getMeanPhiStrip()+0.5), (int)(hit->getMeanRStrip()+0.5));
-			hitMapOfFST[diskIdxTemp]->Fill(phiIdxTemp, rIdxTemp);
-			hitMapOfAPV[diskIdxTemp]->Fill(wedgeIdxTemp, (int)hit->getApv()+(wedgeIdxTemp%2-1)*kFstApvsPerWedge);
-			hitGlobalXY[diskIdxTemp]->Fill((float)P.x(), (float)P.y());
-			hitGlobalRPhi[diskIdxTemp]->Fill((float)P.phi(), (float)P.z());
+			hitMapOfFST[diskIdxTemp-1]->Fill(phiIdxTemp, rIdxTemp);
+			hitMapOfAPV[diskIdxTemp-1]->Fill(wedgeIdxTemp, (int)hit->getApv()+(wedgeIdxTemp%2-1)*kFstApvsPerWedge);
+			hitGlobalXY[diskIdxTemp-1]->Fill((float)P.x(), (float)P.y());
+			hitGlobalRPhi[diskIdxTemp-1]->Fill((float)P.phi(), (float)P.perp());
 
 			hitCharge_SensorId->Fill(sensorIdxTemp, (int)hit->charge());
 			hitChargeErr_SensorId->Fill(sensorIdxTemp, (int)(hit->getChargeErr()+0.5));

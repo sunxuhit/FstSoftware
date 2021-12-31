@@ -411,7 +411,7 @@ int StFstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, in
 		int counterAdcPerRgroupPerEvent[][kFstNumTimeBins], double sumAdcPerRgroupPerEvent[][kFstNumTimeBins], int apvElecId,
 		std::array< std::array<double, kFstNumTimeBins>, kFstNumApvChannels > &signalUnCorrected,
 		std::array< std::array<double, kFstNumTimeBins>, kFstNumApvChannels > &signalCorrected,
-		std::array< std::array<double, kFstNumTimeBins>, kFstNumApvChannels > &seedFlag,
+		std::array< std::array<int, kFstNumTimeBins>, kFstNumApvChannels > &seedFlag,
 		std::array<int, kFstNumApvChannels> &idTruth)
 {
 	int nIdTruth = 0;
@@ -549,17 +549,18 @@ int StFstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, in
 				}
 
 				signalCorrected[iChan][iTBin] *= mGainVec[elecId];
+				/*
 				if( (iTBin >0) && 
-				    (signalCorrected[iChan][iTBin-1]     > mMaxHitCut * mRanRmsVec[elecId][iTBin-1]) &&
-				    (signalCorrected[iChan][iTBin]     > mMaxHitCut * mRanRmsVec[elecId][iTBin]))
+				    (signalCorrected[iChan][iTBin-1] > mMaxHitCut * mRanRmsVec[elecId][iTBin-1]) &&
+				    (signalCorrected[iChan][iTBin] > mMaxHitCut * mRanRmsVec[elecId][iTBin]))
 				{
 				  seedhitflag = 1;
-				  cout << "seedFlag = " << seedFlag[iChan][iTBin] << ", seedhitflag = " << seedhitflag << endl;
+				  // cout << "seedFlag = " << seedFlag[iChan][iTBin] << ", seedhitflag = " << seedhitflag << endl;
 				}
-				/*
+				*/
 				if( (dataFlag == mADCdata) && (iTBin >0) && 
-				    (signalCorrected[iChan][iTBin-1]     > mMaxHitCut * mRanRmsVec[elecId][iTBin-1]) &&
-				    (signalCorrected[iChan][iTBin]     > mMaxHitCut * mRanRmsVec[elecId][iTBin]))
+				    (signalCorrected[iChan][iTBin-1] > mMaxHitCut * mRanRmsVec[elecId][iTBin-1]) &&
+				    (signalCorrected[iChan][iTBin] > mMaxHitCut * mRanRmsVec[elecId][iTBin]))
 				{
 				  seedhitflag = 1;
 				}
@@ -567,7 +568,6 @@ int StFstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, in
 				{
 				  seedhitflag = 1;
 				}
-				*/
 			}
 
 			rawHitPtr->setCharges(signalCorrected[iChan]);
