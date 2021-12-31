@@ -275,7 +275,7 @@ Int_t StFstRawHitMaker::Make()
 		std::array< std::array<double, kFstNumTimeBins>, kFstNumApvChannels > signalUnCorrected{};
 		// Signal w/ pedestal subtracted
 		std::array< std::array<double, kFstNumTimeBins>, kFstNumApvChannels > signalCorrected{};
-		// seed hit flag: non-zs: 0 from data & set to -1 | zs: 7 for seed hit
+		// seed hit flag: non-zs: 0 | zs: >0 & 7 for seed hit
 		std::array< std::array<int, kFstNumTimeBins>, kFstNumApvChannels > seedFlag{};
 		// id of mc track
 		std::array<int, kFstNumApvChannels> idTruth{};
@@ -362,7 +362,6 @@ Int_t StFstRawHitMaker::Make()
 
 				if ( dataFlag == mADCdata ) { // non-ZS data
 					signalCorrected[channel][timebin] = signalUnCorrected[channel][timebin] - mPedVec[elecId][timebin];
-					seedFlag[channel][timebin] = -1; // set seed hit flags to -1 for non-zs data
 
 					// exclude signal-related channels for common mode noise calculation
 					if ( (signalCorrected[channel][timebin] > (-mCmnCut)*mTotRmsVec[elecId][timebin]) &&
