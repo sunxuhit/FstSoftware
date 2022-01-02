@@ -21,16 +21,16 @@ public:
    template<typename Container>
    StFstRawHit(int channelId, int geoId,
       const Container &charges, const Container &chargeErrs = Container{},
-      UChar_t maxTimeBin = 3, UShort_t idTruth = 0);
+      UChar_t maxTimeBin = 1, UShort_t idTruth = 0);
 
    //accessors
-   int               getChannelId()  const; //!< 0-36863
-   int               getGeoId()      const; //!< 0-36863
+   int               getChannelId()  const;  //!< 0-36863
+   int               getGeoId()      const;  //!< 0-36863
    int               getSeedhitflag() const; //!< 0 or 1
-   unsigned char     getDisk()       const; //!< 1-3
-   unsigned char     getWedge()      const; //!< 1-36
-   unsigned char     getPhiStrip()   const; //!< 0-127
-   unsigned char     getRStrip()     const; //!< 0-7
+   unsigned char     getDisk()       const;  //!< 1-3
+   unsigned char     getWedge()      const;  //!< 1-36
+   unsigned char     getPhiStrip()   const;  //!< 0-127
+   unsigned char     getRStrip()     const;  //!< 0-7
    float             getCharge(int tb = 0)    const;
    float             getChargeErr(int tb = 0) const;
    unsigned char     getMaxTimeBin() const;

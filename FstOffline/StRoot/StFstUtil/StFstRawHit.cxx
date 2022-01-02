@@ -14,7 +14,7 @@ bool rawHitPtrLessThan::operator() (const StFstRawHit *rawHit1, const StFstRawHi
 }
 
 
-StFstRawHit::StFstRawHit() : StObject(), mChannelId(-1), mGeoId(-1), mCharge(), mChargeErr(), mMaxTimeBin(3),
+StFstRawHit::StFstRawHit() : StObject(), mChannelId(-1), mGeoId(-1), mCharge(), mChargeErr(), mMaxTimeBin(1),
    mIdTruth(0)
 {
    std::fill_n(mCharge, kFstNumTimeBins, -999);
@@ -34,12 +34,12 @@ StFstRawHit::StFstRawHit(int channelId, int geoId,
 }
 
 
-int StFstRawHit::getChannelId() const              { return mChannelId;     };
-int StFstRawHit::getGeoId() const                  { return mGeoId;      };
-int StFstRawHit::getSeedhitflag() const            { return mSeedhitflag;      };
-unsigned char StFstRawHit::getMaxTimeBin() const   { return mMaxTimeBin;    };
-unsigned char StFstRawHit::getDefaultTimeBin()     { return mDefaultTimeBin;};
-unsigned short StFstRawHit::getIdTruth() const     { return mIdTruth;    };
+int StFstRawHit::getChannelId() const              { return mChannelId;      };
+int StFstRawHit::getGeoId() const                  { return mGeoId;          };
+int StFstRawHit::getSeedhitflag() const            { return mSeedhitflag;    };
+unsigned char StFstRawHit::getMaxTimeBin() const   { return mMaxTimeBin;     };
+unsigned char StFstRawHit::getDefaultTimeBin()     { return mDefaultTimeBin; };
+unsigned short StFstRawHit::getIdTruth() const     { return mIdTruth;        };
 
 unsigned char StFstRawHit::getDisk() const
 {

@@ -21,10 +21,10 @@ public:
    StFstCollection();
    ~StFstCollection();
 
-   size_t getNumRawHits() const;                   // overall
-   size_t getNumRawHits( int wedge) const;      // per wedge
-   size_t getNumClusters() const;                  // overall
-   size_t getNumClusters( int wedge ) const;    // per wedge
+   size_t getNumRawHits() const;             // overall
+   size_t getNumRawHits( int wedge) const;   // per wedge
+   size_t getNumClusters() const;            // overall
+   size_t getNumClusters( int wedge ) const; // per wedge
    unsigned char getNumTimeBins() const;
    void setNumTimeBins(unsigned char nTimebin);
 
