@@ -49,7 +49,7 @@ protected:
   TTree *fstHitTree;
 
   struct rawHitInfo {
-	int channelId, geoId, wedge, sensor, phistrip, rstrip, maxTimeBin, rdo, arm, apv, channel, idTruth, EventId;
+	int channelId, geoId, wedge, sensor, phistrip, rstrip, maxTimeBin, rdo, arm, apv, channel, idTruth, seedHitFlag, EventId;
 	float charge[kFstNumTimeBins], chargeErr[kFstNumTimeBins];
   } fstRawHit;
   

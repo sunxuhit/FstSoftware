@@ -79,7 +79,7 @@ Int_t StFstQAMaker::Init()
     Int_t ierr = kStOk;
 
     fstRawHitTree = new TTree("fstRawHits", "fstRawHits_QA");
-    fstRawHitTree->Branch("rawHits", &fstRawHit, "channelId/I:geoId:wedge:sensor:phistrip:rstrip:maxTimeBin:rdo:arm:apv:channel:idTruth:EventId:charge[9]/F:chargeErr[9]/F");
+    fstRawHitTree->Branch("rawHits", &fstRawHit, "channelId/I:geoId:wedge:sensor:phistrip:rstrip:maxTimeBin:rdo:arm:apv:channel:idTruth:seedHitFlag:EventId:charge[9]/F:chargeErr[9]/F");
 
     fstHitTree = new TTree("fstHits", "fstHits_QA");
     fstHitTree->Branch("hits", &fstHit, "hitId/I:wedge/I:sensor/I:apv/I:idTruth/I:EventId/I:maxTimeBin/I:clusteringType/I:nRawHits/I:nRawHitsR/I:nRawHitsPhi/I:meanPhiStrip/F:meanRStrip/F:localR/F:localPhi/F:localZ/F:x/F:y/F:z/F:charge/F:chargeErr/F");
@@ -223,7 +223,7 @@ Int_t StFstQAMaker::Make(){
     }
 
    //*******Initialization of the raw hit and hit level variables********** 
-   fstRawHit.channelId = fstRawHit.geoId = fstRawHit.wedge = fstRawHit.sensor = fstRawHit.phistrip = fstRawHit.rstrip = fstRawHit.maxTimeBin = fstRawHit.rdo = fstRawHit.arm = fstRawHit.apv = fstRawHit.channel = fstRawHit.idTruth = fstRawHit.EventId = -1;
+   fstRawHit.channelId = fstRawHit.geoId = fstRawHit.wedge = fstRawHit.sensor = fstRawHit.phistrip = fstRawHit.rstrip = fstRawHit.maxTimeBin = fstRawHit.rdo = fstRawHit.arm = fstRawHit.apv = fstRawHit.channel = fstRawHit.idTruth = fstRawHit.seedHitFlag = fstRawHit.EventId = -1;
    for(int iTB=0; iTB<kFstNumTimeBins; iTB++) {
 	fstRawHit.charge[iTB] = 0.;
 	fstRawHit.chargeErr[iTB] = 0.;
@@ -336,19 +336,20 @@ Int_t StFstQAMaker::Make(){
 		   rawHitMap[sensorId]->Fill((int)rawHit->getPhiStrip(), (int)rawHit->getRStrip());
 		   rawHitMaxTimeBin_APV->Fill(((int)rawHit->getRdo()-1)*48+(int)rawHit->getArm()*16+(int)rawHit->getApv(), (int)maxTimeBin);
 
-		   fstRawHit.channelId 	= (int)rawHit->getChannelId();
-		   fstRawHit.geoId      = (int)rawHit->getGeoId();
-		   fstRawHit.wedge	= (int)rawHit->getWedge();
-		   fstRawHit.sensor	= (int)rawHit->getSensor();
-		   fstRawHit.phistrip	= (int)rawHit->getPhiStrip();
-		   fstRawHit.rstrip	= (int)rawHit->getRStrip();
-		   fstRawHit.maxTimeBin = (int)maxTimeBin;
-		   fstRawHit.rdo	= (int)rawHit->getRdo();
-		   fstRawHit.arm        = (int)rawHit->getArm();
-		   fstRawHit.apv        = (int)rawHit->getApv();
-		   fstRawHit.channel    = (int)rawHit->getChannel();
-		   fstRawHit.idTruth	= (int)rawHit->getIdTruth();
-		   fstRawHit.EventId	= (int)eventPtr->id();
+		   fstRawHit.channelId   = (int)rawHit->getChannelId();
+		   fstRawHit.geoId       = (int)rawHit->getGeoId();
+		   fstRawHit.wedge       = (int)rawHit->getWedge();
+		   fstRawHit.sensor      = (int)rawHit->getSensor();
+		   fstRawHit.phistrip    = (int)rawHit->getPhiStrip();
+		   fstRawHit.rstrip      = (int)rawHit->getRStrip();
+		   fstRawHit.maxTimeBin  = (int)maxTimeBin;
+		   fstRawHit.rdo         = (int)rawHit->getRdo();
+		   fstRawHit.arm         = (int)rawHit->getArm();
+		   fstRawHit.apv         = (int)rawHit->getApv();
+		   fstRawHit.channel     = (int)rawHit->getChannel();
+		   fstRawHit.idTruth     = (int)rawHit->getIdTruth();
+		   fstRawHit.seedHitFlag = (int)rawHit->getSeedhitflag();
+		   fstRawHit.EventId     = (int)eventPtr->id();
 
 		   fstRawHitTree->Fill();
                 }//loop over raw hits
