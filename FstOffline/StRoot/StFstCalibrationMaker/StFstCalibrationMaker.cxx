@@ -712,7 +712,8 @@ Int_t StFstCalibrationMaker::saveToFile()
     int wedgeGeomId = 1 + apvId/kFstApvsPerWedge;
     int rdo         = (wedgeGeomId-1)/kFstNumWedsPerRdo + 1;                 //1-6
     int arm         = ((wedgeGeomId-1)%kFstNumWedsPerRdo)/kFstNumWedsPerArm; //0-2
-    int apv         = apvId%(kFstNumArmsPerRdo*kFstNumRdos);                 //0-15
+    // int apv         = apvId%(kFstNumArmsPerRdo*kFstNumRdos);                 //0-15
+    int apv         = apvId%kFstNumApvsPerArm;                 //0-15
 
     fout_cmn << apvId << ' ' << rdo << ' ' << arm << ' '<< apv << ' ' <<  rId << ' ' << timebin << ' ' << cmnDataVecIter->cmn << endl;
   }
