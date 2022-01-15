@@ -53,8 +53,6 @@ void read_fst_mapping()
       << std::endl;
 
     fstMapping_st *table = dataset->GetTable();
-    // for (Int_t i = 0; i < rows; i++) {
-    // }
     for(int elecId = 0; elecId < 36864; ++elecId)
     {
       std::cout << "elecId: " << elecId << " => geomId: " << table[0].mapping[elecId] << std::endl;

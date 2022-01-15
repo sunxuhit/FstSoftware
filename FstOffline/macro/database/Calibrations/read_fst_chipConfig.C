@@ -53,8 +53,6 @@ void read_fst_chipConfig()
       << std::endl;
 
     fstChipConfig_st *table = dataset->GetTable();
-    // for (Int_t i = 0; i < rows; i++) {
-    // }
     for(int iApv = 0; iApv < 288; ++iApv)
     {
       std::cout << "config for APV " << iApv << ": " << table[0].s[iApv] << std::endl;

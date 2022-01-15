@@ -53,8 +53,6 @@ void read_fst_pednoise()
       << std::endl;
 
     fstPedNoise_st *table = dataset->GetTable();
-    // for (Int_t i = 0; i < rows; i++) {
-    // }
     for(int index = 0; index < 10368; ++index)
     {
       std::cout << "index: " << index << " cmn " << table[0].cmNoise[index] << std::endl;

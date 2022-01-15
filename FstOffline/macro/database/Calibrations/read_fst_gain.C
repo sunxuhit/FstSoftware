@@ -53,8 +53,6 @@ void read_fst_gain()
       << std::endl;
 
     fstGain_st *table = dataset->GetTable();
-    // for (Int_t i = 0; i < rows; i++) {
-    // }
     for(int iCh = 0; iCh < 36864; ++ iCh)
     {
       std::cout << "gain for Channel " << iCh << ": " << table[0].gain[iCh] << std::endl;

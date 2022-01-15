@@ -53,8 +53,6 @@ void read_fst_control()
       << std::endl;
 
     fstControl_st *table = dataset->GetTable();
-    // for (Int_t i = 0; i < rows; i++) {
-    // }
     std::cout << "kFstChanMaxRmsNoiseLevel: " << table[0].kFstChanMaxRmsNoiseLevel << std::endl;
     std::cout << "kFstChanMinRmsNoiseLevel: " << table[0].kFstChanMinRmsNoiseLevel << std::endl;
     std::cout << "kFstApvMaxCmNoiseLevel  : " << table[0].kFstApvMaxCmNoiseLevel   << std::endl;

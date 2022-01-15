@@ -53,8 +53,6 @@ void read_fst_simPar()
       << std::endl;
 
     fstSimPar_st *table = dataset->GetTable();
-    // for (Int_t i = 0; i < rows; i++) {
-    // }
     std::cout << "mode: " << table[0].mode << std::endl;
     std::cout << "pCut: " << table[0].pCut << std::endl;
     std::cout << "effFst: " << table[0].effFst << std::endl;
