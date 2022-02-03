@@ -10,7 +10,7 @@
 
 #include "St_base/Stypes.h"
 #include "StChain/StRTSBaseMaker.h"
-#include "StFstUtil/StFstConsts.h"
+#include "StEvent/StFstConsts.h"
 
 
 class StFstCollection;
@@ -47,12 +47,6 @@ public:
    void setDataType(int nDataType = 0)                   { mDataType = nDataType; };
    void setDoEmbedding(Bool_t doIt)                      { mDoEmbedding = doIt; }
    UChar_t getDataType() {return mDataType;} // 0 - All data; 1 - non-ZS data; 2 - ZS data; 3 - ZS first data
-
-   // Get CVS
-   virtual const char *GetCVS() const {
-      static const char cvs[] = "Tag $Name: SL20a $ $Id: StFstRawHitMaker.h,v 1.26 2018/02/25 03:51:57 dongx Exp $ built " __DATE__ " " __TIME__  ;
-      return cvs;
-   }
 
 protected:
    Bool_t mIsCaliMode;
@@ -92,7 +86,7 @@ private:
 
    Int_t mDataType; ///<  0=all, 1=adc only, 2=zs only
    
-   ClassDef(StFstRawHitMaker, 0);
+   ClassDef(StFstRawHitMaker, 1);
 };
 
 #endif

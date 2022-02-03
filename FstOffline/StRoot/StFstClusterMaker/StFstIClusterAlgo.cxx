@@ -1,7 +1,7 @@
 #include "StFstClusterMaker/StFstIClusterAlgo.h"
 #include "StEvent/StEnumerations.h"
 #include "St_base/StMessMgr.h"
-#include "StFstUtil/StFstConsts.h"
+#include "StEvent/StFstConsts.h"
 
 /**
  * Calls the actual clustering method that creates a cluster collection from

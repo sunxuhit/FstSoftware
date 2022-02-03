@@ -12,7 +12,6 @@
 #include "tables/St_fstMapping_Table.h"
 #include "tables/St_fstControl_Table.h"
 #include "tables/St_fstChipConfig_Table.h"
-//#include "tables/St_fstSimPar_Table.h"
 
 THashList *StFstDb::mgRotList = 0;
 
@@ -31,7 +30,6 @@ StFstDb::StFstDb() : StObject()
   mFstMapping            = NULL;
   mFstControl            = NULL;
   mFstChipStatus         = NULL;
-  //mFstSimPar = 0;
 }
 //_____________________________________________________________________________
 Int_t StFstDb::setGeoHMatrices(Survey_st **tables)
@@ -150,10 +148,3 @@ void StFstDb::Print(Option_t *opt) const
       sensorOnGlobal->Print();
    }
 }
-
-
-/***************************************************************************
-* StFstDb.cxx,v 1.0
-* Revision 1.0 2021/10/18 Shenghui Zhang
-* Initial version
-****************************************************************************/

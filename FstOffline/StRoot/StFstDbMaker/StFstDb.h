@@ -6,8 +6,7 @@
 #include "StObject.h"
 #include "THashList.h"
 #include "TGeoMatrix.h"
-//#include "StEvent/StEnumerations.h"
-#include "StFstUtil/StFstConsts.h"
+#include "StEvent/StFstConsts.h"
 
 class Survey_st;
 class fstPedNoise_st;
@@ -15,7 +14,6 @@ class fstControl_st;
 class fstGain_st;
 class fstMapping_st;
 class fstChipConfig_st;
-//class fstSimPar_st;
 
 
 /**
@@ -54,22 +52,15 @@ public:
    const fstMapping_st *getMapping() const  		{return mFstMapping; }
    const fstControl_st *getControl() const  		{return mFstControl; }
    const fstChipConfig_st *getChipStatus() const 	{return mFstChipStatus; }
-
-   /*! Simulator parameters -hft efficiency for both fast and slow*/
-   //const fstSimPar_st *fstSimPar() {return mFstSimPar;}
       
    Int_t setGeoHMatrices(Survey_st **tables);
-   void setPedNoise(fstPedNoise_st *pedNoise) 	    {mFstPedNoise = pedNoise;}
-   void setGain(fstGain_st *gain)		    {mFstGain     = gain;}
-   void setMapping(fstMapping_st *mapping)    	    {mFstMapping  = mapping;}
-   void setControl(fstControl_st *control)    	    {mFstControl  = control;}
-   void setChipStatus(fstChipConfig_st *chipStatus) {mFstChipStatus = chipStatus;}
-   //void setFstSimPar(fstSimPar_st *fstSimPar) {mFstSimPar = fstSimPar;}
+   void setPedNoise(fstPedNoise_st *pedNoise) 	    { mFstPedNoise   = pedNoise;   }
+   void setGain(fstGain_st *gain)		    { mFstGain       = gain;       }
+   void setMapping(fstMapping_st *mapping)    	    { mFstMapping    = mapping;    }
+   void setControl(fstControl_st *control)    	    { mFstControl    = control;    }
+   void setChipStatus(fstChipConfig_st *chipStatus) { mFstChipStatus = chipStatus; }
    
    virtual void Print(Option_t *opt = "") const;
-
-   virtual const char *GetCVS() const
-   {static const char cvs[] = "Tag $Name: SL20a $ $Id: StFstDb.h,v 1.13 2018/03/15 21:35:48 dongx Exp $ built " __DATE__ " " __TIME__ ; return cvs;}
 
 private:
    static THashList 	*mgRotList; ///< A list of TGeoHMatrix transormations for each FST sensor
@@ -84,16 +75,8 @@ private:
    fstMapping_st 	*mFstMapping;
    fstControl_st 	*mFstControl;
    fstChipConfig_st 	*mFstChipStatus;
-   //fstSimPar_st 	*mFstSimPar; ///< simulator parameters - hit efficiency
    
    ClassDef(StFstDb, 1)
 };
 
 #endif
-
-
-/***************************************************************************
-* StFstDb.h,v 1.0
-* Revision 1.0 2021/10/18 Shenghui Zhang
-* Initial version
-****************************************************************************/

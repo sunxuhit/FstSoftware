@@ -1,5 +1,3 @@
-/* $Id: StFstDbMaker.cxx,v */
-
 #include "StFstDbMaker/StFstDbMaker.h"
 #include "StFstDbMaker/StFstDb.h"
 #include "St_base/StMessMgr.h"
@@ -11,7 +9,6 @@
 #include "tables/St_fstMapping_Table.h"
 #include "tables/St_fstControl_Table.h"
 #include "tables/St_fstChipConfig_Table.h"
-//#include "tables/St_fstSimPar_Table.h"
 
 ClassImp(StFstDbMaker)
 
@@ -142,17 +139,6 @@ Int_t StFstDbMaker::InitRun(Int_t runNumber)
 
    mFstDb->setChipStatus(mChipConfig->GetTable());
    mChipConfig->Print(0,1);
-   
-   // set fstSimPar
-   /*St_fstSimPar *fstSimPar = (St_fstSimPar *)GetDataBase("Calibrations/fst/fstSimPar");
-   if (fstSimPar) {
-     mFstDb->setFstSimPar(fstSimPar->GetTable());
-   }
-   else {
-     LOG_WARN << "InitRun : No access to fstSimPar table, abort FST reconstruction" << endm;
-     return kStErr;
-   }
-   fstSimPar->Print(0,1);*/
                                     
    if ( GetDebug() >= 2)
       mFstDb->Print();
@@ -167,10 +153,3 @@ Int_t StFstDbMaker::Make()
 {
    return mReady;
 }
-
-
-/***************************************************************************
-* StFstDbMaker.cxx,v 1.0
-* Revision 1.0 2021/10/18 Shenghui Zhang
-* Initial version
-****************************************************************************/

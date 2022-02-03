@@ -1,4 +1,4 @@
-#include "StFstUtil/StFstConsts.h"
+#include "StEvent/StFstConsts.h"
 #include "StFstUtil/StFstCollection.h"
 #include "StEvent/StEnumerations.h"
 //constructor

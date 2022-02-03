@@ -3,7 +3,7 @@
 #include "StFstRawHit.h"
 #include "St_base/StMessMgr.h"
 #include "StEvent/StEnumerations.h"
-#include "StFstUtil/StFstConsts.h"
+#include "StEvent/StFstConsts.h"
 
 bool rawHitPtrLessThan::operator() (const StFstRawHit *rawHit1, const StFstRawHit *rawHit2) const
 {

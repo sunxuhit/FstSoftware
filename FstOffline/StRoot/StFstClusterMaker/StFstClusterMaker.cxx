@@ -8,13 +8,11 @@
 #include "StFstUtil/StFstRawHitCollection.h"
 #include "StFstUtil/StFstCluster.h"
 #include "StFstUtil/StFstClusterCollection.h"
-#include "StFstUtil/StFstConsts.h"
+#include "StEvent/StFstConsts.h"
 #include "StFstClusterMaker/StFstIClusterAlgo.h"
 #include "StFstClusterMaker/StFstScanRadiusClusterAlgo.h"
 StFstClusterMaker::StFstClusterMaker( const char *name ) : StMaker(name), mFstCollectionPtr(0), mClusterAlgoPtr(0), mTimeBin(UCHAR_MAX), mSplitCluster(true)
-{
-   /* nothing to do */
-};
+{};
 
 StFstClusterMaker::~StFstClusterMaker()
 {
@@ -103,9 +101,3 @@ Int_t StFstClusterMaker::Init()
 };
 
 ClassImp(StFstClusterMaker);
-
-/****************************************************************************
-* StFstClusterMaker.cxx,v 1.0
-* Revision 1.0 2021/09/21 Sheghui Zhang
-* Initial version
-****************************************************************************/

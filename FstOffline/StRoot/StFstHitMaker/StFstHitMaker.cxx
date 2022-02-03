@@ -14,7 +14,7 @@
 #include "StEventTypes.h"
 #include "StContainers.h"
 #include "StEvent/StEnumerations.h"
-#include "StFstUtil/StFstConsts.h"
+#include "StEvent/StFstConsts.h"
 
 #include "StFstDbMaker/StFstDb.h"
 #include "tables/St_fstControl_Table.h"
@@ -23,8 +23,7 @@ ClassImp(StFstHitMaker);
 
 
 StFstHitMaker::StFstHitMaker( const char *name ) : StMaker(name), mSensorTransforms(0)
-{
-}
+{}
 
 
 Int_t StFstHitMaker::InitRun(Int_t runnumber)
@@ -132,41 +131,42 @@ Int_t StFstHitMaker::Make()
                                 int moduleIdx;
 				if(disk == 1) // Disk 1
 					moduleIdx = wedge;
-				if(disk == 2)// Disk 2
+				else if(disk == 2)// Disk 2
 					moduleIdx = wedge-12;
-				if(disk == 3)// Disk 3
+				else if(disk == 3)// Disk 3
 					moduleIdx = wedge-24;
+				// The simple transformation will be updated with the geomtry table in database later
 				if(disk == 1 || disk == 3)
 				{// Disk 1 & 3
-					phiInner = phiStart[moduleIdx-1]*TMath::Pi()/6.0 + 0.5*zDirct[moduleIdx-1]*kFstStripPitchPhi;
-					phiOuter = phiStop[moduleIdx-1]*TMath::Pi()/6.0  - 0.5*zDirct[moduleIdx-1]*kFstStripPitchPhi;
+					phiInner = kFstphiStart[moduleIdx-1]*TMath::Pi()/6.0 + 0.5*kFstzDirct[moduleIdx-1]*kFstStripPitchPhi;
+					phiOuter = kFstphiStop[moduleIdx-1]*TMath::Pi()/6.0  - 0.5*kFstzDirct[moduleIdx-1]*kFstStripPitchPhi;
 				}
-				if(disk == 2)
+				else if(disk == 2)
 				{ // Disk 2
-					phiInner = phiStop[moduleIdx-1]*TMath::Pi()/6.0  - 0.5*zDirct[moduleIdx-1]*kFstStripPitchPhi;
-					phiOuter = phiStart[moduleIdx-1]*TMath::Pi()/6.0 + 0.5*zDirct[moduleIdx-1]*kFstStripPitchPhi;
+					phiInner = kFstphiStop[moduleIdx-1]*TMath::Pi()/6.0  - 0.5*kFstzDirct[moduleIdx-1]*kFstStripPitchPhi;
+					phiOuter = kFstphiStart[moduleIdx-1]*TMath::Pi()/6.0 + 0.5*kFstzDirct[moduleIdx-1]*kFstStripPitchPhi;
 				}
 				double local[3];
 				if(meanRStrip < kFstNumRStripsPerWedge/2)
 				{ // inner
-					local[0] = rStart[meanRStrip] + 0.5*kFstStripPitchR;
-					local[1] = phiInner + zFilp[disk-1]*zDirct[moduleIdx-1]*meanPhiStrip*kFstStripPitchPhi;
+					local[0] = kFstrStart[meanRStrip] + 0.5*kFstStripPitchR;
+					local[1] = phiInner + kFstzFilp[disk-1]*kFstzDirct[moduleIdx-1]*meanPhiStrip*kFstStripPitchPhi;
 				}
 				else
 				{// outer
 					if(sensor == 1){
-						local[0] = rStart[meanRStrip] + 0.5*kFstStripPitchR;
-						local[1] = phiOuter - zFilp[disk-1]*zDirct[moduleIdx-1]*meanPhiStrip*kFstStripPitchPhi - zFilp[disk-1]*zDirct[moduleIdx-1]*0.5*kFstStripGapPhi;
+						local[0] = kFstrStart[meanRStrip] + 0.5*kFstStripPitchR;
+						local[1] = phiOuter - kFstzFilp[disk-1]*kFstzDirct[moduleIdx-1]*meanPhiStrip*kFstStripPitchPhi - kFstzFilp[disk-1]*kFstzDirct[moduleIdx-1]*0.5*kFstStripGapPhi;
 					}
 					if(sensor == 2){
-						local[0] = rStart[meanRStrip] + 0.5*kFstStripPitchR;
-						local[1] = phiOuter - zFilp[disk-1]*zDirct[moduleIdx-1]*meanPhiStrip*kFstStripPitchPhi + zFilp[disk-1]*zDirct[moduleIdx-1]*0.5*kFstStripGapPhi;
+						local[0] = kFstrStart[meanRStrip] + 0.5*kFstStripPitchR;
+						local[1] = phiOuter - kFstzFilp[disk-1]*kFstzDirct[moduleIdx-1]*meanPhiStrip*kFstStripPitchPhi + kFstzFilp[disk-1]*kFstzDirct[moduleIdx-1]*0.5*kFstStripGapPhi;
 					}
 				}
 
-				if(disk == 1) local[2] = 146.6012; //unit: cm
-				if(disk == 2) local[2] = 160.1724; //unit: cm
-				if(disk == 3) local[2] = 173.7436; //unit: cm
+				if(disk == 1) local[2] = 151.750; //unit: cm
+				else if(disk == 2) local[2] = 165.248; //unit: cm
+				else if(disk == 3) local[2] = 178.781; //unit: cm
 				newHit->setLocalPosition(local[0], local[1], local[2]); //set local position on sensor
 
 				fstHitCollection->addHit(newHit);
@@ -186,7 +186,8 @@ Int_t StFstHitMaker::Make()
 				local[1] = newHit->localPosition(1);
 				local[2] = newHit->localPosition(2);
 
-                                //Ye: simple transformation. Need to revisit
+                //Ye: simple transformation. Need to revisit
+		// The simple transformation will be updated with the geomtry table in database later
 				int sensorId = 1000 + ((int)newHit->getWedge() - 1) * kFstNumSensorsPerWedge + (int)newHit->getSensor();
 				TGeoHMatrix *geoMSensorOnGlobal = (TGeoHMatrix *) mSensorTransforms->FindObject(Form("R%04i", sensorId));
 				geoMSensorOnGlobal->LocalToMaster(local, global);
@@ -205,10 +206,3 @@ Int_t StFstHitMaker::Make()
 
 	return kStOk;
 }
-
-
-/***************************************************************************
- * StFstHitMaker.cxx,v 1.0
- * Revision 1.0 2021/10/04 Shenghui Zhang
- * Initial version
- ****************************************************************************/
