@@ -9,135 +9,147 @@
 #include <algorithm>
 #include <iterator>
 #include <map>
+#include <ctime>
 
 using namespace std;
 
-void mergePedFiles(string runId = "22340056")
+void mergePedFiles(long inputRunId = 22361003, bool calcCMN = true)
 {
   char paraDir[256];
-  // initialize map for month
-  std::map<string,int> map_month;
-  string month[12] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
-  for(int iMon = 0; iMon < 12; ++iMon)
-  {
-    map_month[month[iMon]] = iMon+1;
+
+  //-----------------------------------------------------------------------
+  // set map for run timestamp
+  std::map<long,long> map_runTs;
+  sprintf(paraDir, "../TimeStamp/runTime_run22.txt");
+  cout << paraDir << endl;
+
+  FILE *file_timeInfo;
+  file_timeInfo = fopen(paraDir, "r");
+  if (file_timeInfo==0) {
+    cout << "Cannot find file " << paraDir << endl;
+    exit(0);
+  }
+  else {
+    while(!feof(file_timeInfo)) {
+      long runNumberTemp, runTimeTemp;
+      char buff[256];
+
+      if(fgets(buff,sizeof(buff),file_timeInfo) == 0) continue ;
+      int ret = sscanf(buff,"%d %d",&runNumberTemp,&runTimeTemp);
+      if(ret!=2) continue;
+      map_runTs[runNumberTemp] = runTimeTemp;
+      // cout << "runNumber = " << runNumberTemp << ", runTime = " << map_runTs[runNumberTemp] << endl;
+    }
+    fclose(file_timeInfo);
   }
 
   // get run info
-  sprintf(paraDir, "/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/pedestal/fst_s1_pedestals_%s_GOOD.txt", runId.c_str());
+  FILE *file_inRunInfo;
+  sprintf(paraDir, "/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/pedestal/fst_s1_pedestals_%d_GOOD.txt", inputRunId);
+  std::cout << "Opening Pedestal File 1 for run Info: " << paraDir << std::endl;
 
-  std::ifstream file_Input(paraDir);
-  if (!file_Input.is_open()) 
-  {
-    std::cout << "Can't find file!\n";
-    exit(0); 
+  long runNumber = -1;
+  int numTb = -1;
+  file_inRunInfo = fopen(paraDir, "r");
+  if (file_inRunInfo==0) {
+    cout << "Cannot find file" << paraDir << endl;
+    exit(0);
+  }
+  else {
+    int counter = 0;
+    //LOG(U_FST,"loading pedestals from %s ", paraDir);
+    while(!feof(file_inRunInfo)) {
+      char charHeader[128], charName[128];
+      char buff[256];
+
+      if(fgets(buff,sizeof(buff),file_inRunInfo) == 0) continue ;
+      if(buff[0] != '#') continue;
+
+      int ret = -1;
+      // cout << "cout = " << counter << buff;
+
+      if(counter == 1) ret = sscanf(buff,"%s %s %d",&charHeader,&charName,&runNumber);
+      if(counter == 3) ret = sscanf(buff,"%s %s %d",&charHeader,&charName,&numTb);
+
+      counter++;
+      if(ret!=3) continue;
+    }
+    fclose(file_inRunInfo);
   }
 
-  char runNumber[256], runDate[256], runTime[256], numTb[256];
-  string header;
-  for(int iHeader = 0; iHeader < 4; ++iHeader)
+  // get UTC/GMT time
+  long unixtime = map_runTs[runNumber];
+  TTimeStamp ts( unixtime, true );
+  cout << "inputRunId = " << inputRunId << ", runNumber from file = " << runNumber << ", date: " << ts.AsString("s") << ", numTb = " << numTb << endl;
+
+  if(inputRunId != runNumber)
   {
-    getline(file_Input,header);
-    char input[256];
-    strcpy(input,header.c_str());
-
-    if(iHeader < 1) continue;
-    // cout << input << endl;
-    if(iHeader == 1) // get run number
-    {
-      char *token = std::strtok(input, " ");
-      int count = 0;
-      while (token) {
-	// output[count] = malloc((strlen(token) + 1));
-	// std::cout << "input " << token << ", output " << output[count] << std::endl;
-	if(count == 2) strcpy(runNumber,token);
-	token = std::strtok(NULL, " ");
-	count++;
-      }
-      cout << "runNumber: " << runNumber << endl;
-    }
-    if(iHeader == 2) // get run time
-    {
-      char *token = std::strtok(input, " ");
-      char monTemp[4];
-      char dateTemp[3];
-      char yearTemp[5];
-      int count = 0;
-      while (token) {
-	// std::cout << "count: " << count << ", input: " << token << std::endl;
-	if(count == 3) 
-	{
-	  strcpy(monTemp,token);
-	}
-	if(count == 4) 
-	{
-	  strcpy(dateTemp,token);
-	  if(dateTemp[1] == NULL) 
-	  {
-	    dateTemp[1] = dateTemp[0];
-	    dateTemp[0] = '0';
-	    dateTemp[2] = '\0';
-	  }
-	  // cout << dateTemp[0] << ", " << dateTemp[1] << endl;
-	}
-	if(count == 5) strcpy(runTime,token);
-	if(count == 6) 
-	{
-	  strcpy(yearTemp,token);
-	}
-	token = std::strtok(NULL, " ");
-	count++;
-      }
-      string monTemp_str(monTemp);
-      std::map<string,int>::iterator it = map_month.find(monTemp_str);
-      std::ostringstream ssMonTemp;
-      ssMonTemp << it->second;
-      // cout << "monTemp: " << ssMonTemp.str().c_str() << endl;
-      // cout << "dateTemp: " << dateTemp << endl;
-      // cout << "yearTemp: " << yearTemp << endl;
-      strcpy(runDate,yearTemp);
-      strcat(runDate,"-");
-      strcat(runDate,ssMonTemp.str().c_str());
-      strcat(runDate,"-");
-      strcat(runDate,dateTemp);
-      cout << "runDate: " << runDate << endl;
-      cout << "runTime: " << runTime << endl;
-    }
-    if(iHeader == 3) // get number of Time Bin
-    {
-      char *token = std::strtok(input, " ");
-      int count = 0;
-      while (token) {
-	// output[count] = malloc((strlen(token) + 1));
-	// std::cout << "input " << token << ", output " << output[count] << std::endl;
-	if(count == 2) strcpy(numTb,token);
-	token = std::strtok(NULL, " ");
-	count++;
-      }
-      cout << "numTb: " << numTb << endl;
-    }
+    cout << "runId don't match: inputRunId: " << inputRunId << ", runNumber from file: " << runNumber << endl;
+    exit(0);
   }
-  file_Input.close();
 
+  // dump run Info to a file
   FILE *file_runInfo;
-  sprintf(paraDir, "/star/data01/pwg/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/database/runInfo_%s.txt", runNumber);
+  sprintf(paraDir, "/star/data01/pwg/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/database/runInfo_%d.txt", runNumber);
   file_runInfo = fopen(paraDir,"w");
-  fprintf(file_runInfo, "%s %s %s %s \n", runNumber, runDate, runTime, numTb);
+  fprintf(file_runInfo, "%d %s %d \n", runNumber, ts.AsString("s"), numTb);
   fclose(file_runInfo);
+  //-----------------------------------------------------------------------
 
-  int usedTb = (int)numTb[0] - 48; // convert char to int
-  // cout << "numTb = " << numTb[0] << ", usedTb = " << usedTb << endl;
+  //-----------------------------------------------------------------------
+  // initialize the group used for CMN calculation
+  int cmnGroup[24][128]; // group used for CMN calculation
+  string inputCMN = "./cmnGroup";
+  std::ifstream file_cmnGroup ( inputCMN.c_str() );
+  if ( !file_cmnGroup.is_open() )
+  {
+    std::cout << "Abort. Fail to read in CMN Group file: " << inputCMN << std::endl;
+    return 0;
+  }
+  else
+  {
+    int temp_apvIdx = -1, temp_chIdx = -1, temp_groupIdx = -1;
+    std::cout << "reading group Index: " << std::endl;
+    string header;
+    getline(file_cmnGroup,header);
+    // cout << header.c_str() << endl;;
+    while (file_cmnGroup >> temp_apvIdx >> temp_chIdx >> temp_groupIdx)
+    {
+      // cout << "apvIdx = " << temp_apvIdx << ", chIdx = " << temp_chIdx << ", groupIdx = " << temp_groupIdx << endl;
+      cmnGroup[temp_apvIdx][temp_chIdx] = temp_groupIdx;
+    }
+  }
+  file_cmnGroup.close();
+  //-----------------------------------------------------------------------
 
-  //
+  //-----------------------------------------------------------------------
+  const int totCh  = 36864;
+  const int totTb  = numTb;
+  const int totApv = 288;
+  const int numGrp = 4;
+  float cmn[totApv][numGrp][totTb];
+  int cmnCou[totApv][numGrp][totTb];
+  for(int i_apv = 0; i_apv < 288; ++i_apv)
+  {
+    for(int i_grp = 0; i_grp < 4; ++i_grp)
+    {
+      for(int i_tb = 0; i_tb < numTb; ++i_tb)
+      {
+	cmn[i_apv][i_grp][i_tb] = 0.0;
+	cmnCou[i_apv][i_grp][i_tb] = 0;
+      }
+    }
+  }
+
   FILE *file_pedestal;
-  sprintf(paraDir, "/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/database/pedestals_%s_unsorted.txt", runId.c_str());
+  sprintf(paraDir, "/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/database/pedestals_%d_unsorted.txt", inputRunId);
   file_pedestal = fopen(paraDir, "w");
 
   //load external pedstal/RMS value for all channels
-  FILE *file_inPed1;
-  sprintf(paraDir, "/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/pedestal/fst_s1_pedestals_%s_GOOD.txt", runId.c_str());
+  sprintf(paraDir, "/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/pedestal/fst_s1_pedestals_%d_GOOD.txt", inputRunId);
   std::cout << "Opening Pedestal File 1 " << paraDir << std::endl;
 
+  FILE *file_inPed1;
   file_inPed1 = fopen(paraDir, "r");
   if (file_inPed1==0) {
     cout << "Cannot find file" << paraDir << endl;
@@ -162,21 +174,29 @@ void mergePedFiles(string runId = "22340056")
       int ret = sscanf(buff,"%d %d %d %d %d %f %f %f",&rdoIdxTemp,&armIdxTemp,&apvIdxTemp,&chanIdxTemp,&tbIdxTemp,&pedestalTemp,&totrmsTemp,&ranrmsTemp);
       if(ret!=8) continue;
 
-      // int portIdxTemp        = apvIdxTemp/12; // 0: 0-7 | 1: 12-19
-      // int refApvIdxTemp      = apvIdxTemp - portIdxTemp*ApvNumOffset + portIdxTemp*ApvPerPort; // 0-15
       int refApvIdxTemp = apvIdxTemp;
       if(apvIdxTemp > 7) refApvIdxTemp = apvIdxTemp - 4; // 0-15
       int glbElecChanIdxTemp = (rdoIdxTemp-1)*3*16*128 + armIdxTemp*16*128 + refApvIdxTemp*128 + chanIdxTemp; // 0-36863
       fprintf(file_pedestal,"%d %d %d %2d %3d %2d %7.3f %.3f %.3f\n",glbElecChanIdxTemp,rdoIdxTemp,armIdxTemp,refApvIdxTemp,chanIdxTemp,tbIdxTemp,pedestalTemp,totrmsTemp,ranrmsTemp);
 
+      if(calcCMN)
+      {
+	int glbApvIdxTemp = (rdoIdxTemp-1)*3*16 + armIdxTemp*16 + refApvIdxTemp; // 0-287
+	int grpTemp       = cmnGroup[apvIdxTemp][chanIdxTemp]; // 0-3
+	if(totrmsTemp > ranrmsTemp)
+	{
+	  cmn[glbApvIdxTemp][grpTemp][tbIdxTemp] += sqrt(totrmsTemp*totrmsTemp-ranrmsTemp*ranrmsTemp);
+	  cmnCou[glbApvIdxTemp][grpTemp][tbIdxTemp]++;
+	}
+      }
     }
     fclose(file_inPed1);
   }
 
-  FILE *file_inPed2;
-  sprintf(paraDir, "/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/pedestal/fst_s2_pedestals_%s_GOOD.txt", runId.c_str());
+  sprintf(paraDir, "/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/pedestal/fst_s2_pedestals_%d_GOOD.txt", inputRunId);
   std::cout << "Opening Pedestal File 2 " << paraDir << std::endl;
 
+  FILE *file_inPed2;
   file_inPed2 = fopen(paraDir, "r");
   if (file_inPed2==0) {
     cout << "Cannot find file" << paraDir << endl;
@@ -208,55 +228,53 @@ void mergePedFiles(string runId = "22340056")
       int glbElecChanIdxTemp = (rdoIdxTemp-1)*3*16*128 + armIdxTemp*16*128 + refApvIdxTemp*128 + chanIdxTemp; // 0-36863
       fprintf(file_pedestal,"%d %d %d %2d %3d %2d %7.3f %.3f %.3f\n",glbElecChanIdxTemp,rdoIdxTemp,armIdxTemp,refApvIdxTemp,chanIdxTemp,tbIdxTemp,pedestalTemp,totrmsTemp,ranrmsTemp);
 
+      if(calcCMN)
+      {
+	int glbApvIdxTemp = (rdoIdxTemp-1)*3*16 + armIdxTemp*16 + refApvIdxTemp; // 0-287
+	int grpTemp       = cmnGroup[apvIdxTemp][chanIdxTemp]; // 0-3
+	if(totrmsTemp > ranrmsTemp)
+	{
+	  cmn[glbApvIdxTemp][grpTemp][tbIdxTemp] += sqrt(totrmsTemp*totrmsTemp-ranrmsTemp*ranrmsTemp);
+	  cmnCou[glbApvIdxTemp][grpTemp][tbIdxTemp]++;
+	}
+      }
     }
     fclose(file_inPed2);
   }
-
   fclose(file_pedestal);
+  //-----------------------------------------------------------------------
 
-  FILE *file_cmn;
-  sprintf(paraDir, "/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/database/cmn_%s_unsorted.txt", runId.c_str());
-  file_cmn = fopen(paraDir, "w");
+  //-----------------------------------------------------------------------
+  if(calcCMN)
+  {
+    FILE *file_cmn;
+    sprintf(paraDir, "/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/database/cmn_%d_unsorted.txt", inputRunId);
+    file_cmn = fopen(paraDir, "w");
 
-  // fake CMN for now
-  FILE *file_inCmn;
-  sprintf(paraDir, "/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/pedestal/fst_cmn_22340057_GOOD.txt");
+    for(int i_rdo = 0; i_rdo < 6; ++i_rdo)
+    {
+      for(int i_arm = 0; i_arm < 3; ++i_arm)
+      {
+	for(int i_apv = 0; i_apv < 16; ++i_apv)
+	{
+	  int calcGlbApvIdxTemp = i_rdo*3*16 + i_arm*16 + i_apv; // 0-287
+	  for(int i_grp = 0; i_grp < 4; ++i_grp)
+	  {
+	    for(int i_tb = 0; i_tb < numTb; ++i_tb)
+	    {
+	      float cmnTemp = 100.0;
+	      if(cmnCou[calcGlbApvIdxTemp][i_grp][i_tb] > 0) 
+		cmnTemp = cmn[calcGlbApvIdxTemp][i_grp][i_tb]/cmnCou[calcGlbApvIdxTemp][i_grp][i_tb];
 
-  std::cout << "Opening CMN File " << paraDir << std::endl;
-
-  file_inCmn = fopen(paraDir, "r");
-  if (file_inCmn==0) {
-    cout << "Cannot find file" << paraDir << endl;
-    exit(0);
-  }
-  else {
-    //LOG(U_FST,"loading pedestals from %s ", paraDir);
-    while(!feof(file_inCmn)) {
-      int rdoIdxTemp=0, armIdxTemp=0, apvIdxTemp=0, grpIdxTemp=0, tbIdxTemp=0;
-      float cmnTemp=0.;
-      int glbApvIdxTemp=0;
-      char buff[256];
-
-      if(fgets(buff,sizeof(buff),file_inCmn) == 0) continue ;
-      switch(buff[0]) {
-	case '#' :
-	case '!' :
-	case '*' :
-	case '/' :
-	case '.' :
-	  continue ;
+	      fprintf(file_cmn,"%d %d %d %2d %3d %2d %.3f\n",calcGlbApvIdxTemp,i_rdo+1,i_arm,i_apv,i_grp,i_tb,cmnTemp);
+	    }
+	  }
+	}
       }
-      int ret = sscanf(buff,"%d %d %d %d %d %d %f",&glbApvIdxTemp,&rdoIdxTemp,&armIdxTemp,&apvIdxTemp,&grpIdxTemp,&tbIdxTemp,&cmnTemp);
-      if(ret!=7) continue;
-
-      if(tbIdxTemp >= usedTb) continue;
-      int calcGlbApvIdxTemp = (rdoIdxTemp-1)*3*16 + armIdxTemp*16 + apvIdxTemp; // 0-287
-      // fprintf(file_cmn,"%d %d %d %2d %3d %2d %.3f\n",calcGlbApvIdxTemp,rdoIdxTemp,armIdxTemp,apvIdxTemp,grpIdxTemp,tbIdxTemp,cmnTemp);
-      fprintf(file_cmn,"%d %d %d %2d %3d %2d %.3f\n",calcGlbApvIdxTemp,rdoIdxTemp,armIdxTemp,apvIdxTemp,grpIdxTemp,tbIdxTemp,10.0);
-
     }
-    fclose(file_inCmn);
-  }
 
-  fclose(file_cmn);
+    fclose(file_cmn);
+  }
+  //-----------------------------------------------------------------------
+
 }

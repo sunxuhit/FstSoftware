@@ -1,4 +1,4 @@
-void write_fst_pednoise(string runId = "22361003")
+void write_fst_pednoise(long inputRunId = 22361003)
 {
 
   // if you want to use root.exe instead of root4star, uncomment block below:
@@ -18,7 +18,7 @@ void write_fst_pednoise(string runId = "22361003")
 
   // read in run info
   char paraDir[256];
-  sprintf(paraDir, "/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/database/runInfo_%s.txt", runId.c_str());
+  sprintf(paraDir, "/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/database/runInfo_%d.txt", inputRunId);
   cout << paraDir << endl;
 
   FILE *file_runInfo;
@@ -60,7 +60,7 @@ void write_fst_pednoise(string runId = "22361003")
   // Fill structure with data 
   // read in CMN
   FILE *file_cmn;
-  sprintf(paraDir, "/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/database/cmn_%s_unsorted.txt", runId.c_str());
+  sprintf(paraDir, "/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/database/cmn_%d_unsorted.txt", inputRunId);
   std::cout << "Opening CMN File " << paraDir << std::endl;
 
   file_cmn = fopen(paraDir, "r");
@@ -90,7 +90,7 @@ void write_fst_pednoise(string runId = "22361003")
 
   // read in pedestal 
   FILE *file_ped;
-  sprintf(paraDir, "/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/database/pedestals_%s_unsorted.txt", runId.c_str());
+  sprintf(paraDir, "/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/database/pedestals_%d_unsorted.txt", inputRunId);
   std::cout << "Opening Pedestal File " << paraDir << std::endl;
 
   file_ped = fopen(paraDir, "r");
