@@ -1,4 +1,4 @@
-void write_fst_pednoise(long inputRunId = 22361003)
+void write_fst_initPedNoise(long inputRunId = 22327032)
 {
 
   // if you want to use root.exe instead of root4star, uncomment block below:
@@ -50,8 +50,8 @@ void write_fst_pednoise(long inputRunId = 22361003)
   StDbManager* mgr = StDbManager::Instance();
   StDbConfigNode* node = mgr->initConfig("Calibrations_fst");
   StDbTable* dbtable = node->addDbTable("fstPedNoise");
-  // TString storeTime = "2021-10-25 00:00:00"; // beginTime timestamp in MySQL format: "YYYY-MM-DD HH:mm:ss"
-  TString storeTime = Form("%s %s",runDate,runTime);
+  TString storeTime = "2021-10-25 00:00:00"; // beginTime timestamp in MySQL format: "YYYY-MM-DD HH:mm:ss"
+  // TString storeTime = Form("%s %s",runDate,runTime);
   mgr->setStoreTime(storeTime.Data());
 
   // Create your c-struct
@@ -80,7 +80,7 @@ void write_fst_pednoise(long inputRunId = 22361003)
       if(ret!=7) continue;
 
       int index = (glbApvIdxTemp*4+grpIdxTemp)*numTb + tbIdxTemp;
-      int cmn = (int)100*cmnTemp;
+      int cmn = (int)100*1.0;
       // cout << "glbApvIdxTemp = " << glbApvIdxTemp << ", grpIdxTemp = " << grpIdxTemp << ", tbIdxTemp = " << tbIdxTemp << ", index = " << index << ", cmnTemp = " << cmnTemp << ", cmn = " << cmn << endl;
       table.cmNoise[index] = cmn;
 
@@ -110,9 +110,9 @@ void write_fst_pednoise(long inputRunId = 22361003)
       if(ret!=9) continue;
 
       int index    = glbElecChanIdxTemp*numTb + tbIdxTemp;
-      int pedestal = (int)pedestalTemp;
-      int totrms   = (int)100*totrmsTemp;
-      int ranrms   = (int)100*ranrmsTemp;
+      int pedestal = (int)100;
+      int totrms   = (int)100*1.0;
+      int ranrms   = (int)100*1.0;
       // cout << "glbElecChanIdxTemp = " << glbElecChanIdxTemp << ", tbIdxTemp = " << tbIdxTemp << ", index = " << index << ", pedestalTemp = " << pedestalTemp << ", pedestal = " << pedestal << ", totrmsTemp = " << totrmsTemp << ", totrms = " << totrms << ", ranrmsTemp = " << ranrmsTemp << ", ranrms = " << ranrms << endl;
       table.pedestal[index] = pedestal;
       table.totNoise[index] = totrms;

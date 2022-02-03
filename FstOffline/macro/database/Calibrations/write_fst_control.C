@@ -19,7 +19,7 @@ void write_fst_control()
   StDbManager* mgr = StDbManager::Instance();
   StDbConfigNode* node = mgr->initConfig("Calibrations_fst");
   StDbTable* dbtable = node->addDbTable("fstControl");
-  TString storeTime = "2021-10-26 00:00:00"; // beginTime timestamp in MySQL format: "YYYY-MM-DD HH:mm:ss"
+  TString storeTime = "2021-10-25 00:00:00"; // beginTime timestamp in MySQL format: "YYYY-MM-DD HH:mm:ss"
   mgr->setStoreTime(storeTime.Data());
 
   // Create your c-struct
@@ -40,7 +40,7 @@ void write_fst_control()
   table.kFstADCdata                 = 1;
   table.kFstZSdata                  = 2;
   table.kFstDefaultTimeBin          = 1;
-  table.kFstCurrentTimeBinNum       = 3;
+  table.kFstCurrentTimeBinNum       = 9;
 
   // Store data to the StDbTable
   dbtable->SetTable((char*)&table, 1);

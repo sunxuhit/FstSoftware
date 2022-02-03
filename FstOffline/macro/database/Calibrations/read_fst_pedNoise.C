@@ -1,4 +1,4 @@
-void read_fst_pednoise()
+void read_fst_pedNoise()
 {
 
   // if you want to use root.exe instead of root4star, uncomment block below:

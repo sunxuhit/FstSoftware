@@ -9,6 +9,6 @@ databaseDir="/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/databas
 while IFS= read -r runNumber
 do
   echo "input run number: $runNumber"
-  root4star -b -q write_fst_pednoise.C\($runNumber\)
+  root4star -b -q write_fst_pedNoise.C\($runNumber\)
   head -n 1 $databaseDir/runInfo_$runNumber.txt >> $outputList
 done < $inputList
