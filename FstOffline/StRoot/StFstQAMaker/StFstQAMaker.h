@@ -20,7 +20,7 @@
 #include "StMaker.h"
 #include "StIOMaker/StIOMaker.h"
 #include "StEvent/StEnumerations.h"
-#include "StFstUtil/StFstConsts.h"
+#include "StEvent/StFstConsts.h"
 #include "TString.h"
 #include "TNtuple.h"
 #include "TH2F.h"
@@ -38,10 +38,6 @@ public:
   Int_t Init();
   Int_t Make();                      		// invoked for every event
   Int_t Finish();                    		// called once at the end
-  /*virtual const char *GetCVS() const {
-    static const char cvs[]="Tag $Name:  $ $Id: StFstQAMaker.h,v 1.8 2014/03/18 02:19:37 ypwang Exp $ built "__DATE__" "__TIME__ ; 
-    return cvs;
-  };*/
 
 protected:
   TFile* myRootFile;
