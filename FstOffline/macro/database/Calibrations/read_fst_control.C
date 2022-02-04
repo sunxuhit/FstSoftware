@@ -23,7 +23,7 @@ void read_fst_control()
 
   St_db_Maker *dbMk=new St_db_Maker("db", "MySQL:StarDb", "$STAR/StarDb");
   dbMk->SetDebug();
-  dbMk->SetDateTime(20211025,1); // event or run start time, set to your liking
+  dbMk->SetDateTime(20211228,1); // event or run start time, set to your liking
   dbMk->SetFlavor("ofl");
 
   dbMk->Init();

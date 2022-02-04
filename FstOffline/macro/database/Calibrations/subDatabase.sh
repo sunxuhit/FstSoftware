@@ -1,7 +1,7 @@
 #!/bin/bash
 
 inputList=$1
-date="02022022"
+date="02032022"
 
 outputList="/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/database/inDatabase_${date}.list"
 databaseDir="/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/database"
