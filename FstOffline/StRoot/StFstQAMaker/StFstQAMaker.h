@@ -28,6 +28,7 @@ class StIOMaker;
 class StEvent;
 class StTrack;
 class TH2F;
+class TH2S;
 class TProfile;
 class TTree;
 
