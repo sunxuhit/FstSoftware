@@ -13,7 +13,7 @@
 
 using namespace std;
 
-void checkNoise(long inputRunId = 23047025, int rdoIdx = 2, int armIdx = 0, int apvIdx = 9, int tbIdx = 1)
+void checkRms(long inputRunId = 23047025, int rdoIdx = 2, int armIdx = 0, int apvIdx = 9, int tbIdx = 1)
 {
   char paraDir[256];
 
@@ -93,8 +93,9 @@ void checkNoise(long inputRunId = 23047025, int rdoIdx = 2, int armIdx = 0, int 
   float meanRanRms = 0.;
   int   couRms = 0;
 
+  int glbElecApvIdx = (rdoIdx-1)*48 + armIdx*16 + apvIdx; // 0-287
   FILE *file_rmsInfo;
-  sprintf(paraDir, "/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/qa/rmsInfo_%d.txt", inputRunId);
+  sprintf(paraDir, "/star/u/sunxuhit/ForwardSiliconTracker/Data/FstInstallation/qa/rmsInfo_%d_APV%d.txt", inputRunId,glbElecApvIdx);
   file_rmsInfo = fopen(paraDir, "w");
 
   //load external pedstal/RMS value for all channels
@@ -185,9 +186,8 @@ void checkNoise(long inputRunId = 23047025, int rdoIdx = 2, int armIdx = 0, int 
 
   meanTotRms = meanTotRms/couRms;
   meanRanRms = meanRanRms/couRms;
-  int glbElecApvIdx = rdoIdx*48 + armIdx*16 + apvIdx; // 0-287
   string date = ts.AsString("s");
-  fprintf(file_rmsInfo,"%d %s %d %d %d %d %d %2.3f %2.3f\n",runNumber,date.c_str(),glbElecApvIdx,rdoIdx,armIdx,apvIdx,tbIdxTemp,meanTotRms,meanRanRms);
+  fprintf(file_rmsInfo,"%d %s %d %d %d %d %d %2.3f %2.3f\n",runNumber,date.c_str(),glbElecApvIdx,rdoIdx,armIdx,apvIdx,tbIdx,meanTotRms,meanRanRms);
   fclose(file_rmsInfo);
 
 }
