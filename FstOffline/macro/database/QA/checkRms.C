@@ -13,7 +13,7 @@
 
 using namespace std;
 
-void checkRms(long inputRunId = 23047025, int rdoIdx = 2, int armIdx = 0, int apvIdx = 9, int tbIdx = 1)
+void checkRms(long inputRunId = 23047025, int rdoIdx = 5, int armIdx = 0, int apvIdx = 0, int tbIdx = 1)
 {
   char paraDir[256];
 

@@ -1,9 +1,9 @@
 #!/bin/bash
 
 inputList=$1
-rdoIdx=6
-armIdx=1
-apvIdx=3
+rdoIdx=5
+armIdx=0
+apvIdx=7
 tbIdx=1
 
 while IFS= read -r runNumber
