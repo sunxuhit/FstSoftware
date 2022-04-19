@@ -1,0 +1,13 @@
+caget IST:Cool:Reservoir:level
+
+caget IST:Cool:Reservoir:P
+
+caget IST:Cool:Reservoir:RH
+
+caget IST:Cool:TC:ConSensTemp
+
+caget IST:Cool:Flow:supply
+
+caget IST:Cool:Flow:return
+
+

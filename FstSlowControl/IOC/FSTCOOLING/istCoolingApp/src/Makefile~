@@ -1,0 +1,53 @@
+TOP=../..
+
+include $(TOP)/configure/CONFIG
+#----------------------------------------
+#  ADD MACRO DEFINITIONS AFTER THIS LINE
+#=============================
+
+#=============================
+# Build the IOC application
+
+STATIC_BUILD=YES
+
+PROD_IOC = istCooling
+# istCooling.dbd will be created and installed
+DBD += istCooling.dbd
+
+# istCooling.dbd will be made up from these files:
+istCooling_DBD += base.dbd
+istCooling_DBD += softIoc.dbd
+
+# Include dbd files from all support applications:
+istCooling_DBD += stream.dbd
+istCooling_DBD += drvAsynIPPort.dbd
+istCooling_DBD += modbus.dbd
+istCooling_DBD += modbusSupport.dbd
+#istCooling_DBD += pcre.dbd
+#istCooling_DBD += pcreSupport.dbd
+
+# Add all the support libraries needed by this IOC
+istCooling_LIBS += stream
+istCooling_LIBS += modbus
+istCooling_LIBS += asyn
+istCooling_LIBS += pcre
+
+# istCooling_registerRecordDeviceDriver.cpp derives from istCooling.dbd
+istCooling_SRCS += istCooling_registerRecordDeviceDriver.cpp
+
+# Build the main IOC entry point on workstation OSs.
+istCooling_SRCS_DEFAULT += istCoolingMain.cpp
+istCooling_SRCS_vxWorks += -nil-
+
+# Add support from base/src/vxWorks if needed
+#istCooling_OBJS_vxWorks += $(EPICS_BASE_BIN)/vxComLibrary
+
+# Finally link to the EPICS Base libraries
+istCooling_LIBS += $(EPICS_BASE_IOC_LIBS)
+
+#===========================
+
+include $(TOP)/configure/RULES
+#----------------------------------------
+#  ADD RULES AFTER THIS LINE
+

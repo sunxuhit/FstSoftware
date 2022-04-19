@@ -1,0 +1,8 @@
+#!/bin/bash
+
+prog="fst-cooling-tc-48"
+
+cd /home/sysuser/iocTop/fst-tc-48
+
+screen -S $prog -d -m ./main.py
+

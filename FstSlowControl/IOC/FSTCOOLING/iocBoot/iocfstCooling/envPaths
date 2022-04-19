@@ -1,0 +1,8 @@
+epicsEnvSet("ARCH","linux-x86_64")
+epicsEnvSet("IOC","iocfstCooling")
+epicsEnvSet("TOP","/home/sysuser/iocTop/FST/FSTCOOLING")
+epicsEnvSet("MODULE_TOP","/star/u/sysuser/users/jaroslav/epics/synApps_5_7/support")
+epicsEnvSet("MODBUS","/star/u/sysuser/users/jaroslav/epics/synApps_5_7/support/modbus-2-4")
+epicsEnvSet("STREAM","/star/u/sysuser/users/jaroslav/epics/synApps_5_7/support/stream-2-6")
+epicsEnvSet("ASYN","/star/u/sysuser/users/jaroslav/epics/synApps_5_7/support/asyn-4-21")
+epicsEnvSet("EPICS_BASE","/star/u/sysuser/users/jaroslav/epics/base-3.14.12.8")

@@ -1,0 +1,206 @@
+record(bi,"IST:Cool:Interlock:Level") {
+	field(DESC,"read input 0")
+	field(SCAN,"I/O Intr")
+	field(DTYP,"asynUInt32Digital")
+	field(INP,"@asynMask(ADAM-6052-IN,0,1,1000)MODBUS_DATA")
+	field(ZSV,"MAJOR")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bi,"IST:Cool:Interlock:Flow:supply") {
+	field(DESC,"read input 1")
+	field(SCAN,"I/O Intr")
+	field(DTYP,"asynUInt32Digital")
+	field(INP,"@asynMask(ADAM-6052-IN,1,1,1000)MODBUS_DATA")
+	field(ZSV,"MAJOR")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bi,"IST:Cool:Interlock:Flow:return") {
+	field(DESC,"read input 2")
+	field(SCAN,"I/O Intr")
+	field(DTYP,"asynUInt32Digital")
+	field(INP,"@asynMask(ADAM-6052-IN,2,1,1000)MODBUS_DATA")
+	field(ZSV,"MAJOR")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bi,"IST:Cool:Interlock:SensorPower") {
+	field(DESC,"read input 3")
+	field(SCAN,"I/O Intr")
+	field(DTYP,"asynUInt32Digital")
+	field(INP,"@asynMask(ADAM-6052-IN,3,1,1000)MODBUS_DATA")
+	field(ZSV,"MAJOR")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bi,"IST:Cool:Interlock:Dewpoint") {
+	field(DESC,"read input 4")
+	field(SCAN,"I/O Intr")
+	field(DTYP,"asynUInt32Digital")
+	field(INP,"@asynMask(ADAM-6052-IN,4,1,1000)MODBUS_DATA")
+	field(ZSV,"MAJOR")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bi,"IST:Cool:Interlock:FanPower") {
+	field(DESC,"read input 5")
+	field(SCAN,"I/O Intr")
+	field(DTYP,"asynUInt32Digital")
+	field(INP,"@asynMask(ADAM-6052-IN,5,1,1000)MODBUS_DATA")
+	field(ZSV,"MAJOR")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bi,"IST:Cool:Interlock:sum") {
+	field(DESC,"read input 6")
+	field(SCAN,"I/O Intr")
+	field(DTYP,"asynUInt32Digital")
+	field(INP,"@asynMask(ADAM-6052-IN,6,1,1000)MODBUS_DATA")
+        field(FLNK, "IST:Cool:Interlock:sumAlarm")
+	field(ZSV,"MAJOR")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bi,"IST:Cool:Interlock:sum") {
+        field(DESC,"read input 6")
+        field(SCAN,"I/O Intr")
+        field(DTYP,"asynUInt32Digital")
+        field(INP,"@asynMask(ADAM-6052-IN,6,1,1000)MODBUS_DATA")
+        field(FLNK, "IST:Cool:Interlock:sumAlarm")
+        field(ZSV,"MAJOR")
+        field(ZNAM,"OFF")
+        field(ONAM,"ON")
+}
+record(bi,"IST:Cool:6052:in:7") {
+	field(DESC,"read input 7")
+	field(SCAN,"I/O Intr")
+	field(DTYP,"asynUInt32Digital")
+	field(INP,"@asynMask(ADAM-6052-IN,7,1,1000)MODBUS_DATA")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bi,"IST:Cool:SensorReset:read") {
+	field(DESC,"read output 0")
+	field(SCAN,"I/O Intr")
+	field(DTYP,"asynUInt32Digital")
+	field(INP,"@asynMask(ADAM-6052-OUTR,0,1,1000)MODBUS_DATA")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bi,"IST:Cool:ChillerPower:read") {
+	field(DESC,"read output 1")
+	field(SCAN,"I/O Intr")
+	field(DTYP,"asynUInt32Digital")
+	field(INP,"@asynMask(ADAM-6052-OUTR,1,1,1000)MODBUS_DATA")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bi,"IST:Cool:StartupMode:read") {
+	field(DESC,"read output 2")
+	field(SCAN,"I/O Intr")
+	field(DTYP,"asynUInt32Digital")
+	field(INP,"@asynMask(ADAM-6052-OUTR,2,1,1000)MODBUS_DATA")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bi,"IST:Cool:Pump:start:read") {
+	field(DESC,"read output 3")
+	field(SCAN,"I/O Intr")
+	field(DTYP,"asynUInt32Digital")
+	field(INP,"@asynMask(ADAM-6052-OUTR,3,1,1000)MODBUS_DATA")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bi,"IST:Cool:Pump:stop:read") {
+	field(DESC,"read output 4")
+	field(SCAN,"I/O Intr")
+	field(DTYP,"asynUInt32Digital")
+	field(INP,"@asynMask(ADAM-6052-OUTR,4,1,1000)MODBUS_DATA")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bi,"IST:Cool:6052:out:5:read") {
+	field(DESC,"read output 5")
+	field(SCAN,"I/O Intr")
+	field(DTYP,"asynUInt32Digital")
+	field(INP,"@asynMask(ADAM-6052-OUTR,5,1,1000)MODBUS_DATA")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bi,"IST:Cool:6052:out:6:read") {
+	field(DESC,"read output 6")
+	field(SCAN,"I/O Intr")
+	field(DTYP,"asynUInt32Digital")
+	field(INP,"@asynMask(ADAM-6052-OUTR,6,1,1000)MODBUS_DATA")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bi,"IST:Cool:6052:out:7:read") {
+	field(DESC,"read output 7")
+	field(SCAN,"I/O Intr")
+	field(DTYP,"asynUInt32Digital")
+	field(INP,"@asynMask(ADAM-6052-OUTR,7,1,1000)MODBUS_DATA")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bo,"IST:Cool:SensorReset") {
+	field(DESC,"write output 0")
+	field(DTYP,"asynUInt32Digital")
+	field(OUT,"@asynMask(ADAM-6052-OUTW,0,1,1000)MODBUS_DATA")
+	field(HIGH,"2")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bo,"IST:Cool:ChillerPower") {
+	field(DESC,"write output 1")
+	field(DTYP,"asynUInt32Digital")
+	field(OUT,"@asynMask(ADAM-6052-OUTW,1,1,1000)MODBUS_DATA")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bo,"IST:Cool:StartupMode") {
+	field(DESC,"write output 2")
+	field(DTYP,"asynUInt32Digital")
+	field(OUT,"@asynMask(ADAM-6052-OUTW,2,1,1000)MODBUS_DATA")
+	field(HIGH,"2")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bo,"IST:Cool:Pump:start") {
+	field(DESC,"write output 3")
+	field(DTYP,"asynUInt32Digital")
+	field(OUT,"@asynMask(ADAM-6052-OUTW,3,1,1000)MODBUS_DATA")
+	field(HIGH,"2")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bo,"IST:Cool:Pump:stop") {
+	field(DESC,"write output 4")
+	field(DTYP,"asynUInt32Digital")
+	field(OUT,"@asynMask(ADAM-6052-OUTW,4,1,1000)MODBUS_DATA")
+	field(HIGH,"2")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bo,"IST:Cool:6052:out:5") {
+	field(DESC,"write output 5")
+	field(DTYP,"asynUInt32Digital")
+	field(OUT,"@asynMask(ADAM-6052-OUTW,5,1,1000)MODBUS_DATA")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bo,"IST:Cool:6052:out:6") {
+	field(DESC,"write output 6")
+	field(DTYP,"asynUInt32Digital")
+	field(OUT,"@asynMask(ADAM-6052-OUTW,6,1,1000)MODBUS_DATA")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bo,"IST:Cool:6052:out:7") {
+	field(DESC,"write output 7")
+	field(DTYP,"asynUInt32Digital")
+	field(OUT,"@asynMask(ADAM-6052-OUTW,7,1,1000)MODBUS_DATA")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}

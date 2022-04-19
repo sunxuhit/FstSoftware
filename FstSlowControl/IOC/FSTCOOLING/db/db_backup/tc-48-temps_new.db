@@ -1,0 +1,27 @@
+# record(ai,"IST:Cool:TC:SensorOffset:read") {
+# 	field(SCAN,"1 second")
+# 	field(DTYP,"stream")
+# 	field(INP,"@tc-48.proto SensorOffsetRead TC-48")
+# 	field(PREC,"2")
+# 	field(LINR,"LINEAR")
+# 	field(ESLO,"0.1")
+# 	field(MDEL,"0.1")
+# }
+# record(ai,"IST:Cool:TC:SecSensTemp") {
+# 	field(SCAN,"3.1 second")
+# 	field(DTYP,"stream")
+# 	field(INP,"@tc-48.proto SecondarySensorTemp TC-48")
+# 	field(PREC,"2")
+# 	field(LINR,"LINEAR")
+# 	field(ESLO,"0.1")
+# 	field(MDEL,"0.1")
+#}
+record(ai,"IST:Cool:TC:ConSensTemp") {
+	field(SCAN,"1 second")
+	field(DTYP,"stream")
+	field(INP,"@tc-48.proto ControlSensorTemp TC-48")
+	field(PREC,"2")
+	field(LINR,"LINEAR")
+	field(ESLO,"0.1")
+	field(MDEL,"0.1")
+}

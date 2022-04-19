@@ -1,0 +1,212 @@
+record(ai,"IST:Cool:TC:Alarm1:DB:read") {
+	field(SCAN,"1 second")
+	field(DTYP,"stream")
+	field(INP,"@tc-48.proto Alarm1DeadbandRead TC-48")
+	field(PREC,"1")
+	field(LINR,"LINEAR")
+	field(ESLO,"0.1")
+}
+record(ai,"IST:Cool:TC:Alarm2:DB:read") {
+	field(SCAN,"1 second")
+	field(DTYP,"stream")
+	field(INP,"@tc-48.proto Alarm2DeadbandRead TC-48")
+	field(PREC,"1")
+	field(LINR,"LINEAR")
+	field(ESLO,"0.1")
+}
+record(ai,"IST:Cool:TC:AnalogOutMlt:read") {
+	field(SCAN,"1 second")
+	field(DTYP,"stream")
+	field(INP,"@tc-48.proto AnalogOutMultiplierRead TC-48")
+	field(PREC,"2")
+	field(LINR,"LINEAR")
+	field(ESLO,"0.01")
+}
+record(ai,"IST:Cool:TC:PropBW:read") {
+	field(SCAN,"1 second")
+	field(DTYP,"stream")
+	field(INP,"@tc-48.proto BandwidthRead TC-48")
+	field(PREC,"1")
+	field(LINR,"LINEAR")
+	field(ESLO,"0.1")
+}
+record(ai,"IST:Cool:TC:IGain:read") {
+	field(SCAN,"1 second")
+	field(DTYP,"stream")
+	field(INP,"@tc-48.proto IntegralGainRead TC-48")
+	field(PREC,"2")
+	field(LINR,"LINEAR")
+	field(ESLO,"0.01")
+}
+record(ai,"IST:Cool:TC:DGain:read") {
+	field(SCAN,"1 second")
+	field(DTYP,"stream")
+	field(INP,"@tc-48.proto DerivativeGainRead TC-48")
+	field(PREC,"2")
+	field(LINR,"LINEAR")
+	field(ESLO,"0.01")
+}
+record(ao,"IST:Cool:TC:Alarm1:DB:write") {
+	field(DTYP,"stream")
+	field(OUT,"@tc-48.proto Alarm1DeadbandWrite TC-48")
+	field(PREC,"1")
+	field(LINR,"LINEAR")
+	field(ESLO,"0.1")
+	field(DRVH,"20")
+	field(DRVL,"0")
+}
+record(ao,"IST:Cool:TC:Alarm2:DB:write") {
+	field(DTYP,"stream")
+	field(OUT,"@tc-48.proto Alarm2DeadbandWrite TC-48")
+	field(PREC,"1")
+	field(LINR,"LINEAR")
+	field(ESLO,"0.1")
+	field(DRVH,"20")
+	field(DRVL,"0")
+}
+record(ao,"IST:Cool:TC:AnalogOutMlt:write") {
+	field(DTYP,"stream")
+	field(OUT,"@tc-48.proto AnalogOutMultiplierWrite TC-48")
+	field(PREC,"2")
+	field(LINR,"LINEAR")
+	field(ESLO,"0.01")
+	field(DRVH,"1.0")
+	field(DRVL,"0")
+}
+record(ao,"IST:Cool:TC:PropBW:write") {
+	field(DTYP,"stream")
+	field(OUT,"@tc-48.proto BandwidthWrite TC-48")
+	field(PREC,"1")
+	field(LINR,"LINEAR")
+	field(ESLO,"0.1")
+	field(DRVH,"100.0")
+	field(DRVL,"0.5")
+}
+record(ao,"IST:Cool:TC:IGain:write") {
+	field(DTYP,"stream")
+	field(OUT,"@tc-48.proto IntegralGainWrite TC-48")
+	field(PREC,"2")
+	field(LINR,"LINEAR")
+	field(ESLO,"0.01")
+	field(DRVH,"10.00")
+	field(DRVL,"0")
+}
+record(ao,"IST:Cool:TC:DGain:write") {
+	field(DTYP,"stream")
+	field(OUT,"@tc-48.proto DerivativeGainWrite TC-48")
+	field(PREC,"2")
+	field(LINR,"LINEAR")
+	field(ESLO,"0.01")
+	field(DRVH,"10.00")
+	field(DRVL,"0.0")
+}
+record(bi,"IST:Cool:TC:Alarm1:Type:read") {
+	field(SCAN,"1 second")
+	field(DTYP,"stream")
+	field(INP,"@tc-48.proto Alarm1TypeRead TC-48")
+	field(ZNAM,"No Effect")
+	field(ONAM,"Load Off")
+}
+record(bi,"IST:Cool:TC:Alarm2:Type:read") {
+	field(SCAN,"2 second")
+	field(DTYP,"stream")
+	field(INP,"@tc-48.proto Alarm2TypeRead TC-48")
+	field(ZNAM,"No Effect")
+	field(ONAM,"Load Off")
+}
+record(bi,"IST:Cool:TC:EEpromWrite:read") {
+	field(SCAN,"1 second")
+	field(DTYP,"stream")
+	field(INP,"@tc-48.proto EEpromWriteEnableRead TC-48")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bi,"IST:Cool:TC:Mode:read") {
+	field(SCAN,"1 second")
+	field(DTYP,"stream")
+	field(INP,"@tc-48.proto ModeRead TC-48")
+	field(ZNAM,"Cooling")
+	field(ONAM,"Heating")
+}
+record(bi,"IST:Cool:TC:OutputEnable:read") {
+	field(SCAN,"1 second")
+	field(DTYP,"stream")
+	field(INP,"@tc-48.proto OutputEnableRead TC-48")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bi,"IST:Cool:TC:SensorChoice:read") {
+	field(SCAN,"1 second")
+	field(DTYP,"stream")
+	field(INP,"@tc-48.proto SensorChoiceRead TC-48")
+	field(ZNAM,"15K")
+	field(ONAM,"10K")
+}
+record(bo,"IST:Cool:TC:Alarm1:Type:write") {
+	field(DTYP,"stream")
+	field(OUT,"@tc-48.proto Alarm1TypeWrite TC-48")
+	field(ZNAM,"No Effect")
+	field(ONAM,"Load Off")
+}
+record(bo,"IST:Cool:TC:Alarm2:Type:write") {
+	field(DTYP,"stream")
+	field(OUT,"@tc-48.proto Alarm2TypeWrite TC-48")
+	field(ZNAM,"No Effect")
+	field(ONAM,"Load Off")
+}
+record(bo,"IST:Cool:TC:EEpromWrite:write") {
+	field(DTYP,"stream")
+	field(OUT,"@tc-48.proto EEpromWriteEnableWrite TC-48")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bo,"IST:Cool:TC:Mode:write") {
+	field(DTYP,"stream")
+	field(OUT,"@tc-48.proto ModeWrite TC-48")
+	field(ZNAM,"Cooling")
+	field(ONAM,"Heating")
+}
+record(bo,"IST:Cool:TC:OutputEnable:write") {
+	field(DTYP,"stream")
+	field(OUT,"@tc-48.proto OutputEnableWrite TC-48")
+	field(ZNAM,"OFF")
+	field(ONAM,"ON")
+}
+record(bo,"IST:Cool:TC:SensorChoice:write") {
+	field(DTYP,"stream")
+	field(OUT,"@tc-48.proto SensorChoiceWrite TC-48")
+	field(ZNAM,"15K")
+	field(ONAM,"10K")
+}
+record(mbbi,"IST:Cool:TC:Temp2Display:read") {
+	field(SCAN,"1 second")
+	field(DTYP,"stream")
+	field(INP,"@tc-48.proto Temp2DisplayRead TC-48")
+	field(ZRST,"Off")
+	field(ONST,"Auto")
+	field(TWST,"On")
+}
+record(mbbi,"IST:Cool:TC:AlarmLatch:read") {
+	field(SCAN,"1 second")
+	field(DTYP,"stream")
+	field(INP,"@tc-48.proto AlarmLatchRead TC-48")
+	field(ZRST,"No Latches")
+	field(ONST,"Alarm 1 Latch")
+	field(TWST,"Alarm 2 Latch")
+	field(THST,"Alarm 1+2 Latch")
+}
+record(mbbo,"IST:Cool:TC:AlarmLatch:write") {
+	field(DTYP,"stream")
+	field(OUT,"@tc-48.proto AlarmLatchWrite TC-48")
+	field(ZRST,"No Latches")
+	field(ONST,"Alarm 1 Latch")
+	field(TWST,"Alarm 2 Latch")
+	field(THST,"Alarm 1+2 Latch")
+}
+record(mbbo,"IST:Cool:TC:Temp2Display:write") {
+	field(DTYP,"stream")
+	field(OUT,"@tc-48.proto Temp2DisplayWrite TC-48")
+	field(ZRST,"Off")
+	field(ONST,"Auto")
+	field(TWST,"On")
+}

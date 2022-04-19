@@ -610,7 +610,7 @@ static void I_ss1_0_loading_ramp_all(SS_ID ssId, struct UserVar *pVar)
 	for (pVar->i = 0; pVar->i < 24; pVar->i++)
 	{
 # line 635 "../sncFGTControl.stt"
-		pVar->currentSetting[pVar->i] = 0.000015;
+		pVar->currentSetting[pVar->i] = 0.000050;
 # line 636 "../sncFGTControl.stt"
 		seq_pvPut(ssId, 227/*currentSetting*/ + (VAR_ID)(pVar->i), SYNC);
 	}

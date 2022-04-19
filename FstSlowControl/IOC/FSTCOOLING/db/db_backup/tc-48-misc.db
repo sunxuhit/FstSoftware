@@ -1,0 +1,63 @@
+record(ai,"IST:Cool:TC:ChillerPower") {
+	field(SCAN,"1 second")
+	field(DTYP,"stream")
+	field(INP,"@tc-48.proto Power TC-48")
+	field(PREC,"1")
+	field(LINR,"LINEAR")
+	field(EGUF,"100")
+	field(EGU,"Percent")
+	field(HOPR,"100")
+	field(ESLO,".195694")
+	field(ADEL,"0.1")
+	field(MDEL,"0.1")
+}
+record(calc,"IST:Cool:TC:HeatLoad") {
+	field(SCAN,"1 second")
+	field(CALC,"((C+D)/2)*(B-A)*(E?F:G)")
+	field(INPA,"IST:Cool:TC:ConSensTemp.VAL NPP MS")
+	field(INPB,"IST:Cool:TC:SecSensTemp.VAL NPP MS")
+	field(INPC,"IST:Cool:Flow:supply.VAL NPP MS")
+	field(INPD,"IST:Cool:Flow:return.VAL NPP MS")
+	field(INPE,"IST:Cool:HeatCapacitySelect.VAL NPP MS")
+	field(INPF,"28.918")
+	field(INPG,"69.783")
+	field(EGU,"Watts")
+	field(PREC,"0")
+	field(HOPR,"400")
+	field(ADEL,"1")
+	field(MDEL,"1")
+}
+record(mbbo,"IST:Cool:HeatCapacitySelect") {
+	field(PINI,"YES")
+	field(DTYP,"Soft Channel")
+	field(DOL,"0")
+	field(ZRVL,"0")
+	field(ONVL,"1")
+	field(ZRST,"Water")
+	field(ONST,"Novek")
+}
+record(bo,"IST:Cool:TC:AlarmLatch:Clear") {
+	field(DTYP,"stream")
+	field(OUT,"@tc-48.proto LatchClear TC-48")
+}
+record(longin,"IST:Cool:TC:revision") {
+	field(PINI,"YES")
+	field(DTYP,"stream")
+	field(INP,"@tc-48.proto Revision TC-48")
+}
+record(longin,"IST:Cool:TC:model") {
+	field(PINI,"YES")
+	field(DTYP,"stream")
+	field(INP,"@tc-48.proto Model TC-48")
+}
+record(mbbiDirect,"IST:Cool:TC:AlarmStatus") {
+	field(SCAN,".2 second")
+	field(DTYP,"stream")
+	field(NOBT,"8")
+	field(INP,"@tc-48.proto AlarmStatus TC-48")
+}
+record(calc,"IST:Cool:TC:AlarmStatus:blinker") {
+	field(SCAN,"1 second")
+	field(CALC,"!A")
+	field(INPA,"IST:Cool:TC:AlarmStatus:blinker.VAL NPP NMS")
+}

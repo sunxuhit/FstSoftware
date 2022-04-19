@@ -1,0 +1,6 @@
+#!/bin/csh
+cd /home/sysuser/iocTop/FST/FSTCOOLING/iocBoot/iocistCooling
+source ../../setup_independent_env
+
+screen -L -d -m -S hft-ist-cooling -h 1000 ./iocstart
+

@@ -1,0 +1,20 @@
+istCooling_registerRecordDeviceDriver.o:  \
+ istCooling_registerRecordDeviceDriver.cpp \
+  /home/sysuser/epics/base-3.14.12.3/include/epicsStdlib.h \
+  /home/sysuser/epics/base-3.14.12.3/include/shareLib.h \
+  /home/sysuser/epics/base-3.14.12.3/include/os/Linux/osdStrtod.h \
+  /home/sysuser/epics/base-3.14.12.3/include/iocsh.h \
+  /home/sysuser/epics/base-3.14.12.3/include/shareLib.h \
+  /home/sysuser/epics/base-3.14.12.3/include/iocshRegisterCommon.h \
+  /home/sysuser/epics/base-3.14.12.3/include/registryCommon.h \
+  /home/sysuser/epics/base-3.14.12.3/include/dbStaticLib.h \
+  /home/sysuser/epics/base-3.14.12.3/include/dbFldTypes.h \
+  /home/sysuser/epics/base-3.14.12.3/include/dbBase.h \
+  /home/sysuser/epics/base-3.14.12.3/include/epicsTypes.h \
+  /home/sysuser/epics/base-3.14.12.3/include/ellLib.h \
+  /home/sysuser/epics/base-3.14.12.3/include/dbDefs.h \
+  /home/sysuser/epics/base-3.14.12.3/include/link.h \
+  /home/sysuser/epics/base-3.14.12.3/include/errMdef.h \
+  /home/sysuser/epics/base-3.14.12.3/include/cantProceed.h \
+  /home/sysuser/epics/base-3.14.12.3/include/registryRecordType.h \
+  /home/sysuser/epics/base-3.14.12.3/include/recSup.h

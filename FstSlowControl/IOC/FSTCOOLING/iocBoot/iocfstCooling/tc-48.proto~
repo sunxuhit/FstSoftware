@@ -1,0 +1,261 @@
+# stream protocol file for TC-48 temperature controller     -*- mode: c; modify-insert-tag: nil -*-
+
+OutTerminator = CR;
+InTerminator = "^";
+ReplyTimeout = 3000;
+low_case = "%#/A/a/%#/B/b/%#/C/c/%#/D/d/%#/E/e/%#/F/f/";
+
+Model { 
+  out "*000000%01<sum>";
+  in "*%4x%01<sum>";
+}
+
+ControlSensorTemp { 
+  out "*010000%01<sum>";
+  in "*%4x%01<sum>";
+}
+
+Power { 
+  out "*020000%01<sum>";
+  in "*%4x%01<sum>";
+}
+
+SecondarySensorTemp { 
+  out "*040000%01<sum>";
+  in "*%4x%01<sum>";
+}
+
+AlarmStatus { 
+  out "*030000%01<sum>";
+  in "*%4x%01<sum>";
+}
+
+SetTempRead { 
+  out "*500000%01<sum>";
+  in "*%4x%01<sum>";
+}
+SetTempWrite {
+  out "*1c%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { SetTempRead }
+}
+
+BandwidthRead { 
+  out "*510000%01<sum>";
+  in "*%4x%01<sum>";
+}
+BandwidthWrite {
+  out "*1d%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { BandwidthRead }
+}
+
+IntegralGainRead {
+  out "*520000%01<sum>";
+  in "*%4x%01<sum>";
+}
+IntegralGainWrite {
+  out "*1e%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { IntegralGainRead }
+}
+
+DerivativeGainRead {
+  out "*530000%01<sum>";
+  in "*%4x%01<sum>";
+}
+DerivativeGainWrite {
+  out "*1f%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { DerivativeGainRead }
+}
+
+Alarm1TypeRead {
+  out "*5b0000%01<sum>";
+  in "*%4x%01<sum>";
+}
+Alarm1TypeWrite {
+  out "*27%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { Alarm1TypeRead }
+}
+
+Alarm2TypeRead {
+  out "*5e00005a";
+  in "*%4x%01<sum>";
+}
+Alarm2TypeWrite {
+  out "*2a%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { Alarm2TypeRead }
+}
+
+SensorChoiceRead {
+  out "*540000%01<sum>";
+  in "*%4x%01<sum>";
+}
+SensorChoiceWrite {
+  out "*20%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { SensorChoiceRead }
+}
+
+ModeRead {
+  out "*5500002a";
+  in "*%4x%01<sum>";
+}
+ModeWrite {
+  out "*21%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { ModeRead }
+}
+
+LowSetRead {
+  out "*560000%01<sum>$low_case";
+  in "*%4x%01<sum>";
+}
+LowSetWrite {
+  out "*22%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { LowSetRead }
+}
+
+HighSetRead {
+  out "*5700002c";
+  in "*%4x%01<sum>";
+}
+HighSetWrite {
+  out "*23%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { HighSetRead }
+}
+
+SensorOffsetRead {
+  out "*5800002d";
+  in "*%4x%01<sum>";
+}
+SensorOffsetWrite {
+  out "*24%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { SensorOffsetRead }
+}
+
+Alarm1LowRead {
+  out "*5900002e";
+  in "*%4x%01<sum>";
+}
+Alarm1LowWrite {
+  out "*25%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { Alarm1LowRead }
+}
+
+Alarm1HighRead {
+  out "*5a000056";
+  in "*%4x%01<sum>";
+}
+Alarm1HighWrite {
+  out "*26%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { Alarm1HighRead }
+}
+
+Alarm2LowRead {
+  out "*5c000058";
+  in "*%4x%01<sum>";
+}
+Alarm2LowWrite {
+  out "*28%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { Alarm2LowRead }
+}
+
+Alarm2HighRead {
+  out "*5d000059";
+  in "*%4x%01<sum>";
+}
+Alarm2HighWrite {
+  out "*29%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { Alarm2HighRead }
+}
+
+AlarmLatchRead {
+  out "*5f00005b";
+  in "*%4x%01<sum>";
+}
+AlarmLatchWrite {
+  out "*2b%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { AlarmLatchRead }
+}
+
+Temp2DisplayRead {
+  out "*600000%01<sum>";
+  in "*%4x%01<sum>";
+}
+Temp2DisplayWrite {
+  out "*2c%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { Temp2DisplayRead }
+}
+
+Alarm1DeadbandRead {
+  out "*610000%01<sum>";
+  in "*%4x%01<sum>";
+}
+Alarm1DeadbandWrite {
+  out "*2d%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { Alarm1DeadbandRead }
+}
+
+Alarm2DeadbandRead {
+  out "*620000%01<sum>";
+  in "*%4x%01<sum>";
+}
+Alarm2DeadbandWrite {
+  out "*2e%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { Alarm2DeadbandRead }
+}
+
+AnalogOutMultiplierRead {
+  out "*630000%01<sum>";
+  in "*%4x%01<sum>";
+}
+AnalogOutMultiplierWrite {
+  out "*2f%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { AnalogOutMultiplierRead }
+}
+
+LatchClear {
+  out "*33%04x%01<sum>";
+  in "*%4x%01<sum>";
+}
+
+OutputEnableRead {
+  out "*6400002a";
+  in "*%4x%01<sum>";
+}
+OutputEnableWrite {
+  out "*30%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { OutputEnableRead }
+}
+
+EEpromWriteEnableRead {
+  out "*6500002b";
+  in "*%4x%01<sum>";
+}
+EEpromWriteEnableWrite {
+  out "*31%04x%01<sum>";
+  in "*%4x%01<sum>";
+  @init { EEpromWriteEnableRead }
+}
+
+Revision { 
+  out "*050000%01<sum>";
+  in "*%4x%01<sum>";
+}

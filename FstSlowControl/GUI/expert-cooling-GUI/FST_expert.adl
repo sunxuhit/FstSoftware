@@ -1,0 +1,919 @@
+
+file {
+	name="/star/u/sysuser/users/xusun/FstSlowControl/expert-cooling-GUI/FST/FST_expert.adl"
+	version=020306
+}
+display {
+	object {
+		x=468
+		y=395
+		width=560
+		height=415
+	}
+	clr=14
+	bclr=5
+	cmap=""
+	gridSpacing=5
+	gridOn=0
+	snapToGrid=1
+}
+"color map" {
+	ncolors=65
+	colors {
+		ffffff,
+		ececec,
+		dadada,
+		c8c8c8,
+		bbbbbb,
+		aeaeae,
+		9e9e9e,
+		919191,
+		858585,
+		787878,
+		696969,
+		5a5a5a,
+		464646,
+		2d2d2d,
+		000000,
+		00d800,
+		1ebb00,
+		339900,
+		2d7f00,
+		216c00,
+		fd0000,
+		de1309,
+		be190b,
+		a01207,
+		820400,
+		5893ff,
+		597ee1,
+		4b6ec7,
+		3a5eab,
+		27548d,
+		fbf34a,
+		f9da3c,
+		eeb62b,
+		e19015,
+		cd6100,
+		ffb0ff,
+		d67fe2,
+		ae4ebc,
+		8b1a96,
+		610a75,
+		a4aaff,
+		8793e2,
+		6a73c1,
+		4d52a4,
+		343386,
+		c7bb6d,
+		b79d5c,
+		a47e3c,
+		7d5627,
+		58340f,
+		99ffff,
+		73dfff,
+		4ea5f9,
+		2a63e4,
+		0a00b8,
+		ebf1b5,
+		d4db9d,
+		bbc187,
+		a6a462,
+		8b8239,
+		73ff6b,
+		52da3b,
+		3cb420,
+		289315,
+		1a7309,
+	}
+}
+text {
+	object {
+		x=115
+		y=10
+		width=365
+		height=27
+	}
+	"basic attribute" {
+		clr=13
+	}
+	textix="FST EXPERT SETTINGS"
+}
+"related display" {
+	object {
+		x=10
+		y=10
+		width=100
+		height=30
+	}
+	display[0] {
+		label="ADAM+HX"
+		name="FST.adl"
+	}
+	clr=14
+	bclr=55
+	label=" FST Main   "
+}
+"related display" {
+	object {
+		x=10
+		y=380
+		width=165
+		height=30
+	}
+	display[0] {
+		label="Expert"
+		name="FST_options.adl"
+	}
+	clr=0
+	bclr=38
+	label=" Special Options   "
+}
+composite {
+	object {
+		x=10
+		y=45
+		width=341
+		height=125
+	}
+	"composite name"=""
+	children {
+		text {
+			object {
+				x=25
+				y=65
+				width=80
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Prop. BW"
+		}
+		"text update" {
+			object {
+				x=205
+				y=65
+				width=60
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:TC:PropBW:read"
+				clr=13
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		text {
+			object {
+				x=25
+				y=100
+				width=110
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Deriv. Gain"
+		}
+		"text update" {
+			object {
+				x=205
+				y=100
+				width=60
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:TC:DGain:read"
+				clr=13
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		text {
+			object {
+				x=25
+				y=135
+				width=110
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Integ. Gain"
+		}
+		"text update" {
+			object {
+				x=205
+				y=135
+				width=60
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:TC:IGain:read"
+				clr=13
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		"text entry" {
+			object {
+				x=140
+				y=60
+				width=60
+				height=27
+			}
+			control {
+				chan="FST:Cool:TC:PropBW:write"
+				clr=13
+				bclr=3
+			}
+			limits {
+			}
+		}
+		"text entry" {
+			object {
+				x=140
+				y=95
+				width=60
+				height=27
+			}
+			control {
+				chan="FST:Cool:TC:DGain:write"
+				clr=13
+				bclr=3
+			}
+			limits {
+			}
+		}
+		"text entry" {
+			object {
+				x=140
+				y=130
+				width=60
+				height=27
+			}
+			control {
+				chan="FST:Cool:TC:IGain:write"
+				clr=13
+				bclr=3
+			}
+			limits {
+			}
+		}
+		text {
+			object {
+				x=270
+				y=65
+				width=40
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="degC"
+		}
+		text {
+			object {
+				x=270
+				y=135
+				width=70
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Rep/min"
+		}
+		text {
+			object {
+				x=270
+				y=100
+				width=70
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Cyc/min"
+		}
+		rectangle {
+			object {
+				x=10
+				y=45
+				width=341
+				height=125
+			}
+			"basic attribute" {
+				clr=14
+				fill="outline"
+				width=3
+			}
+		}
+	}
+}
+composite {
+	object {
+		x=355
+		y=45
+		width=195
+		height=125
+	}
+	"composite name"=""
+	children {
+		rectangle {
+			object {
+				x=355
+				y=45
+				width=195
+				height=125
+			}
+			"basic attribute" {
+				clr=38
+				fill="outline"
+				width=3
+			}
+		}
+		text {
+			object {
+				x=370
+				y=95
+				width=40
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="High"
+		}
+		"text update" {
+			object {
+				x=455
+				y=95
+				width=30
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:TC:HighSet:read"
+				clr=13
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		text {
+			object {
+				x=370
+				y=130
+				width=30
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Low"
+		}
+		"text update" {
+			object {
+				x=455
+				y=130
+				width=30
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:TC:LowSet:read"
+				clr=13
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		"text entry" {
+			object {
+				x=415
+				y=90
+				width=35
+				height=27
+			}
+			control {
+				chan="FST:Cool:TC:HighSet:write"
+				clr=13
+				bclr=3
+			}
+			limits {
+			}
+		}
+		"text entry" {
+			object {
+				x=415
+				y=125
+				width=35
+				height=27
+			}
+			control {
+				chan="FST:Cool:TC:LowSet:write"
+				clr=13
+				bclr=3
+			}
+			limits {
+			}
+		}
+		text {
+			object {
+				x=490
+				y=130
+				width=40
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="degC"
+		}
+		text {
+			object {
+				x=490
+				y=95
+				width=40
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="degC"
+		}
+		text {
+			object {
+				x=375
+				y=55
+				width=150
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Setpoint Limits"
+		}
+	}
+}
+composite {
+	object {
+		x=430
+		y=175
+		width=120
+		height=200
+	}
+	"composite name"=""
+	children {
+		menu {
+			object {
+				x=445
+				y=265
+				width=90
+				height=28
+			}
+			control {
+				chan="FST:Cool:HeatCapacitySelect"
+				clr=14
+				bclr=5
+			}
+		}
+		text {
+			object {
+				x=450
+				y=205
+				width=70
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Coolant"
+		}
+		rectangle {
+			object {
+				x=430
+				y=175
+				width=120
+				height=200
+			}
+			"basic attribute" {
+				clr=54
+				fill="outline"
+				width=3
+			}
+		}
+		text {
+			object {
+				x=460
+				y=230
+				width=50
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Fluid"
+		}
+	}
+}
+composite {
+	object {
+		x=10
+		y=175
+		width=415
+		height=200
+	}
+	"composite name"=""
+	children {
+		text {
+			object {
+				x=25
+				y=215
+				width=30
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Low"
+		}
+		text {
+			object {
+				x=25
+				y=245
+				width=40
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="High"
+		}
+		text {
+			object {
+				x=25
+				y=275
+				width=80
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Deadband"
+		}
+		text {
+			object {
+				x=25
+				y=305
+				width=60
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Action"
+		}
+		text {
+			object {
+				x=110
+				y=185
+				width=70
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Alarm 1"
+		}
+		text {
+			object {
+				x=265
+				y=185
+				width=70
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Alarm 2"
+		}
+		rectangle {
+			object {
+				x=10
+				y=175
+				width=415
+				height=200
+			}
+			"basic attribute" {
+				clr=23
+				fill="outline"
+				width=3
+			}
+		}
+		"text entry" {
+			object {
+				x=110
+				y=210
+				width=60
+				height=27
+			}
+			control {
+				chan="FST:Cool:TC:Alarm1:Low:write"
+				clr=14
+				bclr=3
+			}
+			limits {
+			}
+		}
+		"text update" {
+			object {
+				x=175
+				y=215
+				width=30
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:TC:Alarm1:Low:read"
+				clr=14
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		"text entry" {
+			object {
+				x=110
+				y=240
+				width=60
+				height=27
+			}
+			control {
+				chan="FST:Cool:TC:Alarm1:High:write"
+				clr=14
+				bclr=3
+			}
+			limits {
+			}
+		}
+		"text update" {
+			object {
+				x=175
+				y=245
+				width=30
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:TC:Alarm1:High:read"
+				clr=14
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		"text entry" {
+			object {
+				x=265
+				y=210
+				width=60
+				height=27
+			}
+			control {
+				chan="FST:Cool:TC:Alarm2:Low:write"
+				clr=14
+				bclr=3
+			}
+			limits {
+			}
+		}
+		"text update" {
+			object {
+				x=330
+				y=215
+				width=30
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:TC:Alarm2:Low:read"
+				clr=14
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		"text entry" {
+			object {
+				x=265
+				y=240
+				width=60
+				height=27
+			}
+			control {
+				chan="FST:Cool:TC:Alarm2:High:write"
+				clr=14
+				bclr=3
+			}
+			limits {
+			}
+		}
+		"text update" {
+			object {
+				x=330
+				y=245
+				width=30
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:TC:Alarm2:High:read"
+				clr=14
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		"text entry" {
+			object {
+				x=110
+				y=270
+				width=60
+				height=27
+			}
+			control {
+				chan="FST:Cool:TC:Alarm1:DB:write"
+				clr=14
+				bclr=3
+			}
+			limits {
+			}
+		}
+		"text update" {
+			object {
+				x=175
+				y=275
+				width=30
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:TC:Alarm1:DB:read"
+				clr=14
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		"text entry" {
+			object {
+				x=265
+				y=270
+				width=60
+				height=27
+			}
+			control {
+				chan="FST:Cool:TC:Alarm2:DB:write"
+				clr=14
+				bclr=3
+			}
+			limits {
+			}
+		}
+		"text update" {
+			object {
+				x=330
+				y=275
+				width=30
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:TC:Alarm2:DB:read"
+				clr=14
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		"text update" {
+			object {
+				x=195
+				y=308
+				width=65
+				height=14
+			}
+			monitor {
+				chan="FST:Cool:TC:Alarm1:Type:read"
+				clr=14
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		"text update" {
+			object {
+				x=350
+				y=308
+				width=65
+				height=14
+			}
+			monitor {
+				chan="FST:Cool:TC:Alarm2:Type:read"
+				clr=14
+				bclr=3
+			}
+			align="horiz. centered"
+			limits {
+			}
+		}
+		menu {
+			object {
+				x=110
+				y=305
+				width=80
+				height=20
+			}
+			control {
+				chan="FST:Cool:TC:Alarm1:Type:write"
+				clr=13
+				bclr=3
+			}
+		}
+		menu {
+			object {
+				x=265
+				y=305
+				width=80
+				height=20
+			}
+			control {
+				chan="FST:Cool:TC:Alarm2:Type:write"
+				clr=13
+				bclr=3
+			}
+		}
+		composite {
+			object {
+				x=25
+				y=340
+				width=360
+				height=20
+			}
+			"composite name"=""
+			children {
+				text {
+					object {
+						x=25
+						y=340
+						width=110
+						height=20
+					}
+					"basic attribute" {
+						clr=13
+					}
+					textix="Alarm Latch"
+				}
+				"text update" {
+					object {
+						x=270
+						y=345
+						width=115
+						height=14
+					}
+					monitor {
+						chan="FST:Cool:TC:AlarmLatch:read"
+						clr=14
+						bclr=3
+					}
+					align="horiz. centered"
+					limits {
+					}
+				}
+				menu {
+					object {
+						x=145
+						y=340
+						width=120
+						height=20
+					}
+					control {
+						chan="FST:Cool:TC:AlarmLatch:write"
+						clr=13
+						bclr=3
+					}
+				}
+			}
+		}
+	}
+}

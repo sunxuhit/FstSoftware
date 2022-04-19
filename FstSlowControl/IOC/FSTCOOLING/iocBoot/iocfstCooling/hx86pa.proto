@@ -1,0 +1,17 @@
+# stream protocol file for Omega HX86PA
+
+getData { 
+  in "%s";
+}
+
+getRH { 
+  in "%RH=%f,AT\0370C=%*f,psia=%*f";
+}
+
+getAT { 
+  in "%RH=%*f,AT\0370C=%f,psia=%*f";
+}
+
+getP { 
+  in "%RH=%*f,AT\0370C=%*f,psia=%f";
+}

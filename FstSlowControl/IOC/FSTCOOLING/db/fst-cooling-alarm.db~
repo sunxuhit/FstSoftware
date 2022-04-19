@@ -1,0 +1,13 @@
+record(calc, FST:Cool:Alarm:Reservoirlevel){
+  field(DESC, "Alarm handler alarm")
+  field(SCAN, ".5 second")
+  field(INPA, "FST:Cool:Reservoir:level")
+  field(CALC, "A")
+  field(HIGH,"95")
+  field(HIHI,"97")
+  field(LOW,"50")
+  field(LOLO,"30")
+  field(HSV,"MINOR")
+  field(HHSV,"MAJOR")
+
+}

@@ -1,0 +1,3 @@
+PCRE   = /star/u/sysuser/iocTop/FST/pcre
+PCRE_INCLUDE=/usr/include/pcre
+PCRE_LIB=/usr/lib64

@@ -133,7 +133,7 @@ display {
 		clr=17
 		limits {
 			hoprSrc="default"
-			hoprDefault=0.000005
+			hoprDefault=0.000025
 			loprSrc="default"
 			loprDefault=-0.000001
 		}

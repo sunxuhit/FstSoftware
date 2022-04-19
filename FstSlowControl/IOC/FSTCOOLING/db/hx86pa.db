@@ -1,0 +1,33 @@
+record(ai,"FST:Cool:Reservoir:RH") {
+	field(SCAN,"I/O Intr")
+	field(DTYP,"stream")
+	field(INP,"@hx86pa.proto getRH  HX86PA")
+	field(PREC,"2")
+	field(EGU,"%")
+	field(HOPR,"100")
+	field(LOPR,"0")
+	field(ADEL,"0.01")
+	field(MDEL,"0.0")
+}
+record(ai,"FST:Cool:Reservoir:T") {
+	field(SCAN,"I/O Intr")
+	field(DTYP,"stream")
+	field(INP,"@hx86pa.proto getAT  HX86PA")
+	field(PREC,"2")
+	field(EGU,"degC")
+	field(HOPR,"120")
+	field(LOPR,"-20")
+	field(ADEL,"0.01")
+	field(MDEL,"0.0")
+}
+record(ai,"FST:Cool:Reservoir:P") {
+	field(SCAN,"I/O Intr")
+	field(DTYP,"stream")
+	field(INP,"@hx86pa.proto getP  HX86PA")
+	field(PREC,"2")
+	field(EGU,"psi")
+	field(HOPR,"200")
+	field(LOPR,"0")
+	field(ADEL,"0.01")
+	field(MDEL,"0.0")
+}

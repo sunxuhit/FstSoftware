@@ -1,0 +1,1302 @@
+
+file {
+	name="/star/u/sysuser/users/xusun/FstSlowControl/expert-cooling-GUI/FST/FST.adl"
+	version=020306
+}
+display {
+	object {
+		x=6
+		y=51
+		width=450
+		height=850
+	}
+	clr=14
+	bclr=5
+	cmap=""
+	gridSpacing=5
+	gridOn=0
+	snapToGrid=1
+}
+"color map" {
+	ncolors=65
+	colors {
+		ffffff,
+		ececec,
+		dadada,
+		c8c8c8,
+		bbbbbb,
+		aeaeae,
+		9e9e9e,
+		919191,
+		858585,
+		787878,
+		696969,
+		5a5a5a,
+		464646,
+		2d2d2d,
+		000000,
+		00d800,
+		1ebb00,
+		339900,
+		2d7f00,
+		216c00,
+		fd0000,
+		de1309,
+		be190b,
+		a01207,
+		820400,
+		5893ff,
+		597ee1,
+		4b6ec7,
+		3a5eab,
+		27548d,
+		fbf34a,
+		f9da3c,
+		eeb62b,
+		e19015,
+		cd6100,
+		ffb0ff,
+		d67fe2,
+		ae4ebc,
+		8b1a96,
+		610a75,
+		a4aaff,
+		8793e2,
+		6a73c1,
+		4d52a4,
+		343386,
+		c7bb6d,
+		b79d5c,
+		a47e3c,
+		7d5627,
+		58340f,
+		99ffff,
+		73dfff,
+		4ea5f9,
+		2a63e4,
+		0a00b8,
+		ebf1b5,
+		d4db9d,
+		bbc187,
+		a6a462,
+		8b8239,
+		73ff6b,
+		52da3b,
+		3cb420,
+		289315,
+		1a7309,
+	}
+}
+text {
+	object {
+		x=70
+		y=10
+		width=310
+		height=35
+	}
+	"basic attribute" {
+		clr=13
+	}
+	textix="FST Cooling System"
+}
+"related display" {
+	object {
+		x=275
+		y=810
+		width=165
+		height=30
+	}
+	display[0] {
+		label="Expert"
+		name="FST_expert.adl"
+	}
+	clr=0
+	bclr=38
+	label=" Expert Settings   "
+}
+composite {
+	object {
+		x=10
+		y=290
+		width=430
+		height=150
+	}
+	"composite name"=""
+	children {
+		text {
+			object {
+				x=155
+				y=305
+				width=139
+				height=27
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Reservoir"
+		}
+		"text update" {
+			object {
+				x=95
+				y=370
+				width=50
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:Reservoir:level"
+				clr=14
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		"text update" {
+			object {
+				x=300
+				y=375
+				width=50
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:Reservoir:RH"
+				clr=14
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+				precDefault=2
+			}
+		}
+		text {
+			object {
+				x=355
+				y=375
+				width=10
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="%"
+		}
+		text {
+			object {
+				x=210
+				y=375
+				width=80
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Humidity"
+		}
+		"text update" {
+			object {
+				x=300
+				y=350
+				width=50
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:Reservoir:T"
+				clr=14
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+				precDefault=2
+			}
+		}
+		text {
+			object {
+				x=355
+				y=350
+				width=40
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="degC"
+		}
+		text {
+			object {
+				x=210
+				y=350
+				width=40
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Temp"
+		}
+		"text update" {
+			object {
+				x=300
+				y=400
+				width=50
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:Reservoir:P"
+				clr=14
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+				precDefault=2
+			}
+		}
+		text {
+			object {
+				x=355
+				y=400
+				width=40
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="psia"
+		}
+		text {
+			object {
+				x=210
+				y=400
+				width=80
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Pressure"
+		}
+		text {
+			object {
+				x=150
+				y=370
+				width=40
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="%"
+		}
+		bar {
+			object {
+				x=30
+				y=335
+				width=60
+				height=90
+			}
+			monitor {
+				chan="FST:Cool:Reservoir:level"
+				clr=54
+				bclr=51
+			}
+			direction="up"
+			limits {
+			}
+		}
+		rectangle {
+			object {
+				x=10
+				y=290
+				width=430
+				height=150
+			}
+			"basic attribute" {
+				clr=54
+				fill="outline"
+				width=3
+			}
+		}
+	}
+}
+"related display" {
+	object {
+		x=10
+		y=810
+		width=80
+		height=30
+	}
+	display[0] {
+		label="Alarms"
+		name="FST_Alarms.adl"
+	}
+	clr=0
+	bclr=38
+	label="  Alarms    "
+}
+composite {
+	object {
+		x=10
+		y=675
+		width=430
+		height=130
+	}
+	"composite name"=""
+	children {
+		text {
+			object {
+				x=142
+				y=690
+				width=167
+				height=27
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Flow (l/min)"
+		}
+		text {
+			object {
+				x=30
+				y=740
+				width=60
+				height=20
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="Supply"
+		}
+		text {
+			object {
+				x=30
+				y=770
+				width=60
+				height=20
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="Return"
+		}
+		"text update" {
+			object {
+				x=365
+				y=739
+				width=50
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:Flow:supply"
+				clr=14
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		indicator {
+			object {
+				x=195
+				y=735
+				width=165
+				height=26
+			}
+			monitor {
+				chan="FST:Cool:Flow:supply"
+				clr=34
+				bclr=3
+			}
+			limits {
+			}
+		}
+		"text update" {
+			object {
+				x=365
+				y=769
+				width=50
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:Flow:return"
+				clr=14
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		indicator {
+			object {
+				x=195
+				y=765
+				width=165
+				height=26
+			}
+			monitor {
+				chan="FST:Cool:Flow:return"
+				clr=34
+				bclr=3
+			}
+			limits {
+			}
+		}
+		rectangle {
+			object {
+				x=10
+				y=675
+				width=430
+				height=130
+			}
+			"basic attribute" {
+				clr=34
+				fill="outline"
+				width=3
+			}
+		}
+		text {
+			object {
+				x=205
+				y=725
+				width=6
+				height=10
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="0"
+		}
+		text {
+			object {
+				x=345
+				y=725
+				width=12
+				height=10
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="20"
+		}
+	}
+}
+composite {
+	object {
+		x=95
+		y=813
+		width=125
+		height=25
+	}
+	"composite name"=""
+	children {
+		rectangle {
+			object {
+				x=95
+				y=813
+				width=125
+				height=25
+			}
+			"basic attribute" {
+				clr=21
+			}
+		}
+		text {
+			object {
+				x=98
+				y=815
+				width=120
+				height=20
+			}
+			"basic attribute" {
+				clr=0
+			}
+			textix="Active Alarm"
+			align="horiz. right"
+		}
+	}
+	"dynamic attribute" {
+		vis="calc"
+		calc="A&&B"
+		chan="FST:Cool:TC:AlarmStatus"
+		chanB="FST:Cool:TC:AlarmStatus:blinker"
+	}
+}
+composite {
+	object {
+		x=10
+		y=445
+		width=430
+		height=225
+	}
+	"composite name"=""
+	children {
+		polyline {
+			object {
+				x=234
+				y=504
+				width=3
+				height=159
+			}
+			"basic attribute" {
+				clr=14
+				fill="outline"
+				width=3
+			}
+			"dynamic attribute" {
+				chan="FST:Cool:Pressure:Pump:discharge"
+			}
+			points {
+				(235,505)
+				(235,661)
+			}
+		}
+		text {
+			object {
+				x=115
+				y=460
+				width=220
+				height=27
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Pressure (psig)"
+		}
+		text {
+			object {
+				x=30
+				y=510
+				width=120
+				height=20
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="Pump Suction"
+		}
+		text {
+			object {
+				x=30
+				y=540
+				width=140
+				height=20
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="Pump Discharge"
+		}
+		text {
+			object {
+				x=30
+				y=570
+				width=80
+				height=20
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="HX Inlet"
+		}
+		"text update" {
+			object {
+				x=365
+				y=514
+				width=50
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:Pressure:Pump:suction"
+				clr=14
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		indicator {
+			object {
+				x=195
+				y=510
+				width=165
+				height=26
+			}
+			monitor {
+				chan="FST:Cool:Pressure:Pump:suction"
+				clr=17
+				bclr=3
+			}
+			limits {
+			}
+		}
+		"text update" {
+			object {
+				x=365
+				y=544
+				width=50
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:Pressure:Pump:discharge"
+				clr=14
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		indicator {
+			object {
+				x=195
+				y=540
+				width=165
+				height=26
+			}
+			monitor {
+				chan="FST:Cool:Pressure:Pump:discharge"
+				clr=17
+				bclr=3
+			}
+			limits {
+			}
+		}
+		"text update" {
+			object {
+				x=365
+				y=574
+				width=50
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:Pressure:HX:inlet"
+				clr=14
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		indicator {
+			object {
+				x=195
+				y=570
+				width=165
+				height=26
+			}
+			monitor {
+				chan="FST:Cool:Pressure:HX:inlet"
+				clr=17
+				bclr=3
+			}
+			limits {
+			}
+		}
+		"text update" {
+			object {
+				x=365
+				y=604
+				width=50
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:Pressure:Main:supply"
+				clr=14
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		indicator {
+			object {
+				x=195
+				y=600
+				width=165
+				height=26
+			}
+			monitor {
+				chan="FST:Cool:Pressure:Main:supply"
+				clr=17
+				bclr=3
+			}
+			limits {
+			}
+		}
+		rectangle {
+			object {
+				x=10
+				y=445
+				width=430
+				height=225
+			}
+			"basic attribute" {
+				clr=64
+				fill="outline"
+				width=3
+			}
+		}
+		text {
+			object {
+				x=30
+				y=600
+				width=110
+				height=20
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="Main Supply"
+		}
+		text {
+			object {
+				x=30
+				y=630
+				width=110
+				height=20
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="Main Return"
+		}
+		"text update" {
+			object {
+				x=365
+				y=634
+				width=50
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:Pressure:Main:return"
+				clr=14
+				bclr=3
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		indicator {
+			object {
+				x=195
+				y=630
+				width=165
+				height=26
+			}
+			monitor {
+				chan="FST:Cool:Pressure:Main:return"
+				clr=17
+				bclr=3
+			}
+			limits {
+			}
+		}
+		text {
+			object {
+				x=195
+				y=500
+				width=18
+				height=10
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="-25"
+		}
+		text {
+			object {
+				x=340
+				y=500
+				width=18
+				height=10
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="100"
+		}
+	}
+}
+composite {
+	object {
+		x=270
+		y=50
+		width=165
+		height=235
+	}
+	"composite name"=""
+	children {
+		text {
+			object {
+				x=280
+				y=130
+				width=100
+				height=20
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="Res. Level"
+		}
+		text {
+			object {
+				x=280
+				y=155
+				width=110
+				height=20
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="Supply Flow"
+		}
+		text {
+			object {
+				x=280
+				y=180
+				width=110
+				height=20
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="Return Flow"
+		}
+		text {
+			object {
+				x=280
+				y=205
+				width=120
+				height=20
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="Sensor Power"
+		}
+		text {
+			object {
+				x=280
+				y=230
+				width=120
+				height=20
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="Coolant Temp"
+		}
+		text {
+			object {
+				x=280
+				y=255
+				width=90
+				height=20
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="Fan Power"
+		}
+		text {
+			object {
+				x=280
+				y=95
+				width=30
+				height=20
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="Sum"
+		}
+		rectangle {
+			object {
+				x=405
+				y=130
+				width=20
+				height=20
+			}
+			"basic attribute" {
+				clr=21
+			}
+			"dynamic attribute" {
+				clr="alarm"
+				chan="FST:Cool:Interlock:Level"
+			}
+		}
+		rectangle {
+			object {
+				x=405
+				y=155
+				width=20
+				height=20
+			}
+			"basic attribute" {
+				clr=21
+			}
+			"dynamic attribute" {
+				clr="alarm"
+				chan="FST:Cool:Interlock:Flow:supply"
+			}
+		}
+		rectangle {
+			object {
+				x=405
+				y=180
+				width=20
+				height=20
+			}
+			"basic attribute" {
+				clr=21
+			}
+			"dynamic attribute" {
+				clr="alarm"
+				chan="FST:Cool:Interlock:Flow:return"
+			}
+		}
+		rectangle {
+			object {
+				x=405
+				y=205
+				width=20
+				height=20
+			}
+			"basic attribute" {
+				clr=21
+			}
+			"dynamic attribute" {
+				clr="alarm"
+				chan="FST:Cool:Interlock:SensorPower"
+			}
+		}
+		rectangle {
+			object {
+				x=405
+				y=230
+				width=20
+				height=20
+			}
+			"basic attribute" {
+				clr=21
+			}
+			"dynamic attribute" {
+				clr="alarm"
+				chan="FST:Cool:Interlock:Dewpoint"
+			}
+		}
+		rectangle {
+			object {
+				x=405
+				y=255
+				width=20
+				height=20
+			}
+			"basic attribute" {
+				clr=21
+			}
+			"dynamic attribute" {
+				clr="alarm"
+				chan="FST:Cool:Interlock:FanPower"
+			}
+		}
+		rectangle {
+			object {
+				x=405
+				y=95
+				width=20
+				height=20
+			}
+			"basic attribute" {
+				clr=21
+			}
+			"dynamic attribute" {
+				clr="alarm"
+				chan="FST:Cool:Interlock:sum"
+			}
+		}
+		rectangle {
+			object {
+				x=270
+				y=50
+				width=165
+				height=235
+			}
+			"basic attribute" {
+				clr=24
+				fill="outline"
+				width=3
+			}
+		}
+		text {
+			object {
+				x=280
+				y=60
+				width=138
+				height=27
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="Interlocks"
+		}
+	}
+}
+composite {
+	object {
+		x=10
+		y=50
+		width=255
+		height=235
+	}
+	"composite name"=""
+	children {
+		rectangle {
+			object {
+				x=10
+				y=50
+				width=255
+				height=235
+			}
+			"basic attribute" {
+				clr=14
+				fill="outline"
+				width=3
+			}
+		}
+		text {
+			object {
+				x=90
+				y=60
+				width=92
+				height=27
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Chiller"
+		}
+		"text entry" {
+			object {
+				x=135
+				y=100
+				width=60
+				height=27
+			}
+			control {
+				chan="FST:Cool:TC:SetTemp:write"
+				clr=13
+				bclr=3
+			}
+			limits {
+			}
+		}
+		text {
+			object {
+				x=25
+				y=115
+				width=80
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Setpoint"
+		}
+		"text update" {
+			object {
+				x=140
+				y=130
+				width=50
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:TC:SetTemp:read"
+				clr=13
+				bclr=3
+			}
+			limits {
+			}
+		}
+		text {
+			object {
+				x=200
+				y=115
+				width=40
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="degC"
+		}
+		text {
+			object {
+				x=25
+				y=170
+				width=110
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Outlet Temp"
+		}
+		"text update" {
+			object {
+				x=140
+				y=170
+				width=50
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:TC:ConSensTemp"
+				clr=13
+				bclr=3
+			}
+			limits {
+			}
+		}
+		text {
+			object {
+				x=200
+				y=170
+				width=40
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="degC"
+		}
+		text {
+			object {
+				x=25
+				y=230
+				width=50
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Power"
+		}
+		"text update" {
+			object {
+				x=140
+				y=230
+				width=50
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:TC:ChillerPower"
+				clr=13
+				bclr=3
+			}
+			limits {
+			}
+		}
+		text {
+			object {
+				x=200
+				y=230
+				width=10
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="%"
+		}
+		text {
+			object {
+				x=25
+				y=195
+				width=100
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Inlet Temp"
+		}
+		"text update" {
+			object {
+				x=140
+				y=195
+				width=50
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:TC:SecSensTemp"
+				clr=13
+				bclr=3
+			}
+			limits {
+			}
+		}
+		text {
+			object {
+				x=200
+				y=195
+				width=40
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="degC"
+		}
+		text {
+			object {
+				x=25
+				y=255
+				width=90
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Heat Load"
+		}
+		"text update" {
+			object {
+				x=140
+				y=255
+				width=50
+				height=20
+			}
+			monitor {
+				chan="FST:Cool:TC:HeatLoad"
+				clr=13
+				bclr=3
+			}
+			limits {
+			}
+		}
+		text {
+			object {
+				x=200
+				y=255
+				width=50
+				height=20
+			}
+			"basic attribute" {
+				clr=13
+			}
+			textix="Watts"
+		}
+		"related display" {
+			object {
+				x=200
+				y=55
+				width=60
+				height=21
+			}
+			display[0] {
+				label="Chiller Controls"
+				name="FST_Chiller_Control.adl"
+			}
+			clr=0
+			bclr=38
+			label="  Control    "
+		}
+	}
+}

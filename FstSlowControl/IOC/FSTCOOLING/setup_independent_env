@@ -1,0 +1,3 @@
+#setenv EPICS_CA_SERVER_PORT 45586
+setenv EPICS_CA_AUTO_ADDR_LIST NO
+setenv EPICS_CA_ADDR_LIST "softioc4.starp.bnl.gov"

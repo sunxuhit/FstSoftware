@@ -632,7 +632,7 @@ ss ss1 {
     state loading_ramp_all{
         entry {
             for(i=0; i<24; i++) {
-              currentSetting[i] = 0.000015;
+              currentSetting[i] = 0.000050;
               pvPut(currentSetting[i],SYNC);
             }
             v = 1;

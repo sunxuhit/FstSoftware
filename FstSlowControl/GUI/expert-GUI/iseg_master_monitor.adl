@@ -108,7 +108,7 @@ display {
 		clr=20
 		limits {
 			hoprSrc="default"
-			hoprDefault=0.000005
+			hoprDefault=0.000025
 			loprSrc="default"
 			loprDefault=-0.000001
 		}
@@ -118,7 +118,7 @@ display {
 		clr=54
 		limits {
 			hoprSrc="default"
-			hoprDefault=0.000005
+			hoprDefault=0.000025
 			loprSrc="default"
 			loprDefault=-0.000001
 		}
@@ -128,7 +128,7 @@ display {
 		clr=64
 		limits {
 			hoprSrc="default"
-			hoprDefault=0.000005
+			hoprDefault=0.000025
 			loprSrc="default"
 			loprDefault=-0.000001
 		}
@@ -138,7 +138,7 @@ display {
 		clr=30
 		limits {
 			hoprSrc="default"
-			hoprDefault=0.000005
+			hoprDefault=0.000025
 			loprSrc="default"
 			loprDefault=-0.000001
 		}
@@ -301,7 +301,7 @@ composite {
 				clr=20
 				limits {
 					hoprSrc="default"
-					hoprDefault=0.000005
+					hoprDefault=0.000025
 					loprSrc="default"
 					loprDefault=-0.000001
 				}
@@ -311,7 +311,7 @@ composite {
 				clr=54
 				limits {
 					hoprSrc="default"
-					hoprDefault=0.000005
+					hoprDefault=0.000025
 					loprSrc="default"
 					loprDefault=-0.000001
 				}
@@ -321,7 +321,7 @@ composite {
 				clr=64
 				limits {
 					hoprSrc="default"
-					hoprDefault=0.000005
+					hoprDefault=0.000025
 					loprSrc="default"
 					loprDefault=-0.000001
 				}
@@ -331,7 +331,7 @@ composite {
 				clr=30
 				limits {
 					hoprSrc="default"
-					hoprDefault=0.000005
+					hoprDefault=0.000025
 					loprSrc="default"
 					loprDefault=-0.000001
 				}
