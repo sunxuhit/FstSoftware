@@ -9,12 +9,14 @@
 
 using namespace std;
 
-void plotPedestal(string runId = "22319088")
+void plotPedestal(string runId = "23047025")
 {
+  const int numTb = 3;
+
   // read in ADC info for all events
-  float pedestals[6][3][24][128][9];
-  float totStdDev[6][3][24][128][9];
-  float ranStdDev[6][3][24][128][9];
+  float pedestals[6][3][24][128][numTb];
+  float totStdDev[6][3][24][128][numTb];
+  float ranStdDev[6][3][24][128][numTb];
   for(int i_rdo = 0; i_rdo < 6; ++i_rdo)
   {
     for(int i_arm = 0; i_arm < 3; ++i_arm)
@@ -23,7 +25,7 @@ void plotPedestal(string runId = "22319088")
       {
 	for(int i_ch = 0; i_ch < 128; ++i_ch)
 	{
-	  for(int i_tb = 0; i_tb < 9; ++i_tb)
+	  for(int i_tb = 0; i_tb < numTb; ++i_tb)
 	  {
 	    pedestals[i_rdo][i_arm][i_apv][i_ch][i_tb] = -1;
 	    totStdDev[i_rdo][i_arm][i_apv][i_ch][i_tb] = -1;
@@ -37,7 +39,7 @@ void plotPedestal(string runId = "22319088")
   FILE *file_pedestals;
   char inputfile[256]; 
   // read in pedestal file on fst01
-  sprintf(inputfile, "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstInstallation/daqtest/fst_s1_pedestals_%s_GOOD.txt",runId.c_str());
+  sprintf(inputfile, "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstInstallation/pedestal/fst_s1_pedestals_%s_GOOD.txt",runId.c_str());
   cout << "Read in pedestal from fst01: " << inputfile << endl;
   file_pedestals = fopen(inputfile,"r");
   if(file_pedestals == 0) 
@@ -66,7 +68,7 @@ void plotPedestal(string runId = "22319088")
   fclose(file_pedestals);
 
   // read in pedestal file on fst02
-  sprintf(inputfile, "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstInstallation/daqtest/fst_s2_pedestals_%s_GOOD.txt",runId.c_str());
+  sprintf(inputfile, "/Users/xusun/WorkSpace/STAR/Data/ForwardSiliconTracker/FstInstallation/pedestal/fst_s2_pedestals_%s_GOOD.txt",runId.c_str());
   cout << "Read in pedestal from fst02: " << inputfile << endl;
   file_pedestals = fopen(inputfile,"r");
   if(file_pedestals == 0) 
@@ -94,12 +96,12 @@ void plotPedestal(string runId = "22319088")
   }
   fclose(file_pedestals);
 
-  TGraph *g_pedestals[36][9];
-  TGraph *g_totStdDev[36][9];
-  TGraph *g_ranStdDev[36][9];
+  TGraph *g_pedestals[36][numTb];
+  TGraph *g_totStdDev[36][numTb];
+  TGraph *g_ranStdDev[36][numTb];
   for(int i_mod = 0; i_mod < 36; ++i_mod)
   {
-    for(int i_tb = 0; i_tb < 9; ++i_tb)
+    for(int i_tb = 0; i_tb < numTb; ++i_tb)
     {
       g_pedestals[i_mod][i_tb] = new TGraph();
       g_totStdDev[i_mod][i_tb] = new TGraph();
@@ -134,7 +136,7 @@ void plotPedestal(string runId = "22319088")
 	// cout << "diskIdx = " << diskIdx << ", moduleIdx = " << moduleIdx << ", glbModuleIdx = " << glbModuleIdx << endl;
 	for(int i_ch = 0; i_ch < 128; ++i_ch)
 	{
-	  for(int i_tb = 0; i_tb < 9; ++i_tb)
+	  for(int i_tb = 0; i_tb < numTb; ++i_tb)
 	  {
 	    int i_point = (i_apv - 12*portIdx)*128 + i_ch;
 	    g_pedestals[glbModuleIdx-1][i_tb]->SetPoint(i_point,i_point,pedestals[i_rdo][i_arm][i_apv][i_ch][i_tb]);
@@ -159,7 +161,7 @@ void plotPedestal(string runId = "22319088")
   }
   outputStart = outputname + "[";
   c_pedestals->Print(outputStart.c_str());
-  for(int i_tb = 0; i_tb < 9; ++i_tb)
+  for(int i_tb = 0; i_tb < numTb; ++i_tb)
   {
     for(int i_rdo = 0; i_rdo < 6; ++i_rdo)
     {
@@ -193,7 +195,7 @@ void plotPedestal(string runId = "22319088")
   }
   outputStart = outputname + "[";
   c_totStdDev->Print(outputStart.c_str());
-  for(int i_tb = 0; i_tb < 9; ++i_tb)
+  for(int i_tb = 0; i_tb < numTb; ++i_tb)
   {
     for(int i_rdo = 0; i_rdo < 6; ++i_rdo)
     {
@@ -228,7 +230,7 @@ void plotPedestal(string runId = "22319088")
   }
   outputStart = outputname + "[";
   c_ranStdDev->Print(outputStart.c_str());
-  for(int i_tb = 0; i_tb < 9; ++i_tb)
+  for(int i_tb = 0; i_tb < numTb; ++i_tb)
   {
     for(int i_rdo = 0; i_rdo < 6; ++i_rdo)
     {
