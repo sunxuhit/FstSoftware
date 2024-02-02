@@ -42,3 +42,6 @@ FstTracking/list/IST/*/*/*.list
 # FstOnlineZS
 FstOnlineZS/figures/*.pdf
 FstOnlineZS/figures/*.eps
+
+# FstBiasCurrent
+FstBiasCurrent/data/*.txt
