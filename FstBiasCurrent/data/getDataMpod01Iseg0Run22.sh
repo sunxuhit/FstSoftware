@@ -1,7 +1,7 @@
 #!/bin/bash
 date +%F
 
-#. ./getDataMpod01Iseg0.sh
+#. ./getDataMpod01Iseg0Run22.sh
 
 if [ $# -eq 0 ]
 then
@@ -41,5 +41,5 @@ then
   mysql -h db04.star.bnl.gov --port=3421 -s -e 'SELECT beginTime, UNIX_TIMESTAMP(beginTime), `fstmpod01:measurement_current_u7` from `mq_collector_Conditions_fst`.`fstMPOD01` WHERE beginTime BETWEEN "2021-11-01" AND "2022-04-30" ORDER BY beginTime ASC' > fstmpod01_u7_run22.txt
 
 else
-  echo "Wrong Input Parameter! Try: . ./getDataMpod01Iseg0.sh"
+  echo "Wrong Input Parameter! Try: . ./getDataMpod01Iseg0Run22.sh"
 fi

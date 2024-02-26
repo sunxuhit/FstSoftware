@@ -45,3 +45,5 @@ FstOnlineZS/figures/*.eps
 
 # FstBiasCurrent
 FstBiasCurrent/data/*.txt
+FstBiasCurrent/figures/*.png
+FstBiasCurrent/figures/*.eps

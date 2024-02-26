@@ -4,11 +4,11 @@
 #include "TGraph.h"
 #include "TStyle.h"
 
-void plotBiasCurrent(int mpodId = 2, int runId = 22)
+void plotBiasCurrentRun22(int mpodId = 2)
 {
   // read in inner sensor of Disk2 module 4: isegId = 6
   const int iIsegId = 6;
-  string inputfileIS = Form("./data/fstmpod0%d_u%d_run%d.txt", mpodId, iIsegId, runId);
+  string inputfileIS = Form("./data/fstmpod0%d_u%d_run22.txt", mpodId, iIsegId);
   FILE *file_InnerSensor;
   file_InnerSensor = fopen(inputfileIS.c_str(), "r");
 
@@ -42,7 +42,7 @@ void plotBiasCurrent(int mpodId = 2, int runId = 22)
 
   // read in outer sensor of Disk2 module 4: isegId = 7
   const int oIsegId = 7;
-  string inputfileOS = Form("./data/fstmpod0%d_u%d_run%d.txt", mpodId, oIsegId, runId);
+  string inputfileOS = Form("./data/fstmpod0%d_u%d_run22.txt", mpodId, oIsegId);
   FILE *file_OuterSensor;
   file_OuterSensor = fopen(inputfileOS.c_str(), "r");
 
