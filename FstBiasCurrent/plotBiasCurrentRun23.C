@@ -74,7 +74,7 @@ void plotBiasCurrentRun23(int mpodId = 2)
   }
 
   // Draw the graph
-  const int pixelScale = 4;
+  const int pixelScale = 2;
   // gStyle->SetGridStyle(2);
   gStyle->SetGridWidth(1*pixelScale);
   gStyle->SetFrameLineWidth(2*pixelScale);
