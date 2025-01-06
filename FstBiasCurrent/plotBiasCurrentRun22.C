@@ -84,6 +84,7 @@ void plotBiasCurrentRun22(int mpodId = 2)
   c_bCurrent->SetRightMargin(0.05);
   c_bCurrent->SetBottomMargin(0.15);
   c_bCurrent->SetGrid(1,0);
+  c_bCurrent->SetTicks(0,1);
 
   TH1F *h_play = new TH1F("h_play","h_play",1000,0.0,1000.0);
   for(int iBin = 0; iBin < h_play->GetNbinsX(); ++iBin)
@@ -91,7 +92,7 @@ void plotBiasCurrentRun22(int mpodId = 2)
     h_play->SetBinContent(iBin+1, -1000.0);
     h_play->SetBinError(iBin+1, 1.0);
   }
-  h_play->SetTitle("FST Disk2 Module4");
+  h_play->SetTitle("Leak Current of FST Disk2 Module4 in Run22");
   h_play->SetStats(0);
   h_play->GetXaxis()->SetTitle("EST Time");
   h_play->GetXaxis()->CenterTitle();
